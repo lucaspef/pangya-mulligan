@@ -15,16 +15,16 @@
 // HACK: wview.h and golfdoc.h (PCH) only declare these three; the unit owns their COMDATs. In the original
 // they are PCH inlines past the end of the unit's IL (compiled after the main pass, before wave 1): the dead
 // reference to a function of the main pass defers them to the head of wave 1.
-inline void WView::ResetClippingArea()
+#ifndef JP983_VS_DEBUG // Debug nao expande: letter_effect precisa do simbolo externo
+inline
+#endif
+void WView::ResetClippingArea()
 {
 	if (0)
 		((CMiniScore*)0)->CMiniScore::Flicker();
 	WRect rect(0.0f, 0.0f, SCREEN_XS, SCREEN_YS);
 	SetClippingArea(rect);
 }
-#ifdef JP983_VS_DEBUG // D843: letter_effect chama; /Ob1 sem expansao aqui nao emite o COMDAT
-void (WView::* const g_jp983DbgResetClippingArea)() = &WView::ResetClippingArea;
-#endif
 
 inline void CGolfDoc::SetSaveChatNum(int num)
 {
