@@ -1,0 +1,52 @@
+# build
+bin/
+obj/
+*.user
+.vs/
+.idea/
+TestResults/
+/client/build/
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.tlog
+*.ipch
+*.iobj
+*.ipdb
+*.map
+
+# binários, SDKs e arquivos do jogo nunca entram
+*.exe
+*.dll
+*.lib
+*.pak
+*.iff
+*.pet
+*.mpet
+*.sav
+*.dmp
+
+# configuração e dados locais do servidor
+/server/config/pangya.json
+/server/config/test.json
+/server/data/
+/server/logs/
+.env
+.env.*
+.claude/
+
+# material interno que nunca deve ser copiado para cá
+/out/
+/ref/
+/ext/
+/runs/
+/lock/
+/painel_web/
+HANDOFF*
+NOTES*.md
+NEEDS_HUMAN*
+PLANO_INTERNO*
+DONE-*
+prompt*.txt
+status.json*

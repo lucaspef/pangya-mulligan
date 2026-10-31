@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="terc"><UniqueIdentifier>{CE917F0B-E96C-5469-B7AB-A02F4186180C}</UniqueIdentifier></Filter>
+    <Filter Include="terc\libpng-1.2.8"><UniqueIdentifier>{78B6BD0E-0460-574B-B051-C17D50A36037}</UniqueIdentifier></Filter>
+    <Filter Include="terc\src"><UniqueIdentifier>{421A345A-B942-5444-B684-AC85FBAB90C7}</UniqueIdentifier></Filter>
+    <Filter Include="terc\zlib-1.2.2"><UniqueIdentifier>{C7AC3883-1297-5251-BD0F-EE548D8EA37A}</UniqueIdentifier></Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\adler32.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\compress.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\crc32.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\deflate.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\gzio.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\infback.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\inffast.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\inflate.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\inftrees.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\trees.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\uncompr.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\zutil.c"><Filter>terc\zlib-1.2.2</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\png.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngerror.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngget.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngmem.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngpread.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngread.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngrio.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngrtran.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngrutil.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngset.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngtrans.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngwio.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngwrite.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngwtran.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngwutil.c"><Filter>terc\libpng-1.2.8</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lapi.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lauxlib.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lbaselib.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lcode.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ldblib.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ldebug.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ldo.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ldump.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lfunc.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lgc.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\linit.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\liolib.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\llex.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lmathlib.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lmem.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\loadlib.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lobject.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lopcodes.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\loslib.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lparser.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lstate.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lstring.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lstrlib.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ltable.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ltablib.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ltm.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lundump.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lvm.c"><Filter>terc\src</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lzio.c"><Filter>terc\src</Filter></ClCompile>
+  </ItemGroup>
+</Project>

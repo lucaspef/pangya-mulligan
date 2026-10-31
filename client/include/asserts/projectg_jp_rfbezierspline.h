@@ -1,0 +1,30 @@
+// V3: layout do 983 das classes vistas por src/projectg/jp/rfbezierspline.cpp (gerado por tools/v3/gen.py; não editar à mão).
+// unidade: src/projectg/jp/rfbezierspline.cpp
+V3_OFF(AnimDrawEventArgs, object, 0x08) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:119
+V3_OFF(AnimDrawEventArgs, alpha, 0x0c) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:120
+V3_OFF(RFAnimationFrame, time, 0x00) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:42
+V3_OFF(RFAnimationFrame, visible, 0x04) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:43
+V3_OFF(RFAnimationFrame, sfx, 0x08) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:44
+V3_OFF(RFAnimationFrame, x, 0x24) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:45
+V3_OFF(RFAnimationFrame, y, 0x2c) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:46
+V3_OFF(RFAnimationFrame, scaleX, 0x34) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:47
+V3_OFF(RFAnimationFrame, scaleY, 0x3c) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:48
+V3_OFF(RFAnimationFrame, centerX, 0x44) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:49
+V3_OFF(RFAnimationFrame, centerY, 0x4c) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:50
+V3_OFF(RFAnimationFrame, rotation, 0x54) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:51
+V3_OFF(RFAnimationFrame, alpha, 0x5c) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:52
+V3_OFF(RFAnimationObject, _name, 0x30) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:151
+V3_OFF(RFAnimationObject, _type983, 0x4c) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:152
+V3_OFF(RFAnimationObject, _ani983, 0x50) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:153
+V3_OFF(RFAnimationObject, _asset, 0x6c) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:154
+V3_OFF(RFAnimationObject, _rect, 0x88) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:155
+V3_OFF(RFAnimationObject, _endTime983, 0x98) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:156
+V3_OFF(RFAnimationObject, _frame, 0x9c) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:157
+V3_OFF(RFAnimationObject, _animation, 0xa0) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:158
+V3_OFF(RFAnimationObject, _texture, 0xa4) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:159
+V3_OFF(RFBezierSpline, _p0, 0x04) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:67
+V3_OFF(RFBezierSpline, _p1, 0x0c) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:68
+V3_OFF(RFBezierSpline, _p2, 0x14) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:69
+V3_OFF(RFBezierSpline, _p3, 0x1c) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:70
+V3_OFF(RFBezierSpline, _resolution, 0x24) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:71
+V3_OFF(RFBezierSpline, _points, 0x28) // 983: anotação do cabeçalho include/jp/refresh/lib/rfdirector.h:72

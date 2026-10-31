@@ -1,0 +1,30 @@
+// V3: layout do 983 das classes vistas por src/projectg/titles_client.cpp (gerado por tools/v3/gen.py; não editar à mão).
+// unidade: src/projectg/titles_client.cpp
+V3_SIZE(Title123, 0x4) // 983: push 0x4; call operator new em 00836445, construtor 00835ed0 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title124, 0x4) // 983: push 0x4; call operator new em 00836468, construtor 00835ef0 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title125, 0x4) // 983: push 0x4; call operator new em 0083648b, construtor 00835f10 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title126, 0x4) // 983: push 0x4; call operator new em 008364ae, construtor 00835f30 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title22, 0x4) // 983: push 0x4; call operator new em 008361a6, construtor 00835c70 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title23, 0x4) // 983: push 0x4; call operator new em 008361c9, construtor 00835c90 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title24, 0x4) // 983: push 0x4; call operator new em 008361ec, construtor 00835cb0 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title25, 0x4) // 983: push 0x4; call operator new em 0083620f, construtor 00835cd0 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title26, 0x4) // 983: push 0x4; call operator new em 00836232, construtor 00835cf0 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title27, 0x4) // 983: push 0x4; call operator new em 00836255, construtor 00835d10 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title28, 0x4) // 983: push 0x4; call operator new em 00836278, construtor 00835d30 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title357, 0x4) // 983: push 0x4; call operator new em 008364d1, construtor 00835f50 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title358, 0x4) // 983: push 0x4; call operator new em 008364f7, construtor 00835f70 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title359, 0x4) // 983: push 0x4; call operator new em 0083651d, construtor 00835f90 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title360, 0x4) // 983: push 0x4; call operator new em 00836543, construtor 00835fb0 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title361, 0x4) // 983: push 0x4; call operator new em 00836569, construtor 00835fd0 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title380, 0x4) // 983: push 0x4; call operator new em 0083634d, construtor 00835e90 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title381, 0x4) // 983: push 0x4; call operator new em 00836327, construtor 00835eb0 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title50, 0x4) // 983: push 0x4; call operator new em 0083629b, construtor 00835d50 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title51, 0x4) // 983: push 0x4; call operator new em 008362be, construtor 00835d70 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title52, 0x4) // 983: push 0x4; call operator new em 008362e1, construtor 00835d90 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title53, 0x4) // 983: push 0x4; call operator new em 00836304, construtor 00835db0 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title69, 0x4) // 983: push 0x4; call operator new em 00836373, construtor 00835dd0 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title70, 0x4) // 983: push 0x4; call operator new em 00836396, construtor 00835df0 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title71, 0x4) // 983: push 0x4; call operator new em 008363b9, construtor 00835e10 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title72, 0x4) // 983: push 0x4; call operator new em 008363dc, construtor 00835e30 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title73, 0x4) // 983: push 0x4; call operator new em 008363ff, construtor 00835e50 (rtti=1; 1 new); unidade por construtor
+V3_SIZE(Title74, 0x4) // 983: push 0x4; call operator new em 00836422, construtor 00835e70 (rtti=1; 1 new); unidade por construtor

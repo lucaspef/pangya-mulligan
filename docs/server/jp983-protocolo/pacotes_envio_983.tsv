@@ -1,0 +1,625 @@
+id	destino	campos	onde	va_func	funcao	unidade
+0x1	GAME		00a4d68d	00a4d650	FUN_00a4d650	source/client/ProjectG/networksystem.cpp
+0x1	LOGIN	ES ES E4 E1 E4 E8 ES	00a5221f	00a520b0	FUN_00a520b0	source/client/ProjectG/loginunit.cpp
+0x1	RANK	E4 ES E1	00b292f7	00b292a0	FUN_00b292a0	source/client/ProjectG/rankingdlg.cpp
+0x2	?	ES E4 E4 E2 ES ES E4 ES ES	00a51875	00a51750	FUN_00a51750	source/client/ProjectG/gameunit.cpp | source/client/ProjectG/loginunit.cpp
+0x2	SHOP	E1 ES ES	00a5375b	00a536f0	ShopUnit::OnConnect	source/client/ProjectG/shopunit.cpp
+0x2	?	ES E4 E4 E2 ES ES E4 ES	00af53e3	00af5180	FrAutoConnect::FUN_00af5180	source/client/ProjectG/serverdlg.cpp
+0x2	RANK	E1 E4 ES E1 E1 E1 E1 E4	00b294a7	00b293e0	FUN_00b293e0	source/client/ProjectG/rankingdlg.cpp
+0x3	GAME	ES ES	009a58bd	009a4f50	ChatManager::SendChatMessage	source/client/ProjectG/hatmanager.cpp
+0x3	?	ES ES	009a6295	009a5950	ChatManager::SendChatMessage2	source/client/ProjectG/hatmanager.cpp | source/client/ProjectG/inputmanager.cpp
+0x3	LOGIN	E4	00af4ee4	00af4ce0	FUN_00af4ce0	source/client/ProjectG/serverdlg.cpp
+0x4	LOGIN		00ad997a	00ad98f0	FUN_00ad98f0	source/client/ProjectG/logindlg.cpp
+0x4	LOGIN		00adb2ee	00adaf90	FrLoginDlg::OnProc	source/client/ProjectG/logindlg.cpp | source/client/ProjectG/loginrsdlg.cpp
+0x4	?	E1	00af60d0	00af5e00	FUN_00af5e00	source/client/ProjectG/serverdlg.cpp
+0x4	?	E1	00b1cc0b	00b1cbe0	FUN_00b1cbe0	source/client/ProjectG/g_starmode.cpp
+0x6	GAME	EB(0x109)	0054d15f	0054d110	FrGrandPrixAwardDlg::FUN_0054d110	
+0x6	?	EB(?)	006a8884	006a8440	CGolfRule::ChangeGameMode	source/client/ProjectG/golfrulebase.cpp | source/client/ProjectG/golfruleguildmatch.cpp
+0x6	LOGIN	ES	00acdf31	00acde40	FUN_00acde40	source/client/ProjectG/createnickdlg.cpp | source/client/ProjectG/detaildlg.cpp
+0x6	GAME	EB(0x109)	00ae9514	00ae9320	FrResultDlg::FUN_00ae9320	source/client/ProjectG/resultdlg.cpp
+0x6	GAME	EB(0x109)	00aec655	00aec210	FrUniteResultDlg::OnInit	source/client/ProjectG/resultdlg.cpp
+0x7	?	E1 ES	0080e220	0080e140	FUN_0080e140	source/client/ProjectG/post_senddlg.cpp
+0x7	?	E1 ES	008f9e40	008f9dd0	FUN_008f9dd0	
+0x7	?	E1 ES	00aaf679	00aaf510	FUN_00aaf510	source/client/ProjectG/giftdlg.cpp
+0x7	?	E1 ES	00ac5def	00ac5c90	FUN_00ac5c90	source/client/ProjectG/addfrienddlg.cpp | source/client/ProjectG/awarddlg.cpp
+0x7	LOGIN	ES	00ace05e	00ace020	FUN_00ace020	source/client/ProjectG/createnickdlg.cpp | source/client/ProjectG/detaildlg.cpp
+0x8	LOGIN	EB(0x6)	00ab7030	00ab6fc0	FUN_00ab6fc0	source/client/ProjectG/lobbymain.cpp
+0x8	?	E1 E4 E4 E1 E1 E1 E1 E1 E1 E4 E4 ES ES E4	00abad92	00abaa10	FUN_00abaa10	source/client/ProjectG/lobbymain.cpp | source/client/ProjectG/lobbytask.cpp
+0x8	?	E1 E4 E4 E1 E1 E1 E4 E4 E1 E1 E1 E4 E4 E1 E1 E1 E1 E1 E4 ES ES E4	00abd71a	00abc140	CLobbyMain::HandleMsg	source/client/ProjectG/lobbymain.cpp | source/client/ProjectG/lobbytask.cpp
+0x8	?	E1 E4 E4 E1 E1 E1 E1 E1 E4 ES ES E4	00ae208e	00ae19c0	FUN_00ae19c0	source/client/ProjectG/makeroomdlg.cpp | source/client/ProjectG/mapselectdlg.cpp
+0x9	?	E2 ES	0059bef1	0059b980	CNormalLobbyRoom::FUN_0059b980	source/client/ProjectG/lobbymain.cpp
+0x9	?	E2 ES	007b254f	007b2440	FUN_007b2440	source/client/ProjectG/avatar_mainui.cpp
+0x9	?	E2 ES	00ab922b	00ab90f0	CLobbyMain::OnInviteDlgResult	source/client/ProjectG/lobbymain.cpp
+0x9	?	E2 ES	00ab954f	00ab9440	FUN_00ab9440	source/client/ProjectG/lobbymain.cpp
+0x9	?	E2 ES	00acf219	00acf100	?OnPasswordDlgResult@FrDtRoomDlg@@IAE_NHPAVFrForm@@@Z	source/client/ProjectG/detailedroominfodlg.cpp
+0x9	?	E2 ES	00ad07fe	00ad04e0	FUN_00ad04e0	source/client/ProjectG/detailedroominfodlg.cpp | source/client/ProjectG/dlgquickstartsetting.cpp
+0xa	?	E2 E1 E1 E1	00503a9e	00503a50	FUN_00503a50	source/client/ProjectG/lobbymain.cpp
+0xa	?	E2 E1 E1 E1	00503ba0	00503b50	FUN_00503b50	source/client/ProjectG/lobbymain.cpp
+0xa	?	E2 E1 E1 E1	00503d81	00503cf0	FUN_00503cf0	source/client/ProjectG/lobbymain.cpp
+0xa	?	E2 E1 E1 E1	0050b2d6	0050acd0	CLobbyMain::ProcessLobbyUI	source/client/ProjectG/lobbymain.cpp
+0xa	GAME	E2 E1 E1 E4	0050c926	0050c760	FUN_0050c760	source/client/ProjectG/lobbymain.cpp
+0xa	GAME	E2 E1 E1 E1	005229d7	00522960	FUN_00522960	
+0xa	GAME	E2 E1 E1 E4	00522df6	00522d90	FUN_00522d90	
+0xa	GAME	E2 E1 E1 E4 ED	007252ea	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0xa	?	E2 E1 E1 E1	0083fad2	0083f980	FrTreasureCourse::SelectMapBtn	source/client/ProjectG/treasuredlg.cpp
+0xa	?	E2 E1 E1 ES E1 ES E1 E1 E1 E4 E1 E2 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E4 E1 E1 E1 E4	00acc60b	00acc1d0	FUN_00acc1d0	source/client/ProjectG/changeroominfodlg.cpp
+0xa	?	E2 E1 E1 E1	00ae3112	00ae2fd0	FUN_00ae2fd0	source/client/ProjectG/mapselectdlg.cpp
+0xb	GAME	E1 E4	00589326	00589270	FUN_00589270	
+0xb	GAME	E1 E4	0058ae3e	0058add0	FUN_0058add0	
+0xb	GAME	E1 E4	0082282a	00822800	FUN_00822800	source/client/ProjectG/ghostmain.cpp
+0xb	LOGIN	ES E4 ES	00a52135	00a520b0	FUN_00a520b0	source/client/ProjectG/loginunit.cpp
+0xc	GAME	E1 E4	0050907a	00508f60	FUN_00508f60	source/client/ProjectG/lobbymain.cpp
+0xc	GAME	E1 E4	005090c3	00508f60	FUN_00508f60	source/client/ProjectG/lobbymain.cpp
+0xc	GAME	E1 E4	0050b750	0050b660	FUN_0050b660	source/client/ProjectG/lobbymain.cpp
+0xc	GAME	E1 E4	0050b7b3	0050b660	FUN_0050b660	source/client/ProjectG/lobbymain.cpp
+0xc	GAME	E1 E4	0050b7fb	0050b660	FUN_0050b660	source/client/ProjectG/lobbymain.cpp
+0xc	?	E1 E4	005d2d6a	005d2ac0	FUN_005d2ac0	
+0xc	GAME	E1 E4	006137ba	00613590	FUN_00613590	source/client/ProjectG/realmyroommainui.cpp
+0xc	GAME	E1 E4 E4	007a419a	007a4170	FUN_007a4170	source/client/ProjectG/avatar_avatar.cpp
+0xc	GAME	E1 E4	007ab9ee	007ab920	ntAvatarChatMain::OnRestorePreserved	source/client/ProjectG/avatar_main.cpp
+0xc	GAME	E1 EB(0x10)	008566f9	008565f0	FUN_008565f0	source/client/ProjectG/intrusion.cpp
+0xc	GAME	E1 EB(0x10)	009c221a	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0xc	GAME	E1 E4	00ab3376	00ab3320	FUN_00ab3320	source/client/ProjectG/lobbymain.cpp
+0xc		E1	00ab33b2	00ab3320	FUN_00ab3320	source/client/ProjectG/lobbymain.cpp
+0xc		E1	00ab33d6	00ab3320	FUN_00ab3320	source/client/ProjectG/lobbymain.cpp
+0xc		E1	00ab33fa	00ab3320	FUN_00ab3320	source/client/ProjectG/lobbymain.cpp
+0xc	GAME	E1 E4	00ab3420	00ab3320	FUN_00ab3320	source/client/ProjectG/lobbymain.cpp
+0xd	?	E1	00505d3c	00505bc0	FUN_00505bc0	source/client/ProjectG/lobbymain.cpp
+0xd	?	E1	00505d7e	00505bc0	FUN_00505bc0	source/client/ProjectG/lobbymain.cpp
+0xd	?	E1	00509ea0	00509960	FUN_00509960	source/client/ProjectG/lobbymain.cpp
+0xd	?	E1	00509ee2	00509960	FUN_00509960	source/client/ProjectG/lobbymain.cpp
+0xe	?	E4	00505cc1	00505bc0	FUN_00505bc0	source/client/ProjectG/lobbymain.cpp
+0xe	GAME	E4	00505e68	00505e20	FUN_00505e20	source/client/ProjectG/lobbymain.cpp
+0xe	?	E4	00509e03	00509960	FUN_00509960	source/client/ProjectG/lobbymain.cpp
+0xf	?	E1 E2 E8 E8 E8	00505467	00505410	FUN_00505410	source/client/ProjectG/lobbymain.cpp
+0xf	?	E1 E2 E8 E8	0065770e	006576e0	FUN_006576e0	source/client/ProjectG/taskmain.cpp
+0xf		E1 E2	006f0031	006efeb0	FUN_006efeb0	source/client/ProjectG/quitwindow.cpp | source/client/ProjectG/randomhouse.cpp
+0xf	?	E1 E2 E8 E8 E8	00afa657	00afa600	FUN_00afa600	
+0xf	GAME	E1 E2 E8 E8	00b2f09d	00b2f070	FUN_00b2f070	source/client/ProjectG/s5/classicserver/classicserver.cpp
+0x10	GAME	E1	00507733	005076c0	FUN_005076c0	source/client/ProjectG/lobbymain.cpp
+0x11	?	E4	0069d6ed	0069d6b0	CGolfTask::OnInitFinished	source/client/ProjectG/golftask.cpp
+0x11	?		0072f647	0072f030	FUN_0072f030	source/client/ProjectG/golfbg.cpp | source/client/ProjectG/golfcadie.cpp
+0x12	?	EB(0x32)	006945dd	00694110	FUN_00694110	source/client/ProjectG/golfrule.cpp
+0x12	MSN	E4 ES	00a52a12	00a52930	FUN_00a52930	source/client/ProjectG/msnunit.cpp
+0x13	GAME	EB(0x4)	00717445	007172d0	CCamera::OnProcess	source/client/ProjectG/camera.cpp
+0x13	MSN	E2	0080ef1b	0080eeb0	CPost_SendDlg::OnPostFriendListBtnUp	source/client/ProjectG/post_senddlg.cpp
+0x13	MSN	E2	00aaf40b	00aaf3a0	FrGiftDlg::OnFriendBtnUp	source/client/ProjectG/giftdlg.cpp
+0x14	?	EB(0x5)	00680850	006807e0	FUN_006807e0	source/client/ProjectG/golfrule.cpp
+0x14	?	EB(0x5)	0068d08c	0068c2f0	CGolfRule::ChangeGameMode	source/client/ProjectG/golfrule.cpp
+0x14	?	EB(0x5)	0069b85e	0069b5c0	FUN_0069b5c0	source/client/ProjectG/golfrule.cpp | source/client/ProjectG/golftask.cpp
+0x14	MSN		009c6da2	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x15	GAME	E1	00743106	00743000	CGolfPlayer::Cancel_PowerShot	source/client/ProjectG/golfplayer.obj
+0x15	?	E1	00743a56	00743920	CGolfPlayer::OnProcess	source/client/ProjectG/golfplayer.obj
+0x16	MSN		0047d884	0047d770	FUN_0047d770	
+0x16	GAME	E1	006ad223	006ad110	FUN_006ad110	source/client/ProjectG/club.cpp
+0x16	GAME	E1	006ad2eb	006ad110	FUN_006ad110	source/client/ProjectG/club.cpp
+0x16	MSN		009c1849	009c17e0	FUN_009c17e0	source/client/ProjectG/taskmanager.obj
+0x16	MSN		009c8205	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x16	MSN		00adc554	00adc440	FUN_00adc440	source/client/ProjectG/logoutdlg.cpp | source/client/ProjectG/mailboxdlg.cpp
+0x17	GAME	E4	00686031	00685fe0	CGolfRule::OnForgetDlgResult	source/client/ProjectG/golfrule.cpp
+0x17	GAME	E4	0075d803	0075d700	CItemWindow::UseItem	source/client/ProjectG/itemwindow.cpp
+0x17	MSN	ES	00ac5da6	00ac5c90	FUN_00ac5c90	source/client/ProjectG/addfrienddlg.cpp | source/client/ProjectG/awarddlg.cpp
+0x18	GAME	E2	006e56c8	006e5690	CHeadIcon::SendIcon	source/client/ProjectG/headicon.cpp
+0x18	MSN	E4 ES	00ac61b3	00ac5fa0	FUN_00ac5fa0	source/client/ProjectG/addfrienddlg.cpp | source/client/ProjectG/awarddlg.cpp
+0x19	GAME	EB(0xc)	007148c2	00714350	FUN_00714350	source/client/ProjectG/camera.cpp
+0x19	?	EB(0xc)	0074c6c5	0074c680	FUN_0074c680	source/client/ProjectG/gui_control.obj
+0x19	MSN	E4	008fdbd3	008fdb90	FUN_008fdb90	source/client/ProjectG/messengerdlg.cpp
+0x19	MSN	E4	009c75c2	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x1a	?	E1 EB(0x19)	006736d8	006735c0	FUN_006735c0	source/client/ProjectG/golfrule.cpp
+0x1a	MSN	E4	008fdcdc	008fdc90	FUN_008fdc90	source/client/ProjectG/messengerdlg.cpp
+0x1b	?	EB(0x26)	00684bde	00684ba0	FUN_00684ba0	source/client/ProjectG/golfrule.cpp
+0x1b	MSN	E4	008fdd7c	008fdd30	FUN_008fdd30	source/client/ProjectG/messengerdlg.cpp
+0x1c	GAME		006925dd	00692480	FUN_00692480	source/client/ProjectG/golfrule.cpp
+0x1c	GAME		006927d8	00692480	FUN_00692480	source/client/ProjectG/golfrule.cpp
+0x1c	GAME		00692864	00692480	FUN_00692480	source/client/ProjectG/golfrule.cpp
+0x1c	?		00693514	00693490	CGolfRule::DoToDefaultCamera	source/client/ProjectG/golfrule.cpp
+0x1c	?		006954ff	00695440	CGolfRule::DoDespairPose	source/client/ProjectG/golfrule.cpp
+0x1c	GAME		00695933	006958b0	CGolfRule::DoTimeOut	source/client/ProjectG/golfrule.cpp
+0x1c	?		00695ce2	00695c20	CGolfRule::DoHoleInPose	source/client/ProjectG/golfrule.cpp
+0x1c	MSN	E4 ES	0090345a	00903400	FUN_00903400	source/client/ProjectG/messengerdlg.cpp
+0x1d	MSN	E1	008ff055	008ff000	CMessengerInfo::SetMyStatus	source/client/ProjectG/messengerdlg.cpp
+0x1d	MSN	E1	009c7d59	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x1d	?	E1 E2 EB(0x25) E4	00aa275a	00aa25f0	FUN_00aa25f0	
+0x1d	GAME	E1 E2 EB(0x25) E4	00aa2cba	00aa25f0	FUN_00aa25f0	
+0x1e	MSN	E4 ES	008fd686	008fd4e0	FUN_008fd4e0	source/client/ProjectG/messengerchatdlg.cpp | source/client/ProjectG/messengerdlg.cpp
+0x1e	MSN	E4 ES	0090670b	009061e0	FUN_009061e0	source/client/ProjectG/messengerdlg.cpp
+0x1e	?	E1 E1 E4 E4	00a86879	00a867a0	FUN_00a867a0	source/client/ProjectG/shopmain.cpp
+0x1f	MSN	E4 ES	0090333a	009032e0	FUN_009032e0	source/client/ProjectG/messengerdlg.cpp
+0x1f	?	ES E4 ES E1 E2 EB(0x25)	00aaf934	00aaf840	FUN_00aaf840	source/client/ProjectG/giftdlg.cpp
+0x1f		ES E4 ES E1 E2 EB(0x25)	00aafa6a	00aaf840	FUN_00aaf840	source/client/ProjectG/giftdlg.cpp
+0x1f	GAME	ES E4 ES E1 E2 EB(0x25)	00aafb71	00aaf840	FUN_00aaf840	source/client/ProjectG/giftdlg.cpp
+0x20	GAME	E1 E4	00566ff8	00566f30	FUN_00566f30	
+0x20	GAME	E1 E4	0060508a	00605060	FUN_00605060	source/client/ProjectG/realmyroommainui.cpp
+0x20	GAME	E1 E4	0060e4ee	0060e4b0	FUN_0060e4b0	source/client/ProjectG/realmyroommainui.cpp
+0x20	GAME	E1 EB(0x28)	0060e5ac	0060e550	FUN_0060e550	source/client/ProjectG/realmyroommainui.cpp
+0x20	GAME	E1 E4 E4	0060e64b	0060e600	FUN_0060e600	source/client/ProjectG/realmyroommainui.cpp
+0x20	?	E1 EB(0x8)	0060e765	0060e6c0	FUN_0060e6c0	source/client/ProjectG/realmyroommainui.cpp
+0x20	GAME	E1 E4 EB(0x10)	0060e84e	0060e810	FUN_0060e810	source/client/ProjectG/realmyroommainui.cpp
+0x20	GAME	E1 EB(0x201)	00613759	00613590	FUN_00613590	source/client/ProjectG/realmyroommainui.cpp
+0x20	GAME	E1 EB(0x18)	006139f1	00613930	FUN_00613930	source/client/ProjectG/realmyroommainui.cpp
+0x20	GAME	E1 E4	00614d84	00614d20	FUN_00614d20	source/client/ProjectG/realmyroommainui.cpp
+0x20	GAME	E1 E4	00614e96	00614de0	FUN_00614de0	source/client/ProjectG/realmyroommainui.cpp
+0x20	GAME	E1 EB(0x201)	0063b401	0063b2b0	FUN_0063b2b0	source/client/ProjectG/shareddoc.cpp
+0x20	GAME	E1 E4	0063b4b9	0063b2b0	FUN_0063b2b0	source/client/ProjectG/shareddoc.cpp
+0x20	GAME	E1 EB(0x28)	0063dddb	0063dd00	FUN_0063dd00	source/client/ProjectG/shareddoc.cpp
+0x20	GAME	E1 EB(0x28)	0063df47	0063de40	FUN_0063de40	source/client/ProjectG/shareddoc.cpp
+0x20	GAME	E1 EB(0x201)	006427b9	00642730	FUN_00642730	source/client/ProjectG/shareddoc.cpp
+0x20	?	E1 EB(0x28)	00653c48	00653be0	FUN_00653be0	source/client/ProjectG/taskmain.cpp
+0x20	?	E1 EB(0x28)	00823c12	00823b70	FUN_00823b70	source/client/ProjectG/ghostmain.cpp
+0x20	GAME	E1 E4	00a8267a	00a82650	FUN_00a82650	source/client/ProjectG/shopmain.cpp
+0x20	GAME	E1 E4	00a9758b	00a971f0	CShopMain::FUN_00a971f0	source/client/ProjectG/shoptask.cpp
+0x20	GAME	E1 EB(0x201)	00a977b5	00a971f0	CShopMain::FUN_00a971f0	source/client/ProjectG/shoptask.cpp
+0x21	MSN	ES E4	009cf86b	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x21	MSN	ES E4	009cffa4	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x21		ES E4	009d042d	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x21	MSN	ES E4	00b0e433	00b0e330	FUN_00b0e330	source/client/ProjectG/pointeventdlg.cpp | source/client/ProjectG/valentineeventdlg.cpp
+0x21	MSN	ES E4	00b0e4d6	00b0e330	FUN_00b0e330	source/client/ProjectG/pointeventdlg.cpp | source/client/ProjectG/valentineeventdlg.cpp
+0x22	GAME		00717d65	00717cc0	CClock::HandleMsg	source/client/ProjectG/clock.cpp | source/client/ProjectG/console.cpp
+0x22	MSN	ES	009c5dd3	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x22	MSN	ES	009c9176	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x23	MSN	EB(0x4b)	00856c22	00856aa0	CIntrusion::DoIntrusionAccess	source/client/ProjectG/intrusion.cpp
+0x23	MSN	EB(0x4b)	009c3ee0	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x23	MSN	EB(0x4b)	009c4b82	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x23	MSN	EB(0x4b)	009c6d6d	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x23	MSN	EB(0x4b)	009d6697	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x23	MSN	EB(0x4b)	00ac1347	00ac03a0	CLobbyTask::OnPacket	source/client/ProjectG/lobbytask.cpp
+0x23	MSN	EB(0x4b)	00af61ed	00af5e00	FUN_00af5e00	source/client/ProjectG/serverdlg.cpp
+0x24	?	E4 E4	005b4277	005b41e0	FUN_005b41e0	source/client/ProjectG/post_recivedlg.cpp
+0x24	MSN	E4	00ac3637	00ac03a0	CLobbyTask::OnPacket	source/client/ProjectG/lobbytask.cpp
+0x25	MSN	ES	009a56f5	009a4f50	ChatManager::SendChatMessage	source/client/ProjectG/hatmanager.cpp
+0x25	MSN	ES	009a609a	009a5950	ChatManager::SendChatMessage2	source/client/ProjectG/hatmanager.cpp | source/client/ProjectG/inputmanager.cpp
+0x26	GAME	E4	004ff359	004ff320	FUN_004ff320	MSVCP71.dll | source/client/ProjectG/realmyroommain.cpp
+0x26	GAME	E4	007b0c37	007b0be0	ntAvatarChatMain::OnEnterTradeShop	source/client/ProjectG/avatar_mainui.cpp
+0x26	MSN	ES ES E4 E1	008fa2eb	008f9fa0	FUN_008f9fa0	
+0x26	MSN	ES ES E4 E1	008fb3a1	008fb340	FUN_008fb340	
+0x26	GAME	E4	00ab32d9	00ab32a0	FUN_00ab32a0	source/client/ProjectG/lobbymain.cpp
+0x27	MSN	ES E4	009cfcbf	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x27	GAME	E1	00ab302a	00ab3000	FUN_00ab3000	source/client/ProjectG/lobbymain.cpp
+0x28	MSN	E4 E1 E2 E4 ES E4	00ac4340	00ac03a0	CLobbyTask::OnPacket	source/client/ProjectG/lobbytask.cpp
+0x29	GAME	E4	0051679c	00516390	FUN_00516390	source/client/ProjectG/lobbymain.cpp
+0x29	MSN	E4 E4	005e1222	005e0ff0	CShopWidget::FUN_005e0ff0	
+0x29	MSN	E4 E4	009cfea2	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x29	MSN	ES ES	009d203f	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x29	MSN	E4 E4	009d40a9	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x29		E4	00ac42e1	00ac03a0	CLobbyTask::OnPacket	source/client/ProjectG/lobbytask.cpp
+0x29	?	E4	00afa1c0	00af9f90	FUN_00af9f90	source/client/ProjectG/userlistdlg.cpp
+0x2a	GAME	ES ES	009a581b	009a4f50	ChatManager::SendChatMessage	source/client/ProjectG/hatmanager.cpp
+0x2a	?	ES ES	009a61c4	009a5950	ChatManager::SendChatMessage2	source/client/ProjectG/hatmanager.cpp | source/client/ProjectG/inputmanager.cpp
+0x2d	?	E2	00598f44	00598e70	CNormalLobbyRoom::FUN_00598e70	source/client/ProjectG/lobbymain.cpp
+0x2d	?	E2	0059a3f0	0059a390	CGrandPrixLobbyRoom::FUN_0059a390	source/client/ProjectG/lobbymain.cpp
+0x2e	?		00698bfa	006964c0	CGolfRule::HandleMsg	source/client/ProjectG/golfrule.cpp
+0x2f	GAME	E4 E1	006a0e53	0069eef0	CGolfTask::OnPacket	source/client/ProjectG/golftask.cpp
+0x2f	GAME	E4 E1	006a3df0	0069eef0	CGolfTask::OnPacket	source/client/ProjectG/golftask.cpp
+0x2f	GAME	E4 E1	0078e985	0078e6d0	FUN_0078e6d0	source/client/ProjectG/scoreboard.cpp
+0x2f	GAME	E4 E1	0089a026	00899ff0	FUN_00899ff0	source/client/ProjectG/user_info.cpp
+0x2f	GAME	E4 E1	008a5f9f	008a5f70	FUN_008a5f70	source/client/ProjectG/user_info.cpp
+0x2f	GAME	E4 E1	008a9e64	008a9ae0	CUserInfo::SetInfo	
+0x30	GAME	E1	00676adf	00676a90	FUN_00676a90	source/client/ProjectG/golfrule.cpp
+0x30	?	E1	0074c554	0074c480	FUN_0074c480	source/client/ProjectG/gui_control.obj
+0x31	GAME	EB(0x109)	006880a9	00688010	FUN_00688010	source/client/ProjectG/golfrule.cpp
+0x32	?	E1	0050b332	0050acd0	CLobbyMain::ProcessLobbyUI	source/client/ProjectG/lobbymain.cpp
+0x33	GAME	E1 ES	00686148	00686110	CGolfRule::SendReportError	source/client/ProjectG/golfrule.cpp
+0x33	?	E1 ES	00992827	009926f0	RecordExceptionInfo	source/shared/exceptionreport.cpp
+0x34	?		005455c3	00545570	CGolfRuleHoleInOne::FUN_00545570	
+0x34	GAME		006a5283	006a5230	CGolfRule30Battle::FUN_006a5230	source/client/ProjectG/golfrule30battle.cpp
+0x34	GAME		006a8046	006a7fb0	CGolfRuleBase::FUN_006a7fb0	source/client/ProjectG/golfrulebase.cpp
+0x34	GAME		006a8b1f	006a8ad0	CGolfRuleGuildMatch::FUN_006a8ad0	source/client/ProjectG/golfruleguildmatch.cpp
+0x35	GAME	E1 E1	0068a84a	00689f20	CGolfRule::SetHoleInPose_Team	source/client/ProjectG/golfrule.cpp
+0x36	GAME	E1	00676bbf	00676b80	CGolfRule::GoStopDlgResult	source/client/ProjectG/golfrule.cpp
+0x37	?		006eff2c	006efeb0	FUN_006efeb0	source/client/ProjectG/quitwindow.cpp | source/client/ProjectG/randomhouse.cpp
+0x38	?	ES	008cee19	008ced50	FUN_008ced50	source/client/ProjectG/optiondlg.cpp
+0x39	?	E4	00a9a902	00a9a8b0	FrCaddieInfoDlg::OnSignUpConfirmDlgResult	source/client/ProjectG/caddieinfodlg.cpp
+0x3a	GAME		00676c95	00676c50	FUN_00676c50	source/client/ProjectG/golfrule.cpp
+0x3b	?	E4	008ce9b2	008ce910	FUN_008ce910	source/client/ProjectG/optiondlg.cpp
+0x3c	?	E2 E4 ES E1	00614f2c	00614ef0	FUN_00614ef0	source/client/ProjectG/realmyroommainui.cpp
+0x3c	?	E2 E4 ES E1	007b20f6	007b20a0	FUN_007b20a0	source/client/ProjectG/avatar_mainui.cpp
+0x3c		E2	0080ef01	0080eeb0	CPost_SendDlg::OnPostFriendListBtnUp	source/client/ProjectG/post_senddlg.cpp
+0x3c	?	E2 E4 ES E1	008fb507	008fb4b0	FUN_008fb4b0	
+0x3c	?	E2 E4 ES E1	009031fa	009031a0	FUN_009031a0	source/client/ProjectG/messengerdlg.cpp
+0x3c		E2	00aaf3f1	00aaf3a0	FrGiftDlg::OnFriendBtnUp	source/client/ProjectG/giftdlg.cpp
+0x3c	?	E2 E4 ES E1	00adcb76	00adcb30	FUN_00adcb30	source/client/ProjectG/mailboxdlg.cpp | source/client/ProjectG/makeroomdlg.cpp
+0x3d	?		00868448	00868320	FUN_00868320	source/client/ProjectG/browser.cpp
+0x3d	GAME		0086903a	00868de0	FUN_00868de0	source/client/ProjectG/browser.cpp
+0x3d	GAME		00a869d9	00a86990	FUN_00a86990	source/client/ProjectG/shopmain.cpp
+0x3e	?	E2 ES	0059bd55	0059b980	CNormalLobbyRoom::FUN_0059b980	source/client/ProjectG/lobbymain.cpp
+0x3e	?	E2 ES	00acf60a	00acf4e0	FUN_00acf4e0	source/client/ProjectG/detailedroominfodlg.cpp
+0x3f	GAME	E4	00503920	005038d0	FUN_005038d0	source/client/ProjectG/lobbymain.cpp
+0x3f	GAME	E4	0069507a	00694c30	CGolfRule::ProcessObserver	source/client/ProjectG/golfrule.cpp
+0x3f	?	E4	0069d80f	0069d6b0	CGolfTask::OnInitFinished	source/client/ProjectG/golftask.cpp
+0x40	GAME	EB(0xfb) E1 E4	006a1c4f	0069eef0	CGolfTask::OnPacket	source/client/ProjectG/golftask.cpp
+0x41		E4 ES	009a49ed	009a47a0	ChatManager::CheckChatCommand	source/client/ProjectG/hatmanager.cpp
+0x41		E4 ES	009a4a41	009a47a0	ChatManager::CheckChatCommand	source/client/ProjectG/hatmanager.cpp
+0x41	?	E4 ES	009a4a9b	009a47a0	ChatManager::CheckChatCommand	source/client/ProjectG/hatmanager.cpp
+0x42	GAME	E1 E4	0069468b	00694110	FUN_00694110	source/client/ProjectG/golfrule.cpp
+0x43	?		0051f3a3	0051f2e0	FUN_0051f2e0	
+0x43	?		00658992	00658890	FUN_00658890	source/client/ProjectG/taskmain.cpp
+0x43	?		00902226	00902090	FUN_00902090	source/client/ProjectG/messengerdlg.cpp
+0x43	?		00ab938e	00ab90f0	CLobbyMain::OnInviteDlgResult	source/client/ProjectG/lobbymain.cpp
+0x43	GAME		00ac497b	00ac03a0	CLobbyTask::OnPacket	source/client/ProjectG/lobbytask.cpp
+0x47	?		0065918c	006590e0	CTaskMain::OnUnderBar_RankingUp	source/client/ProjectG/taskmain.cpp
+0x48	GAME	E1	009b76bd	009b7690	FUN_009b7690	source/client/ProjectG/soundmanager.cpp | source/client/ProjectG/taskmanager.obj
+0x49	GAME		00688e2b	00688af0	FUN_00688af0	source/client/ProjectG/golfrule.cpp
+0x4a	GAME	E4	00688d81	00688af0	FUN_00688af0	source/client/ProjectG/golfrule.cpp
+0x4a			00688e15	00688af0	FUN_00688af0	source/client/ProjectG/golfrule.cpp
+0x4b	GAME	E1 E1 E4 EB(0x201)	00aa73b5	00aa7240	FUN_00aa7240	source/client/ProjectG/fortunedlg.cpp
+0x4d	?	E4 E4	005b4134	005b40c0	FUN_005b40c0	source/client/ProjectG/post_recivedlg.cpp
+0x4e	?	E4 E1 E4	009a4926	009a47a0	ChatManager::CheckChatCommand	source/client/ProjectG/hatmanager.cpp
+0x4e		E4 E1	009a497d	009a47a0	ChatManager::CheckChatCommand	source/client/ProjectG/hatmanager.cpp
+0x4f	GAME	E1	009a4d94	009a4cc0	FUN_009a4cc0	source/client/ProjectG/hatmanager.cpp
+0x4f	GAME	E1	009a53f7	009a4f50	ChatManager::SendChatMessage	source/client/ProjectG/hatmanager.cpp
+0x4f	GAME	E1	009a55b4	009a4f50	ChatManager::SendChatMessage	source/client/ProjectG/hatmanager.cpp
+0x54	GAME	ES	009a5600	009a4f50	ChatManager::SendChatMessage	source/client/ProjectG/hatmanager.cpp
+0x54	?	ES	009a5f6d	009a5950	ChatManager::SendChatMessage2	source/client/ProjectG/hatmanager.cpp | source/client/ProjectG/inputmanager.cpp
+0x55	?	E1	0049784f	00497180	FUN_00497180	
+0x55	GAME	E1	009c3e29	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x57	?	ES	00a79daf	00a79c20	FUN_00a79c20	source/client/ProjectG/gmtoolkit.cpp
+0x5a	GAME	E1	00af8b8a	00af8b50	FUN_00af8b50	source/client/ProjectG/trainingdlg.cpp
+0x5a	GAME	E1	00af9015	00af8ea0	FrTrainingDlg::OnTrainingBtnUp	source/client/ProjectG/trainingdlg.cpp | source/client/ProjectG/userlistdlg.cpp
+0x5a	GAME	E1	00b1b92a	00b1b450	FUN_00b1b450	source/client/ProjectG/familymain.cpp
+0x5c	?		0050fb4f	0050fb20	FUN_0050fb20	source/client/ProjectG/lobbymain.cpp
+0x5c	GAME		00a869be	00a86990	FUN_00a86990	source/client/ProjectG/shopmain.cpp
+0x5d	GAME		00694d38	00694c30	CGolfRule::ProcessObserver	source/client/ProjectG/golfrule.cpp
+0x60	GAME	E2	00a773f7	00a77390	FUN_00a77390	source/client/ProjectG/gmtoolkit.cpp
+0x61	GAME	E4	00a771a6	00a770c0	FUN_00a770c0	source/client/ProjectG/gmtoolkit.cpp
+0x61	GAME	E4	00a77316	00a77220	FUN_00a77220	source/client/ProjectG/gmtoolkit.cpp
+0x63	GAME	E1 E4	007a3d07	007a3cb0	FUN_007a3cb0	source/client/ProjectG/avatar_avatar.cpp
+0x63	GAME	E1 EB(0x4) EB(0x4) EB(0x4)	007a3e25	007a3d60	ntAvatar::SendMove	source/client/ProjectG/avatar_avatar.cpp
+0x63	GAME	E1 E4	007a4877	007a4820	FUN_007a4820	source/client/ProjectG/avatar_avatar.cpp
+0x63	?	E1 ES	007a5066	007a5000	FUN_007a5000	source/client/ProjectG/avatar_avatar.cpp
+0x63	GAME	E1 EB(0x4) EB(0x4) EB(0x4)	007ae400	007acdb0	ntAvatarChatMain::HandleMsg	source/client/ProjectG/avatar_main.cpp
+0x63	?	E1 EB(0x4)	00ab8df8	00ab8d60	FUN_00ab8d60	source/client/ProjectG/lobbymain.cpp
+0x63	?	E1 ES	00ab8e43	00ab8d60	FUN_00ab8d60	source/client/ProjectG/lobbymain.cpp
+0x64	?	E4 E4	00a7ffed	00a7ffb0	FUN_00a7ffb0	source/client/ProjectG/deleteitem.cpp | source/client/ProjectG/mascotinfodlg.cpp
+0x65	GAME	EB(0x4)	0069c586	0069bb50	CGolfRule::OnProcess	source/client/ProjectG/golfrule.cpp | source/client/ProjectG/golftask.cpp
+0x66	GAME	ES	00653b70	00653b40	FUN_00653b40	source/client/ProjectG/taskmain.cpp
+0x66	GAME	ES	006704e0	006704b0	FUN_006704b0	source/client/ProjectG/golfrule.cpp
+0x67	GAME		0065d0ee	0065cfe0	FUN_0065cfe0	source/client/ProjectG/taskmain.cpp
+0x67	?		00681a6f	00681940	FUN_00681940	source/client/ProjectG/golfrule.cpp
+0x68	GAME	E4	00aa4eee	00aa4dd0	FUN_00aa4dd0	source/client/ProjectG/compounddlg.cpp | source/client/ProjectG/downgradedlg.cpp
+0x69	GAME	EB(0x240)	004939fc	004939b0	FUN_004939b0	source/client/ProjectG/clientsetting.cpp
+0x69	?	EB(0x240)	008ce8a1	008ce6a0	FrOptionDlg::CloseDlg	source/client/ProjectG/optiondlg.cpp
+0x6b	GAME	E4 E1	00a9a812	00a9a780	FrCaddieInfoDlg::SendCaddieWarningCheckOption	source/client/ProjectG/caddieinfodlg.cpp
+0x6b	GAME	E4 E1	00ac918c	00ac90b0	?OnOkBtnUp@FrCaddieWarningDlg@@IAEXXZ	source/client/ProjectG/caddiewarningdlg.cpp | source/client/ProjectG/changeroominfodlg.cpp
+0x6e	GAME	E4	00b0ff4f	00b0ff20	NtValentineEventDlg::OnCombine2BtnUp	source/client/ProjectG/valentineeventdlg.cpp
+0x6e	GAME	E4	00b1005f	00b10030	FUN_00b10030	source/client/ProjectG/valentineeventdlg.cpp
+0x6f	GAME	E4	00b0fd4f	00b0fd20	NtValentineEventDlg::OnCombine0BtnUp	source/client/ProjectG/valentineeventdlg.cpp
+0x6f	GAME	E4	00b0fe4f	00b0fe20	NtValentineEventDlg::OnCombine1BtnUp	source/client/ProjectG/valentineeventdlg.cpp
+0x70	GAME		008e54af	008e5470	FUN_008e5470	source/client/ProjectG/scratchdlg.cpp
+0x71	GAME	E4 EB(0xd)	008eceb4	008ece60	FUN_008ece60	source/client/ProjectG/scratchdlg.cpp
+0x73	?	E4 ES	00a80754	00a80680	FUN_00a80680	source/client/ProjectG/mascotinfodlg.cpp
+0x74	GAME		0062ff2e	0062fee0	FUN_0062fee0	source/client/ProjectG/shareddoc.cpp
+0x75	GAME		0062ffb5	0062ff70	CSharedDoc::SendTradeCloseShop	source/client/ProjectG/shareddoc.cpp
+0x76	GAME		0062baaa	0062ba80	FUN_0062ba80	source/client/ProjectG/shareddoc.cpp
+0x77	GAME	E4	0062bb27	0062bae0	FUN_0062bae0	source/client/ProjectG/shareddoc.cpp
+0x78	GAME	E4	0062bbb7	0062bb70	FUN_0062bb70	source/client/ProjectG/shareddoc.cpp
+0x79	GAME	ES	006368dc	00636880	FUN_00636880	source/client/ProjectG/shareddoc.cpp
+0x7a	GAME		00630039	0062fff0	FUN_0062fff0	source/client/ProjectG/shareddoc.cpp
+0x7b	GAME		006300b9	00630070	FUN_00630070	source/client/ProjectG/shareddoc.cpp
+0x7c	GAME	E4 EB(0xac)	008f7d2c	008f7cb0	FUN_008f7cb0	source/client/ProjectG/tradedlg.cpp
+0x7d	GAME	E4 EB(0xac)	0063014a	006300f0	FUN_006300f0	source/client/ProjectG/shareddoc.cpp
+0x81	?		0059ea34	0059e9f0	FUN_0059e9f0	source/client/ProjectG/lobbymain.cpp
+0x81	?		006587a6	006586c0	FUN_006586c0	source/client/ProjectG/taskmain.cpp
+0x81	?		00abe111	00abc140	CLobbyMain::HandleMsg	source/client/ProjectG/lobbymain.cpp | source/client/ProjectG/lobbytask.cpp
+0x82	?		00654031	00654000	FUN_00654000	source/client/ProjectG/taskmain.cpp
+0x82	?		00ab668a	00ab6620	FUN_00ab6620	source/client/ProjectG/lobbymain.cpp
+0x83			00af60ac	00af5e00	FUN_00af5e00	source/client/ProjectG/serverdlg.cpp
+0x88	GAME	EB(0x10)	00a5d19b	00a5d160	GameGuardMsgHandler::Process	source/client/ProjectG/ggc_wrapper.cpp | source/client/ProjectG/ccrc32.cpp
+0x89	GAME		007240af	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x8b	GAME		00a528e5	00a52870	FUN_00a52870	source/client/ProjectG/msnunit.cpp
+0x8c	GAME		0086906c	00868de0	FUN_00868de0	source/client/ProjectG/browser.cpp
+0x8d	GAME	E4	00b0d000	00b0cfc0	FUN_00b0cfc0	source/client/ProjectG/pointeventdlg.cpp
+0x8e	GAME		00b0bced	00b0bcc0	FUN_00b0bcc0	source/client/ProjectG/pointeventdlg.cpp
+0x8f	GAME	E2 E4	0072159b	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x8f	GAME	E2 E2	00a75db0	00a75d80	FUN_00a75d80	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 EB(?)	00a75e45	00a75e00	FUN_00a75e00	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E1	00a76127	00a75fd0	CGMToolkit::CommandWeather	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4	00a761eb	00a761a0	FUN_00a761a0	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4	00a762bc	00a76260	FUN_00a76260	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4 E4 E4 E1 E1	00a766aa	00a76610	FUN_00a76610	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4 E4 E4 E1 E1	00a767f6	00a76610	FUN_00a76610	source/client/ProjectG/gmtoolkit.cpp
+0x8f	?	E2 ES	00a769bf	00a76960	FUN_00a76960	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4 E1	00a76fec	00a76f30	FUN_00a76f30	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4	00a77175	00a770c0	FUN_00a770c0	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4	00a772e5	00a77220	FUN_00a77220	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2	00a7741e	00a77390	FUN_00a77390	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E1 E1	00a775f6	00a77510	CGMToolkit::CommandWind	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4 ES	00a777ae	00a77690	CGMToolkit::CommandIdentity	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4 ES	00a7782b	00a77690	CGMToolkit::CommandIdentity	source/client/ProjectG/gmtoolkit.cpp
+0x8f		E2 E4 E4 E4	00a77a54	00a778f0	FUN_00a778f0	source/client/ProjectG/gmtoolkit.cpp
+0x8f		E2 E4 E4	00a77ce1	00a77bc0	CGMToolkit::CommandGoldenBell	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4 EB(0x14)	00a7822b	00a781f0	FUN_00a781f0	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4	00a78353	00a78300	FUN_00a78300	source/client/ProjectG/gmtoolkit.cpp
+0x8f	GAME	E2 E4	00a7841b	00a783c0	FUN_00a783c0	source/client/ProjectG/gmtoolkit.cpp
+0x91	?	ES	00ae5b4f	00ae59e0	FUN_00ae59e0	source/client/ProjectG/parannickdlg.cpp | source/client/ProjectG/passworddlg.cpp
+0x93	?	E4	0060f782	0060f6f0	FUN_0060f6f0	source/client/ProjectG/realmyroommainui.cpp
+0x94	?	E4	0060f882	0060f7f0	FUN_0060f7f0	source/client/ProjectG/realmyroommainui.cpp
+0x98	GAME		00596597	00596550	FUN_00596550	source/client/ProjectG/lobbymain.cpp
+0x98	?		00658fb9	00658ee0	CTaskMain::FUN_00658ee0	source/client/ProjectG/taskmain.cpp
+0x9a	GAME	E1 E4 ES	009c9337	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x9a	?	E1 E4 ES	00a8070d	00a80680	FUN_00a80680	source/client/ProjectG/mascotinfodlg.cpp
+0x9c	GAME		0069cd00	0069ccd0	FUN_0069ccd0	source/client/ProjectG/golfrule.cpp | source/client/ProjectG/golftask.cpp
+0x9c	GAME		008a93a4	008a9290	FUN_008a9290	
+0x9c	GAME		009be7d4	009be760	FUN_009be760	source/client/ProjectG/taskmanager.obj
+0x9d	GAME	E1 E2	00855f58	00855f20	FUN_00855f20	source/client/ProjectG/intrusion.cpp
+0x9d	GAME	E1 E2	00856632	008565f0	FUN_008565f0	source/client/ProjectG/intrusion.cpp
+0x9d	GAME	E1 EB(0xf2)	0085790e	008572d0	CIntrusion::PacketAnalysis	source/client/ProjectG/intrusion.cpp | source/client/ProjectG/voiceitem.cpp
+0x9e	?		00868371	00868320	FUN_00868320	source/client/ProjectG/browser.cpp
+0xa0		E1	008683bd	00868320	FUN_00868320	source/client/ProjectG/browser.cpp
+0xa1	GAME	E1	00870df3	00870d90	FUN_00870d90	source/client/ProjectG/browser.cpp
+0xa2			008683df	00868320	FUN_00868320	source/client/ProjectG/browser.cpp
+0xa2	?		00868414	00868320	FUN_00868320	source/client/ProjectG/browser.cpp
+0xa4	?		008683f7	00868320	FUN_00868320	source/client/ProjectG/browser.cpp
+0xa5	GAME		008fa41d	008fa3f0	FUN_008fa3f0	
+0xa5	GAME		009c83be	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0xa7	GAME	E4 E4 E1	008fb160	008fb120	FUN_008fb120	
+0xa8	GAME	E4 E4 E1	00901bf5	00901b60	FUN_00901b60	source/client/ProjectG/messengerdlg.cpp
+0xaa	?	EB(0x109)	00afa8a6	00afa810	FUN_00afa810	
+0xab	?	E4 E4	0060f63f	0060f5c0	FUN_0060f5c0	source/client/ProjectG/realmyroommainui.cpp
+0xad	GAME	E4	00b123d0	00b123a0	FUN_00b123a0	source/client/ProjectG/worldtoureventdlg.cpp | source/client/ProjectG/birthdayeventdlg.cpp
+0xae	GAME	E1 E1 E4	00907a21	009079e0	FUN_009079e0	source/client/ProjectG/contentsdoc.cpp
+0xb0	GAME	E4	007d1572	007d1500	FUN_007d1500	source/client/ProjectG/questinfodlg.cpp | source/client/ProjectG/quizdlg.cpp
+0xb2	?	E4	0060f982	0060f8f0	FUN_0060f8f0	source/client/ProjectG/realmyroommainui.cpp
+0xb2	?	E4	0060fac6	0060fa40	FUN_0060fa40	source/client/ProjectG/realmyroommainui.cpp
+0xb4	?	E1 E2	0090215b	00902090	FUN_00902090	source/client/ProjectG/messengerdlg.cpp
+0xb4	GAME	E1 E2	009ce8ff	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0xb4	GAME	E1 E2	00ac48bc	00ac03a0	CLobbyTask::OnPacket	source/client/ProjectG/lobbytask.cpp
+0xb5	?	E4 E4	0065b9e0	0065b8a0	FUN_0065b8a0	source/client/ProjectG/taskmain.cpp
+0xb7	GAME	E4 E1	00b2dfbf	00b2df70	FUN_00b2df70	source/client/ProjectG/s5/utilities.cpp
+0xb8	?	EB(0x6b)	00610a7c	00610980	FUN_00610980	source/client/ProjectG/realmyroommainui.cpp
+0xb9	GAME	E1 E4 E1	0059100d	00590f00	FUN_00590f00	
+0xb9	?	E1 E4 ES E2 E4	007e1e25	007e1df0	FUN_007e1df0	source/client/ProjectG/ucccopydlg.cpp | source/client/ProjectG/uccdrawdlg.cpp
+0xb9	GAME	E1 E4 E1	007e98a0	007e9840	FUN_007e9840	source/client/ProjectG/ucclibrary.cpp
+0xb9	GAME	E1 E4 E1	007ee54f	007ee460	FUN_007ee460	source/client/ProjectG/uccmanager.cpp
+0xb9	GAME	E1 E4 E1	007ef0f6	007ef040	FUN_007ef040	source/client/ProjectG/uccmanager.cpp
+0xb9	?	E1 E4 ES	009a99db	009a92f0	NetResourceManager::WorkUploadThread	source/client/ProjectG/netresourcemanager.cpp
+0xb9	?	E1 E4 ES ES	009a9a65	009a92f0	NetResourceManager::WorkUploadThread	source/client/ProjectG/netresourcemanager.cpp
+0xba	GAME	ES E4	00516720	00516390	FUN_00516390	source/client/ProjectG/lobbymain.cpp
+0xba	?	ES E4	009035b1	00903510	FUN_00903510	source/client/ProjectG/messengerdlg.cpp
+0xba	?	ES E4	00afa171	00af9f90	FUN_00af9f90	source/client/ProjectG/userlistdlg.cpp
+0xbd	?	E4	007f3c6f	007f3be0	FUN_007f3be0	source/client/ProjectG/ccardbook.cpp
+0xbd	GAME	E4	007f49d5	007f4930	FUN_007f4930	source/client/ProjectG/ccardbook.cpp
+0xbe	GAME	E1 E1 E1	00ad28f1	00ad2440	FrQuickStartSettingDlg::UpdateData	source/client/ProjectG/dlgquickstartsetting.cpp
+0xbf	GAME	E1	00ad1985	00ad1940	FUN_00ad1940	source/client/ProjectG/dlgquickstartsetting.cpp
+0xc0	?	E4 E1	00ab73c6	00ab7300	FUN_00ab7300	source/client/ProjectG/lobbymain.cpp
+0xc0	GAME	E4 E1	00abe772	00abc140	CLobbyMain::HandleMsg	source/client/ProjectG/lobbymain.cpp | source/client/ProjectG/lobbytask.cpp
+0xc1	GAME	E1	00657d4a	00657cd0	FUN_00657cd0	source/client/ProjectG/taskmain.cpp
+0xc1	GAME	E1	00657db7	00657cd0	FUN_00657cd0	source/client/ProjectG/taskmain.cpp
+0xc1	GAME	E1	00657e25	00657cd0	FUN_00657cd0	source/client/ProjectG/taskmain.cpp
+0xc1	?	E1	00658644	006584e0	CTaskMain::FUN_006584e0	source/client/ProjectG/taskmain.cpp
+0xc1	GAME	E1	00818c5e	00818c20	FUN_00818c20	source/client/ProjectG/ghostgamedlg.cpp
+0xc1	?	E1	0082117c	00821130	FUN_00821130	source/client/ProjectG/ghosthandler.cpp
+0xc1	?	E1	00823754	00823700	FUN_00823700	source/client/ProjectG/ghostmain.cpp
+0xc1	?	E1	008268a1	00826850	CGhostMain::Initialize	source/client/ProjectG/ghostmain.cpp
+0xc1	?	E1	008befc5	008bef30	FUN_008bef30	source/client/ProjectG/bongdarishopdlg.cpp
+0xc1	?	E1	008c09a1	008c0340	FrBongdariShopDlg::FrBongdariShopDlg	source/client/ProjectG/bongdarishopdlg.cpp
+0xc1	GAME	E1	008e13f6	008e1390	FUN_008e1390	source/client/ProjectG/recycledlg.cpp
+0xc1	?	E1	008e1ad0	008e15f0	FrRecycleDlg::FrRecycleDlg	source/client/ProjectG/recycledlg.cpp
+0xc1	?	E1	008ec33c	008ec050	FrScratchDlg::FrScratchDlg	source/client/ProjectG/scratchdlg.cpp
+0xc1	?	E1	008ec9a8	008ec940	FUN_008ec940	source/client/ProjectG/scratchdlg.cpp
+0xc1	?	E1	00b2a935	00b2a740	FUN_00b2a740	source/client/ProjectG/rankingdlg.cpp
+0xc1	GAME	E1	00b2aa75	00b2a9d0	FUN_00b2a9d0	
+0xc2	GAME	E1 E1 E4 E4	0081f466	0081f3a0	FUN_0081f3a0	source/client/ProjectG/ghostgamedlg.cpp
+0xc2	GAME	E1 ES ES	00820a3d	00820a10	FUN_00820a10	source/client/ProjectG/ghosthandler.cpp
+0xc2	?	E1 E4	008211ae	00821130	FUN_00821130	source/client/ProjectG/ghosthandler.cpp
+0xc2	GAME	E1 ES	00821512	008214d0	CGhostHandler::UploadComplete	source/client/ProjectG/ghosthandler.cpp
+0xc2	GAME	E1 E1 E1 E4 E4	00822600	008224f0	FUN_008224f0	source/client/ProjectG/ghosthandler.cpp | source/client/ProjectG/ghostmain.cpp
+0xc2	GAME	E1 E4 E1	008237c5	00823700	FUN_00823700	source/client/ProjectG/ghostmain.cpp
+0xc2	GAME	E1	00827105	00826ea0	FUN_00826ea0	source/client/ProjectG/ghostmain.cpp | source/client/ProjectG/ghostmanager.cpp
+0xc2	?	E1 E4 ES E1	00827b8c	00827a10	CGhostMain::OnInitGhostFinish	source/client/ProjectG/ghostmain.cpp | source/client/ProjectG/ghostmanager.cpp
+0xc2	GAME	E1 E4 E4 E1 E4 E4 E4 E4 E4 E4 E4 E4 E1 E1 E1	0082aa31	0082a9f0	FUN_0082a9f0	source/client/ProjectG/ghostplayer.cpp
+0xc2	?	E1 E4	0082aede	0082ae80	CGhostPlayer::HandleMsg	source/client/ProjectG/ghostplayer.cpp
+0xc2	?	E1 E4	0082b18c	0082ae80	CGhostPlayer::HandleMsg	source/client/ProjectG/ghostplayer.cpp
+0xc8	?	EB(0x3a)	007f3ddb	007f3cd0	FUN_007f3cd0	source/client/ProjectG/ccardbook.cpp
+0xc9	GAME	E1 E4 E1 E4	007d8e7d	007d8e50	FUN_007d8e50	source/client/ProjectG/overlaycursor.cpp
+0xc9	GAME	E1 E4 E1 E4 ES	007d9054	007d9020	FUN_007d9020	source/client/ProjectG/overlaycursor.cpp
+0xca	?	E4 E4	00610b87	00610ae0	FUN_00610ae0	source/client/ProjectG/realmyroommainui.cpp
+0xca	?	E4 E4	007f3b67	007f3ac0	FUN_007f3ac0	source/client/ProjectG/ccardbook.cpp
+0xca	?	E4 E4	008c1f14	008c1ea0	FUN_008c1ea0	source/client/ProjectG/cardboxdlg.cpp
+0xcb	GAME	E4	005053b7	00505380	FUN_00505380	source/client/ProjectG/lobbymain.cpp
+0xcc	?	ES	007fcee0	007fce20	FUN_007fce20	source/client/ProjectG/itemstorage.cpp
+0xcd	?	E4 E2	005a9f69	005a8360	CRealMyRoomTask::OnPacket	
+0xcd	GAME	E4 E2	00625a75	00623500	CRealMyRoomMain::HandleMsg	source/client/ProjectG/realmyroommainui.cpp
+0xcd	GAME	E4 E2	00625af9	00623500	CRealMyRoomMain::HandleMsg	source/client/ProjectG/realmyroommainui.cpp
+0xcd	GAME	E4 E2	007fc6ab	007fc660	FUN_007fc660	source/client/ProjectG/itemstorage.cpp
+0xcd	GAME	E4 E2	007fc75b	007fc710	FUN_007fc710	source/client/ProjectG/itemstorage.cpp
+0xcd	GAME	E4 E2	007fc80b	007fc7c0	FUN_007fc7c0	source/client/ProjectG/itemstorage.cpp
+0xce	GAME	E1 EB(0xb0)	007fca14	007fc930	FUN_007fc930	source/client/ProjectG/itemstorage.cpp
+0xce	GAME	E1 EB(0xb0)	007fcb94	007fcab0	FUN_007fcab0	source/client/ProjectG/itemstorage.cpp
+0xcf	GAME	E1 EB(0xb0)	007fc9ab	007fc930	FUN_007fc930	source/client/ProjectG/itemstorage.cpp
+0xcf	GAME	E1 EB(0xb0)	007fcb2b	007fcab0	FUN_007fcab0	source/client/ProjectG/itemstorage.cpp
+0xd0	?	ES	007fce70	007fce20	FUN_007fce20	source/client/ProjectG/itemstorage.cpp
+0xd1	?	ES ES	007fcf55	007fce20	FUN_007fce20	source/client/ProjectG/itemstorage.cpp
+0xd2	?	E1 ES	007fd024	007fce20	FUN_007fce20	source/client/ProjectG/itemstorage.cpp
+0xd2	?	E1 ES	007fd0b8	007fce20	FUN_007fce20	source/client/ProjectG/itemstorage.cpp
+0xd3	?		00615ead	00615dd0	FUN_00615dd0	source/client/ProjectG/realmyroommainui.cpp
+0xd3	?		006227b3	00622630	CRealMyRoomMain::SelectMenu	source/client/ProjectG/realmyroommainui.cpp
+0xd4	GAME	E1 E8	007fc8ae	007fc870	FUN_007fc870	source/client/ProjectG/itemstorage.cpp
+0xd5	?		005a9f49	005a8360	CRealMyRoomTask::OnPacket	
+0xd8	?	E4	0081342b	008133a0	FUN_008133a0	source/client/ProjectG/itembuffactor.cpp
+0xd9	GAME	E1 E4 ES	0077ad7f	0077ad20	FUN_0077ad20	source/client/ProjectG/privatetrade.cpp
+0xd9	GAME	E1 E4 ES	0077aeef	0077aeb0	FUN_0077aeb0	source/client/ProjectG/privatetrade.cpp
+0xd9	GAME	E1 E4 ES	0077af5e	0077aeb0	FUN_0077aeb0	source/client/ProjectG/privatetrade.cpp
+0xd9	GAME	E1 E4 ES	0077b24f	0077b1b0	CPrivateTrade::HandleMsg	source/client/ProjectG/privatetrade.cpp | source/client/ProjectG/scoreboard.cpp
+0xd9	GAME	E1 E4 ES EB(0x428)	0077b307	0077b1b0	CPrivateTrade::HandleMsg	source/client/ProjectG/privatetrade.cpp | source/client/ProjectG/scoreboard.cpp
+0xd9		E1 E4	0077b370	0077b1b0	CPrivateTrade::HandleMsg	source/client/ProjectG/privatetrade.cpp | source/client/ProjectG/scoreboard.cpp
+0xd9	GAME	E1 E4 ES EB(0x428) EB(0x428)	0077b3b6	0077b1b0	CPrivateTrade::HandleMsg	source/client/ProjectG/privatetrade.cpp | source/client/ProjectG/scoreboard.cpp
+0xd9	GAME	E1 E4 ES	0077b4cc	0077b450	FUN_0077b450	source/client/ProjectG/privatetrade.cpp | source/client/ProjectG/scoreboard.cpp
+0xde	?	ES	007b6adf	007b5a20	ntAvatarChatTask::OnPacket	source/client/ProjectG/avatar_task.cpp
+0xde	GAME	ES	009c6a78	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0xde	?	ES	00ac09fa	00ac03a0	CLobbyTask::OnPacket	source/client/ProjectG/lobbytask.cpp
+0xdf	?	E4 E4 E4	00b0648f	00b06460	FUN_00b06460	source/client/ProjectG/frticketexchangedlg.cpp
+0xe0	GAME	E4 E4 E4 E4	007fe559	007fe510	FUN_007fe510	source/client/ProjectG/cardremove.cpp
+0xe1	?		0059464f	00594610	FUN_00594610	source/client/ProjectG/lobbymain.cpp
+0xe2	GAME	E4	00b0979d	00b09770	FUN_00b09770	source/client/ProjectG/missioneventdlg.cpp
+0xe3	?	E4	0059479f	00594760	FUN_00594760	source/client/ProjectG/lobbymain.cpp
+0xe3	?	E4	00afd269	00afd110	FUN_00afd110	source/client/ProjectG/bingoeventdlg.cpp
+0xe4	GAME		009c6e18	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0xe4	GAME		009c6e53	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0xe5	GAME	E4 E2 E4 E4 E1	00b2cfd3	00b2cfa0	FUN_00b2cfa0	source/client/ProjectG/s5/skinnedtheme.cpp | source/client/ProjectG/s5/utilities.cpp
+0xe6	?	E4	006111f3	00611110	FUN_00611110	source/client/ProjectG/realmyroommainui.cpp
+0xe7	?	E4	00611278	00611110	FUN_00611110	source/client/ProjectG/realmyroommainui.cpp
+0xea	?	E4	00ab1862	00ab1830	FUN_00ab1830	source/client/ProjectG/upgradecaddiedlg.cpp | source/client/ProjectG/lobbybg.cpp
+0xeb	GAME	E4	007ae557	007acdb0	ntAvatarChatMain::HandleMsg	source/client/ProjectG/avatar_main.cpp
+0xec	?	E4 E4	00b35134	00b34f40	S5::FrSupplyPackDlg::FUN_00b34f40	source/client/ProjectG/s5/supplypack.cpp
+0xed	?		00594fcf	00594f90	FUN_00594f90	source/client/ProjectG/lobbymain.cpp
+0xef	?	E4	008c56bd	008c5610	FrRandomBoxProgress::FUN_008c5610	source/client/ProjectG/frrandomboxprogress.cpp | source/client/ProjectG/giftalarmdlg.cpp
+0xef	?	E4	00921d6f	00921cf0	_gateway::FrSpecialBoxDlg::FUN_00921cf0	source/client/ProjectG/specialboxdlg.cpp
+0xf4	GAME	E4	009be9d1	009be990	CWorkAliveCheck::Act	source/client/ProjectG/taskmanager.obj
+0xfb	GAME		008aa007	008a9fa0	FUN_008a9fa0	
+0xfd	?	E4 E4 ES ES	00b3c805	00b3c7d0	FUN_00b3c7d0	source/client/ProjectG/audioin.cpp | source/client/ProjectG/avirecorder.cpp | source/client/ProjectG/aviwriter.cpp | source/client/ProjectG/vcomp.cpp
+0xfe	GAME	E4	009c3f26	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0xfe	GAME	E4	00a869ff	00a86990	FUN_00a86990	source/client/ProjectG/shopmain.cpp
+0x119	GAME	E4	0065ee13	0065d8e0	CTaskMain::HandleMsgCommon	source/client/ProjectG/taskmain.cpp
+0x119	GAME	E4	00af4f33	00af4ce0	FUN_00af4ce0	source/client/ProjectG/serverdlg.cpp
+0x127	?		00659392	00659360	FUN_00659360	source/client/ProjectG/taskmain.cpp
+0x128	GAME	E1 E4 E4 E4 E4	00851ed1	00851e90	FUN_00851e90	source/client/ProjectG/guildactor.cpp
+0x129	GAME	E1 E4 E4 E4	00851f9e	00851e90	FUN_00851e90	source/client/ProjectG/guildactor.cpp
+0x12c	GAME		005798ed	005798c0	FUN_005798c0	
+0x12c	?		0057c4a7	0057c440	_gateway::_golfgame::CHoleInOneGameHandler::FUN_0057c440	
+0x12d	GAME	EB(0x8)	006a4457	0069eef0	CGolfTask::OnPacket	source/client/ProjectG/golftask.cpp
+0x12e	GAME	EB(0x4) EB(0x4) EB(0x4)	006b27ea	006b2740	CTutorGuide::FUN_006b2740	source/client/ProjectG/golfball.cpp
+0x12f	GAME	EB(0x57)	0067e19b	0067e140	FUN_0067e140	source/client/ProjectG/golfrule.cpp
+0x130	?		006eff95	006efeb0	FUN_006efeb0	source/client/ProjectG/quitwindow.cpp | source/client/ProjectG/randomhouse.cpp
+0x131			006eff86	006efeb0	FUN_006efeb0	source/client/ProjectG/quitwindow.cpp | source/client/ProjectG/randomhouse.cpp
+0x137	?		0057af17	0057aee0	FUN_0057aee0	
+0x138	?	E4	0055f1c4	0055f0e0	FUN_0055f0e0	
+0x140	?		0065f9e3	0065f9b0	CTaskMain::FUN_0065f9b0	source/client/ProjectG/taskmain.cpp | source/client/ProjectG/golfdoc.cpp
+0x140	?		00a879af	00a87980	FUN_00a87980	source/client/ProjectG/shopmain.cpp
+0x141	GAME		006a6fcf	006a6f90	FUN_006a6f90	source/client/ProjectG/golfrulebase.cpp
+0x143	?	E4	005b3f3c	005b3ee0	FUN_005b3ee0	source/client/ProjectG/post_recivedlg.cpp
+0x143	?	E4	005b402e	005b3fd0	FUN_005b3fd0	source/client/ProjectG/post_recivedlg.cpp
+0x143	?	E4	005b451e	005b43f0	FUN_005b43f0	source/client/ProjectG/post_recivedlg.cpp
+0x143	?	E4	005b47c5	005b4790	FUN_005b4790	source/client/ProjectG/post_recivedlg.cpp
+0x143	?	E4	005b6bf1	005b6b00	FUN_005b6b00	
+0x145	?	E4 E4 ES ES ES E8 E1 EB(0x37)	0065c31d	0065c2d0	FUN_0065c2d0	source/client/ProjectG/taskmain.cpp
+0x147	?	E4 E4 E4	005b6db7	005b6d30	FUN_005b6d30	
+0x14b	?		008bcbbe	008bc9e0	FrBongdariShopDlg::FUN_008bc9e0	source/client/ProjectG/bongdarishopdlg.cpp
+0x14b	?		008c01ad	008bf6f0	FrBongdariShopDlg::Processing	source/client/ProjectG/bongdarishopdlg.cpp
+0x14c			0072497a	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x14d	?	E4 E4 ED	00724a4f	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x14d		E4 E4 ED	00724adb	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x14e			00724bfe	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x14e		E4 E4 ED	00724c1a	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x14f			00724d29	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x150			00724dd5	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x151	?		0051f51e	0051f4f0	FUN_0051f4f0	
+0x151	?		005939c1	00593990	FUN_00593990	source/client/ProjectG/lobbymain.cpp
+0x151	GAME		00724df7	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x151	?		007b0d67	007b0d20	ntAvatarChatMain::FUN_007b0d20	source/client/ProjectG/avatar_mainui.cpp
+0x151	GAME		00b14b1d	00b14af0	FUN_00b14af0	source/client/ProjectG/topiconmanager.cpp | source/client/ProjectG/topicons.cpp | source/client/ProjectG/webicons.cpp
+0x152		E4 E4 ED	00724e32	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x153	?	E4 E4	00519a33	005199e0	FUN_005199e0	source/client/ProjectG/lobbymain.cpp
+0x153	?	E4 E4	0051a6f7	0051a690	FUN_0051a690	source/client/ProjectG/lobbymain.cpp
+0x153			00724fc6	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x154		E4 E4 ED	00724fe2	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x155	?	E8 E4	00486fa0	00486f70	FUN_00486f70	
+0x155	?	E8 E4 ED	007250da	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x156	?		00694953	00694110	FUN_00694110	source/client/ProjectG/golfrule.cpp
+0x156			00725421	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x157	?	E4	0060d524	0060d460	FUN_0060d460	source/client/ProjectG/realmyroommainui.cpp
+0x157	?	E4	00658330	006582f0	FUN_006582f0	source/client/ProjectG/taskmain.cpp
+0x157		E4	007253ed	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x157	?	E4	007b1ac9	007b1a80	ntAvatarChatMain::OnKickAvatar	source/client/ProjectG/avatar_mainui.cpp
+0x157	?	E4	008a0571	008a0540	FUN_008a0540	source/client/ProjectG/user_info.cpp
+0x157	?	E4	008bc333	008bc2a0	FUN_008bc2a0	source/client/ProjectG/bongdarishopdlg.cpp
+0x157	GAME	E4	008be341	008be2e0	FrBongdariShopDlg::FUN_008be2e0	source/client/ProjectG/bongdarishopdlg.cpp
+0x157	?	E4	00900c99	00900c50	FUN_00900c50	source/client/ProjectG/messengerdlg.cpp
+0x158	?	E2 E4 E1 E4 E4 ED	008e2db8	008e2d70	FUN_008e2d70	source/client/ProjectG/recycledlg.cpp
+0x15b	?		00b1347d	00b133d0	FUN_00b133d0	source/client/ProjectG/birthdayeventdlg.cpp
+0x15c	GAME		00675476	00675160	FUN_00675160	source/client/ProjectG/golfrule.cpp
+0x15d	?	E4 E4 E1	004aa82a	004aa7d0	FUN_004aa7d0	
+0x164	GAME	E4 E2 E4	004ce153	004ce120	FUN_004ce120	MSVCP71.dll | source/client/ProjectG/realmyroommain.cpp
+0x164		E4 E2 E4	007255ca	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x165			00725616	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x166			00725632	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x167	GAME	E4 E2 E4	004ce253	004ce220	FUN_004ce220	MSVCP71.dll | source/client/ProjectG/realmyroommain.cpp
+0x167		E4 E2 E4	00725796	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x168			007257e0	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x169			007257fc	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x16a		E1	0072584c	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x16b	GAME	E4 E4	004ce353	004ce320	FUN_004ce320	MSVCP71.dll | source/client/ProjectG/realmyroommain.cpp
+0x16b		E4 E4	0072587a	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x16b	MSN	E4	009cfbc2	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x16b	MSN	E4	009cfd4f	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x16c	GAME	E4 E4 E4 E4	004ce3d3	004ce3a0	FUN_004ce3a0	MSVCP71.dll | source/client/ProjectG/realmyroommain.cpp
+0x16c	GAME	E4 E4 E4 E4	007258da	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x16d	GAME	E4 E4	004ce473	004ce440	FUN_004ce440	MSVCP71.dll | source/client/ProjectG/realmyroommain.cpp
+0x16d		E4 E4	007259af	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x16e	?		006572a5	00657200	FUN_00657200	source/client/ProjectG/taskmain.cpp
+0x16e	GAME		006ef8d3	006ef850	FUN_006ef850	source/client/ProjectG/quitwindow.cpp
+0x16e			00725a1a	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x16e	?		00af6230	00af5e00	FUN_00af5e00	source/client/ProjectG/serverdlg.cpp
+0x16f	GAME		009d5b7f	009c20a0	FUN_009c20a0	source/client/ProjectG/taskmanager.obj | source/shared/itemmanager.cpp
+0x170			00725a6d	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x171	?	E4 E1 EB(0x4)	0082db0a	0082da60	FUN_0082da60	source/client/Wangreal/source/textout.cpp
+0x172			00725a89	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x172	?		00b153d9	00b15360	FUN_00b15360	source/client/ProjectG/topiconmanager.cpp | source/client/ProjectG/topicons.cpp | source/client/ProjectG/webicons.cpp
+0x173		E4	00725ac9	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x173	?	E4	0082fc28	0082fba0	FUN_0082fba0	source/client/Wangreal/source/textout.cpp
+0x174			00725af7	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x175		E4	00725b37	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x176	?		0059ebff	0059ebd0	FUN_0059ebd0	source/client/ProjectG/lobbymain.cpp
+0x176			00725ece	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x176	?		00abe0e6	00abc140	CLobbyMain::HandleMsg	source/client/ProjectG/lobbymain.cpp | source/client/ProjectG/lobbytask.cpp
+0x177			00725f21	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x177			00ab6674	00ab6620	FUN_00ab6620	source/client/ProjectG/lobbymain.cpp
+0x179	?	E4	0055b126	0055b0e0	FUN_0055b0e0	
+0x179		E4	00725fa5	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x17a	GAME	E1 E2 E8 E8	0072600a	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x17a	GAME	E1 E2 E8 E8	00b2e400	00b2e3d0	FUN_00b2e3d0	source/client/ProjectG/s5/utilities.cpp
+0x17f	GAME	E4	008b4cad	008b4c80	FUN_008b4c80	source/client/ProjectG/bongdarishopdlg.cpp
+0x180	?	E4	00b45771	00b45740	FUN_00b45740	
+0x181	GAME	EB(0x10)	00569b47	00569b00	FUN_00569b00	
+0x181	GAME	EB(0x10)	0056a5c7	0056a580	FUN_0056a580	
+0x181	GAME	EB(0x10)	0056b377	0056b330	FUN_0056b330	
+0x181	GAME	EB(0x10)	0056bbe7	0056bba0	FUN_0056bba0	
+0x181	GAME	EB(0x10)	005a0aa7	005a0a60	FUN_005a0a60	
+0x181	GAME	EB(0x10)	005e06de	005e0670	FUN_005e0670	
+0x184	?		00504637	005045b0	FUN_005045b0	source/client/ProjectG/lobbymain.cpp
+0x184			007263ae	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x185	?	E4	0047dc81	0047dc50	FUN_0047dc50	
+0x186	?		008bcba0	008bc9e0	FrBongdariShopDlg::FUN_008bc9e0	source/client/ProjectG/bongdarishopdlg.cpp
+0x187	?	E4 E4	005c173c	005c16c0	FUN_005c16c0	
+0x187		E4 E4	007266cf	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x188		E4 EB(0x201)	00726754	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x189			007267df	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x18a	GAME	E4 E4 E4 E4 E4	005bbb71	005bbab0	FUN_005bbab0	
+0x18a	GAME	E4 E4 E4 E4 E4	00726840	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x18b	GAME	E4 E4 E4 E4 E4	0072698a	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x18c	?	E4 E4 E4 E4 E4	005bbd01	005bbc50	FUN_005bbc50	
+0x18c	GAME	E4 E4 E4 E4 E4	00726aba	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x18d	GAME	E4 E4 E4 E4	00476a5f	00476a20	FUN_00476a20	
+0x18d	GAME	E4 E4 E4 E4 ED	00726bb0	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x18f		E4	00726d9e	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x190	?		005d9099	005d9020	FUN_005d9020	
+0x190	GAME		00726e00	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x191	?		005d9179	005d9100	FUN_005d9100	
+0x191	GAME		00726e69	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x192	GAME		00726ed2	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x192	GAME		0072700e	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x192	?		00b15489	00b15410	FUN_00b15410	source/client/ProjectG/topiconmanager.cpp | source/client/ProjectG/topicons.cpp | source/client/ProjectG/webicons.cpp
+0x193	?	E4	005d9245	005d91b0	FUN_005d91b0	
+0x193		E4	00726f7a	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x194	?		005d9309	005d9290	FUN_005d9290	
+0x194	GAME		00726fdc	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x195	GAME		00727077	00721420	CConsole::Command	source/client/ProjectG/console.cpp
+0x196	GAME		006754dc	00675160	FUN_00675160	source/client/ProjectG/golfrule.cpp
+0x197	GAME	EB(0x10)	005b7a17	005b79d0	FUN_005b79d0	
+0x198	?	E4	0056ae11	0056ade0	FUN_0056ade0	
+0x199	GAME		006754a9	00675160	FUN_00675160	source/client/ProjectG/golfrule.cpp
+?	GAME		004ce1e5	004ce1b0	FUN_004ce1b0	MSVCP71.dll | source/client/ProjectG/realmyroommain.cpp
+?	GAME		004ce2e5	004ce2b0	FUN_004ce2b0	MSVCP71.dll | source/client/ProjectG/realmyroommain.cpp
+?	?	E4 E4 E4	0051a593	0051a550	FUN_0051a550	source/client/ProjectG/lobbymain.cpp
+?	GAME	E1 E4	00566fc5	00566f30	FUN_00566f30	
+?	?	E4 E4 E4	005b3d82	005b3d30	FUN_005b3d30	source/client/ProjectG/post_recivedlg.cpp
+?	?	E4	005b3dc0	005b3d30	FUN_005b3d30	source/client/ProjectG/post_recivedlg.cpp
+?	GAME	E4 EB(0x201)	005c9d7e	005c9bc0	FUN_005c9bc0	
+?	GAME	E1 E4	00655f10	00655e10	FUN_00655e10	source/client/ProjectG/taskmain.cpp
+?		E1	00655f4b	00655e10	FUN_00655e10	source/client/ProjectG/taskmain.cpp
+?		E1	00655f6e	00655e10	FUN_00655e10	source/client/ProjectG/taskmain.cpp
+?		E1	00655f91	00655e10	FUN_00655e10	source/client/ProjectG/taskmain.cpp
+?	GAME	E1 E4	00655fb6	00655e10	FUN_00655e10	source/client/ProjectG/taskmain.cpp
+?			006943bf	00694110	FUN_00694110	source/client/ProjectG/golfrule.cpp
+?			00a4d9f3	00a4d9b0	FUN_00a4d9b0	
+?	GAME	E1 E2 EB(0x25) E4	00aa2850	00aa25f0	FUN_00aa25f0	
+?	RANK	E4 ES E1 E1 E1 E1 E4 E1	00b29168	00b29120	FUN_00b29120	source/client/ProjectG/rankingdlg.cpp

@@ -1,0 +1,54 @@
+// V3: layout do 983 das classes vistas por src/projectg/taskmanager.cpp (gerado por tools/v3/gen.py; não editar à mão).
+// unidade: src/projectg/taskmanager.cpp
+V3_SIZE(CTask, 0x208) // 983: push 0x208; call operator new em 009bfee3, construtor 009bf340 (rtti=1; 1 new); unidade por construtor
+V3_OFF(CTask, m_anotherHand, 0x6c) // 983: anotação do cabeçalho src/projectg/taskmanager.h:149
+V3_OFF(CTask, m_taskFlag, 0x1f4) // 983: anotação do cabeçalho src/projectg/taskmanager.h:150
+V3_OFF(CTask, m_bRecieveWhisper, 0x1f8) // 983: anotação do cabeçalho src/projectg/taskmanager.h:151
+V3_OFF(CTask, m_pWidget983, 0x1fc) // 983: anotação do cabeçalho src/projectg/taskmanager.h:152
+V3_OFF(CTask, m_bPause, 0x200) // 983: anotação do cabeçalho src/projectg/taskmanager.h:153
+V3_OFF(CTask, m_netSyncTime, 0x204) // 983: anotação do cabeçalho src/projectg/taskmanager.h:154
+V3_SIZE(CTaskManager, 0x90) // 983: push 0x90 em 00a66fbd antes do operator new; construtor 009c13e0 em 00a66fdd (era 0x74; A s100; C-PKT lote 24)
+V3_OFF(CTaskManager, m_pFade, 0x40) // 983: anotação do cabeçalho src/projectg/taskmanager.h:255
+V3_ANOT(CTaskManager, m_fadeAlpha, 0x44) // anot: anotação do cabeçalho src/projectg/taskmanager.h:256
+V3_ANOT(CTaskManager, m_msgQueue, 0x60) // anot: anotação do cabeçalho src/projectg/taskmanager.h:258
+V3_ANOT(CTaskManager, m_history, 0x78) // anot: anotação do cabeçalho src/projectg/taskmanager.h:259
+V3_ANOT(CTaskManager, m_historyPos, 0x84) // anot: anotação do cabeçalho src/projectg/taskmanager.h:260
+V3_ANOT(CTaskManager, m_naviMode, 0x88) // anot: anotação do cabeçalho src/projectg/taskmanager.h:261
+V3_ANOT(sAttendanceReward983, bGift, 0x00) // anot: anotação do cabeçalho include/packets/attendancepackets.h:11
+V3_ANOT(sAttendanceReward983, todayTid, 0x04) // anot: anotação do cabeçalho include/packets/attendancepackets.h:12
+V3_ANOT(sAttendanceReward983, todayCount, 0x08) // anot: anotação do cabeçalho include/packets/attendancepackets.h:13
+V3_ANOT(sAttendanceReward983, nextTid, 0x0c) // anot: anotação do cabeçalho include/packets/attendancepackets.h:14
+V3_ANOT(sAttendanceReward983, nextCount, 0x10) // anot: anotação do cabeçalho include/packets/attendancepackets.h:15
+V3_ANOT(sAttendanceReward983, round, 0x14) // anot: anotação do cabeçalho include/packets/attendancepackets.h:16
+V3_ANOT(sFriendStateNotify983, uid, 0x00) // anot: anotação do cabeçalho include/packets/messengerpackets.h:12
+V3_ANOT(sFriendStateNotify983, state, 0x04) // anot: anotação do cabeçalho include/packets/messengerpackets.h:13
+V3_ANOT(sFriendStateNotify983, srvByte983, 0x08) // anot: anotação do cabeçalho include/packets/messengerpackets.h:14
+V3_ANOT(sFriendStateNotify983, pos, 0x09) // anot: anotação do cabeçalho include/packets/messengerpackets.h:15
+V3_ANOT(sGuildBrief983, guildUID, 0x00) // anot: anotação do cabeçalho include/packets/guildpackets.h:8
+V3_ANOT(sGuildBrief983, srvByte04_983, 0x04) // anot: anotação do cabeçalho include/packets/guildpackets.h:9
+V3_ANOT(sGuildBrief983, guildName, 0x05) // anot: anotação do cabeçalho include/packets/guildpackets.h:10
+V3_ANOT(sGuildBrief983, guildMark, 0x19) // anot: anotação do cabeçalho include/packets/guildpackets.h:11
+V3_ANOT(sGuildBrief983, emblemVer, 0x25) // anot: anotação do cabeçalho include/packets/guildpackets.h:12
+V3_ANOT(sGuildBrief983, srvData29_983, 0x29) // anot: anotação do cabeçalho include/packets/guildpackets.h:13
+V3_ANOT(sGuildBrief983, guildPang, 0x31) // anot: anotação do cabeçalho include/packets/guildpackets.h:14
+V3_ANOT(sGuildBrief983, srvData35_983, 0x35) // anot: anotação do cabeçalho include/packets/guildpackets.h:15
+V3_ANOT(sGuildBrief983, guildPoint, 0x49) // anot: anotação do cabeçalho include/packets/guildpackets.h:16
+V3_ANOT(sMailIncludeItem983, dwIDX, 0x00) // anot: anotação do cabeçalho include/packets/postpackets.h:11
+V3_ANOT(sMailIncludeItem983, dwTID, 0x04) // anot: anotação do cabeçalho include/packets/postpackets.h:12
+V3_ANOT(sMailIncludeItem983, btItemType, 0x08) // anot: anotação do cabeçalho include/packets/postpackets.h:13
+V3_ANOT(sMailIncludeItem983, iCount, 0x09) // anot: anotação do cabeçalho include/packets/postpackets.h:14
+V3_ANOT(sMailIncludeItem983, iTimeCount, 0x0d) // anot: anotação do cabeçalho include/packets/postpackets.h:15
+V3_ANOT(sMailIncludeItem983, soCom, 0x11) // anot: anotação do cabeçalho include/packets/postpackets.h:18
+V3_ANOT(sMailIncludeItem983, CharacterSlotNum, 0x1b) // anot: anotação do cabeçalho include/packets/postpackets.h:19
+V3_ANOT(sMailIncludeItem983, CaddieSlotNum, 0x1d) // anot: anotação do cabeçalho include/packets/postpackets.h:20
+V3_ANOT(sMailIncludeItem983, dwSetTID, 0x21) // anot: anotação do cabeçalho include/packets/postpackets.h:22
+V3_ANOT(sMailIncludeItem983, iSetItemCount, 0x25) // anot: anotação do cabeçalho include/packets/postpackets.h:23
+V3_ANOT(sMailIncludeItem983, csUCCIndex, 0x29) // anot: anotação do cabeçalho include/packets/postpackets.h:24
+V3_ANOT(sMailIncludeItem983, reserved32, 0x32) // anot: anotação do cabeçalho include/packets/postpackets.h:25
+V3_ANOT(sMailIncludeItem983, reserved36, 0x36) // anot: anotação do cabeçalho include/packets/postpackets.h:26
+V3_ANOT(sMailInfoBrief983, id, 0x00) // anot: anotação do cabeçalho include/packets/postpackets.h:33
+V3_ANOT(sMailInfoBrief983, sender, 0x04) // anot: anotação do cabeçalho include/packets/postpackets.h:34
+V3_ANOT(sMailInfoBrief983, reserved, 0x1a) // anot: anotação do cabeçalho include/packets/postpackets.h:35
+V3_ANOT(sMailInfoBrief983, bRead, 0x88) // anot: anotação do cabeçalho include/packets/postpackets.h:36
+V3_ANOT(sMailInfoBrief983, itemCount, 0x89) // anot: anotação do cabeçalho include/packets/postpackets.h:37
+V3_ANOT(sMailInfoBrief983, item, 0x8d) // anot: anotação do cabeçalho include/packets/postpackets.h:38

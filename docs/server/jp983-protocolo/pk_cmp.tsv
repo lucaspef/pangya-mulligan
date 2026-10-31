@@ -1,0 +1,480 @@
+estado	unidade	funcao	propria	classe_cmp	va983	assinatura_983	assinatura_nossa
+difere_campos	src_projectg_avatar_task	?OnPacket@ntAvatarChatTask@@MAEHAAVWReceivedPacket@@@Z	1	DIFERENTE	007b5a20	D2 D1 D2 D1 DB(0x15c) DB(0x201) D1 DB(0x15c) DB(0x201) DB(0x15c) DB(0x201) D4 D4 DB(0x15c) D4 D2 DS D4 DS D1 DS DS D4 D1 DS DS P(0xde) ES >? D4 D1 DB(0x4) DB(0x4) DB(0x4) D4 DB(0x4) DB(0x4) DB(0x4) DS D4 D1 D1 D1 D4 D1 D4 D1 D1 D4 DB(0x4)	D2 D1 D2 D1 DB(0x15c) DB(0x201) D1 DB(0x15c) DB(0x201) DB(0x15c) DB(0x201) D4 D4 DB(0x15c) D4 D2 DS D4 DS D1 DS DS D4 D4 D1 D1 DS DS P(0xde) ES >? D4 D1 D1 D1 D1 D1 D4 D1 DB(0x4) DB(0x4) DB(0x4) D4 DB(0x4) DB(0x4) DB(0x4) DS D4 D4 DB(0x4)
+difere_campos	src_projectg_changeroominfodlg	?OnOkBtnUp@FrChangeRoomInfoDlg@@IAEXXZ	1	DIFERENTE	00acc1d0	P(0xa) E2 E1 E1 ES E1 ES E1 E1 E1 E4 E1 E2 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E4 E1 E1 E1 E4 >?	P(0xa) E2 E1 E1 ES E1 ES E1 E1 E1 E2 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 E1 >?
+difere_campos	src_projectg_console	?Command@CConsole@@IAEXPBD@Z	1	DIFERENTE	00721420	P(0x8f) E2 E4 >GAME P(0x89) >GAME P(0x14c) P(0x14d) E4 E4 ED >? P(0x14d) E4 E4 ED P(0x14e) P(0x14e) E4 E4 ED P(0x14f) P(0x150) P(0x151) >GAME P(0x152) E4 E4 ED P(0x153) P(0x154) E4 E4 ED P(0x155) E8 E4 ED >? P(0xa) E2 E1 E1 E4 ED >GAME P(0x157) E4 P(0x156) P(0x164) E4 E2 E4 P(0x165) P(0x166) P(0x167) E4 E2 E4 P(0x168) P(0x169) P(0x16a) E1 P(0x16b) E4 E4 P(0x16c) E4 E4 E4 E4 >GAME P(0x16d) E4 E4 P(0x16e) P(0x170) P(0x172) P(0x173) E4 P(0x174) P(0x175) E4 P(0x176) P(0x177) P(0x179) E4 P(0x17a) E1 E2 E8 E8 >GAME P(0x184) P(0x187) E4 E4 P(0x188) E4 EB(0x201) P(0x189) P(0x18a) E4 E4 E4 E4 E4 >GAME P(0x18b) E4 E4 E4 E4 E4 >GAME P(0x18c) E4 E4 E4 E4 E4 >GAME P(0x18d) E4 E4 E4 E4 ED >GAME P(0x18f) E4 P(0x190) >GAME P(0x191) >GAME P(0x192) >GAME P(0x193) E4 P(0x194) >GAME P(0x192) >GAME P(0x195) >GAME	P(0x89) >GAME
+difere_campos	src_projectg_golfrule	?ReplayTapeCheckAndUse@CGolfRule@@AAEXXZ	1	DIFERENTE	00688af0	P(0x4a) E4 >GAME P(0x4a) P(0x49) >GAME	P(0x4a) E4 >? P(0x4a) E4 >GAME P(0x49) >GAME
+difere_campos	src_projectg_golftask	?OnPacket@CGolfTask@@UAEHAAVWReceivedPacket@@@Z	1	DIFERENTE	0069eef0	D2 D1 D8 DB(0x4) D4 DS DB(0x64) D4 D1 D1 D1 D1 D1 D1 D1 D1 D4 DB(0x32) D4 DB(0x4) D4 DB(0x5) D4 D1 D4 D1 D4 D4 D4 D4 D4 D2 D4 D4 D2 D4 D1 D4 D4 DB(0x21) D1 D1 D1 D4 DB(0x26) D4 D1 D4 D1 D1 D4 D8 D8 D1 D4 D1 DB(0x8) D4 D4 D4 D2 D4 P(0x2f) E4 E1 >GAME D4 D4 D1 D1 D4 D4 DB(0x60) DB(0x18) D4 D4 D2 D2 DB(0xc) D4 D1 D1 D4 D1 D1 D4 DB(0x1c) D1 DS DS DS DS D1 D1 D4 D1 D4 P(0x40) EB(0xfb) E1 E4 >GAME D1 DB(0xdd) D4 D1 DB(0x15c) DB(0x31c6) DB(0x31c6) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1 DB(0x15c) D1 D1 D1 D1 D1 D4 D4 D1 DB(0xfb) D4 DB(0x31c6) D1 D1 D1 D1 D1 D1 D1 DB(0xfb) D4 D4 D4 D4 D1 D2 D4 D1 D4 DB(0x15c) D1 DB(0x15c) D1 D2 D1 DB(0x15c) DB(0x201) DB(0x15c) DB(0x201) D4 D4 DB(0x15c) D4 D1 DS D1 D4 D1 D4 D2 D2 D1 D1 D4 D1 DB(0x800) D1 DB(0x18) D4 D1 DB(0x57) D1 D1 D1 D4 D4 DS D1 DB(0x18) P(0x2f) E4 E1 >GAME D1 D4 D4 DB(0xb8) D2 D4 D4 DB(0x8) P(0x12d) EB(0x8) >GAME D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4	D2 D1 D8 DB(0x4) D4 DS DB(0x64) D4 D1 D1 D1 D1 D1 D4 DB(0x32) D4 DB(0x4) D4 DB(0x5) D4 D1 D4 D1 D4 D4 D4 D4 D4 D2 D4 D4 D2 D4 D4 DB(0x26) D4 D1 D4 D1 D1 D4 D8 D8 D1 D4 D1 DB(0x8) D4 D4 D4 D2 D4 P(0x2f) E4 E1 >GAME D4 D4 D1 D1 D4 D4 DB(0x60) DB(0x18) D4 D4 D2 D2 DB(0xc) D4 D1 D1 DS DS D1 D2 D1 DB(0x15c) DB(0x201) DB(0x15c) DB(0x201) D4 D4 DB(0x15c) D4 D1 D1 D1 D1 D1 D4 D4 DB(0x21) D1 D1 D1 D1 D4 D1 D1 D4 DB(0x1c) DS DS D1 D1 D4 D1 D4 P(0x40) EB(0xfb) E1 E4 >GAME D1 DB(0xdd) D4 D1 DB(0x15c) DB(0x31c6) DB(0x31c6) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1 DB(0x15c) D1 D1 D1 D1 D1 D4 D4 D1 DB(0xfb) D4 DB(0x31c6) D1 D1 D1 D1 D1 D1 D1 DB(0xfb) D4 D4 D4 D4 D1 D2 D4 D1 D4 DB(0x15c) D1 DB(0x15c) D4 D1 DS D1 D4 D2 D2 D1 D1 D4 D1 DB(0x800) D1 DB(0x18) D1 D1 D1 D4 D4 DS D1 DB(0x18) P(0x2f) E4 E1 >GAME D1 D4 D4 DB(0xb8) D2 DB(0x8) P(0x12d) EB(0x8) >GAME D4 D4 D1 DB(0x57) D4 D4 D4 D4 D4 D4 D4 D4 D4 D4
+difere_campos	src_projectg_hatmanager	?CheckChatCommand@ChatManager@@QAEHPBDH@Z	1	DIFERENTE	009a47a0	P(0x4e) E4 E1 E4 >? P(0x4e) E4 E1 P(0x41) E4 ES P(0x41) E4 ES P(0x41) E4 ES >?	P(0x41) E4 E4 E4 ES P(0x4e) E4 E1 >GAME P(0x4e) E4 E1 E4 >GAME
+difere_campos	src_projectg_hatmanager	?SendChatMessage@ChatManager@@QAEXPBD0_N@Z	1	DIFERENTE	009a4f50	P(0x4f) E1 >GAME P(0x4f) E1 >GAME P(0x54) ES >GAME P(0x25) ES >MSN P(0x2a) ES ES >GAME P(0x3) ES ES >GAME	P(0x4f) E1 >GAME P(0x54) ES >GAME P(0x25) ES >MSN P(0x2a) ES ES >GAME P(0x3) ES ES >GAME
+difere_campos	src_projectg_lobbymain	?OnApproachGiftDlgResult@CLobbyMain@@IAE_NHPAVFrForm@@@Z	1	QUASE	006704b0	P(0x66) ES >GAME	P(0xcb) E4 >GAME
+difere_campos	src_projectg_lobbymain	?OnItemEquipResult@CLobbyMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	00ab6620	P(0x177) P(0x82) >?	P(0x20) E1 EB(0x28) >?
+difere_campos	src_projectg_lobbymain	?OnRoomList_RoomListRUp@CLobbyMain@@IAEXXZ	1	DIFERENTE	005d9290	P(0x194) >?	P(0x2d) E2 >?
+difere_campos	src_projectg_lobbytask	?OnPacket@CLobbyTask@@MAEHAAVWReceivedPacket@@@Z	1	DIFERENTE	00ac03a0	D2 D4 D1 DB(0x4) DS D4 D4 D4 DB(0x6d) D1 DS DS P(0xde) ES >? DS DS D2 D1 D1 D1 D1 D1 D4 D4 D1 D1 D1 D4 D4 D4 D1 DS D1 D1 D4 DB(0xdd) P(0x23) EB(0x4b) >MSN D4 D4 D1 D4 DB(0x15c) D1 DB(0x15c) D1 D2 D1 DB(0x15c) DB(0x201) D1 DB(0x15c) DB(0x15c) DB(0x201) D4 D4 DB(0x15c) DS D1 D4 DS D1 DS D4 D4 DS DS D1 DB(0x5c) D1 DB(0x5c) D1 D4 DS D1 D4 D4 DB(0x240) D4 D4 D4 DS D4 D4 DS D4 DB(0x19) D4 D1 D4 D1 D4 D1 DB(0x8) D4 D4 D4 D2 D4 D1 D1 D4 D8 D8 D1 D4 D4 D1 D1 D4 D4 DB(0x60) DB(0x18) D4 D2 D4 D1 D1 D4 DS D4 D2 D4 D1 D2 D4 DS D4 P(0x24) E4 >MSN D2 D4 D4 DB(0xc) DB(0x12) D4 D4 D2 D4 D1 D8 DB(0x31c6) D4 D1 DB(0xdd) D4 D1 DB(0x15c) DB(0x31c6) DB(0x31c6) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1 D1 DB(0x9) DB(0x1c) D4 D2 DB(0x32) D4 D2 D2 D1 D1 D2 D4 D1 D4 D2 D4 D1 D2 D4 DS D4 P(0x29) E4 P(0x28) E4 E1 E2 E4 ES E4 >MSN D4 D4 DS D1 D1 D1 D1 D4 D1 D2 P(0xb4) E1 E2 >GAME P(0x43) >GAME D1 D1 D2 D4 D1 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D1 D4 D4 D4 D4 D4 DB(0x10) D4 D4 D4 D4 D4 D4 D4 D4 D4	D2 D4 D1 DB(0x4) DS D4 D4 D4 DB(0x6d) D1 DS DS P(0xde) ES >? DS DS D2 D1 D1 D1 D1 D1 D4 D4 D1 D1 D1 D4 D4 D4 D1 DS D1 D1 D4 DB(0xdd) P(0x23) EB(0x4b) >MSN D4 D4 D1 D4 DB(0x15c) D1 DB(0x15c) D1 D2 D1 DB(0x15c) DB(0x201) D1 DB(0x15c) DB(0x15c) DB(0x201) D4 D4 DB(0x15c) DS D1 D4 DS D1 DS D4 D4 DS DS D1 DB(0x5c) D1 DB(0x5c) D1 D4 DS D1 D4 D4 DB(0x240) D4 D4 D4 DS D4 D4 DS D4 DB(0x19) D4 D1 D4 D1 D4 D1 DB(0x8) D4 D4 D4 D2 D4 D1 D1 D4 D8 D8 D1 D4 D4 D1 D1 D4 D4 DB(0x60) DB(0x18) D4 D2 D4 D1 D1 D4 DS D4 D2 D4 D1 D2 D4 DS D4 P(0x24) E4 >MSN D2 D4 D4 DB(0xc) DB(0x12) D4 D4 D2 D4 D1 D8 DB(0x31c6) D4 D1 DB(0xdd) D4 D1 DB(0x15c) DB(0x31c6) DB(0x31c6) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1 D1 DB(0x9) DB(0x1c) D4 D2 DB(0x32) D4 D2 D2 D1 D1 D2 D4 D1 D4 D2 D4 D1 D2 D4 DS D4 P(0x29) E4 P(0x26) E4 E1 E2 E4 ES E4 >MSN D4 D4 DS D1 D1 D1 D1 D4 D1 D2 P(0xb4) E1 E2 >GAME P(0x43) >GAME D1 D1 D2 D4 D1 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D1 D4 D4 D4 D4 D4 DB(0x10) D4 D4 D4 D4 D4 D4 D4 D4 D4 D1 D1 DB(0xc) D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 DB(0x129) D4 D4 D4 D2 DB(0x31) D4 DB(0x119) D4 D4 D4 D2 DB(0x51) D4 D4 D4 D4 D4 D2 DB(0xc4) D4 D4 D4 D4 D4 D4 D4 D4
+difere_campos	src_projectg_lobbytask	?OnPlainCode@CLSLoginAckPostProcessor@@AAEHEAAVWReceivedPacket@@@Z	1	DIFERENTE	005a1630	D4 D4 D4 DS DS D4	D4 D4 DS DS D4 D4
+difere_campos	src_projectg_netresourcemanager	?WorkUploadThread@NetResourceManager@@IAEHXZ	1	DIFERENTE	009a92f0	P(0xb9) E1 E4 ES >? P(0xb9) E1 E4 ES ES >?	P(0xb9) E1 E4 ES ES >? P(0xb9) E1 E4 ES >GAME
+difere_campos	src_projectg_quitwindow	?OnToLobbyConfirmResult@FrQuitForm@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	006efeb0	P(0x37) >? P(0x131) P(0x130) >? P(0xf) E1 E2	P(0x37) >? P(0xf) E1 E2 E8 E8 >? E8 P(0x131) P(0x130) >?
+difere_campos	src_projectg_realmyroommainui	?HandleMsg@CRealMyRoomMain@@UAEXABVMsgObject@@@Z	1	DIFERENTE	00623500	P(0xcd) E4 E2 >GAME P(0xcd) E4 E2 >GAME	P(0xcd) E4 E2 >GAME P(0xcd) E4
+difere_campos	src_projectg_realmyroommainui	?OnFortuneDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	007b0d20	P(0x151) >?	P(0x59) E4 >?
+difere_campos	src_projectg_realmyroommainui	?OnPangGiftDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	00ab3000	P(0x27) E1 >GAME	P(0x24) E4 E4 >GAME
+difere_campos	src_projectg_shopmain	?Net_StartPeriodItem@CShopMain@@IAEXK@Z	1	DIFERENTE	008b4c80	P(0x17f) E4 >GAME	P(0x20) E1 E4 >GAME
+difere_campos	src_projectg_shoptask	?OnPacket@CShopTask@@MAEHAAVWReceivedPacket@@@Z	1	DIFERENTE	005e0ff0	D2 D4 D8 D8 P(0x29) E4 E4 >MSN DB(0x10) DB(0x10) D4 D4 D4 D4 D4 D4 D8 D8 DB(0x10) DB(0x10) D4 D4 D4 D4 DB(0x19) D4 D2 DB(0x1b) D1	D2 D4 D4 D4 D4 D4 D8 D8 DB(0x10) DB(0x10) D4 D4 D8 D8 P(0x29) E4 E4 >MSN DB(0x10) DB(0x10) D4 D4 D1 D4 D1 D4 D4 D4 D4 DB(0x19) D4 D2 DB(0x1b)
+difere_campos	taskmanager	?Act@CWorkAliveCheck@@UAEXXZ	0	IGUAL	009be990	P(0xf4) E4 >GAME	E4 >GAME
+difere_campos	taskmanager	?AddNewItemToDoc@CTaskManager@@QAEXIAAVWReceivedPacket@@@Z	1	DIFERENTE	009bff50	DB(0x201) DB(0xc4) DB(0xc4) DB(0xc4) DB(0xc4) DB(0x19) DB(0x4) DB(0x4) DB(0x4) DB(0xc4) DB(0x4) DB(0x201) DB(0x3e) DB(0xc4) DB(0x3a)	DB(0x201) DB(0xc4) DB(0xc4) DB(0xc4) DB(0xc4) DB(0x19) DB(0x4) DB(0x4) DB(0x4) DB(0xc4) DB(0x4) DB(0x201) DB(0x3e) DB(0xc4) DB(0xc4) DB(0x3a)
+difere_campos	taskmanager	?OnPacketCommon@CTask@@IAEHAAVWReceivedPacket@@@Z	1	DIFERENTE	009c20a0	D2 D4 P(0xc) E1 EB(0x10) >GAME D1 D1 D1 D1 D1 DB(0x10) DB(0x31c6) DB(0x10) D1 DB(0x41) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1 D1 DS DS D4 D4 D4 D4 D4 D8 D1 DS DS D4 D1 DS D1 D1 D4 DS DB(0x31c6) DB(0x10) D1 D1 D2 D2 D2 D4 D8 D4 D4 P(0x55) E1 >GAME P(0x23) EB(0x4b) >MSN P(0xfe) E4 >GAME D4 DB(0x109) DB(0x4e) D1 DB(0x2b) D4 D1 D4 DB(0x201) D4 DB(0x19) D4 DB(0x1c) D4 D4 D4 DB(0x3e) D4 D4 DB(0x4) D2 P(0x23) EB(0x4b) >MSN D1 D1 D2 DB(0xdd) DB(0xdd) DB(0xdd) DB(0xdd) D1 D1 DB(0xc8) DB(0xc8) DB(0xc8) DB(0xc8) D1 DB(0x55) D1 D4 D4 DS D8 P(0x22) ES >MSN D1 D4 D2 D2 DB(0x201) D2 D2 DB(0x19) DB(0x74) D2 D2 DB(0xc4) D1 DB(0x19) D1 DS DS P(0xde) ES >GAME D4 D1 D4 D4 D1 D4 P(0x23) EB(0x4b) >MSN P(0x14) >MSN P(0xe4) >GAME P(0xe4) >GAME D4 DS DS DS DS D2 D1 D4 DS D4 D4 DB(0x91) DB(0x91) P(0x19) E4 >MSN D4 DS DS D1 D1 D4 D4 D4 D4 D4 D4 D4 D4 D4 DS DB(0x91) D4 D4 D1 D2 D2 DB(0x91) P(0x1d) E1 >MSN D4 D4 D4 D4 D1 DB(0x6d) D1 D1 D4 D4 DB(0x4b) DB(0x54) P(0x16) >MSN D4 D4 D4 DS D4 P(0xa5) >GAME D1 D1 DB(0x201) DB(0x28) D4 DB(0x18) DB(0x3e) D4 DB(0x10) DB(0x8) D4 D1 D4 D8 D1 D1 DB(0xc) D4 D1 D1 DS P(0x22) ES >MSN D1 DB(0x3e) P(0x9a) E1 E4 ES >GAME D2 DB(0xe) D4 D2 DB(0x3a) D2 DB(0x41) D4 D4 D1 DB(0x3a) D2 DB(0x41) D2 DB(0x41) D2 DB(0x41) D4 D4 D4 D4 D4 DB(0x41) D4 DB(0x3a) D1 DB(0x3a) D4 D1 DB(0x5c) D1 DB(0x55) D1 DB(0x5c) D1 D4 DB(0x12d) DS D4 DS D1 D1 D4 DB(0x31c6) D1 D4 D4 D2 D4 D4 D8 D4 D2 DB(0x26) D2 D2 DB(0x10) D2 D2 DB(0x10) D2 D4 D8 D4 D4 D4 D4 D1 DB(0xc4) D1 D1 D1 DB(0xc) D1 DB(0x4e) D1 D1 DB(0x4) DB(0x10) DS DS D4 D8 D2 D4 D1 D2 D4 D2 D4 D1 D2 D4 D1 D8 D4 D4 D4 DB(0xc4) DS D4 DS D4 DS D4 D4 DS D4 D4 DB(0x16) DS D4 D4 DB(0xac) D4 D4 DS D4 DS D4 D4 D4 D8 D4 DB(0x16) D4 D4 DB(0xac) D4 D1 D8 DB(0xac) D1 DB(0xc4) DB(0xc4) DB(0x19) DB(0x3a) DS D4 DB(0xac) D4 D1 D4 P(0xb4) E1 E2 >GAME D1 D2 D2 D4 D4 D4 DB(?) D4 DB(?) D1 DB(0x14) D1 DB(0x14) DB(0x5c) D1 D2 D2 D4 D2 D1 D4 D4 D4 D4 D4 D4 D4 D4 D4 DB(0x14) P(0x21) ES E4 >MSN DB(0x104) D4 D4 D4 D1 D1 D2 DB(0x37) D4 D4 P(0x16b) E4 >MSN D2 DB(0x2c) D4 D1 D4 P(0x27) ES E4 >MSN P(0x16b) E4 >MSN D4 D1 D1 P(0x29) E4 E4 >MSN D4 D4 D4 P(0x21) ES E4 >MSN D4 D4 P(0x21) ES E4 D4 DS DS D1 D1 DB(0x5) DB(0x5) D4 D1 DB(0xb) D1 DB(0x15) D1 D1 D1 D4 D4 DS DS D4 DS D1 DB(0xc4) D4 DS D2 D4 D4 D4 DS D2 D1 D4 DS D1 D1 DB(0x43) D1 D4 D2 DB(0x12d) D4 D1 D4 DB(0x109) D1 D4 DB(0x74) D4 DB(0x4d) D1 D4 D2 DB(0x4) D1 D4 DB(0x4e) D1 D4 D2 DB(0xc) D1 D4 D4 DB(0x2b) D4 DB(0x2b) D4 DB(0x201) D1 D1 D4 DS D1 D1 D4 DS D1 D4 DB(0x6b) D4 D2 DB(0x1b) D4 D4 D4 D1 D4 D4 D1 D4 D4 D4 D8 D8 D1 P(0x29) ES ES >MSN D1 D1 D4 D1 D8 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D1 D4 D4 D4 D4 D4 DS D1 D4 D4 DB(0xc) D1 D4 D4 D4 DB(0x14) D4 D1 D4 D2 DB(0xc) D4 D4 D1 D4 D1 DB(0x2b) D4 D4 D4 D4 D4 D4 D4 D4 DB(0xe) D4 DS D4 D4 DB(?) D4 DS D4 DB(0x4) DB(0x4) DB(0x4) D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 DB(0xc4) D4 D4 D4 D4 D4 DB(0xc4) D4 D4 DS DS DS D1 D4 DB(0x37) D4 P(0x29) E4 E4 >MSN D4 D4 D4 D4 DB(0xc4) D4 D4 D4 D4 D4 D4 D4 D4 D4 DB(0x14) D8 D8 D4 D4 D4 DB(0x14) D8 D8 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 P(0x16f) >GAME D4 D4 D4 D4 D4 D4 D4 D2 P(0x23) EB(0x4b) >MSN D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D1 D1 D1 D1 D1 D4 D4 D2 D4 D4 D4 D4 D2 D1 DS DS D1 D4 D4 D4 D4 D2 D1 DS DS D1 D1 D1 D1 D1 D4 D4 D2 D4 D4 D4 D4 D2 D1 DS DS D2 D1 DB(0x27c)	D2 D4 P(0xc) E1 EB(0x10) >GAME D1 D1 D1 D1 D1 DB(0x10) DB(0x31c6) DB(0x10) D1 DB(0x41) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1 D1 DS DS D4 D4 D4 D4 D4 D8 D1 DS DS D4 D1 DS D1 D1 D4 DS DB(0x31c6) DB(0x10) D1 D1 D2 D2 D2 D4 D8 D4 D4 P(0x55) E1 >GAME P(0x23) EB(0x4b) >MSN P(0xfe) E4 >GAME D4 DB(0x109) DB(0x4e) D1 DB(0x2b) D4 D1 D4 DB(0x201) D4 DB(0x19) D4 DB(0x1c) D4 D4 D4 DB(0x3e) D4 D4 DB(0x4) D2 P(0x23) EB(0x4b) >MSN D1 D1 D2 DB(0xdd) DB(0xdd) DB(0xdd) DB(0xdd) D1 D1 DB(0xc8) DB(0xc8) DB(0xc8) DB(0xc8) P(0x3) E4 >LOGIN D1 DB(0x55) D1 D4 D4 DS D8 P(0x22) ES >MSN D1 D4 D2 D2 DB(0x201) D2 D2 DB(0x19) DB(0x74) D2 D2 DB(0xc4) D1 D2 D2 D2 DB(0xfb) P(0x95) E4 >GAME P(?) E4 >GAME D1 DB(0x19) D1 DS DS P(0xde) ES >GAME D4 D1 D4 D4 D1 D4 P(0x23) EB(0x4b) >MSN P(0x14) >MSN P(0xe4) >GAME P(0x96) >GAME P(0xe4) >GAME D4 DS DS DS DS D2 D1 D4 DS D4 D4 DB(0x91) DB(0x91) P(0x19) E4 >MSN D4 DS DS D1 D1 D4 D4 D4 D4 D4 D4 D4 D4 D4 DS DB(0x91) D4 D4 D1 D2 D2 DB(0x91) P(0x1d) E1 >MSN D4 D4 D4 D4 D1 DB(0x6d) D1 D1 D4 D4 DB(0x4b) DB(0x54) P(0x16) >MSN D4 P(0xa5) >GAME D4 D4 DS D4 P(0xa5) >GAME D1 D1 DB(0x201) DB(0x28) D4 DB(0x18) DB(0x3e) D4 DB(0x10) DB(0x8) D4 D1 D4 D8 D1 D1 DB(0xc) D4 D1 D1 DS P(0x22) ES >MSN D1 DB(0x3e) D2 DB(0xe) D4 D2 DB(0x3a) D2 DB(0x41) D4 DB(0x3a) D1 D4 D2 DB(0x41) D2 DB(0x41) D2 DB(0x41) D4 D4 D4 D4 D4 DB(0x41) D4 DB(0x3a) D1 DB(0x3a) D4 D1 D1 D2 DB(0xfb) D1 DB(0x5c) D1 DB(0x55) D1 DB(0x5c) D1 D4 DB(0x12d) DS D4 DS D1 D1 D4 DB(0x31c6) D1 D4 D4 D2 D4 D4 D8 D2 DB(0x26) D2 D2 DB(0x10) D2 D2 DB(0x10) D2 D4 D8 D4 D4 D4 D4 D1 DB(0xc4) D1 D1 D1 DB(0xc) D1 DB(0x4e) D1 D1 DB(0x4) DB(0x10) DS DS D4 D8 D2 D4 D1 D2 D4 D2 D4 D1 D2 D4 D1 D8 D4 D4 D4 DB(0xc4) DS D4 D2 DB(0x1b) D1 D1 D1 D4 P(0x29) ES ES >MSN D4 DS D4 DS D4 D4 DS D4 D4 DB(0x16) DS D4 D4 DB(0xac) D4 D4 DS D4 DS D4 D4 D4 D8 D4 DB(0x16) D4 D4 DB(0xac) D4 D1 D8 DB(0xac) D1 DB(0xc4) DB(0xc4) DB(0x19) DB(0x3a) DS D4 DB(0xac) D4 D1 D4 P(0x4) E1 >GAME P(0x23) EB(0x4b) >MSN P(0xb4) E1 E2 >GAME D1 D2 D2 D4 D4 D4 DB(?) D4 DB(?) D1 DB(0x14) D1 DB(0x14) DB(0x5c) D1 D2 D2 D4 D2 D1 D4 D4 D4 P(0x95) E4 >GAME D2 DB(0xfb) D4 D4 D4 D4 D4 D4 DB(0x14) P(0x21) ES E4 >MSN DB(0x104) D4 D4 D1 D1 D4 D1 D2 DB(0x37) D4 D4 P(0x16b) E4 >MSN D2 DB(0x2c) D4 D1 D4 P(0x27) ES E4 >MSN P(0x16b) E4 >MSN D1 D4 D1 D1 P(0x27) E4 E4 >MSN D4 D4 D4 P(0x21) ES E4 >MSN D4 D4 P(0x21) ES E4 D4 DS DS D1 D1 DB(0x5) DB(0x5) D4 D1 DB(0xb) D1 DB(0x15) D1 D1 D1 D4 D4 DS DS D4 DS D1 DB(0xc4) D4 DS D2 D4 D4 D4 DS D2 D1 D4 DS D1 D1 DB(0x43) D1 D4 D2 DB(0x12d) D4 D1 D4 DB(0x109) D1 D4 DB(0x74) D4 DB(0x4d) D1 D4 D2 DB(0x4) D1 D4 DB(0x4e) D1 D4 D2 DB(0xc) D1 D4 D4 DB(0x2b) D4 DB(0x201) D1 D1 D4 DS D1 D1 D4 DS D1 D4 DB(0x6b) D4 D4 D4 D1 D4 D4 D1 D4 D4 D4 D8 D8 D8 D1 D4 D4 D4 D4 D4 DS D1 D4 D4 D4 DB(0x14) D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 DS D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D1 D4 D1 DB(0x2b) D4 DS D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 DB(0xc4) D4 D4 D4 D4 DB(0xc4) D4 D4 DS DS DS D1 D4 DB(0x37) D4 D4 P(0x29) E4 E4 >MSN D4 D4 P(0x16f) >GAME D4 D4 D4 D4 D4 D4 D4 D4 DB(0x4) DB(0x4) DB(0x4) D4 D2 P(0x23) EB(0x4b) >MSN D4 DB(0xe) D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D1 D4 D4 D4 D1 D4 D4 DB(0xc) DB(0xc) D4 D4 D4 D4 D4 D1 D1 D1 D1 D1 D4 D4 D2 D4 D4 D4 D4 D2 D1 DS DS D1 D4 D4 D4 D4 D2 D1 DS DS D1 D1 D1 D1 D1 D4 D4 D2 D4 D4 D4 D4 D2 D1 DS DS D2 D1 DB(0x27c) D4 DB(0x37) DB(0x37) D4 DB(0x129) DB(0x129) D4 D4 DB(0x14) D8 D8 D4 D4 P(?) E4 E4 >MSN D2 D1 D1 D4 D4 D1 D4 D4 D1 D4 D4 D8 P(0x21) ES E4 >GAME D2 D2 DB(0x5e) D4 D4 D4 D1 DB(0xac) D4 D8 D8 D1 DB(0xac) D4 D8 D1 DB(0xac) D1 DB(0xc4) D4 DS D4 D1 DB(0xac) D4 D4 D2 D1 DB(0x50) D4 DB(0xc2) D1 D2 DB(0x7b) D4 D4 D4 D4 D4 D4
+difere_id	src_projectg_lobbymain	?OnToppage_ValEventDown@CLobbyMain@@IAEXXZ	1	DIFERENTE	0062ff70	P(0x75) >GAME	P(0xda) >GAME
+igual	automiraclesigncontroller	?SendAutoMiracleSign@@YIXK@Z	1	QUASE	0047dc50	P(0x185) E4 >?	P(0x185) E4 >?
+igual	classicwind	?HandleMsg@CClassicWind@@MAEXABVMsgObject@@@Z	1	IGUAL	00491700	E4 E4 D4 D4	E4 E4 D4 D4
+igual	classicwind	?HandleMsg@CNoClassicWind@@MAEXABVMsgObject@@@Z	1	IGUAL	00490fa0	E4 E4 D4 D4	E4 E4 D4 D4
+igual	clubsetexpmultiplycontroller	?Send@CClubsetExpMultiplyController@@QAEXPAVCClubsetExpMultiplyObject@@@Z	1	DIFERENTE	0056a580	P(0x181) EB(0x10) >GAME	P(0x181) EB(0x10) >GAME
+igual	clubsetlevelupwnd	?OnLevelUpCancel983@FrClubSetLevelUpWnd@@QAEXPAVWReceivedPacket@@@Z	1	IGUAL	004ec6d0	D4	D4
+igual	clubsetlevelupwnd	?OnLevelUpResult983@FrClubSetLevelUpWnd@@QAEXPAVWReceivedPacket@@@Z	1	IGUAL	004eb130	D4 D4	D4 D4
+igual	clubsetlevelupwnd	?OnLevelUpStart983@FrClubSetLevelUpWnd@@QAEXPAVWReceivedPacket@@@Z	1	IGUAL	004ea850	D4	D4
+igual	clubsetrankupwnd	?OnRankUpPacketA983@FrClubSetRankUpWnd@@QAEXPAVWReceivedPacket@@@Z	1	IGUAL	004c7360	D4 D4	D4 D4
+igual	clubsetrankupwnd	?OnRankUpPacketB983@FrClubSetRankUpWnd@@QAEXPAVWReceivedPacket@@@Z	1	IGUAL	004c8540	D4 D4	D4 D4
+igual	clubsetrankupwnd	?OnRankUpResult983@FrClubSetRankUpWnd@@QAEXPAVWReceivedPacket@@@Z	1	IGUAL	004c64c0	D4 D4	D4 D4
+igual	clubsetresetwnd	?OnResetResult983@FrClubSetResetWnd@@QAEXPAVWReceivedPacket@@@Z	1	IGUAL	0049bc40	D4 D4	D4 D4
+igual	conditionalauxpartobject	?Send@CConditionalAuxpartObject@@QAEXHH@Z	1	DIFERENTE	004aa7d0	P(0x15d) E4 E4 E1 >?	P(0x15d) E4 E4 E1 >?
+igual	controllerhandler	?OnPacket13@CControllerHandler@_controller@_gateway@@QAEXABVMsgObject@@@Z	1	IGUAL	004bb560	DB(?)	DB(?)
+igual	controllerhandler	?OnPacket14@CControllerHandler@_controller@_gateway@@QAEXABVMsgObject@@@Z	1	IGUAL	004bb700	D4 D4 D1	D4 D4 D1
+igual	controllerhandler	?OnPacket15@CControllerHandler@_controller@_gateway@@QAEXABVMsgObject@@@Z	1	IGUAL	004bb7c0	D4 D4 D1 DB(0x4)	D4 D4 D1 DB(0x4)
+igual	controllerhandler	?OnPacket16@CControllerHandler@_controller@_gateway@@QAEXABVMsgObject@@@Z	1	IGUAL	004bb860	D4 D4	D4 D4
+igual	controllerhandler	?OnPacket18@CControllerHandler@_controller@_gateway@@QAEXABVMsgObject@@@Z	1	IGUAL	004bb8c0	D4 D4	D4 D4
+igual	controllerhandler	?OnPacket19@CControllerHandler@_controller@_gateway@@QAEXABVMsgObject@@@Z	1	IGUAL	004bb980	D4 D4	D4 D4
+igual	eventicon	?EventIcon_Arin2014983@@YIXXZ	1	IGUAL	00b15410	P(0x192) >?	P(0x192) >?
+igual	eventicon	?EventIcon_OneDayQuest983@@YIXXZ	1	IGUAL	00b14af0	P(0x151) >GAME	P(0x151) >GAME
+igual	eventicon	?EventIcon_Workshop2013983@@YIXXZ	1	IGUAL	00b15360	P(0x172) >?	P(0x172) >?
+igual	gameroomdlg	?Banish@FrGameRoomDlg@@IAEXXZ	1	IGUAL	004ff320	P(0x26) E4 >GAME	P(0x26) E4 >GAME
+igual	gameroomdlg	?OnApproachGiftDlgResult@FrGameRoomDlg@@IAE_NHPAVFrForm@@@Z	1	QUASE	00505380	P(0xcb) E4 >GAME	P(0xcb) E4 >GAME
+igual	gameroomdlg	?OnAssist@FrGameRoomDlg@@IAEXXZ	1	IGUAL	005045b0	P(0x184) >?	P(0x184) >?
+igual	gameroomdlg	?OnChangeTeamBtnUp@FrGameRoomDlg@@IAEXXZ	1	QUASE	005076c0	P(0x10) E1 >GAME	P(0x10) E1 >GAME
+igual	gameroomdlg	?OnMapHoleComboDown@FrGameRoomDlg@@IAEXXZ	1	IGUAL	00503cf0	P(0xa) E2 E1 E1 E1 >?	P(0xa) E2 E1 E1 E1 >?
+igual	gameroomdlg	?OnMapNextBtnUp@FrGameRoomDlg@@IAEXXZ	1	IGUAL	00503b50	P(0xa) E2 E1 E1 E1 >?	P(0xa) E2 E1 E1 E1 >?
+igual	gameroomdlg	?OnMapPrevBtnUp@FrGameRoomDlg@@IAEXXZ	1	IGUAL	00503a50	P(0xa) E2 E1 E1 E1 >?	P(0xa) E2 E1 E1 E1 >?
+igual	gameroomdlg	?OnProc@FrGameRoomDlg@@MAEXM@Z	1	DIFERENTE	0050acd0	P(0xa) E2 E1 E1 E1 >? P(0x32) E1 >?	P(0xa) E2 E1 E1 E1 >? P(0x32) E1 >?
+igual	gameroomdlg	?OnReadyBtnUp@FrGameRoomDlg@@IAEXXZ	1	IGUAL	00505bc0	P(0xe) E4 >? P(0xd) E1 >? P(0xd) E1 >?	P(0xe) E4 >? P(0xd) E1 >? P(0xd) E1 >?
+igual	gameroomdlg	?OnRoomExtResQuitDlgResult@FrGameRoomDlg@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00505410	P(0xf) E1 E2 E8 E8 >? E8	P(0xf) E1 E2 E8 E8 >? E8
+igual	gameroomdlg	?OnStartBtnUp@FrGameRoomDlg@@IAEXXZ	1	DIFERENTE	00509960	P(0xe) E4 >? P(0xd) E1 >? P(0xd) E1 >?	P(0xe) E4 >? P(0xd) E1 >? P(0xd) E1 >?
+igual	gameroomdlg	?OnStartTicketResult983@FrGameRoomDlg@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00505e20	P(0xe) E4 >GAME	P(0xe) E4 >GAME
+igual	gameroomdlg	?OnUserDblClick@FrGameRoomDlg@@IAEXXZ	1	IGUAL	005038d0	P(0x3f) E4 >GAME	P(0x3f) E4 >GAME
+igual	gameroomdlg	?SetRoomCaddieControl@FrGameRoomDlg@@IAEXH@Z	1	IGUAL	0050b660	P(0xc) E1 E4 >GAME P(0xc) E1 E4 >GAME P(0xc) E1 E4 >GAME	P(0xc) E1 E4 >GAME P(0xc) E1 E4 >GAME P(0xc) E1 E4 >GAME
+igual	gameroomdlg	?SetRoomCharControl@FrGameRoomDlg@@IAEXH@Z	1	IGUAL	00508f60	P(0xc) E1 E4 >GAME P(0xc) E1 E4 >GAME	P(0xc) E1 E4 >GAME P(0xc) E1 E4 >GAME
+igual	gameroomdlg	?UpdateMaster983@FrGameRoomDlg@@IAEXXZ	1	DIFERENTE	0050c760	P(0xa) E2 E1 E1 E4 >GAME	P(0xa) E2 E1 E1 E4 >GAME
+igual	ghostmain	?CallBackEquipItemResult@CGhostMain@@AAE_NHPAVFrForm@@@Z	1	IGUAL	00823b70	P(0x20) E1 EB(0x28) >?	P(0x20) E1 EB(0x28) >?
+igual	ghostmain	?Initialize@CGhostMain@@AAEXXZ	1	DIFERENTE	00826850	P(0xc1) E1 >?	P(0xc1) E1 >?
+igual	ghostmain	?OnDownStart@CGhostMain@@IAEXXZ	1	QUASE	00826ea0	P(0xc2) E1 >GAME	P(0xc2) E1 >GAME
+igual	ghostmain	?OnExit@CGhostMain@@IAEXXZ	1	QUASE	00823700	P(0xc1) E1 >? P(0xc2) E1 E4 E1 >GAME	P(0xc1) E1 >? P(0xc2) E1 E4 E1 >GAME
+igual	ghostmain	?OnInitGhostFinish@CGhostMain@@IAEXXZ	1	IGUAL	00827a10	P(0xc2) E1 E4 ES E1 >?	P(0xc2) E1 E4 ES E1 >?
+igual	ghostmain	?SendPacketEquipResult@CGhostMain@@AAEXW4PANGYA_ITEM_GROUP@@K@Z	1	IGUAL	00822800	P(0xb) E1 E4 >GAME	P(0xb) E1 E4 >GAME
+igual	golfruleholeinone	?RequestShotReview@CGolfRuleHoleInOne@@UAEXH@Z	1	QUASE	00545570	P(0x34) >?	P(0x34) >?
+igual	gptyperoomdlg	?OnGuildInviteLBtnUp@FrMassTypeRoomDlg@@IAEXXZ	1	DIFERENTE	00516390	P(0xba) ES E4 >GAME P(0x29) E4 >GAME	P(0xba) ES E4 >GAME P(0x29) E4 >GAME
+igual	grandprixawarddlg	?OnInit@FrGrandPrixAwardDlg@@UAE_NXZ	1	DIFERENTE	0054d110	P(0x6) EB(0x109) >GAME	P(0x6) EB(0x109) >GAME
+igual	grandprixdocument	?Read5564a0_983@CGrandPrixDocument@_grandprix@_gateway@@QAEXPAVWReceivedPacket@@@Z	1	QUASE	005564a0	D4 D4	D4 D4
+igual	grandprixdocument	?Read5582b0_983@CGrandPrixDocument@_grandprix@_gateway@@QAEXPAVWReceivedPacket@@@Z	1	DIFERENTE	005582b0	D1 D4 D4 D1 D1 DB(0x60) DB(0x14) DB(0x60)	D1 D4 D4 D1 D1 DB(0x60) DB(0x14) DB(0x60)
+igual	grandprixdocument	?ReadList983@CGrandPrixDocument@_grandprix@_gateway@@QAEXPAVWReceivedPacket@@@Z	1	QUASE	005592b0	D4 D4 DB(0x4)	D4 D4 DB(0x4)
+igual	grandprixdocument	?ReadPairs983@@YIXAAV?$vector@U?$pair@KH@std@@V?$allocator@U?$pair@KH@std@@@2@@std@@PAVWReceivedPacket@@@Z	1	QUASE	005580d0	D4 D4 D4	D4 D4 D4
+igual	grandprixdocument	?UpdatePair983@CGrandPrixDocument@_grandprix@_gateway@@QAEXPAVWReceivedPacket@@@Z	1	DIFERENTE	00558250	D4 D4	D4 D4
+igual	grandprixlimitdlg	?OnNormalLobby@FrRoomListSelector@@IAEXXZ	1	IGUAL	0059e9f0	P(0x81) >?	P(0x81) >?
+igual	grandprixlimitdlg	?Send@sGrandPrixLobbyRequest983@@QAEXXZ	1	IGUAL	0059ebd0	P(0x176) >?	P(0x176) >?
+igual	grandprixopendlg	?OnOk@FrGrandPrixOpenDlg@_grandprix@_gateway@@IAEXXZ	1	IGUAL	0055b0e0	P(0x179) E4 >?	P(0x179) E4 >?
+igual	grandprixroomdlg	?Enter983@FrGrandPrixRoomDlg@@IAEXXZ	1	IGUAL	0050fb20	P(0x5c) >?	P(0x5c) >?
+igual	groundinclinationcontroller	?UseGroundInclination@@YI_NPAVCGroundInclinationObject@@H@Z	1	DIFERENTE	0055f0e0	P(0x138) E4 >?	P(0x138) E4 >?
+igual	holeinonegamehandler	?On01@CHoleInOneGameHandler@_golfgame@_gateway@@QAEXABVMsgObject@@@Z	1	DIFERENTE	0057bd30	D4 DB(0x8)	D4 DB(0x8)
+igual	holeinonegamehandler	?On10@CHoleInOneGameHandler@_golfgame@_gateway@@QAEXABVMsgObject@@@Z	1	QUASE	0057ceb0	D4 D4	D4 D4
+igual	holeinonegamehandler	?On18@CHoleInOneGameHandler@_golfgame@_gateway@@QAEXABVMsgObject@@@Z	1	QUASE	0057dce0	D4 D4 D4 D4 D4 D4 D4 D4 D4 D8 D8 D8 D4 D4 D4 D4	D4 D4 D4 D4 D4 D4 D4 D4 D4 D8 D8 D8 D4 D4 D4 D4
+igual	holeinonegamehandler	?OnProcess@CHoleInOneGameHandler@_golfgame@_gateway@@UAEXM@Z	1	QUASE	0057c440	P(0x12c) >?	P(0x12c) >?
+igual	holeinonegamehandler	?OnSend12c@CHoleInOneGameHandler@_golfgame@_gateway@@QAEXXZ	1	IGUAL	005798c0	P(0x12c) >GAME	P(0x12c) >GAME
+igual	holeinonegamehandler	?SendTimeOver@CHoleInOneGameHandler@_golfgame@_gateway@@QAEXXZ	1	IGUAL	0057aee0	P(0x137) >?	P(0x137) >?
+igual	lobbyavataractor	?Request983@LobbyAvatarActor@@AAEXPAUsLobbyAvatarInfo983@@@Z	1	QUASE	00590f00	P(0xb9) E1 E4 E1 >GAME	P(0xb9) E1 E4 E1 >GAME
+igual	lobbyplayer	?SendLobbyChar983@@YIXK@Z	1	DIFERENTE	00566f30	P(?) E1 E4 >GAME P(0x20) E1 E4 >GAME	P(?) E1 E4 >GAME P(0x20) E1 E4 >GAME
+igual	losslesshitcontroller	?Send@CLosslessHitController@@QAEXPAVCLosslessHitObject@@@Z	1	DIFERENTE	005a0a60	P(0x181) EB(0x10) >GAME	P(0x181) EB(0x10) >GAME
+igual	losslesshitweathercontroller	?Send@CLosslessHitWeatherController@@QAEXPAVCLosslessHitWeatherObject@@@Z	1	DIFERENTE	00569b00	P(0x181) EB(0x10) >GAME	P(0x181) EB(0x10) >GAME
+igual	miraclesignskillcontroller	?SendMiracleSignSkill@@YIXK@Z	1	IGUAL	0056ade0	P(0x198) E4 >?	P(0x198) E4 >?
+igual	normallobbyroom	?OnRoomListDClick@CNormalLobbyRoom@@UAEXPAVFrRoomListDlg@@@Z	1	QUASE	0059b980	P(0x3e) E2 ES >? P(0x9) E2 ES >?	P(0x3e) E2 ES >? P(0x9) E2 ES >?
+igual	normallobbyroom	?OnRoomListRUp@CGrandPrixLobbyRoom@@UAEXPAVFrRoomListDlg@@@Z	1	IGUAL	0059a390	P(0x2d) E2 >?	P(0x2d) E2 >?
+igual	normallobbyroom	?OnRoomListRUp@CNormalLobbyRoom@@UAEXPAVFrRoomListDlg@@@Z	1	QUASE	00598e70	P(0x2d) E2 >?	P(0x2d) E2 >?
+igual	powershotitemcontroller	?Send@CPowerShotItemController@@QAEXPAVCPowerShotItemObject@@@Z	1	DIFERENTE	005b79d0	P(0x197) EB(0x10) >GAME	P(0x197) EB(0x10) >GAME
+igual	putter10yardcontroller	?Send@CPutter10YardController@@QAEXPAVCPutter10YardObject@@@Z	1	DIFERENTE	0056b330	P(0x181) EB(0x10) >GAME	P(0x181) EB(0x10) >GAME
+igual	roomlistdlg	?OnMakeRoomUp@FrRoomListDlg@@IAEXXZ	1	IGUAL	0051f2e0	P(0x43) >?	P(0x43) >?
+igual	roomlistdlg	?OnQuestBtnUp@FrRoomListDlg@@IAEXXZ	1	IGUAL	0051f4f0	P(0x151) >?	P(0x151) >?
+igual	safetyitemcontroller	?Send@CSafetyItemController@@QAEXPAVCSafetyItemObject@@@Z	1	DIFERENTE	005e0670	P(0x181) EB(0x10) >GAME	P(0x181) EB(0x10) >GAME
+igual	singletypedlg	?OnFixHolecupPos@FrSingleTypeDlg@@IAEXXZ	1	IGUAL	00522d90	P(0xa) E2 E1 E1 E4 >GAME	P(0xa) E2 E1 E1 E4 >GAME
+igual	singletypedlg	?OnHoleSelected@FrSingleTypeDlg@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00522960	P(0xa) E2 E1 E1 E1 >GAME	P(0xa) E2 E1 E1 E1 >GAME
+igual	src_projectg_addfrienddlg	?OnCheckBtnUp@FrAddFriendDlg@@IAEXXZ	1	DIFERENTE	00ac5c90	P(0x17) ES >MSN P(0x7) E1 ES >?	P(0x17) ES >MSN P(0x7) E1 ES >?
+igual	src_projectg_addfrienddlg	?OnOKBtnUp@FrAddFriendDlg@@IAEXXZ	1	DIFERENTE	00ac5fa0	P(0x18) E4 ES >MSN	P(0x18) E4 ES >MSN
+igual	src_projectg_avatar_avatar	?SendMove@ntAvatar@@AAEXABVWVector@@_N@Z	1	QUASE	007a3d60	P(0x63) E1 EB(0x4) EB(0x4) EB(0x4) >GAME	P(0x63) E1 EB(0x4) EB(0x4) EB(0x4) >GAME
+igual	src_projectg_avatar_avatar	?SetAction@ntAvatar@@QAEXH@Z	1	QUASE	007a3cb0	P(0x63) E1 E4 >GAME	P(0x63) E1 E4 >GAME
+igual	src_projectg_avatar_avatar	?SetState@ntAvatar@@QAEXK@Z	1	QUASE	007a4820	P(0x63) E1 E4 >GAME	P(0x63) E1 E4 >GAME
+igual	src_projectg_avatar_avatar	?UseSPItem@ntAvatar@@QAEXW4eSPAVILITYTYPE@@@Z	1	QUASE	007a4170	P(0xc) E1 E4 E4 >GAME	P(0xc) E1 E4 E4 >GAME
+igual	src_projectg_avatar_main	?HandleMsg@ntAvatarChatMain@@UAEXABVMsgObject@@@Z	1	DIFERENTE	007acdb0	P(0x63) E1 EB(0x4) EB(0x4) EB(0x4) >GAME P(0xeb) E4 >GAME	P(0x63) E1 EB(0x4) EB(0x4) EB(0x4) >GAME P(0xeb) E4 >GAME
+igual	src_projectg_avatar_main	?OnRestorePreserved@ntAvatarChatMain@@UAEXXZ	1	DIFERENTE	007ab920	P(0xc) E1 E4 >GAME	P(0xc) E1 E4 >GAME
+igual	src_projectg_avatar_mainui	?OnKickAvatar@ntAvatarChatMain@@IAEXXZ	1	QUASE	007b0be0	P(0x26) E4 >GAME	P(0x26) E4 >GAME
+igual	src_projectg_avatar_mainui	?OnNoteDlgResult@ntAvatarChatMain@@IAE_NHPAVFrForm@@@Z	1	QUASE	007b20a0	P(0x3c) E2 E4 ES E1 >?	P(0x3c) E2 E4 ES E1 >?
+igual	src_projectg_avatar_mainui	?OnPasswordDlgResult@ntAvatarChatMain@@IAE_NHPAVFrForm@@@Z	1	QUASE	007b2440	P(0x9) E2 ES >?	P(0x9) E2 ES >?
+igual	src_projectg_bingoeventdlg	?OnLButtonDownStartButton@FrBingoEventDlg@@IAEXXZ	1	IGUAL	00afd110	P(0xe3) E4 >?	P(0xe3) E4 >?
+igual	src_projectg_birthdayeventdlg	?OnLButtonDownGiftButton@FrBirthdayEventDlg@@IAEXXZ	1	DIFERENTE	00b133d0	P(0x15b) >?	P(0x15b) >?
+igual	src_projectg_bongdarishopdlg	??0FrBongdariShopDlg@@QAE@XZ	1	DIFERENTE	008c0340	P(0xc1) E1 >?	P(0xc1) E1 >?
+igual	src_projectg_browser	?Close@CBrowser@@QAEXXZ	1	DIFERENTE	00868de0	P(0x3d) >GAME P(0x8c) >GAME	P(0x3d) >GAME P(0x8c) >GAME
+igual	src_projectg_browser	?OpenWeb983@CBrowser@@QAEXPBD_NH@Z	1	IGUAL	00870d90	P(0xa1) E1 >GAME	P(0xa1) E1 >GAME
+igual	src_projectg_browser	?SendWebPageClose983@@YIXH@Z	1	QUASE	00868320	P(0x9e) >? P(0xa0) E1 P(0xa2) P(0xa4) >? P(0xa2) >? P(0x3d) >?	P(0x9e) >? P(0xa0) E1 P(0xa2) P(0xa4) >? P(0xa2) >? P(0x3d) >?
+igual	src_projectg_browser	?SendWebPageOpen983@@YIXH@Z	1	SEM_PAR	00870d90	P(0xa1) E1 >GAME	P(0xa1) E1 >GAME
+igual	src_projectg_caddieinfodlg	?OnSignUpConfirmDlgResult@FrCaddieInfoDlg@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	00a9a8b0	P(0x39) E4 >?	P(0x39) E4 >?
+igual	src_projectg_caddieinfodlg	?SendCaddieWarningCheckOption@FrCaddieInfoDlg@@IAEXXZ	1	IGUAL	00a9a780	P(0x6b) E4 E1 >GAME	P(0x6b) E4 E1 >GAME
+igual	src_projectg_caddiewarningdlg	?OnOkBtnUp@FrCaddieWarningDlg@@IAEXXZ	1	IGUAL	00ac90b0	P(0x6b) E4 E1 >GAME	P(0x6b) E4 E1 >GAME
+igual	src_projectg_camera	?OnProcess@CCamera@@UAEXM@Z	1	QUASE	007172d0	P(0x13) EB(0x4) >GAME	P(0x13) EB(0x4) >GAME
+igual	src_projectg_camera	?ProcessMousePick@CCamera@@IAEXM@Z	1	DIFERENTE	00714350	P(0x19) EB(0xc) >GAME	P(0x19) EB(0xc) >GAME
+igual	src_projectg_cardboxdlg	?OnPackOpenBtnUp@FrCardBoxDlg@@IAEXXZ	1	IGUAL	008c1ea0	P(0xca) E4 E4 >?	P(0xca) E4 E4 >?
+igual	src_projectg_cardboxdlg	?RecievedPacket@FrCardBoxDlg@@QAEXPAVWReceivedPacket@@@Z	1	QUASE	008c3080	D4 DB(0x3a) D1 DB(0x3a) D4	D4 DB(0x3a) D1 DB(0x3a) D4
+igual	src_projectg_cardremove	?OnUseCardRemoveConfirm@FrCardRemove@@IAE_NHPAVFrForm@@@Z	1	QUASE	007fe510	P(0xe0) E4 E4 E4 E4 >GAME	P(0xe0) E4 E4 E4 E4 >GAME
+igual	src_projectg_ccardbook	?OnCardDlgResult@CCardSlot@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	007f4930	P(0xbd) E4 >GAME	P(0xbd) E4 >GAME
+igual	src_projectg_ccardbook	?OnCardPackDlgResult@CCardSlot@@IAE_NHPAVFrForm@@@Z	1	IGUAL	007f3ac0	P(0xca) E4 E4 >?	P(0xca) E4 E4 >?
+igual	src_projectg_ccardbook	?OnItemAttachCardDlgResult@CCardSlot@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	007f3cd0	P(0xc8) EB(0x3a) >?	P(0xc8) EB(0x3a) >?
+igual	src_projectg_ccardbook	?OnSpCardDlgResult@CCardSlot@@IAE_NHPAVFrForm@@@Z	1	IGUAL	007f3be0	P(0xbd) E4 >?	P(0xbd) E4 >?
+igual	src_projectg_checkoutdlg	?OnConfirmResult@FrCheckoutDlg@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	00aa25f0	P(0x1d) E1 E2 EB(0x25) E4 >? P(?) E1 E2 EB(0x25) E4 >GAME P(0x1d) E1 E2 EB(0x25) E4 >GAME	P(0x1d) E1 E2 EB(0x25) E4 >? P(?) E1 E2 EB(0x25) E4 >GAME P(0x1d) E1 E2 EB(0x25) E4 >GAME
+igual	src_projectg_clientsetting	?CheckPendingChanges@COption@@QAEXXZ	1	DIFERENTE	00497180	P(0x55) E1 >?	P(0x55) E1 >?
+igual	src_projectg_clientsetting	?SendUpdateGameOptionPacket@COption@@QAEXXZ	1	IGUAL	004939b0	P(0x69) EB(0x240) >GAME	P(0x69) EB(0x240) >GAME
+igual	src_projectg_clock	?HandleMsg@CClock@@UAEXABVMsgObject@@@Z	1	IGUAL	00717cc0	P(0x22) >GAME	P(0x22) >GAME
+igual	src_projectg_club	?BarProcess@CClub@@AAEXM@Z	1	DIFERENTE	006ad110	P(0x16) E1 >GAME P(0x16) E1 >GAME	P(0x16) E1 >GAME P(0x16) E1 >GAME
+igual	src_projectg_compounddlg	?OnYesBtnUp@FrCompoundDlg@@IAEXXZ	1	IGUAL	00aa4dd0	P(0x68) E4 >GAME	P(0x68) E4 >GAME
+igual	src_projectg_contentsdoc	?DecodeMissionInfo@CMissionEvent@@QAEXAAVWReceivedPacket@@@Z	1	QUASE	0090d2e0	D4 DB(0x5) D1 D1	D4 DB(0x5) D1 D1
+igual	src_projectg_contentsdoc	?LoadFromPacket@CGimmickContainer@@QAEXAAVWReceivedPacket@@@Z	1	QUASE	009103e0	D4 D1 DB(0x24)	D4 D1 DB(0x24)
+igual	src_projectg_createnickdlg	?OnCheckBtnUp@FrCreateNickDlg@@IAEXXZ	1	IGUAL	00ace020	P(0x7) ES >LOGIN	P(0x7) ES >LOGIN
+igual	src_projectg_createnickdlg	?OnOKBtnUp@FrCreateNickDlg@@IAEXXZ	1	IGUAL	00acde40	P(0x6) ES >LOGIN	P(0x6) ES >LOGIN
+igual	src_projectg_deleteitem	?OnConfirmResult@FrDeleteItemDlg@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	00a7ffb0	P(0x64) E4 E4 >?	P(0x64) E4 E4 >?
+igual	src_projectg_detailedroominfodlg	?OnGalleryBtnUp@FrDtRoomDlg@@IAEXXZ	1	QUASE	00acf4e0	P(0x3e) E2 ES >?	P(0x3e) E2 ES >?
+igual	src_projectg_detailedroominfodlg	?OnJoinBtnUp@FrDtRoomDlg@@IAEXXZ	1	DIFERENTE	00ad04e0	P(0x9) E2 ES >?	P(0x9) E2 ES >?
+igual	src_projectg_detailedroominfodlg	?OnPasswordDlgResult@FrDtRoomDlg@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00acf100	P(0x9) E2 ES >?	P(0x9) E2 ES >?
+igual	src_projectg_dlgquickstartsetting	?SendRequestMatching@FrQuickStartDlg@@IAEXE@Z	1	QUASE	00ad1940	P(0xbf) E1 >GAME	P(0xbf) E1 >GAME
+igual	src_projectg_dlgquickstartsetting	?UpdateData@FrQuickStartSettingDlg@@QAEXXZ	1	QUASE	00ad2440	P(0xbe) E1 E1 E1 >GAME	P(0xbe) E1 E1 E1 >GAME
+igual	src_projectg_enchantdlg	?OnYesBtnUp@FrEnchantDlg@@IAEXXZ	1	QUASE	00aa7240	P(0x4b) E1 E1 E4 EB(0x201) >GAME	P(0x4b) E1 E1 E4 EB(0x201) >GAME
+igual	src_projectg_familymain	?OnDownBtnStart@CFamilyMain@@IAEXXZ	1	IGUAL	00b1b450	P(0x5a) E1 >GAME	P(0x5a) E1 >GAME
+igual	src_projectg_familytask	?OnPacket@CFamilyTask@@MAEHAAVWReceivedPacket@@@Z	1	DIFERENTE	00b1c5d0	D2 D1 D4	D2 D1 D4
+igual	src_projectg_frrandomboxprogress	?OnProc@FrRandomBoxProgress@@MAEXM@Z	1	IGUAL	008c5610	P(0xef) E4 >?	P(0xef) E4 >?
+igual	src_projectg_frticketexchangedlg	?Request@FrTicketExchangeDlg@@AAE_NIKI@Z	1	IGUAL	00b06460	P(0xdf) E4 E4 E4 >?	P(0xdf) E4 E4 E4 >?
+igual	src_projectg_g_starmode	?Skip30vs@CGStarMode@@QAEXXZ	1	IGUAL	00b1cbe0	P(0x4) E1 >?	P(0x4) E1 >?
+igual	src_projectg_gameunit	?OnConnect@GameUnit@@AAEHAAVWReceivedPacket@@@Z	1	QUASE	00a51750	D1 D2 D1 D1 D1 P(0x2) ES E4 E4 E2 ES ES E4 ES ES >?	D1 D2 D1 D1 D1 P(0x2) ES E4 E4 E2 ES ES E4 ES ES >?
+igual	src_projectg_ggc_wrapper	?_GGC_CSAuth2@@YIXAAVWReceivedPacket@@@Z	1	IGUAL	00a5d0b0	DB(0x10)	DB(0x10)
+igual	src_projectg_ghostgamedlg	?OnDownCancel@FrGhostGameMapDlg@@IAEXXZ	1	IGUAL	00818c20	P(0xc1) E1 >GAME	P(0xc1) E1 >GAME
+igual	src_projectg_ghostgamedlg	?OnDownRecentMatch@FrGhostGameMapDlg@@IAEXXZ	1	IGUAL	0081f3a0	P(0xc2) E1 E1 E4 E4 >GAME	P(0xc2) E1 E1 E4 E4 >GAME
+igual	src_projectg_ghosthandler	?OnGhostPacket@CGhostHandler@@QAEXAAVWReceivedPacket@@@Z	1	DIFERENTE	00821f80	D1 D4 D4 D4 DS D4 DS D1 D1 D4 D4 D1 D1 D4 D1 DS D4 DB(0x10) D4 D1	D1 D4 D4 D4 DS D4 DS D1 D1 D4 D4 D1 D1 D4 D1 DS D4 DB(0x10) D4 D1
+igual	src_projectg_ghosthandler	?RecordComplete@CGhostHandler@@QAEXXZ	1	IGUAL	008224f0	P(0xc2) E1 E1 E1 E4 E4 >GAME	P(0xc2) E1 E1 E1 E4 E4 >GAME
+igual	src_projectg_ghosthandler	?RequestGhostGameList@CGhostHandler@@QAEXK@Z	1	QUASE	00821130	P(0xc1) E1 >? P(0xc2) E1 E4 >?	P(0xc1) E1 >? P(0xc2) E1 E4 >?
+igual	src_projectg_ghosthandler	?SendErrorReport@CGhostHandler@@QAEXABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z	1	IGUAL	00820a10	P(0xc2) E1 ES ES >GAME	P(0xc2) E1 ES ES >GAME
+igual	src_projectg_ghosthandler	?UploadComplete@CGhostHandler@@QAEX_NABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z	1	IGUAL	008214d0	P(0xc2) E1 ES >GAME	P(0xc2) E1 ES >GAME
+igual	src_projectg_ghostplayer	?SendAwardResult@CGhostPlayer@@AAEXXZ	1	QUASE	0082a9f0	P(0xc2) E1 E4 E4 E1 E4 E4 E4 E4 E4 E4 E4 E4 E1 E1 E1 >GAME	P(0xc2) E1 E4 E4 E1 E4 E4 E4 E4 E4 E4 E4 E4 E1 E1 E1 >GAME
+igual	src_projectg_ghosttask	?OnPacket@CGhostTask@@MAEHAAVWReceivedPacket@@@Z	1	IGUAL	0082c830	D2 DS D1	D2 DS D1
+igual	src_projectg_giftdlg	?GiftProgress@FrGiftDlg@@QAEXXZ	1	DIFERENTE	00aaf840	P(0x1f) ES E4 ES E1 E2 EB(0x25) >? P(0x1f) ES E4 ES E1 E2 EB(0x25) P(0x1f) ES E4 ES E1 E2 EB(0x25) >GAME	P(0x1f) ES E4 ES E1 E2 EB(0x25) >? P(0x1f) ES E4 ES E1 E2 EB(0x25) P(0x1f) ES E4 ES E1 E2 EB(0x25) >GAME
+igual	src_projectg_giftdlg	?OnBtNickCheckUp@FrGiftDlg@@IAEXXZ	1	DIFERENTE	00aaf510	P(0x7) E1 ES >?	P(0x7) E1 ES >?
+igual	src_projectg_giftdlg	?OnFriendBtnUp@FrGiftDlg@@IAEXXZ	1	DIFERENTE	00aaf3a0	P(0x3c) E2 P(0x13) E2 >MSN	P(0x3c) E2 P(0x13) E2 >MSN
+igual	src_projectg_gmtoolkit	?CommandDestroy@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	DIFERENTE	00a77390	P(0x60) E2 >GAME P(0x8f) E2 >GAME	P(0x60) E2 >GAME P(0x8f) E2 >GAME
+igual	src_projectg_gmtoolkit	?CommandDiscon_UID@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	DIFERENTE	00a770c0	P(0x8f) E2 E4 >GAME P(0x61) E4 >GAME	P(0x8f) E2 E4 >GAME P(0x61) E4 >GAME
+igual	src_projectg_gmtoolkit	?CommandDisconnect@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	DIFERENTE	00a77220	P(0x8f) E2 E4 >GAME P(0x61) E4 >GAME	P(0x8f) E2 E4 >GAME P(0x61) E4 >GAME
+igual	src_projectg_gmtoolkit	?CommandGiveItem@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	DIFERENTE	00a778f0	P(0x8f) E2 E4 E4 E4	P(0x8f) E2 E4 E4 E4
+igual	src_projectg_gmtoolkit	?CommandGoldenBell@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	DIFERENTE	00a77bc0	P(0x8f) E2 E4 E4	P(0x8f) E2 E4 E4
+igual	src_projectg_gmtoolkit	?CommandIdentity@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	DIFERENTE	00a77690	P(0x8f) E2 E4 ES >GAME P(0x8f) E2 E4 ES >GAME	P(0x8f) E2 E4 ES >GAME P(0x8f) E2 E4 ES >GAME
+igual	src_projectg_gmtoolkit	?CommandKickUser@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	DIFERENTE	00a76f30	P(0x8f) E2 E4 E1 >GAME	P(0x8f) E2 E4 E1 >GAME
+igual	src_projectg_gmtoolkit	?CommandMatchHoleSetting@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	QUASE	00a76260	P(0x8f) E2 E4 >GAME	P(0x8f) E2 E4 >GAME
+igual	src_projectg_gmtoolkit	?CommandMatchMapSetting@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	QUASE	00a761a0	P(0x8f) E2 E4 >GAME	P(0x8f) E2 E4 >GAME
+igual	src_projectg_gmtoolkit	?CommandNotice@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	DIFERENTE	00a79c20	P(0x57) ES >?	P(0x57) ES >?
+igual	src_projectg_gmtoolkit	?CommandNoticePrize@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	DIFERENTE	00a781f0	P(0x8f) E2 E4 EB(0x14) >GAME	P(0x8f) E2 E4 EB(0x14) >GAME
+igual	src_projectg_gmtoolkit	?CommandSetMission@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	DIFERENTE	00a783c0	P(0x8f) E2 E4 >GAME	P(0x8f) E2 E4 >GAME
+igual	src_projectg_gmtoolkit	?CommandWeather@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	DIFERENTE	00a75fd0	P(0x8f) E2 E1 >GAME	P(0x8f) E2 E1 >GAME
+igual	src_projectg_gmtoolkit	?CommandWind@CGMToolkit@@IAE?AW4eGMToolResult@@W4eGMToolkitStatus@@@Z	1	QUASE	00a77510	P(0x8f) E2 E1 E1 >GAME	P(0x8f) E2 E1 E1 >GAME
+igual	src_projectg_gmtoolkit	?Confirm@CGMToolkit@@IAE_NXZ	1	DIFERENTE	00a75ea0	>?	>?
+igual	src_projectg_gmtoolkit	?SendCharacterBuffer@CGMToolkit@@QAEXW4eGMCommandTag@@PBD@Z	1	QUASE	00a75e00	P(0x8f) E2 EB(?) >GAME	P(0x8f) E2 EB(?) >GAME
+igual	src_projectg_gmtoolkit	?SendPrize@CGMToolkit@@QAEXPAVFrListBox@@@Z	1	DIFERENTE	00a76610	P(0x8f) E2 E4 E4 E4 E1 E1 >GAME P(0x8f) E2 E4 E4 E4 E1 E1 >GAME	P(0x8f) E2 E4 E4 E4 E1 E1 >GAME P(0x8f) E2 E4 E4 E4 E1 E1 >GAME
+igual	src_projectg_gmtoolkit	?SendStatus@CGMToolkit@@QAEXW4eGMCommandTag@@@Z	1	IGUAL	00a75d80	P(0x8f) E2 E2 >GAME	P(0x8f) E2 E2 >GAME
+igual	src_projectg_gmtoolkit	?SendStringBuffer@CGMToolkit@@QAEXW4eGMCommandTag@@PBD@Z	1	IGUAL	00a76960	P(0x8f) E2 ES >?	P(0x8f) E2 ES >?
+igual	src_projectg_golfbg	?DoReLoad@CGolfBg@@IAEXXZ	1	DIFERENTE	0072f030	P(0x11) >?	P(0x11) >?
+igual	src_projectg_golfplayer	?Cancel_PowerShot@CGolfPlayer@@IAEXXZ	1	QUASE	00743000	P(0x15) E1 >GAME	P(0x15) E1 >GAME
+igual	src_projectg_golfplayer	?OnProcess@CGolfPlayer@@UAEXM@Z	1	DIFERENTE	00743920	P(0x15) E1 >?	P(0x15) E1 >?
+igual	src_projectg_golfrule	?AddSomeInfo@CGolfRule@@AAEXAAVWSendPacket@@@Z	1	DIFERENTE	006809e0	E2 E4 EB(0x8) ED E1 E4 E1 E4 E1 E4 E4 E4 E2	E2 E4 EB(0x8) ED E1 E4 E1 E4 E1 E4 E4 E4 E2
+igual	src_projectg_golfrule	?CancelShot@CGolfRule@@IAEXXZ	1	DIFERENTE	006807e0	P(0x14) EB(0x5) >?	P(0x14) EB(0x5) >?
+igual	src_projectg_golfrule	?ChangeGameMode@CGolfRule@@IAEXK@Z	1	DIFERENTE	0068c2f0	P(0x14) EB(0x5) >?	P(0x14) EB(0x5) >?
+igual	src_projectg_golfrule	?DoDespairPose@CGolfRule@@IAEXM@Z	1	DIFERENTE	00695440	P(0x1c) >?	P(0x1c) >?
+igual	src_projectg_golfrule	?DoFlyBall_Stopped@CGolfRule@@IAEXM@Z	1	DIFERENTE	00692480	P(0x1c) >GAME P(0x1c) >GAME P(0x1c) >GAME	P(0x1c) >GAME P(0x1c) >GAME P(0x1c) >GAME
+igual	src_projectg_golfrule	?DoHoleInPose@CGolfRule@@IAEXM@Z	1	DIFERENTE	00695c20	P(0x1c) >?	P(0x1c) >?
+igual	src_projectg_golfrule	?DoPowerGauge@CGolfRule@@IAEXM@Z	1	DIFERENTE	0069b5c0	P(0x14) EB(0x5) >?	P(0x14) EB(0x5) >?
+igual	src_projectg_golfrule	?DoTimeOut@CGolfRule@@IAEXM@Z	1	DIFERENTE	006958b0	P(0x1c) >GAME	P(0x1c) >GAME
+igual	src_projectg_golfrule	?DoToDefaultCamera@CGolfRule@@IAEXM@Z	1	DIFERENTE	00693490	P(0x1c) >?	P(0x1c) >?
+igual	src_projectg_golfrule	?EncodePacket@CGolfRule@@IAEXW4enumClientPacket@@AAVWSendPacket@@@Z	1	QUASE	00688e80	E1 E1 E1 E4 E1	E1 E1 E1 E4 E1
+igual	src_projectg_golfrule	?GetBarCondition@CGolfRule@@IAE_NXZ	1	DIFERENTE	00675160	P(0x15c) >GAME P(0x199) >GAME P(0x196) >GAME	P(0x15c) >GAME P(0x199) >GAME P(0x196) >GAME
+igual	src_projectg_golfrule	?GoStopDlgResult@CGolfRule@@IAE_NHPAVFrForm@@@Z	1	QUASE	00676b80	P(0x36) E1 >GAME	P(0x36) E1 >GAME
+igual	src_projectg_golfrule	?OnForgetDlgResult@CGolfRule@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00685fe0	P(0x17) E4 >GAME	P(0x17) E4 >GAME
+igual	src_projectg_golfrule	?OnOnelineReqChkOutDlgResult@CGolfRule@@IAE_NHPAVFrForm@@@Z	1	IGUAL	006704b0	P(0x66) ES >GAME	P(0x66) ES >GAME
+igual	src_projectg_golfrule	?OnProcess@CGolfRule@@UAEXM@Z	1	DIFERENTE	0069bb50	P(0x65) EB(0x4) >GAME	P(0x65) EB(0x4) >GAME
+igual	src_projectg_golfrule	?OnReportResult@CGolfRule@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00676c50	P(0x3a) >GAME	P(0x3a) >GAME
+igual	src_projectg_golfrule	?PauseDlgResult@CGolfRule@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00676a90	P(0x30) E1 >GAME	P(0x30) E1 >GAME
+igual	src_projectg_golfrule	?ProcessObserver@CGolfRule@@AAEXXZ	1	DIFERENTE	00694c30	P(0x5d) >GAME P(0x3f) E4 >GAME	P(0x5d) >GAME P(0x3f) E4 >GAME
+igual	src_projectg_golfrule	?SendHoleData@CGolfRule@@QAEXXZ	1	QUASE	006735c0	P(0x1a) E1 EB(0x19) >?	P(0x1a) E1 EB(0x19) >?
+igual	src_projectg_golfrule	?SendHoleStat@CGolfRule@@IAEXXZ	1	QUASE	00688010	P(0x31) EB(0x109) >GAME	P(0x31) EB(0x109) >GAME
+igual	src_projectg_golfrule	?SendMassGameShot983@@YIXPAVCGolfRule@@@Z	1	DIFERENTE	0067e140	P(0x12f) EB(0x57) >GAME	P(0x12f) EB(0x57) >GAME
+igual	src_projectg_golfrule	?SendReportError@CGolfRule@@IAEXE@Z	1	DIFERENTE	00686110	P(0x33) E1 ES >GAME	P(0x33) E1 ES >GAME
+igual	src_projectg_golfrule	?SendShotResult@CGolfRule@@IAEXXZ	1	DIFERENTE	00684ba0	P(0x1b) EB(0x26) >?	P(0x1b) EB(0x26) >?
+igual	src_projectg_golfrule	?SetHoleInPose_Team@CGolfRule@@IAE_NXZ	1	DIFERENTE	00689f20	P(0x35) E1 E1 >GAME	P(0x35) E1 E1 >GAME
+igual	src_projectg_golfrule30battle	?RequestShotReview@CGolfRule30Battle@@UAEXM@Z	1	DIFERENTE	006a5230	P(0x34) >GAME	P(0x34) >GAME
+igual	src_projectg_golfrulebase	?NextHole983@CGolfRuleBase@@QAEXXZ	1	DIFERENTE	006a6f90	P(0x141) >GAME	P(0x141) >GAME
+igual	src_projectg_golfrulebase	?RequestShotReview@CGolfRuleBase@@UAEXM@Z	1	QUASE	006a7fb0	P(0x34) >GAME	P(0x34) >GAME
+igual	src_projectg_golfrulebase	?V14_983@CGolfRuleBase@@UAEXXZ	1	DIFERENTE	006a8440	P(0x6) EB(?) >?	P(0x6) EB(?) >?
+igual	src_projectg_golfruleguildmatch	?RequestShotReview@CGolfRuleGuildMatch@@UAEXM@Z	1	QUASE	006a8ad0	P(0x34) >GAME	P(0x34) >GAME
+igual	src_projectg_golftask	?OnInitFinished@CGolfTask@@UAEXXZ	1	DIFERENTE	0069d6b0	P(0x11) E4 >? P(0x3f) E4 >?	P(0x11) E4 >? P(0x3f) E4 >?
+igual	src_projectg_golftask	?RequestHistory@CMatchHistory@@QAEXXZ	0	IGUAL	0069ccd0	P(0x9c) >GAME	P(0x9c) >GAME
+igual	src_projectg_gui_control	?OnDropDlgResult@CAuxMenuUI@@AAE_NHPAVFrForm@@@Z	1	QUASE	0074c680	P(0x19) EB(0xc) >?	P(0x19) EB(0xc) >?
+igual	src_projectg_gui_control	?SetPause@CAuxMenuUI@@QAEXXZ	1	QUASE	0074c480	P(0x30) E1 >?	P(0x30) E1 >?
+igual	src_projectg_hatmanager	?CheckPenaltyTime@ChatManager@@QAEXXZ	1	DIFERENTE	009a4cc0	P(0x4f) E1 >GAME	P(0x4f) E1 >GAME
+igual	src_projectg_hatmanager	?SendChatMessage2@ChatManager@@QAEXPBD0_N@Z	1	DIFERENTE	009a5950	P(0x54) ES >? P(0x25) ES >MSN P(0x2a) ES ES >? P(0x3) ES ES >?	P(0x54) ES >? P(0x25) ES >MSN P(0x2a) ES ES >? P(0x3) ES ES >?
+igual	src_projectg_headicon	?SendIcon@CHeadIcon@@QAE_NG@Z	1	DIFERENTE	006e5690	P(0x18) E2 >GAME	P(0x18) E2 >GAME
+igual	src_projectg_intrusion	?DoIntrusionAccess@CIntrusion@@AAEXAAVWReceivedPacket@@W4eIntrusionPermitCode@@@Z	1	DIFERENTE	00856aa0	DB(0xdd) P(0x23) EB(0x4b) >MSN D1 DB(0x15c) D4 D1 D1 D1 DB(0x10) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1	DB(0xdd) P(0x23) EB(0x4b) >MSN D1 DB(0x15c) D4 D1 D1 D1 DB(0x10) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1
+igual	src_projectg_intrusion	?DoJoinRoom@CIntrusion@@QAEXG@Z	1	IGUAL	00855f20	P(0x9d) E1 E2 >GAME	P(0x9d) E1 E2 >GAME
+igual	src_projectg_intrusion	?OnAlarmDlgResult@CIntrusion@@AAE_NHPAVFrForm@@@Z	1	IGUAL	008565f0	P(0x9d) E1 E2 >GAME P(0xc) E1 EB(0x10) >GAME	P(0x9d) E1 E2 >GAME P(0xc) E1 EB(0x10) >GAME
+igual	src_projectg_intrusion	?RivalDataUpdate@CIntrusion@@AAEXAAVWReceivedPacket@@@Z	1	IGUAL	00856370	D4 D1 D1 D4 D8 DB(0xf2)	D4 D1 D1 D4 D8 DB(0xf2)
+igual	src_projectg_itembuffactor	?OnUseBuffItemDlgResult@CItemBuff@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	008133a0	P(0xd8) E4 >?	P(0xd8) E4 >?
+igual	src_projectg_itembuffactor	?ProcessPacket@CItemBuff@@SIXAAVWReceivedPacket@@@Z	1	DIFERENTE	00813a70	D2 D4 D4 D4 DB(0x41) D4 D1 DB(0x41)	D2 D4 D4 D4 DB(0x41) D4 D1 DB(0x41)
+igual	src_projectg_itemstorage	?IndexControlClick@CItemStorage@@QAEXXZ	1	IGUAL	007fc660	P(0xcd) E4 E2 >GAME	P(0xcd) E4 E2 >GAME
+igual	src_projectg_itemstorage	?IndexControlNext@CItemStorage@@QAEXXZ	1	IGUAL	007fc710	P(0xcd) E4 E2 >GAME	P(0xcd) E4 E2 >GAME
+igual	src_projectg_itemstorage	?IndexControlPrev@CItemStorage@@QAEXXZ	1	IGUAL	007fc7c0	P(0xcd) E4 E2 >GAME	P(0xcd) E4 E2 >GAME
+igual	src_projectg_itemstorage	?OnResultItemConfirm@CItemStorage@@QAE_NHPAVFrForm@@@Z	1	IGUAL	007fcab0	P(0xcf) E1 EB(0xb0) >GAME P(0xce) E1 EB(0xb0) >GAME	P(0xcf) E1 EB(0xb0) >GAME P(0xce) E1 EB(0xb0) >GAME
+igual	src_projectg_itemstorage	?OnResultItemCounter@CItemStorage@@QAE_NHPAVFrForm@@@Z	1	IGUAL	007fc930	P(0xcf) E1 EB(0xb0) >GAME P(0xce) E1 EB(0xb0) >GAME	P(0xcf) E1 EB(0xb0) >GAME P(0xce) E1 EB(0xb0) >GAME
+igual	src_projectg_itemstorage	?OnResultPangBank@CItemStorage@@QAE_NHPAVFrForm@@@Z	1	QUASE	007fc870	P(0xd4) E1 E8 >GAME	P(0xd4) E1 E8 >GAME
+igual	src_projectg_itemstorage	?SendPasswordToServer@FrItemStorageAccessPanel@@QAEXXZ	1	IGUAL	007fce20	P(0xd0) ES >? P(0xcc) ES >? P(0xd1) ES ES >? P(0xd2) E1 ES >? P(0xd2) E1 ES >?	P(0xd0) ES >? P(0xcc) ES >? P(0xd1) ES ES >? P(0xd2) E1 ES >? P(0xd2) E1 ES >?
+igual	src_projectg_itemwindow	?UseItem@CItemWindow@@IAE_NH@Z	1	IGUAL	0075d700	P(0x17) E4 >GAME	P(0x17) E4 >GAME
+igual	src_projectg_lobbymain	?Banish@CLobbyMain@@IAEXXZ	1	DIFERENTE	00ab32a0	P(0x26) E4 >GAME	P(0x26) E4 >GAME
+igual	src_projectg_lobbymain	?OnGameRoomExt_GuildInviteLBtnUp@CLobbyMain@@IAEXXZ	1	QUASE	00516390	P(0xba) ES E4 >GAME P(0x29) E4 >GAME	P(0xba) ES E4 >GAME P(0x29) E4 >GAME
+igual	src_projectg_lobbymain	?OnGameRoom_RoomUserDClick@CLobbyMain@@IAEXXZ	1	DIFERENTE	005038d0	P(0x3f) E4 >GAME	P(0x3f) E4 >GAME
+igual	src_projectg_lobbymain	?OnInviteDlgResult@CLobbyMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	00ab90f0	P(0x9) E2 ES >? P(0x43) >?	P(0x9) E2 ES >? P(0x43) >?
+igual	src_projectg_lobbymain	?OnMatchingDlgResult@CLobbyMain@@IAE_NHPAVFrForm@@@Z	1	QUASE	00ab7300	P(0xc0) E4 E1 >?	P(0xc0) E4 E1 >?
+igual	src_projectg_lobbymain	?OnPasswordDlgResult@CLobbyMain@@IAE_NHPAVFrForm@@@Z	1	QUASE	00ab9440	P(0x9) E2 ES >?	P(0x9) E2 ES >?
+igual	src_projectg_lobbymain	?OnToppage_BingoEventDown@CLobbyMain@@IAEXXZ	1	IGUAL	00594760	P(0xe3) E4 >?	P(0xe3) E4 >?
+igual	src_projectg_lobbymain	?OnToppage_KoohBirthdayEventDown@CLobbyMain@@IAEXXZ	1	QUASE	00594f90	P(0xed) >?	P(0xed) >?
+igual	src_projectg_lobbymain	?OnToppage_MissionEventDown@CLobbyMain@@IAEXXZ	1	IGUAL	00594610	P(0xe1) >?	P(0xe1) >?
+igual	src_projectg_lobbymain	?OnToppage_PointEventDown@CLobbyMain@@IAEXXZ	1	IGUAL	00596550	P(0x98) >GAME	P(0x98) >GAME
+igual	src_projectg_lobbymain	?OnVoteDlgResult@CLobbyMain@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00ab3000	P(0x27) E1 >GAME	P(0x27) E1 >GAME
+igual	src_projectg_lobbymain	?ProcessLobbyPetSync@CLobbyMain@@IAEXM@Z	1	QUASE	00ab8d60	P(0x63) E1 EB(0x4) >? P(0x63) E1 ES >?	P(0x63) E1 EB(0x4) >? P(0x63) E1 ES >?
+igual	src_projectg_lobbymain	?SendChangedUserInfo@CLobbyMain@@IAEXXZ	1	IGUAL	00ab3320	P(0xc) E1 E4 >GAME P(0xc) E1 P(0xc) E1 P(0xc) E1 P(0xc) E1 E4 >GAME	P(0xc) E1 E4 >GAME P(0xc) E1 P(0xc) E1 P(0xc) E1 P(0xc) E1 E4 >GAME
+igual	src_projectg_lobbytask	?OnNicknameCode@CLSLoginAckPostProcessor@@AAEHEAAVWReceivedPacket@@@Z	1	QUASE	005a14f0	D4	D4
+igual	src_projectg_lobbytask	?OnServerError@CLSLoginAckPostProcessor@@AAEHEAAVWReceivedPacket@@@Z	1	DIFERENTE	005a1ff0	D4 D4 D4 DS DS D4	D4 D4 D4 DS DS D4
+igual	src_projectg_lobbytask	?Process@CLSLoginAckPostProcessor@@QAEHAAVWReceivedPacket@@@Z	1	QUASE	005a2620	D1 DS D4 D4 D1 D1 D4 D4 DS DS D4 D4 DS	D1 DS D4 D4 D1 D1 D4 D4 DS DS D4 D4 DS
+igual	src_projectg_logindlg	?OnDisconPrevSession@FrLoginDlg@@IAE_NHPAVFrForm@@@Z	1	QUASE	00ad98f0	P(0x4) >LOGIN	P(0x4) >LOGIN
+igual	src_projectg_logindlg	?OnProc@FrLoginDlg@@MAEXM@Z	1	DIFERENTE	00adaf90	P(0x4) >LOGIN	P(0x4) >LOGIN
+igual	src_projectg_loginunit	?OnConnect@LoginUnit@@AAEHAAVWReceivedPacket@@@Z	1	DIFERENTE	00a520b0	D1 D2 D4 D4 P(0xb) ES E4 ES >LOGIN P(0x1) ES ES E4 E1 E4 E8 ES >LOGIN	D1 D2 D4 D4 P(0xb) ES E4 ES >LOGIN P(0x1) ES ES E4 E1 E4 E8 ES >LOGIN
+igual	src_projectg_logoutdlg	?OnLogoutBtnUp@FrLogoutDlg@@IAEXXZ	1	DIFERENTE	00adc440	P(0x16) >MSN	P(0x16) >MSN
+igual	src_projectg_mailboxdlg	?OnNoteDlgResult@FrMailBoxDlg@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00adcb30	P(0x3c) E2 E4 ES E1 >?	P(0x3c) E2 E4 ES E1 >?
+igual	src_projectg_makeroomdlg	?MakeRoom@FrMakeRoomDlg@@QAE_N_N@Z	1	DIFERENTE	00ae19c0	P(0x8) E1 E4 E4 E1 E1 E1 E1 E1 E4 ES ES E4 >?	P(0x8) E1 E4 E4 E1 E1 E1 E1 E1 E4 ES ES E4 >?
+igual	src_projectg_mapselectdlg	?OnSelectBtnUp@FrMapSelectDlg@@IAEXXZ	1	DIFERENTE	00ae2fd0	P(0xa) E2 E1 E1 E1 >?	P(0xa) E2 E1 E1 E1 >?
+igual	src_projectg_mascotinfodlg	?OnChangeMsgConfirmDlgResult@FrMascotInfoDlg@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00a80680	P(0x9a) E1 E4 ES >? P(0x73) E4 ES >?	P(0x9a) E1 E4 ES >? P(0x73) E4 ES >?
+igual	src_projectg_messengerchatdlg	?OnChatInputEnterKey@FrMessengerChatDlg@@IAE_NH@Z	1	IGUAL	008fd4e0	P(0x1e) E4 ES >MSN	P(0x1e) E4 ES >MSN
+igual	src_projectg_messengerdlg	?OnAcceptFriend@FrMessengerDlg@@IAEXXZ	1	IGUAL	008fdb90	P(0x19) E4 >MSN	P(0x19) E4 >MSN
+igual	src_projectg_messengerdlg	?OnBlockCancelFriendDlgResult@FrMessengerDlg@@IAE_NHPAVFrForm@@@Z	1	IGUAL	008fdd30	P(0x1b) E4 >MSN	P(0x1b) E4 >MSN
+igual	src_projectg_messengerdlg	?OnBlockFriendDlgResult@FrMessengerDlg@@IAE_NHPAVFrForm@@@Z	1	IGUAL	008fdc90	P(0x1a) E4 >MSN	P(0x1a) E4 >MSN
+igual	src_projectg_messengerdlg	?OnGoWithFriend@FrMessengerDlg@@IAEXXZ	1	DIFERENTE	00902090	P(0xb4) E1 E2 >? P(0x43) >?	P(0xb4) E1 E2 >? P(0x43) >?
+igual	src_projectg_messengerdlg	?OnGuildInviteDlgResult983@CMessengerInfo@@IAE_NHPAVFrForm@@@Z	1	QUASE	00901b60	P(0xa8) E4 E4 E1 >GAME	P(0xa8) E4 E4 E1 >GAME
+igual	src_projectg_messengerdlg	?OnInviteFriend@FrMessengerDlg@@IAEXXZ	1	QUASE	00903510	P(0xba) ES E4 >?	P(0xba) ES E4 >?
+igual	src_projectg_messengerdlg	?OnMemoDlgResult@FrMessengerDlg@@IAE_NHPAVFrForm@@@Z	1	QUASE	009032e0	P(0x1f) E4 ES >MSN	P(0x1f) E4 ES >MSN
+igual	src_projectg_messengerdlg	?OnNoteDlgResult@FrMessengerDlg@@IAE_NHPAVFrForm@@@Z	1	IGUAL	009031a0	P(0x3c) E2 E4 ES E1 >?	P(0x3c) E2 E4 ES E1 >?
+igual	src_projectg_messengerdlg	?OnRemoveFriendDlgResult@FrMessengerDlg@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00903400	P(0x1c) E4 ES >MSN	P(0x1c) E4 ES >MSN
+igual	src_projectg_messengerdlg	?RecvChat@CMessengerInfo@@QAEXPAUsFriend@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z	1	DIFERENTE	009061e0	P(0x1e) E4 ES >MSN	P(0x1e) E4 ES >MSN
+igual	src_projectg_messengerdlg	?SetMyStatus@CMessengerInfo@@QAEXW4eStatusType@MSN@@@Z	1	IGUAL	008ff000	P(0x1d) E1 >MSN	P(0x1d) E1 >MSN
+igual	src_projectg_missioneventdlg	?RequestGift@FrMissionEventDlg@@AAEXH@Z	1	IGUAL	00b09770	P(0xe2) E4 >GAME	P(0xe2) E4 >GAME
+igual	src_projectg_msnunit	?OnConnect@MSNUnit@@AAEHAAVWReceivedPacket@@@Z	1	QUASE	00a52930	D1 D2 D1 D1 D4 P(0x12) E4 ES >MSN	D1 D2 D1 D1 D4 P(0x12) E4 ES >MSN
+igual	src_projectg_msnunit	?RequestMSNServerList@MSNUnit@@IAEXXZ	1	IGUAL	00a52870	P(0x8b) >GAME	P(0x8b) >GAME
+igual	src_projectg_netsyncactor	?HandleMsg@NetSyncActor@@UAEXABVMsgObject@@@Z	1	IGUAL	0085d080	D4 E4	D4 E4
+igual	src_projectg_networksystem	?SendTTL@WNetworkSystem@@QAEXXZ	1	IGUAL	00a4d650	P(0x1) >GAME	P(0x1) >GAME
+igual	src_projectg_optiondlg	?OnChangeNickConfirmDlgResult@FrChangeNickDlg@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	008ced50	P(0x38) ES >?	P(0x38) ES >?
+igual	src_projectg_optiondlg	?OnChangeSchoolDlgResult@FrOptionDlg@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	008ce910	P(0x3b) E4 >?	P(0x3b) E4 >?
+igual	src_projectg_paper	?ReceivedPacket@CPaper@@QAEXPAVWReceivedPacket@@@Z	1	IGUAL	00a5eb40	D1	D1
+igual	src_projectg_parannickdlg	?OnOkBtnUp@FrParanNickDlg@@IAEXXZ	1	QUASE	00ae59e0	P(0x91) ES >?	P(0x91) ES >?
+igual	src_projectg_pointeventdlg	?OnPointEventNoticeDlgResult@FrPointEventDlg@@QAE_NHPAVFrForm@@@Z	1	QUASE	00b0cfc0	P(0x8d) E4 >GAME	P(0x8d) E4 >GAME
+igual	src_projectg_pointeventdlg	?ResultMessage@FrPointEventDlg@@QAEXK@Z	1	QUASE	00b0e330	P(0x21) ES E4 >MSN P(0x21) ES E4 >MSN	P(0x21) ES E4 >MSN P(0x21) ES E4 >MSN
+igual	src_projectg_pointeventdlg	?SendUpdateDataPacket@FrPointEventDlg@@QAEXXZ	1	IGUAL	00b0bcc0	P(0x8e) >GAME	P(0x8e) >GAME
+igual	src_projectg_post_recivedlg	?OnDeleteAllLetterResult@CPost_ReciveDlg@@QAE_NHPAVFrForm@@@Z	1	DIFERENTE	005b6d30	P(0x147) E4 E4 E4 >?	P(0x147) E4 E4 E4 >?
+igual	src_projectg_post_recivedlg	?OnIndexListLBDown@CPost_ReciveDlg@@IAEXXZ	1	DIFERENTE	005b43f0	P(0x143) E4 >?	P(0x143) E4 >?
+igual	src_projectg_post_recivedlg	?OnLoadPostList@CPost_ReciveDlg@@QAEXXZ	1	IGUAL	005b4790	P(0x143) E4 >?	P(0x143) E4 >?
+igual	src_projectg_post_recivedlg	?OnMoveGiftDlgResult@CPost_ReciveDlg@@QAE_NHPAVFrForm@@@Z	1	QUASE	005b41e0	P(0x24) E4 E4 >?	P(0x24) E4 E4 >?
+igual	src_projectg_post_recivedlg	?OnPageDownBtnUp@CPost_ReciveDlg@@IAEXXZ	1	DIFERENTE	005b3ee0	P(0x143) E4 >?	P(0x143) E4 >?
+igual	src_projectg_post_recivedlg	?OnPageUpBtnUp@CPost_ReciveDlg@@IAEXXZ	1	DIFERENTE	005b3fd0	P(0x143) E4 >?	P(0x143) E4 >?
+igual	src_projectg_post_recivedlg	?OnReturnGiftDlgResult@CPost_ReciveDlg@@QAE_NHPAVFrForm@@@Z	1	IGUAL	005b40c0	P(0x4d) E4 E4 >?	P(0x4d) E4 E4 >?
+igual	src_projectg_post_recivedlg	?SetLoadPostList@CPost_ReciveDlg@@QAEXXZ	1	DIFERENTE	005b6b00	P(0x143) E4 >?	P(0x143) E4 >?
+igual	src_projectg_post_recivedlg	?ToServerSendData@CPost_ReciveDlg@@QAEXPAUFrListItem@@K@Z	1	QUASE	005b3d30	P(?) E4 E4 E4 >? P(?) E4 >?	P(?) E4 E4 E4 >? P(?) E4 >?
+igual	src_projectg_post_senddlg	?OnPostFriendListBtnUp@CPost_SendDlg@@IAEXXZ	1	IGUAL	0080eeb0	P(0x3c) E2 P(0x13) E2 >MSN	P(0x3c) E2 P(0x13) E2 >MSN
+igual	src_projectg_post_senddlg	?OnPostSearchUserBtnUp@CPost_SendDlg@@IAEXXZ	1	QUASE	0080e140	P(0x7) E1 ES >?	P(0x7) E1 ES >?
+igual	src_projectg_privatetrade	?HandleMsg@CPrivateTrade@@MAEXABVMsgObject@@@Z	1	IGUAL	0077b1b0	P(0xd9) E1 E4 ES >GAME P(0xd9) E1 E4 ES EB(0x428) >GAME P(0xd9) E1 E4 P(0xd9) E1 E4 ES EB(0x428) EB(0x428) >GAME	P(0xd9) E1 E4 ES >GAME P(0xd9) E1 E4 ES EB(0x428) >GAME P(0xd9) E1 E4 P(0xd9) E1 E4 ES EB(0x428) EB(0x428) >GAME
+igual	src_projectg_privatetrade	?OnPacket@CPrivateTrade@@QAEXPAVWReceivedPacket@@@Z	1	QUASE	0077b450	D1 D4 DS P(0xd9) E1 E4 ES >GAME D4 DS DB(0x428) D4 DS DB(0x428) D4 DS DB(0x428) D1	D1 D4 DS P(0xd9) E1 E4 ES >GAME D4 DS DB(0x428) D4 DS DB(0x428) D4 DS DB(0x428) D1
+igual	src_projectg_privatetrade	?OnResultTrade@CPrivateTradeImpl@@AAE_NHPAVFrForm@@@Z	1	IGUAL	0077ad20	P(0xd9) E1 E4 ES >GAME	P(0xd9) E1 E4 ES >GAME
+igual	src_projectg_privatetrade	?OnResultWait@CPrivateTradeImpl@@AAE_NHPAVFrForm@@@Z	1	IGUAL	0077aeb0	P(0xd9) E1 E4 ES >GAME P(0xd9) E1 E4 ES >GAME	P(0xd9) E1 E4 ES >GAME P(0xd9) E1 E4 ES >GAME
+igual	src_projectg_projectg	?OnPacket@CProjectG@@QAEXAAVWReceivedPacket@@@Z	1	QUASE	00a673e0	D2	D2
+igual	src_projectg_projectg	?ProcessPacket@CProjectG@@IAEXAAVWReceivedPacket@@@Z	1	IGUAL	00a62d70	D2	D2
+igual	src_projectg_questinfodlg	?OnGiftListLBtnDown@FrQuestGift@@IAEXXZ	1	IGUAL	007d1500	P(0xb0) E4 >GAME	P(0xb0) E4 >GAME
+igual	src_projectg_quitwindow	?OnExitConfirmResult@FrQuitForm@@IAE_NHPAVFrForm@@@Z	1	IGUAL	006ef850	P(0x16e) >GAME	P(0x16e) >GAME
+igual	src_projectg_rankingdlg	??0FrRankingDlg@@QAE@XZ	1	QUASE	00b2a740	P(0xc1) E1 >?	P(0xc1) E1 >?
+igual	src_projectg_rankingdlg	?SendRequestRank@FrRankingDlg@@IAEX_N@Z	1	QUASE	00b29120	P(?) E4 ES E1 E1 E1 E1 E4 E1 >RANK	P(?) E4 ES E1 E1 E1 E1 E4 E1 >RANK
+igual	src_projectg_rankingdlg	?SendRequestSearchUser@FrRankingDlg@@IAEXPBD@Z	1	DIFERENTE	00b293e0	P(0x2) E1 E4 ES E1 E1 E1 E1 E4 >RANK	P(0x2) E1 E4 ES E1 E1 E1 E1 E4 >RANK
+igual	src_projectg_rankingdlg	?SendRequestUserInfo@FrRankingDlg@@IAEXKPBD@Z	1	QUASE	00b292a0	P(0x1) E4 ES E1 >RANK	P(0x1) E4 ES E1 >RANK
+igual	src_projectg_rankunit	?OnConnect@RankUnit@@AAEHAAVWReceivedPacket@@@Z	1	QUASE	00a53430	D1 D2 D4 D1 DS	D1 D2 D4 D1 DS
+igual	src_projectg_realmyroom_avatar	?SetAction@CRealMyRoom_Avatar@@QAEXH@Z	1	QUASE	007a3cb0	P(0x63) E1 E4 >GAME	P(0x63) E1 E4 >GAME
+igual	src_projectg_realmyroom_avatar	?SetState@CRealMyRoom_Avatar@@QAEXK@Z	1	QUASE	007a4820	P(0x63) E1 E4 >GAME	P(0x63) E1 E4 >GAME
+igual	src_projectg_realmyroommain	?SendClubSetLevelUp983@@YIXKKG@Z	1	IGUAL	004ce120	P(0x164) E4 E2 E4 >GAME	P(0x164) E4 E2 E4 >GAME
+igual	src_projectg_realmyroommain	?SendClubSetRandomBox983@@YIXKK@Z	1	IGUAL	004ce440	P(0x16d) E4 E4 >GAME	P(0x16d) E4 E4 >GAME
+igual	src_projectg_realmyroommain	?SendClubSetRankUp983@@YIXKKG@Z	1	IGUAL	004ce220	P(0x167) E4 E2 E4 >GAME	P(0x167) E4 E2 E4 >GAME
+igual	src_projectg_realmyroommain	?SendClubSetWork165_983@@YIX_N@Z	1	IGUAL	004ce1b0	P(?) >GAME	P(?) >GAME
+igual	src_projectg_realmyroommain	?SendClubSetWork168_983@@YIX_N@Z	1	IGUAL	004ce2b0	P(?) >GAME	P(?) >GAME
+igual	src_projectg_realmyroommain	?SendClubSetWork16b_983@@YIXKK@Z	1	IGUAL	004ce320	P(0x16b) E4 E4 >GAME	P(0x16b) E4 E4 >GAME
+igual	src_projectg_realmyroommain	?SendClubSetWork16c_983@@YIXKKKK@Z	1	IGUAL	004ce3a0	P(0x16c) E4 E4 E4 E4 >GAME	P(0x16c) E4 E4 E4 E4 >GAME
+igual	src_projectg_realmyroommainui	?Net_EquipCaddie@CRealMyRoomMain@@IAEXXZ	1	QUASE	00614d20	P(0x20) E1 E4 >GAME	P(0x20) E1 E4 >GAME
+igual	src_projectg_realmyroommainui	?Net_EquipCharacter@CRealMyRoomMain@@IAEXXZ	1	QUASE	0060e4b0	P(0x20) E1 E4 >GAME	P(0x20) E1 E4 >GAME
+igual	src_projectg_realmyroommainui	?Net_EquipCutIn983@CRealMyRoomMain@@IAEXXZ	1	IGUAL	0060e810	P(0x20) E1 E4 EB(0x10) >GAME	P(0x20) E1 E4 EB(0x10) >GAME
+igual	src_projectg_realmyroommainui	?Net_EquipGear@CRealMyRoomMain@@IAEXXZ	1	QUASE	0060e600	P(0x20) E1 E4 E4 >GAME	P(0x20) E1 E4 E4 >GAME
+igual	src_projectg_realmyroommainui	?Net_EquipItem@CRealMyRoomMain@@IAEXXZ	1	QUASE	0060e550	P(0x20) E1 EB(0x28) >GAME	P(0x20) E1 EB(0x28) >GAME
+igual	src_projectg_realmyroommainui	?Net_EquipMascot@CRealMyRoomMain@@IAEXXZ	1	DIFERENTE	00614de0	P(0x20) E1 E4 >GAME	P(0x20) E1 E4 >GAME
+igual	src_projectg_realmyroommainui	?Net_EquipPoster983@CRealMyRoomMain@@IAEXXZ	1	DIFERENTE	0060e6c0	P(0x20) E1 EB(0x8) >?	P(0x20) E1 EB(0x8) >?
+igual	src_projectg_realmyroommainui	?Net_EquipSkin@CRealMyRoomMain@@IAEXXZ	1	DIFERENTE	00613930	P(0x20) E1 EB(0x18) >GAME	P(0x20) E1 EB(0x18) >GAME
+igual	src_projectg_realmyroommainui	?Net_StartPeriodItem@CRealMyRoomMain@@IAEXK@Z	1	IGUAL	00a82650	P(0x20) E1 E4 >GAME	P(0x20) E1 E4 >GAME
+igual	src_projectg_realmyroommainui	?OnCardPackDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	QUASE	00610ae0	P(0xca) E4 E4 >?	P(0xca) E4 E4 >?
+igual	src_projectg_realmyroommainui	?OnInitItemStorageBGI@CRealMyRoomMain@@IAEXH@Z	1	DIFERENTE	00615dd0	P(0xd3) >?	P(0xd3) >?
+igual	src_projectg_realmyroommainui	?OnNoteDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	QUASE	00614ef0	P(0x3c) E2 E4 ES E1 >?	P(0x3c) E2 E4 ES E1 >?
+igual	src_projectg_realmyroommainui	?OnOpenEventGiftDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	0060f7f0	P(0x94) E4 >?	P(0x94) E4 >?
+igual	src_projectg_realmyroommainui	?OnOpenNewYearMoneyDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	0060f6f0	P(0x93) E4 >?	P(0x93) E4 >?
+igual	src_projectg_realmyroommainui	?OnOpenS4EventGiftDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	0060f8f0	P(0xb2) E4 >?	P(0xb2) E4 >?
+igual	src_projectg_realmyroommainui	?OnOpenTikiReport@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	0060f5c0	P(0xab) E4 E4 >?	P(0xab) E4 E4 >?
+igual	src_projectg_realmyroommainui	?OnRentalExtensionDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	00611110	P(0xe6) E4 >? P(0xe7) E4 >?	P(0xe6) E4 >? P(0xe7) E4 >?
+igual	src_projectg_realmyroommainui	?SelectMenu@CRealMyRoomMain@@IAEXE@Z	1	DIFERENTE	00622630	P(0xd3) >?	P(0xd3) >?
+igual	src_projectg_recycledlg	??0FrRecycleDlg@@QAE@XZ	1	DIFERENTE	008e15f0	P(0xc1) E1 >?	P(0xc1) E1 >?
+igual	src_projectg_recycledlg	??1FrRecycleDlg@@UAE@XZ	1	IGUAL	008e1390	P(0xc1) E1 >GAME	P(0xc1) E1 >GAME
+igual	src_projectg_recycledlg	?SendDataRecycleItem@FrRecycleDlg@@QAEXHH@Z	1	QUASE	008e2d70	P(0x158) E2 E4 E1 E4 E4 ED >?	P(0x158) E2 E4 E1 E4 E4 ED >?
+igual	src_projectg_resultdlg	?OnInit@FrResultDlg@@MAE_NXZ	1	QUASE	00ae9320	P(0x6) EB(0x109) >GAME	P(0x6) EB(0x109) >GAME
+igual	src_projectg_resultdlg	?OnInit@FrUniteResultDlg@@MAE_NXZ	1	DIFERENTE	00aec210	P(0x6) EB(0x109) >GAME	P(0x6) EB(0x109) >GAME
+igual	src_projectg_s5_supplypack	?OnResultConfirm@FrSupplyPackDlg@S5@@MAE_NHPAVFrForm@@@Z	1	DIFERENTE	00b34f40	P(0xec) E4 E4 >?	P(0xec) E4 E4 >?
+igual	src_projectg_s5_utilities	?SendCutInPacket@UTIL@S5@@YIXKFKK_N@Z	1	IGUAL	00b2cfa0	P(0xe5) E4 E2 E4 E4 E1 >GAME	P(0xe5) E4 E2 E4 E4 E1 >GAME
+igual	src_projectg_s5_utilities	?SendExitGPRoom983@UTIL@S5@@YIXE@Z	1	IGUAL	00b2e3d0	P(0x17a) E1 E2 E8 E8 >GAME	P(0x17a) E1 E2 E8 E8 >GAME
+igual	src_projectg_s5_utilities	?SendExitRoom983@UTIL@S5@@YIXE@Z	1	QUASE	00b2f070	P(0xf) E1 E2 E8 E8 >GAME	P(0xf) E1 E2 E8 E8 >GAME
+igual	src_projectg_s5_utilities	?SendRealMyRoomEnter983@UTIL@S5@@YIXK_N@Z	1	IGUAL	00b2df70	P(0xb7) E4 E1 >GAME	P(0xb7) E4 E1 >GAME
+igual	src_projectg_scoreboard	?SetLeader@CRankExData@@QAEXXZ	1	DIFERENTE	0078e6d0	P(0x2f) E4 E1 >GAME	P(0x2f) E4 E1 >GAME
+igual	src_projectg_scratchdlg	??0FrScratchDlg@@QAE@XZ	1	IGUAL	008ec050	P(0xc1) E1 >?	P(0xc1) E1 >?
+igual	src_projectg_scratchdlg	??1FrScratchDlg@@UAE@XZ	1	QUASE	008ec940	P(0xc1) E1 >?	P(0xc1) E1 >?
+igual	src_projectg_scratchdlg	?RequestScratchItem@FrScratchDlg@@QAEXXZ	1	IGUAL	008e5470	P(0x70) >GAME	P(0x70) >GAME
+igual	src_projectg_securitykeymanager	?ReqCheckKey@CSecurityKeyManager@@QAEXW4eSKContent@@KV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z	1	IGUAL	007d9020	P(0xc9) E1 E4 E1 E4 ES >GAME	P(0xc9) E1 E4 E1 E4 ES >GAME
+igual	src_projectg_securitykeymanager	?ReqCreateKey@CSecurityKeyManager@@QAEXW4eSKContent@@K@Z	1	IGUAL	007d8e50	P(0xc9) E1 E4 E1 E4 >GAME	P(0xc9) E1 E4 E1 E4 >GAME
+igual	src_projectg_serverdlg	?OnChannelListBtnDown@FrServerDlg@@IAEXXZ	1	DIFERENTE	00af5e00	P(0x83) P(0x4) E1 >? P(0x23) EB(0x4b) >MSN P(0x16e) >?	P(0x83) P(0x4) E1 >? P(0x23) EB(0x4b) >MSN P(0x16e) >?
+igual	src_projectg_serverdlg	?OnProc@FrAutoConnect@@UAEXM@Z	1	DIFERENTE	00af5180	P(0x2) ES E4 E4 E2 ES ES E4 ES >?	P(0x2) ES E4 E4 E2 ES ES E4 ES >?
+igual	src_projectg_serverdlg	?OnServerListBtnDown@FrServerDlg@@IAEXXZ	1	DIFERENTE	00af4ce0	P(0x3) E4 >LOGIN P(0x119) E4 >GAME	P(0x3) E4 >LOGIN P(0x119) E4 >GAME
+igual	src_projectg_shareddoc	?CheckCurrEquipParts@CSharedDoc@@QAEXXZ	1	IGUAL	0063b2b0	P(0x20) E1 EB(0x201) >GAME P(0x20) E1 E4 >GAME	P(0x20) E1 EB(0x201) >GAME P(0x20) E1 E4 >GAME
+igual	src_projectg_shareddoc	?SendEquipItemSlot@CSharedDoc@@QAEXXZ	1	DIFERENTE	0063de40	P(0x20) E1 EB(0x28) >GAME	P(0x20) E1 EB(0x28) >GAME
+igual	src_projectg_shareddoc	?SendEquipItemSlotByMascot@CSharedDoc@@QAEXXZ	1	DIFERENTE	0063dd00	P(0x20) E1 EB(0x28) >GAME	P(0x20) E1 EB(0x28) >GAME
+igual	src_projectg_shareddoc	?SendTradeBuyItem@CSharedDoc@@QAE_NKUsTradeItem@@@Z	1	IGUAL	006300f0	P(0x7d) E4 EB(0xac) >GAME	P(0x7d) E4 EB(0xac) >GAME
+igual	src_projectg_shareddoc	?SendTradeCloseShop@CSharedDoc@@QAE_NXZ	1	IGUAL	0062ff70	P(0x75) >GAME	P(0x75) >GAME
+igual	src_projectg_shareddoc	?SendTradeEditShop@CSharedDoc@@QAE_NXZ	1	IGUAL	0062ba80	P(0x76) >GAME	P(0x76) >GAME
+igual	src_projectg_shareddoc	?SendTradeEnterShop@CSharedDoc@@QAE_NK@Z	1	IGUAL	0062bae0	P(0x77) E4 >GAME	P(0x77) E4 >GAME
+igual	src_projectg_shareddoc	?SendTradeExitShop@CSharedDoc@@QAE_NK@Z	1	IGUAL	0062bb70	P(0x78) E4 >GAME	P(0x78) E4 >GAME
+igual	src_projectg_shareddoc	?SendTradeIncome@CSharedDoc@@QAE_NXZ	1	IGUAL	00630070	P(0x7b) >GAME	P(0x7b) >GAME
+igual	src_projectg_shareddoc	?SendTradeOpenShop@CSharedDoc@@QAE_NXZ	1	IGUAL	0062fee0	P(0x74) >GAME	P(0x74) >GAME
+igual	src_projectg_shareddoc	?SendTradeShowVisitor@CSharedDoc@@QAE_NXZ	1	IGUAL	0062fff0	P(0x7a) >GAME	P(0x7a) >GAME
+igual	src_projectg_shareddoc	?SendTradeTitle@CSharedDoc@@QAE_NV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z	1	IGUAL	00636880	P(0x79) ES >GAME	P(0x79) ES >GAME
+igual	src_projectg_shopmain	?HandleMsg@CShopMain@@UAEXABVMsgObject@@@Z	1	DIFERENTE	00a971f0	P(0x20) E1 E4 >GAME P(0x20) E1 EB(0x201) >GAME	P(0x20) E1 E4 >GAME P(0x20) E1 EB(0x201) >GAME
+igual	src_projectg_shopmain	?OnSellDlgResult@CShopMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	00a867a0	P(0x1e) E1 E1 E4 E4 >?	P(0x1e) E1 E1 E4 E4 >?
+igual	src_projectg_shopmain	?OpenLayout@CShopMain@@IAEXPBD@Z	1	QUASE	00a86990	P(0x5c) >GAME P(0x3d) >GAME P(0xfe) E4 >GAME	P(0x5c) >GAME P(0x3d) >GAME P(0xfe) E4 >GAME
+igual	src_projectg_shopmain	?SendShopRefresh983@CShopMain@@IAEXXZ	1	IGUAL	00a87980	P(0x140) >?	P(0x140) >?
+igual	src_projectg_shopunit	?OnConnect@ShopUnit@@AAEHXZ	1	IGUAL	00a536f0	P(0x2) E1 ES ES >SHOP	P(0x2) E1 ES ES >SHOP
+igual	src_projectg_specialboxdlg	?OnProc@FrSpecialBoxDlg@_gateway@@UAEXM@Z	1	QUASE	00921cf0	P(0xef) E4 >?	P(0xef) E4 >?
+igual	src_projectg_tradedlg	?OnOkBnUp@FrTradeFinishEditDlg@@IAEXXZ	1	IGUAL	008f7cb0	P(0x7c) E4 EB(0xac) >GAME	P(0x7c) E4 EB(0xac) >GAME
+igual	src_projectg_trainingdlg	?OnNewTrainingOptionDlgResult@FrTrainingDlg@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00af8b50	P(0x5a) E1 >GAME	P(0x5a) E1 >GAME
+igual	src_projectg_trainingdlg	?OnTrainingBtnUp@FrTrainingDlg@@IAEXXZ	1	QUASE	00af8ea0	P(0x5a) E1 >GAME	P(0x5a) E1 >GAME
+igual	src_projectg_treasuredlg	?SelectMapBtn@FrTreasureCourse@@QAEXE@Z	1	DIFERENTE	0083f980	P(0xa) E2 E1 E1 E1 >?	P(0xa) E2 E1 E1 E1 >?
+igual	src_projectg_ucccopydlg	?OnOkBtnUp@FrUccCopyConfirmDlg@@IAEXXZ	1	IGUAL	007e1df0	P(0xb9) E1 E4 ES E2 E4 >?	P(0xb9) E1 E4 ES E2 E4 >?
+igual	src_projectg_ucclibrary	?GetUccInfoFromPacket@@YIXPAVWReceivedPacket@@@Z	1	QUASE	007e9e50	D1 D4 D4 DS	D1 D4 D4 DS
+igual	src_projectg_ucclibrary	?RequestUccInfo@@YIXAAUsCharacterInfo@@@Z	1	DIFERENTE	007e9840	P(0xb9) E1 E4 E1 >GAME	P(0xb9) E1 E4 E1 >GAME
+igual	src_projectg_uccmanager	?AddClothes@CUccManager@@QAEXEAAUsUccClothes@@_N1@Z	1	DIFERENTE	007ee460	P(0xb9) E1 E4 E1 >GAME	P(0xb9) E1 E4 E1 >GAME
+igual	src_projectg_uccmanager	?AddDisplayClothes@CUccManager@@QAEXKKV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H@Z	1	IGUAL	007ef040	P(0xb9) E1 E4 E1 >GAME	P(0xb9) E1 E4 E1 >GAME
+igual	src_projectg_upgradecaddiedlg	?OnYesBtnUp@FrUpgradeCaddieDlg@@IAEXXZ	1	IGUAL	00ab1830	P(0xea) E4 >?	P(0xea) E4 >?
+igual	src_projectg_user_info	?MatchHistoryUserBtnUp@FrUserInfoForm@@AAEXH@Z	1	QUASE	008a5f70	P(0x2f) E4 E1 >GAME	P(0x2f) E4 E1 >GAME
+igual	src_projectg_user_info	?RequestSeasonData@FrUserInfoForm@@QAEXE@Z	1	IGUAL	00899ff0	P(0x2f) E4 E1 >GAME	P(0x2f) E4 E1 >GAME
+igual	src_projectg_user_info	?SetInfo@CUserInfo@@QAEXKK_N000V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z	1	DIFERENTE	008a9ae0	P(0x2f) E4 E1 >GAME	P(0x2f) E4 E1 >GAME
+igual	src_projectg_userlistdlg	?OnInviteBtnUp@FrUserListDlg@@IAEXXZ	1	IGUAL	00af9f90	P(0xba) ES E4 >? P(0x29) E4 >?	P(0xba) ES E4 >? P(0x29) E4 >?
+igual	src_projectg_valentineeventdlg	?OnCombine0BtnUp@NtValentineEventDlg@@IAEXXZ	1	IGUAL	00b0fd20	P(0x6f) E4 >GAME	P(0x6f) E4 >GAME
+igual	src_projectg_valentineeventdlg	?OnCombine1BtnUp@NtValentineEventDlg@@IAEXXZ	1	IGUAL	00b0fe20	P(0x6f) E4 >GAME	P(0x6f) E4 >GAME
+igual	src_projectg_valentineeventdlg	?OnCombine2BtnUp@NtValentineEventDlg@@IAEXXZ	1	IGUAL	00b0ff20	P(0x6e) E4 >GAME	P(0x6e) E4 >GAME
+igual	src_projectg_valentineeventdlg	?OnCombine3BtnUp@NtValentineEventDlg@@IAEXXZ	1	IGUAL	00b10030	P(0x6e) E4 >GAME	P(0x6e) E4 >GAME
+igual	src_projectg_worldtoureventdlg	?OnLBDownYesButton@FrWorldTourEventGiftDlg@@IAEXXZ	1	IGUAL	00b123a0	P(0xad) E4 >GAME	P(0xad) E4 >GAME
+igual	src_shared_exceptionreport	?RecordExceptionInfo@@YGJPAU_EXCEPTION_POINTERS@@@Z	1	IGUAL	009926f0	P(0x33) E1 ES >?	P(0x33) E1 ES >?
+igual	taskmain	?ChangeRealMyRoom@CTaskMain@@QAEXXZ	1	IGUAL	00657cd0	P(0xc1) E1 >GAME P(0xc1) E1 >GAME P(0xc1) E1 >GAME	P(0xc1) E1 >GAME P(0xc1) E1 >GAME P(0xc1) E1 >GAME
+igual	taskmain	?HandleMsgCommon@CTaskMain@@IAEXABVMsgObject@@@Z	1	DIFERENTE	0065d8e0	P(0x119) E4 >GAME	P(0x119) E4 >GAME
+igual	taskmain	?MakeRealMyRoom@CTaskMain@@QAEXXZ	1	QUASE	0065b8a0	P(0xb5) E4 E4 >?	P(0xb5) E4 E4 >?
+igual	taskmain	?OnItemEquipResult983@CTaskMain@@IAE_NHPAVFrForm@@@Z	1	IGUAL	00653be0	P(0x20) E1 EB(0x28) >?	P(0x20) E1 EB(0x28) >?
+igual	taskmain	?OnOnelineReqChkOutDlgResult@CTaskMain@@IAE_NHPAVFrForm@@@Z	1	IGUAL	006704b0	P(0x66) ES >GAME	P(0x66) ES >GAME
+igual	taskmain	?OnOnelineReqDlgResult@CTaskMain@@IAE_NHPAVFrForm@@@Z	1	IGUAL	0065cfe0	P(0x67) >GAME	P(0x67) >GAME
+igual	taskmain	?OnPostSendDlgResult983@CTaskMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	0065c2d0	P(0x145) E4 E4 ES ES ES E8 E1 EB(0x37) >?	P(0x145) E4 E4 ES ES ES E8 E1 EB(0x37) >?
+igual	taskmain	?OnUnderBar_BongdariShopUp@CTaskMain@@MAEXXZ	1	DIFERENTE	00658ee0	P(0x98) >?	P(0x98) >?
+igual	taskmain	?OnUnderBar_CookieUp@CTaskMain@@MAEXXZ	1	IGUAL	006584e0	P(0xc1) E1 >?	P(0xc1) E1 >?
+igual	taskmain	?OnUnderBar_GameUp@CTaskMain@@IAEXXZ	1	DIFERENTE	006586c0	P(0x81) >?	P(0x81) >?
+igual	taskmain	?OnUnderBar_ServerUp@CTaskMain@@IAEXXZ	1	DIFERENTE	00658890	P(0x43) >?	P(0x43) >?
+igual	taskmain	?SendRoomExitPacket@CTaskMain@@IAEXXZ	1	IGUAL	006576e0	P(0xf) E1 E2 E8 E8 >?	P(0xf) E1 E2 E8 E8 >?
+igual	taskmain	?SendRoomListExitPacket@CTaskMain@@IAEXXZ	1	DIFERENTE	00654000	P(0x82) >?	P(0x82) >?
+igual	taskmain	?SendSubSelectionPacket@CTaskMain@@IAEXW4PANGYA_ITEM_GROUP@@@Z	1	DIFERENTE	00655e10	P(?) E1 E4 >GAME P(?) E1 P(?) E1 P(?) E1 P(?) E1 E4 >GAME	P(?) E1 E4 >GAME P(?) E1 P(?) E1 P(?) E1 P(?) E1 E4 >GAME
+igual	taskmanager	?Decode@sAttendanceReward983@@QAEXAAVWReceivedPacket@@@Z	0	IGUAL	009b9120	D1 D4 D4 D4 D4 D4	D1 D4 D4 D4 D4 D4
+igual	taskmanager	?LoginRequest@CMatchHistory@@QAEXV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z	0	IGUAL	009be760	P(0x9c) >GAME	P(0x9c) >GAME
+igual	taskmanager	?Process@GameGuardMsgHandler@@QAEXXZ	0	DIFERENTE	00a5d160	P(0x88) EB(0x10) >GAME	P(0x88) EB(0x10) >GAME
+igual	taskmanager	?SendPacket@@YIXE@Z	0	IGUAL	009b7690	P(0x48) E1 >GAME	P(0x48) E1 >GAME
+igual	tutorguide	?HandleMsg@CTutorGuide@@MAEXABVMsgObject@@@Z	1	IGUAL	006b2740	P(0x12e) EB(0x4) EB(0x4) EB(0x4) >GAME	P(0x12e) EB(0x4) EB(0x4) EB(0x4) >GAME
+igual	tutorialwidget	?OnPacket@CTutorialWidget@@UAEHAAVWReceivedPacket@@@Z	1	QUASE	006b2ee0	D2 D1 D1 D1 D4 DB(0xc)	D2 D1 D1 D1 D4 DB(0xc)
+igual	webpageconnector	?RequestOpen983@CWebPageConnector@@QAEXPBD_NH@Z	1	QUASE	008a9fa0	P(0xfb) >GAME	P(0xfb) >GAME
+igual	winddirectioncontroller	?SendWindDirection@@YIXABVWVector@@K@Z	1	QUASE	0082da60	P(0x171) E4 E1 EB(0x4) >?	P(0x171) E4 E1 EB(0x4) >?
+igual	windminuscontroller	?Send@CWindMinusController@@QAEXPAVCWindMinusObject@@@Z	1	DIFERENTE	0056bba0	P(0x181) EB(0x10) >GAME	P(0x181) EB(0x10) >GAME
+igual	windvolumecontroller	?SendWindVolume@@YIXK@Z	1	QUASE	00b45740	P(0x180) E4 >?	P(0x180) E4 >?
+igual_curinga	src_projectg_avatar_avatar	?ChangeMotion@ntAvatar@@QAEXHPBDM@Z	1	DIFERENTE	007a5000	P(0x63) E1 ES >?	P(0x63) E1 ES >GAME
+igual_curinga	src_projectg_ghostplayer	?HandleMsg@CGhostPlayer@@MAEXABVMsgObject@@@Z	1	DIFERENTE	0082ae80	P(0xc2) E1 E4 >? P(0xc2) E1 E4 >?	P(0xc2) E1 E4 >? P(0xc2) E1 E4 >GAME
+igual_curinga	src_projectg_golfrule	?HandleMsg@CGolfRule@@UAEXABVMsgObject@@@Z	1	DIFERENTE	006964c0	P(0x2e) >?	P(0x2e) >GAME
+igual_curinga	src_projectg_golfrule	?HitShot@CGolfRule@@IAEXXZ	1	DIFERENTE	00694110	P(?) P(0x12) EB(0x32) >? P(0x42) E1 E4 >GAME P(0x156) >?	P(?) P(0x12) EB(0x32) >? P(0x42) E1 E4 >? P(0x156) >?
+igual_curinga	src_projectg_golfrule	?OnOnelineReqDlgResult@CGolfRule@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	00681940	P(0x67) >?	P(0x67) >GAME
+igual_curinga	src_projectg_intrusion	?PacketAnalysis@CIntrusion@@QAEXAAVWReceivedPacket@@@Z	1	DIFERENTE	008572d0	D1 D1 D2 D4 D4 DB(0xdd) DS DB(0xdd) D1 D4 DB(0x15c) D4 D4 P(0x9d) E1 EB(0xf2) >GAME D1	D1 D1 D2 D4 D4 DB(0xdd) DS DB(0xdd) D1 D4 DB(0x15c) D4 D4 P(0x9d) E1 EB(0xf2) >? D1
+igual_curinga	src_projectg_lobbymain	?HandleMsg@CLobbyMain@@UAEXABVMsgObject@@@Z	1	DIFERENTE	00abc140	P(0x8) E1 E4 E4 E1 E1 E1 E4 E4 E1 E1 E1 E4 E4 E1 E1 E1 E1 E1 E4 ES ES E4 >? P(0x176) >? P(0x81) >? P(0xc0) E4 E1 >GAME	P(0x8) E1 E4 E4 E1 E1 E1 E4 E4 E1 E1 E1 E4 E4 E1 E1 E1 E1 E1 E4 ES ES E4 >GAME P(0x176) >GAME P(0x81) >GAME P(0xc0) E4 E1 >GAME
+igual_curinga	src_projectg_optiondlg	?CloseDlg@FrOptionDlg@@QAEXXZ	1	DIFERENTE	008ce6a0	P(0x69) EB(0x240) >?	P(0x69) EB(0x240) >GAME
+igual_curinga	src_projectg_rankingdlg	??1FrRankingDlg@@UAE@XZ	1	DIFERENTE	00b2a9d0	P(0xc1) E1 >GAME	P(0xc1) E1 >?
+igual_curinga	src_projectg_realmyroommainui	?Net_EquipDresserParts@CRealMyRoomMain@@IAEXXZ	1	DIFERENTE	00613590	P(0x20) E1 EB(0x201) >GAME P(0xc) E1 E4 >GAME	P(0x20) E1 EB(0x201) >? P(0xc) E1 E4 >?
+igual_curinga	src_projectg_realmyroommainui	?OnAuthDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	DIFERENTE	00610980	P(0xb8) EB(0x6b) >?	P(0xb8) EB(0x6b) >GAME
+igual_curinga	src_projectg_scratchdlg	?SendScratchSerialNumber@FrScratchDlg@@QAEXXZ	1	DIFERENTE	008ece60	P(0x71) E4 EB(0xd) >GAME	P(0x71) E4 EB(0xd) >?
+igual_curinga	taskmain	?OnUnderBar_RankingUp@CTaskMain@@MAEXXZ	1	DIFERENTE	006590e0	P(0x47) >?	P(0x47) >GAME
+sem_par	src_projectg_bongdarishopdlg	??1FrBongdariShopDlg@@UAE@XZ	1	SEM_PAR	-		P(0xc1) E1 >GAME
+sem_par	src_projectg_bongdarishopdlg	?OnLButtonUp@FrBongdariShopDlg@@MAE_NABVWPoint@@@Z	1	SEM_PAR	-		P(0x6d) >GAME
+sem_par	src_projectg_frreadytoall	?OnReadyBtnUp@FrReadyToAll@@IAEXXZ	1	SEM_PAR	-		P(0xd) E1 >GAME
+sem_par	src_projectg_frreadytoall	?OnStartBtnUp@FrReadyToMaster@@IAEXXZ	1	SEM_PAR	-		P(0xe) E4 >GAME
+sem_par	src_projectg_golfrule	?SetHoleInPose_Match@CGolfRule@@IAE_NXZ	1	SEM_PAR	-		P(0x52) E1 E1 >GAME
+sem_par	src_projectg_guildactor	?ExecGuildMessage@CGuildActor@_guild@@AAEXABVMsgObject@@@Z	1	SEM_PAR	-		P(0x2a) E4 >MSN P(0x2b) E4 >MSN
+sem_par	src_projectg_lobbymain	?OnCreate_CreateBtnUp@CLobbyMain@@IAEXXZ	1	SEM_PAR	-		P(0x8) EB(0x5) >LOGIN
+sem_par	src_projectg_lobbymain	?OnGameRoomExt_ResCloseBtnUp@CLobbyMain@@IAEXXZ	1	SEM_PAR	-		P(0xf) E1 E2 E8 E8 >?
+sem_par	src_projectg_lobbymain	?OnGameRoom_ChangeTeamBtnUp@CLobbyMain@@IAEXXZ	1	SEM_PAR	-		P(0x10) E1 >GAME
+sem_par	src_projectg_lobbymain	?OnGameRoom_MapHoleComboDown@CLobbyMain@@IAEXXZ	1	SEM_PAR	-		P(0xa) E2 E1 E1 E1 >?
+sem_par	src_projectg_lobbymain	?OnGameRoom_MapNextBtnUp@CLobbyMain@@IAEXXZ	1	SEM_PAR	-		P(0xa) E2 E1 E1 E1 >?
+sem_par	src_projectg_lobbymain	?OnGameRoom_MapPrevBtnUp@CLobbyMain@@IAEXXZ	1	SEM_PAR	-		P(0xa) E2 E1 E1 E1 >?
+sem_par	src_projectg_lobbymain	?OnGameRoom_ReadyBtnUp@CLobbyMain@@IAEXXZ	1	SEM_PAR	-		P(0xd) E1 >? P(0xd) E1 >?
+sem_par	src_projectg_lobbymain	?OnGameRoom_StartBtnUp@CLobbyMain@@IAEXXZ	1	SEM_PAR	-		P(0xe) E4 >? P(0xd) E1 >? P(0xd) E1 >?
+sem_par	src_projectg_lobbymain	?OnMatchRoomCreateDlgResult@CLobbyMain@@IAE_NHPAVFrForm@@@Z	1	SEM_PAR	-		P(0x8) E1 E4 E4 E1 E1 E1 E1 E1 E4 ES ES E4 >?
+sem_par	src_projectg_lobbymain	?OnRoomExt30sResQuitDlgResult@CLobbyMain@@IAE_NHPAVFrForm@@@Z	1	SEM_PAR	-		P(0xf) E1 E2 E8 E8 >?
+sem_par	src_projectg_lobbymain	?OnRoomExtResQuitDlgResult@CLobbyMain@@IAE_NHPAVFrForm@@@Z	1	SEM_PAR	-		P(0xf) E1 E2 E8 E8 >? E8 E8
+sem_par	src_projectg_lobbymain	?OnRoomList_MakeRoomUp@CLobbyMain@@IAEXXZ	1	SEM_PAR	-		P(0x43) >?
+sem_par	src_projectg_lobbymain	?OnRoomList_RoomListDClick@CLobbyMain@@IAEXXZ	1	SEM_PAR	-		P(0x3e) E2 ES >? P(0x9) E2 ES >?
+sem_par	src_projectg_lobbymain	?OnRoomUseReportDlgResult@CLobbyMain@@IAE_NHPAVFrForm@@@Z	1	SEM_PAR	-		P(0xaa) EB(0x109) >?
+sem_par	src_projectg_lobbymain	?ProcessAdministrator@CLobbyMain@@IAEXM@Z	1	SEM_PAR	-		P(0x4c) E4 >GAME P(0x5d) E2 >GAME
+sem_par	src_projectg_lobbymain	?ProcessLobbyUI@CLobbyMain@@IAEXM@Z	1	SEM_PAR	-		P(0xf) E1 E2 E8 E8 >? P(0xa) E2 E1 E1 E1 >? P(0x32) E1 >?
+sem_par	src_projectg_lobbymain	?SetRoomCaddieControl@CLobbyMain@@IAEXW4eBtnDir@1@@Z	1	SEM_PAR	-		P(0xc) E1 E4 >? P(0xc) E1 E4 >? P(0xc) E1 E4 >?
+sem_par	src_projectg_lobbymain	?SetRoomCharControl@CLobbyMain@@IAEXW4eBtnDir@1@@Z	1	SEM_PAR	-		P(0xc) E1 E4 >GAME P(0xc) E1 E4 >GAME
+sem_par	src_projectg_lobbytask	?ReadBlockInfo@CLSLoginAckPostProcessor@@AAEXAAVWReceivedPacket@@@Z	0	SEM_PAR	-		D4 D4 DS DS
+sem_par	src_projectg_realmyroom_avatar	?ChangeMotion@CRealMyRoom_Avatar@@QAEXHPBDM@Z	1	SEM_PAR	-		P(0x63) E1 ES >GAME
+sem_par	src_projectg_realmyroommainui	?ChangeMainTab@CRealMyRoomMain@@IAEXW4mainTab_t@1@_N@Z	1	SEM_PAR	-		P(0x95) E4 >?
+sem_par	src_projectg_realmyroommainui	?FurnitureUse@CRealMyRoomMain@@IAEXXZ	1	SEM_PAR	-		P(0xd7) E4 E4 >GAME P(0xd7) E4 E4 >GAME
+sem_par	src_projectg_realmyroommainui	?OnCardDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	SEM_PAR	-		P(0xbd) E4 >GAME
+sem_par	src_projectg_realmyroommainui	?OnGiftPageLBDown@CRealMyRoomMain@@IAEXXZ	1	SEM_PAR	-		P(0x95) E4 >GAME
+sem_par	src_projectg_realmyroommainui	?OnItemAttachCardDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	SEM_PAR	-		P(0xc8) EB(0x3a) >?
+sem_par	src_projectg_realmyroommainui	?OnMoveGiftDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	SEM_PAR	-		P(0x24) E4 E4 >?
+sem_par	src_projectg_realmyroommainui	?OnPostSendDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	SEM_PAR	-		P(0xc3) E4 E4 E1 E8 ES ES EB(0x35) >?
+sem_par	src_projectg_realmyroommainui	?OnReturnGiftDlgResult@CRealMyRoomMain@@IAE_NHPAVFrForm@@@Z	1	SEM_PAR	-		P(0x4d) E4 E4 >GAME
+sem_par	src_projectg_realmyroommainui	?OpenLayout@CRealMyRoomMain@@IAEXPBD@Z	1	SEM_PAR	-		P(0x5c) >GAME
+sem_par	src_projectg_realmyroommainui	?RMR_UpdateDB@CRealMyRoomMain@@QAEXXZ	1	SEM_PAR	-		P(0xb6) E2 EB(0x1b) >GAME
+sem_par	src_projectg_realmyroomtask	?OnPacket@CRealMyRoomTask@@MAEHAAVWReceivedPacket@@@Z	1	SEM_PAR	-		D2 D1 D1 DB(0x26) D8 D8 D1 D1 D1 D4 D1 D1 D4 D8 DB(0x15c) DB(0x201) D1 D4 D4 D2 D1 D4 DS D8 D4 D4 DB(0x10) DB(0x7f) D1 D1 D4 D4 D4 DB(0x14) D4 D4 D4 D4 D4 D4 D4 D4 P(0xd5) >GAME P(0xcd) E4 E2 >GAME D2 D2 D1 DB(0xb0) D4 D4 D4 D8 D4 D1 D4 D1 D4 D4 D1 D4 D4 D1 D4 D4 D1 D4 D1 D2 D2 D2 DB(0xfb) P(0x95) E4 >GAME D1 D4 D1 D1 D2 DB(0xfb) D4 D4 D4 D4 D4 D2 D1 D4 D1 DB(0x26) DB(0x18) D4 D2 DB(0x1b) D1 P(0x27) E4 E4 >MSN D4 DB(0x35) D1 D4 D4 D4 DB(0xc2) D1 D4 DS DS DS D1 D4 DB(0x35) D4 D1 D4 DB(0x35) P(0xb9) E1 E4 E1 >GAME D2 D2 DB(0x10) P(0x27) ES ES >MSN D4 D4 DB(0x119) D4 DS D4 D4 D4 DS D4
+sem_par	src_projectg_secondarypassword	?OnRequestLoginPassword@CSecondaryPassword@_gateway@@AAEXH@Z	1	SEM_PAR	-		P(0xa) ES >LOGIN
+sem_par	src_projectg_secondarypassword	?OnRequestRegistPassword@CSecondaryPassword@_gateway@@AAEXH@Z	1	SEM_PAR	-		P(0x9) ES >LOGIN
+sem_par	src_projectg_shoptask	?Load@CShopTask@@MAEXXZ	1	SEM_PAR	-		P(0xb7) E4 E1 >GAME
+sem_par	src_projectg_tutorialmain	?HandleMsg@CTutorialMain@@UAEXABVMsgObject@@@Z	1	SEM_PAR	-		P(0xae) E1 E1 E4 >GAME
+sem_par	src_projectg_tutorialtask	?OnPacket@CTutorialTask@@MAEHAAVWReceivedPacket@@@Z	1	SEM_PAR	-		D2 D1 D1 D1 D4 DB(0xc)
+sem_par	taskmanager	?OnAnotherHand@CTask@@MAEXHPAX@Z	1	SEM_PAR	-		P(0x48) E1 >GAME
+sem_par	taskmanager	?_ReFreshMyRoomGift@CTask@@AAEX_NV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z	1	SEM_PAR	-		P(0x21) ES E4 P(0x96) >?
+so_nosso	src_projectg_valentineeventdlg	?OnAzerBtnLBDown@FrValEventDlg@@IAEXXZ	1	DIFERENTE	008651b0		P(0xdb) E4 >GAME
+so_nosso	src_projectg_valentineeventdlg	?OnKazBtnLBDown@FrValEventDlg@@IAEXXZ	1	DIFERENTE	00865310		P(0xdb) E4 >GAME
+so_nosso	src_projectg_valentineeventdlg	?OnMaxBtnLBDown@FrValEventDlg@@IAEXXZ	1	DIFERENTE	00865260		P(0xdb) E4 >GAME
+so_nosso	src_projectg_valentineeventdlg	?OnNuriBtnLBDown@FrValEventDlg@@IAEXXZ	1	DIFERENTE	008662e0		P(0xdb) E4 >GAME

@@ -1,0 +1,69 @@
+// V3: layout do 983 das classes vistas por src/projectg/recycledlg.cpp (gerado por tools/v3/gen.py; não editar à mão).
+// unidade: src/projectg/recycledlg.cpp
+V3_SIZE(FrRecycleAboutDlg, 0x140) // 983: push 0x140; call operator new em 008dd303, construtor 008dbb70 (mapa=2; 2 new); unidade por construtor
+V3_ANOT(FrRecycleAboutDlg, m_pIndexBn, 0x110) // anot: anotação do cabeçalho src/projectg/recycledlg.h:297
+V3_ANOT(FrRecycleAboutDlg, m_aboutIndex, 0x124) // anot: anotação do cabeçalho src/projectg/recycledlg.h:298
+V3_ANOT(FrRecycleAboutDlg, m_pBackwardBn, 0x128) // anot: anotação do cabeçalho src/projectg/recycledlg.h:299
+V3_ANOT(FrRecycleAboutDlg, m_pForwardBn, 0x12c) // anot: anotação do cabeçalho src/projectg/recycledlg.h:300
+V3_ANOT(FrRecycleAboutDlg, m_pAboutViewer, 0x130) // anot: anotação do cabeçalho src/projectg/recycledlg.h:301
+V3_SIZE(FrRecycleDlg, 0x810) // 983: push 0x810; call operator new em 00654a6a, construtor 008e15f0 (mapa=2; 2 new); unidade por construtor
+V3_ANOT(FrRecycleDlg, m_pCloseBn, 0x110) // anot: anotação do cabeçalho src/projectg/recycledlg.h:168
+V3_ANOT(FrRecycleDlg, m_pLevelLowBn, 0x114) // anot: anotação do cabeçalho src/projectg/recycledlg.h:169
+V3_ANOT(FrRecycleDlg, m_pLevelMidBn, 0x118) // anot: anotação do cabeçalho src/projectg/recycledlg.h:170
+V3_ANOT(FrRecycleDlg, m_pLevelHighBn, 0x11c) // anot: anotação do cabeçalho src/projectg/recycledlg.h:171
+V3_ANOT(FrRecycleDlg, m_pLevelSpecialBn, 0x120) // anot: anotação do cabeçalho src/projectg/recycledlg.h:172
+V3_ANOT(FrRecycleDlg, m_pLevelEventBn, 0x124) // anot: anotação do cabeçalho src/projectg/recycledlg.h:173
+V3_ANOT(FrRecycleDlg, m_pCharacterSelectList, 0x128) // anot: anotação do cabeçalho src/projectg/recycledlg.h:174
+V3_ANOT(FrRecycleDlg, m_pRecycleItemList, 0x12c) // anot: anotação do cabeçalho src/projectg/recycledlg.h:175
+V3_ANOT(FrRecycleDlg, m_pRecycleNumber, 0x130) // anot: anotação do cabeçalho src/projectg/recycledlg.h:176
+V3_ANOT(FrRecycleDlg, m_pMixBn, 0x134) // anot: anotação do cabeçalho src/projectg/recycledlg.h:177
+V3_ANOT(FrRecycleDlg, m_pArrowMinimumBn, 0x138) // anot: anotação do cabeçalho src/projectg/recycledlg.h:178
+V3_ANOT(FrRecycleDlg, m_pArrowLeftBn, 0x13c) // anot: anotação do cabeçalho src/projectg/recycledlg.h:179
+V3_ANOT(FrRecycleDlg, m_pArrowRightBn, 0x140) // anot: anotação do cabeçalho src/projectg/recycledlg.h:180
+V3_ANOT(FrRecycleDlg, m_pArrowMaximumBn, 0x144) // anot: anotação do cabeçalho src/projectg/recycledlg.h:181
+V3_ANOT(FrRecycleDlg, m_pRecycleItemName, 0x148) // anot: anotação do cabeçalho src/projectg/recycledlg.h:182
+V3_ANOT(FrRecycleDlg, m_pCadieMsg, 0x14c) // anot: anotação do cabeçalho src/projectg/recycledlg.h:183
+V3_ANOT(FrRecycleDlg, m_pTitleFont, 0x150) // anot: anotação do cabeçalho src/projectg/recycledlg.h:185
+V3_ANOT(FrRecycleDlg, m_pItemBnNormal, 0x154) // anot: anotação do cabeçalho src/projectg/recycledlg.h:186
+V3_ANOT(FrRecycleDlg, m_pItemBnClick, 0x158) // anot: anotação do cabeçalho src/projectg/recycledlg.h:187
+V3_ANOT(FrRecycleDlg, m_pArrowUI, 0x15c) // anot: anotação do cabeçalho src/projectg/recycledlg.h:188
+V3_ANOT(FrRecycleDlg, m_selectedIdx, 0x19c) // anot: anotação do cabeçalho src/projectg/recycledlg.h:194
+V3_ANOT(FrRecycleDlg, m_characterIdx, 0x1a0) // anot: anotação do cabeçalho src/projectg/recycledlg.h:195
+V3_ANOT(FrRecycleDlg, m_level, 0x1a4) // anot: anotação do cabeçalho src/projectg/recycledlg.h:196
+V3_ANOT(FrRecycleDlg, m_resultItem, 0x1a8) // anot: anotação do cabeçalho src/projectg/recycledlg.h:197
+V3_ANOT(FrRecycleDlg, m_needItem, 0x218) // anot: anotação do cabeçalho src/projectg/recycledlg.h:199
+V3_ANOT(FrRecycleDlg, m_haveItem, 0x3d8) // anot: anotação do cabeçalho src/projectg/recycledlg.h:200
+V3_ANOT(FrRecycleDlg, m_recycleNumber, 0x598) // anot: anotação do cabeçalho src/projectg/recycledlg.h:201
+V3_ANOT(FrRecycleDlg, m_maxEnableRecycle, 0x59c) // anot: anotação do cabeçalho src/projectg/recycledlg.h:202
+V3_ANOT(FrRecycleDlg, m_mixedItem, 0x5a0) // anot: anotação do cabeçalho src/projectg/recycledlg.h:204
+V3_ANOT(FrRecycleDlg, m_arrowLeftDown, 0x660) // anot: anotação do cabeçalho src/projectg/recycledlg.h:207
+V3_ANOT(FrRecycleDlg, m_arrowRightDown, 0x661) // anot: anotação do cabeçalho src/projectg/recycledlg.h:208
+V3_ANOT(FrRecycleDlg, m_arrowHoldTime, 0x664) // anot: anotação do cabeçalho src/projectg/recycledlg.h:210
+V3_ANOT(FrRecycleDlg, m_mixing, 0x668) // anot: anotação do cabeçalho src/projectg/recycledlg.h:211
+V3_ANOT(FrRecycleDlg, m_arrowState, 0x66c) // anot: anotação do cabeçalho src/projectg/recycledlg.h:213
+V3_ANOT(FrRecycleDlg, m_mixSendDelay, 0x67c) // anot: anotação do cabeçalho src/projectg/recycledlg.h:217
+V3_ANOT(FrRecycleDlg, m_mixResultTime, 0x680) // anot: anotação do cabeçalho src/projectg/recycledlg.h:218
+V3_ANOT(FrRecycleDlg, m_cadieMsgTime, 0x684) // anot: anotação do cabeçalho src/projectg/recycledlg.h:220
+V3_ANOT(FrRecycleDlg, m_selectedTid, 0x688) // anot: anotação do cabeçalho src/projectg/recycledlg.h:222
+V3_ANOT(FrRecycleDlg, m_selectedPart, 0x68c) // anot: anotação do cabeçalho src/projectg/recycledlg.h:224
+V3_ANOT(FrRecycleDlg, m_partSelected, 0x690) // anot: anotação do cabeçalho src/projectg/recycledlg.h:225
+V3_ANOT(FrRecycleDlg, m_unused545, 0x691) // anot: anotação do cabeçalho src/projectg/recycledlg.h:226
+V3_ANOT(FrRecycleDlg, m_unused548, 0x694) // anot: anotação do cabeçalho src/projectg/recycledlg.h:228
+V3_ANOT(FrRecycleDlg, m_unused54C, 0x698) // anot: anotação do cabeçalho src/projectg/recycledlg.h:229
+V3_ANOT(FrRecycleDlg, m_pSelectPartBn, 0x6a0) // anot: anotação do cabeçalho src/projectg/recycledlg.h:231
+V3_ANOT(FrRecycleDlg, m_pCardSlotResult, 0x6a4) // anot: anotação do cabeçalho src/projectg/recycledlg.h:232
+V3_ANOT(FrRecycleDlg, m_pSelectPartDlg, 0x6a8) // anot: anotação do cabeçalho src/projectg/recycledlg.h:233
+V3_ANOT(FrRecycleDlg, m_deleteBtn, 0x708) // anot: anotação do cabeçalho src/projectg/recycledlg.h:240
+V3_ANOT(FrRecycleDlg, m_clockBtn, 0x720) // anot: anotação do cabeçalho src/projectg/recycledlg.h:241
+V3_ANOT(FrRecycleDlg, m_haveItemMap, 0x780) // anot: anotação do cabeçalho src/projectg/recycledlg.h:243
+V3_ANOT(FrRecycleDlg, m_label983, 0x790) // anot: anotação do cabeçalho src/projectg/recycledlg.h:254
+V3_ANOT(FrRecycleDlg::MiniBtn, rect, 0x0) // anot: anotação do cabeçalho src/projectg/recycledlg.h:66
+V3_ANOT(FrRecycleDlg::MiniBtn, pBitmap, 0x10) // anot: anotação do cabeçalho src/projectg/recycledlg.h:67
+V3_ANOT(FrRecycleDlg::sLabel983, rect, 0x0) // anot: anotação do cabeçalho src/projectg/recycledlg.h:250
+V3_ANOT(FrRecycleDlg::sLabel983, pBitmap, 0x10) // anot: anotação do cabeçalho src/projectg/recycledlg.h:251
+V3_ANOT(FrRecycleDlg::sLabel983, color, 0x14) // anot: anotação do cabeçalho src/projectg/recycledlg.h:252
+V3_SIZE(FrSelectPartDlg, 0x120) // 983: push 0x120; call operator new em 008ddd83, construtor 008dbe40 (mapa=2; 2 new); unidade por construtor
+V3_ANOT(FrSelectPartDlg, m_pListBox, 0x110) // anot: anotação do cabeçalho src/projectg/recycledlg.h:328
+V3_ANOT(FrSelectPartDlg, m_partTid, 0x114) // anot: anotação do cabeçalho src/projectg/recycledlg.h:329
+V3_ANOT(FrSelectPartDlg, m_result, 0x118) // anot: anotação do cabeçalho src/projectg/recycledlg.h:334
+V3_SIZE(sRecycleItem, 0x70) // 983: anotação do cabeçalho src/shared/recycletable.h:25

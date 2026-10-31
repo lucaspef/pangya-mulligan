@@ -1,0 +1,279 @@
+using Pangya.Core.Text;
+using Pangya.Domain.Shop;
+
+namespace Pangya.Domain.Players;
+
+public enum UpgradeResult : byte { Up = 1, Down = 2, NoPang = 3, NoSlot = 4, CannotDowngrade = 5, Failed = 6 }
+
+/// <summary>
+/// Ações de My Room e inventário (docs/server/protocolo/SPEC-myroom.md): upgrades de atributo, armário (itens e pang),
+/// mensagem do mascote, aviso do caddie, móveis, privacidade e troca rápida de equipamento.
+/// Tudo é conferido contra o que o jogador possui e gravado antes de mudar o estado em memória.
+/// </summary>
+public sealed class PlayerActions(IPlayerStore store, IGameData data)
+{
+    public const int FlagMyRoomPrivate = 2;
+
+    /// <summary>Sobe/desce um atributo (0 força .. 4 curva) do personagem ou do club set. Devolve o resultado e o pang gasto.</summary>
+    public async Task<(UpgradeResult Result, long Cost)> UpgradeAsync(Player p, bool club, bool down, int stat, int id)
+    {
+        if (stat is < 0 or > 4 || p.Find(id) is not { Location: ItemLocation.Inventory } obj
+            || obj.Group != (club ? ItemGroup.ClubSet : ItemGroup.Character)) return (UpgradeResult.Failed, 0);
+        int cap = club ? data.GetShopItem(obj.TypeId)?.UpgradeSlots is { Length: 5 } s ? s[stat] : 0 : 255;
+        if (club) cap += ClubWorkshop.Slots(obj)[stat];                       // slots ganhos na oficina (JP)
+        var pcl = obj.IntArray("pcl", 5);
+        int cur = pcl[stat];
+        long cost = 0;
+        if (down)
+        {
+            if (cur <= 0) return (UpgradeResult.CannotDowngrade, 0);
+            pcl[stat] = cur - 1;
+        }
+        else
+        {
+            if (data.UpgradePrice(stat, cur) is not { } price || cur >= cap) return (UpgradeResult.NoSlot, 0);
+            if (price > p.Pang) return (UpgradeResult.NoPang, 0);
+            cost = price;
+            pcl[stat] = cur + 1;
+        }
+        var edit = obj.Clone();
+        edit.Set("pcl", pcl);
+        var ch = new PlayerChanges { Pang = p.Pang - cost };
+        ch.Updated.Add(edit);
+        await store.ApplyAsync(p.AccountId, ch);
+        p.Items[edit.Id] = edit;
+        p.Pang -= cost;
+        return (down ? UpgradeResult.Down : UpgradeResult.Up, cost);
+    }
+
+    /// <summary>Guarda um item no armário (não pode estar em uso). null = recusado.</summary>
+    public async Task<Item?> LockerPutAsync(Player p, int id)
+    {
+        if (p.Find(id) is not { Location: ItemLocation.Inventory } it || !IsStorable(p, it)) return null;
+        var edit = it.Clone();
+        edit.Location = ItemLocation.Locker;
+        var ch = new PlayerChanges();
+        ch.Updated.Add(edit);
+        await store.ApplyAsync(p.AccountId, ch);
+        p.Items[id] = edit;
+        return edit;
+    }
+
+    static bool IsStorable(Player p, Item it)
+    {
+        if (it.Group is ItemGroup.Character or ItemGroup.Caddie or ItemGroup.Mascot or ItemGroup.Card or ItemGroup.Furniture) return false;
+        var e = p.Equip;
+        return !IsEquipped(p, it) && !p.Reserved.ContainsKey(it.Id) && it.TypeId != e.BallTypeId && Array.IndexOf(e.ItemSlots, it.TypeId) < 0;
+    }
+
+    /// <summary>Unidades livres do objeto (fora da loja pessoal): pilha = quantidade − à venda; objeto único = 0 ou 1.</summary>
+    public static int Free(Player p, Item it)
+    {
+        int have = it.IsConsumable ? it.Quantity : 1;
+        return Math.Max(have - p.Reserved.GetValueOrDefault(it.Id), 0);
+    }
+
+    /// <summary>Em uso ou inteiro à venda na loja pessoal: não pode sair do inventário nem virar material.</summary>
+    public static bool IsBusy(Player p, Item it) => IsEquipped(p, it) || Free(p, it) == 0;
+
+    /// <summary>Objeto em uso: club set, caddie, mascote ou personagem equipados, ou peça vestida por algum personagem.</summary>
+    public static bool IsEquipped(Player p, Item it)
+    {
+        var e = p.Equip;
+        if (it.Id == e.ClubSetId || it.Id == e.CaddieId || it.Id == e.MascotId || it.Id == e.CharacterId) return true;
+        if (it.Group != ItemGroup.Part) return false;
+        foreach (var c in p.Items.Values)
+            if (c.Group == ItemGroup.Character && Array.IndexOf(c.IntArray("part_ids", 24), it.Id) >= 0) return true;
+        return false;
+    }
+
+    /// <summary>
+    /// Apaga `count` unidades do item (pilha) ou o objeto inteiro. Recusa item em uso, personagem/caddie/mascote e a bola
+    /// básica (nunca acaba). Tira o tid dos slots de item se a pilha acabar. Devolve o item com a quantidade nova (0 = apagado).
+    /// </summary>
+    public async Task<Item?> DeleteItemAsync(Player p, int tid, int count)
+    {
+        if (count <= 0 || tid == Item.BasicBall || p.FindType(tid) is not { } it) return null;
+        if (it.Group is ItemGroup.Character or ItemGroup.Caddie or ItemGroup.Mascot || IsEquipped(p, it)) return null;
+        bool stack = it.Group is ItemGroup.Ball or ItemGroup.Usable or ItemGroup.Card;
+        if (stack ? Math.Min(count, it.Quantity) > Free(p, it) : Free(p, it) == 0) return null;   // à venda na loja pessoal
+        var edit = it.Clone();
+        var ch = new PlayerChanges();
+        edit.Quantity = stack ? Math.Max(it.Quantity - count, 0) : 0;
+        if (edit.Quantity == 0)
+        {
+            ch.Removed.Add(it.Id);
+            var slots = p.Equip.ItemSlots;
+            bool slotChanged = false;
+            for (int i = 0; i < slots.Length; i++) if (slots[i] == tid) { slots[i] = 0; slotChanged = true; }
+            if (p.Equip.BallTypeId == tid) { p.Equip.BallTypeId = Item.BasicBall; slotChanged = true; }
+            if (slotChanged) ch.Equip = p.Equip;
+        }
+        else ch.Updated.Add(edit);
+        await store.ApplyAsync(p.AccountId, ch);
+        if (edit.Quantity == 0) p.Items.Remove(it.Id); else p.Items[it.Id] = edit;
+        return edit;
+    }
+
+    /// <summary>Bola de quem ficou sem a equipada: a premium enquanto o ticket vale, senão a básica.</summary>
+    public static int DefaultBall(Player p, DateTime nowUtc) => Premium.Ticket(p, nowUtc) is { } t ? Premium.CometOf(t.TypeId) : Item.BasicBall;
+
+    /// <summary>Premium: a básica e a 0x140000D8 (a que o cliente sempre pede) viram a bola do ticket.</summary>
+    public static int EquipBall(Player p, int tid, DateTime nowUtc) =>
+        tid is Item.BasicBall or Premium.Comet && Premium.IsActive(p, nowUtc) ? DefaultBall(p, nowUtc) : tid;
+
+    /// <summary>
+    /// Fim da partida: 1 unidade por buraco concluído, com piso em 0 (a bola nunca acaba no meio da partida). A básica, as
+    /// premium e as sem contagem não gastam. Zerou: o item sai e o equipamento volta para DefaultBall. null = nada mudou.
+    /// </summary>
+    public async Task<ItemChange?> SpendBallAsync(Player p, int tid, int holes, DateTime nowUtc)
+    {
+        if (holes <= 0 || tid is Premium.Comet or Premium.VipComet || data.IsUnlimitedBall(tid)
+            || p.FindType(tid) is not { Group: ItemGroup.Ball } it) return null;
+        var edit = it.Clone();
+        edit.Quantity = Math.Max(it.Quantity - holes, 0);
+        var ch = new PlayerChanges();
+        if (edit.Quantity > 0) ch.Updated.Add(edit);
+        else
+        {
+            ch.Removed.Add(it.Id);
+            if (p.Equip.BallTypeId == tid)
+            {
+                p.Equip.BallTypeId = DefaultBall(p, nowUtc);
+                ch.Equip = p.Equip;
+            }
+        }
+        await store.ApplyAsync(p.AccountId, ch);
+        if (edit.Quantity > 0) p.Items[it.Id] = edit; else p.Items.Remove(it.Id);
+        return new ItemChange(tid, it.Id, it.Quantity, edit.Quantity);
+    }
+
+    /// <summary>Tira um item do armário de volta para o inventário. null = não está lá.</summary>
+    public async Task<Item?> LockerTakeAsync(Player p, int id)
+    {
+        if (p.Find(id) is not { Location: ItemLocation.Locker } it) return null;
+        var edit = it.Clone();
+        edit.Location = ItemLocation.Inventory;
+        var ch = new PlayerChanges();
+        ch.Updated.Add(edit);
+        await store.ApplyAsync(p.AccountId, ch);
+        p.Items[id] = edit;
+        return edit;
+    }
+
+    public static List<Item> LockerItems(Player p)
+    {
+        var list = new List<Item>();
+        foreach (var it in p.Items.Values)
+            if (it.Location == ItemLocation.Locker) list.Add(it);
+        list.Sort(static (a, b) => a.Id.CompareTo(b.Id));
+        return list;
+    }
+
+    /// <summary>Deposita (true) ou saca pang do armário. false = valor inválido ou sem saldo.</summary>
+    public async Task<bool> LockerBankAsync(Player p, bool deposit, long amount)
+    {
+        if (amount <= 0 || amount > (deposit ? p.Pang : p.LockerPang)) return false;
+        long pang = deposit ? p.Pang - amount : p.Pang + amount, locker = deposit ? p.LockerPang + amount : p.LockerPang - amount;
+        await store.ApplyAsync(p.AccountId, new PlayerChanges { Pang = pang, LockerPang = locker });
+        p.Pang = pang;
+        p.LockerPang = locker;
+        return true;
+    }
+
+    /// <summary>Mensagem do mascote (até 29 bytes cp949). null = não tem o mascote.</summary>
+    public async Task<string?> MascotMessageAsync(Player p, int id, string message)
+    {
+        if (p.Find(id) is not { Group: ItemGroup.Mascot, Location: ItemLocation.Inventory } m) return null;
+        var field = new byte[30];
+        Cp949.Write(field, message);
+        var msg = Cp949.Read(field);
+        var edit = m.Clone();
+        edit.Attrs["msg"] = msg;
+        var ch = new PlayerChanges();
+        ch.Updated.Add(edit);
+        await store.ApplyAsync(p.AccountId, ch);
+        p.Items[id] = edit;
+        return msg;
+    }
+
+    /// <summary>Aviso de validade do caddie (sCaddieInfo.checkWarning).</summary>
+    public async Task CaddieWarningAsync(Player p, int id, bool flag)
+    {
+        if (p.Find(id) is not { Group: ItemGroup.Caddie } c) return;
+        var edit = c.Clone();
+        edit.Set("warning", flag ? 1 : 0);
+        var ch = new PlayerChanges();
+        ch.Updated.Add(edit);
+        await store.ApplyAsync(p.AccountId, ch);
+        p.Items[id] = edit;
+    }
+
+    /// <summary>
+    /// 0x39: renova por 30 dias o contrato vencido de um caddie com mensalidade, pagando o MonthlyFee em pang
+    /// (<see cref="CaddieRent"/>). Devolve o resultado e o pang depois.
+    /// </summary>
+    public async Task<(CaddieRenewal Result, long Pang)> RenewCaddieAsync(Player p, int id)
+    {
+        var now = DateTime.UtcNow;
+        if (p.Find(id) is not { Group: ItemGroup.Caddie, ExpiresAt: not null } c) return (CaddieRenewal.Fail, p.Pang);
+        int fee = data.CaddieMonthlyFee(c.TypeId);
+        if (fee <= 0) return (CaddieRenewal.Fail, p.Pang);
+        if (!CaddieRent.IsExpired(c, now)) return (CaddieRenewal.StillHired, p.Pang);
+        if (p.Pang < fee) return (CaddieRenewal.NoPang, p.Pang);
+        var edit = c.Clone();
+        edit.ExpiresAt = now.AddDays(CaddieRent.Days);
+        var ch = new PlayerChanges { Pang = p.Pang - fee };
+        ch.Updated.Add(edit);
+        await store.ApplyAsync(p.AccountId, ch);
+        p.Items[id] = edit;
+        p.Pang -= fee;
+        return (CaddieRenewal.Ok, p.Pang);
+    }
+
+    /// <summary>Posições novas dos móveis (só os do jogador).</summary>
+    public async Task SaveFurnitureAsync(Player p, List<(int Id, float X, float Y, float Z, float R, bool Arranged)> moves)
+    {
+        var ch = new PlayerChanges();
+        var edits = new List<Item>();
+        foreach (var (id, x, y, z, r, arranged) in moves)
+        {
+            if (p.Find(id) is not { Group: ItemGroup.Furniture } f) continue;
+            var e = f.Clone();
+            e.Attrs["x"] = x; e.Attrs["y"] = y; e.Attrs["z"] = z; e.Attrs["r"] = r; e.Attrs["arranged"] = arranged ? 1 : 0;
+            ch.Updated.Add(e);
+            edits.Add(e);
+        }
+        await store.ApplyAsync(p.AccountId, ch);
+        foreach (var e in edits) p.Items[e.Id] = e;
+    }
+
+    public async Task SetMyRoomPrivateAsync(Player p, bool isPrivate)
+    {
+        int flags = isPrivate ? p.Flags | FlagMyRoomPrivate : p.Flags & ~FlagMyRoomPrivate;
+        await store.ApplyAsync(p.AccountId, new PlayerChanges { Flags = flags });
+        p.Flags = flags;
+    }
+
+    /// <summary>
+    /// Troca rápida de equipamento (barra de equipamento / setas na sala): 1 caddie, 2 bola, 3 club set, 4 personagem,
+    /// 5 mascote. false = não possui.
+    /// </summary>
+    public async Task<bool> QuickEquipAsync(Player p, int kind, int value)
+    {
+        if (kind == 2) value = EquipBall(p, value, DateTime.UtcNow);
+        var e = p.Equip;
+        bool Owns(ItemGroup g) => p.Find(value) is { Location: ItemLocation.Inventory } it && it.Group == g;
+        switch (kind)
+        {
+            case 1 when value == 0 || Owns(ItemGroup.Caddie): e.CaddieId = value; break;
+            case 2 when value == Item.BasicBall || p.FindType(value) is { Group: ItemGroup.Ball }: e.BallTypeId = value; break;
+            case 3 when Owns(ItemGroup.ClubSet): e.ClubSetId = value; break;
+            case 4 when Owns(ItemGroup.Character): e.CharacterId = value; break;
+            case 5 when value == 0 || Owns(ItemGroup.Mascot): e.MascotId = value; break;
+            default: return false;
+        }
+        await store.ApplyAsync(p.AccountId, new PlayerChanges { Equip = e });
+        return true;
+    }
+}

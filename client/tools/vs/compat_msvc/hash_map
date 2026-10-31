@@ -1,0 +1,9 @@
+// <hash_map> saiu do STL novo (D734 P5): stdext::hash_map = std::unordered_map (o fonte só procura/insere, não depende
+// da ordem). Só no toolset novo (1o /I da tools/vs/sonda_msvc.py).
+#pragma once
+#include <unordered_map>
+namespace stdext {
+	template <class K, class V, class H = std::hash<K>, class E = std::equal_to<K>,
+		class A = std::allocator<std::pair<const K, V> > >
+	using hash_map = std::unordered_map<K, V, H, E, A>;
+}

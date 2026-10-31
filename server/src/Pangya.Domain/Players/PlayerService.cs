@@ -1,0 +1,163 @@
+using System.Text.Json.Nodes;
+using Pangya.Core.Config;
+using Pangya.Core.Text;
+
+namespace Pangya.Domain.Players;
+
+/// <summary>Dados do jogo que dependem da versão do cliente (implementado pela camada de protocolo, a partir do IFF).</summary>
+public interface IGameData
+{
+    bool Exists(int typeId);
+    /// <summary>Partes padrão (24 typeids) de um personagem recém-criado.</summary>
+    int[] DefaultParts(int characterTypeId);
+    /// <summary>
+    /// Peça padrão do personagem (cabelo, rosto, mãos, coxa, sapato, prop de entrada...): o cliente veste sem que o jogador
+    /// tenha o item. No Part.iff são as de série 0 com 0x400/0x600 no código (기본머리 …0400, 기본보조머리 …0600).
+    /// </summary>
+    bool IsDefaultPart(int characterTypeId, int partTypeId);
+    /// <summary>
+    /// Peças auxiliares de uma roupa (Part.iff SubPart[2]): o cliente as veste em outro slot com o id da roupa (ex.: um
+    /// sapato que cobre as pernas). Vazio = nenhuma.
+    /// </summary>
+    int[] SubParts(int partTypeId);
+    /// <summary>Peça Self Design (Part.iff categoria 7/8/9); null = não é.</summary>
+    UccPartInfo? UccPart(int typeId);
+    /// <summary>Item do catálogo da loja (null = não existe).</summary>
+    Shop.ShopItem? GetShopItem(int typeId);
+    /// <summary>Preço em pang para subir um atributo (0 força .. 4 curva) a partir do nível atual; null = não dá.</summary>
+    int? UpgradePrice(int stat, int current);
+    /// <summary>Todos os cards do jogo, por typeid.</summary>
+    IReadOnlyDictionary<int, Shop.CardInfo> Cards { get; }
+    /// <summary>Mapas que o cliente oferece, na ordem da tela de escolha (só os ativos nos dados).</summary>
+    IReadOnlyList<byte> Courses { get; }
+    /// <summary>
+    /// Stats (força, controle, precisão, spin, curva) como o cliente calcula para a física (CItemManager::GetLevel +
+    /// CGolfDoc::SetPlayerLevel; SPEC-bot-especiais.md §4.1): personagem + roupas + anéis + upgrades (até o limite) +
+    /// club set + upgrades do club + caddie; força − 15. E o DriveUp dos anéis (jardas a mais em todo taco menos putter).
+    /// </summary>
+    (int[] Stats, int DriveUp) PlayStats(Player p);
+    /// <summary>Pode ir para a loja pessoal (IFF_ITEM_COMMON.IsSalable 1 ou 3, como o cliente filtra).</summary>
+    bool CanTrade(int typeId);
+    /// <summary>Bola sem contagem (COM[0] = 0 no Ball.iff, IsUnlimitAztec do cliente): nunca é gasta.</summary>
+    bool IsUnlimitedBall(int typeId) => typeId == Item.BasicBall;
+    /// <summary>Itens SP do lounge (SpecialPrizeItem.iff): typeid -> (efeito 0..4, multiplicador).</summary>
+    IReadOnlyDictionary<int, (int Ability, float Rate)> SpItems { get; }
+    /// <summary>Estrelas do curso para a EXP (dificuldade 1..5 do Course.iff; 1 se não existir).</summary>
+    float CourseStars(int course);
+    /// <summary>Receitas da Caixa Mágica, na posição Index (= uiNumber-1, o índice que o cliente manda).</summary>
+    IReadOnlyList<Shop.MagicBoxRecipe> MagicBox { get; }
+    /// <summary>Sorteios da Caixa Mágica por grupo (uiRandSeq).</summary>
+    IReadOnlyDictionary<int, Shop.MagicBoxOutput[]> MagicBoxRandom { get; }
+    /// <summary>Mensalidade do caddie em pang (Caddie.iff MonthlyFee); 0 = não vence (<see cref="CaddieRent"/>).</summary>
+    int CaddieMonthlyFee(int typeId) => 0;
+}
+
+/// <summary>Resultado da conferência/criação de nickname (os códigos são os do cliente KR: 0x0D/0x0E).</summary>
+public enum NicknameStatus { Ok = 0, Error = 1, Taken = 2, Invalid = 3 }
+
+/// <summary>Regras de nickname do cliente (createnickdlg.cpp, hatmanager.cpp:3877-3910), também conferidas no servidor.</summary>
+public static class NicknameRules
+{
+    public static bool IsValid(string nick, string login)
+    {
+        int bytes = Cp949.Encoding.GetByteCount(nick);
+        if (bytes is < 4 or > 16 || nick.Contains('\'') || string.Equals(nick, login, StringComparison.OrdinalIgnoreCase)) return false;
+        // ASCII visível (sem espaço) ou sílabas Hangul
+        foreach (var ch in nick)
+            if (ch is not (>= '\x21' and <= '\x7E' or >= '가' and <= '힣')) return false;
+        return true;
+    }
+}
+
+/// <summary>Criação do jogador (primeiro personagem + itens iniciais) e carga dos dados.</summary>
+public sealed class PlayerService(IPlayerStore store, IGameData data, NewPlayerConfig start)
+{
+    /// <summary>Personagens que o cliente oferece na criação (lobbymain.cpp:14689: 0x04000000 | gênero).</summary>
+    public static bool IsCreatableCharacter(int typeId) => typeId is 0x04000000 or 0x04000001;
+
+    public Task<Player?> LoadAsync(long accountId) => store.LoadAsync(accountId);
+    public IPlayerStore Store => store;
+
+    /// <summary>Uid/guid do bot (fora da faixa das contas, que começam em 100001).</summary>
+    public const long BotAccountId = 0x7F000001;
+    const int BotCharacter = 0x04000001;
+
+    /// <summary>
+    /// Jogador bot em memória (não é salvo), com o mesmo kit de um jogador novo. Os ids dos objetos vêm da
+    /// sequência do banco: nunca iguais aos de um jogador (ids repetidos quebravam a física no cliente).
+    /// </summary>
+    public async Task<Player> CreateBotAsync()
+    {
+        var ids = await store.NewIdsAsync(4);
+        var bot = new Player { AccountId = BotAccountId, Login = "pangbot", Nickname = "Bot", Level = 1 };
+        var ch = new Item { Id = ids[0], TypeId = data.Exists(BotCharacter) ? BotCharacter : 0x04000000 };
+        ch.Set("parts", data.DefaultParts(ch.TypeId));
+        bot.Add(ch);
+        bot.Add(new Item { Id = ids[1], TypeId = start.ClubSet });
+        bot.Add(new Item { Id = ids[2], TypeId = start.Ball, Quantity = start.BallCount });
+        bot.Equip = new Equipment { CharacterId = ids[0], ClubSetId = ids[1], BallTypeId = start.Ball };
+        bot.Add(new Item { Id = ids[3], TypeId = 0, Location = ItemLocation.Locker });    // vaga do caddie (EquipBot)
+        return bot;
+    }
+
+    /// <summary>
+    /// Veste o bot com o kit do nível (só em memória: o bot não é gravado) e ajusta os upgrades do club set até os stats
+    /// (fórmula do cliente) baterem os alvos do kit: força, controle e spin. Itens que não existem nos dados ficam de fora.
+    /// </summary>
+    public void EquipBot(Player bot, Rooms.BotLevel level)
+    {
+        var kit = Rooms.BotKit.For(level);
+        bot.Level = kit.Level;
+        if (bot.Find(bot.Equip.CharacterId) is { } ch)
+        {
+            ch.Set("pcl", [kit.CharPower, 0, 0, 0, 0]);
+            var aux = new JsonArray();
+            foreach (var r in kit.Rings) if (data.Exists(r)) aux.Add(r);
+            ch.Attrs["aux"] = aux;
+        }
+        var slots = new int[10];                                            // itens de partida do nível (0x74 tidItemSlot)
+        int n = 0;
+        foreach (var it in kit.Items) if (n < slots.Length && data.Exists(it)) slots[n++] = it;
+        bot.Equip.ItemSlots = slots;
+        int clubId = bot.Equip.ClubSetId;
+        var club = new Item { Id = clubId, TypeId = data.Exists(kit.ClubSet) ? kit.ClubSet : start.ClubSet };
+        bot.Items[clubId] = club;
+        int caddieSlot = 0;
+        foreach (var it in bot.Items.Values)
+            if (it.Id != bot.Equip.CharacterId && it.Id != clubId && it.Group is ItemGroup.Caddie or (ItemGroup)0) caddieSlot = it.Id;
+        if (caddieSlot != 0)
+        {
+            bool has = kit.Caddie != 0 && data.Exists(kit.Caddie);
+            bot.Items[caddieSlot] = new Item { Id = caddieSlot, TypeId = has ? kit.Caddie : 0, Location = has ? ItemLocation.Inventory : ItemLocation.Locker };
+            bot.Equip.CaddieId = has ? caddieSlot : 0;
+        }
+        // upgrades do club até os alvos; a penalidade de controle depende da força, então repete até estabilizar
+        var pcl = new int[5];
+        for (int pass = 0; pass < 4; pass++)
+        {
+            club.Set("pcl", pcl);
+            var (st, _) = data.PlayStats(bot);
+            int dp = kit.Power - st[0], dc = kit.Control - st[1], ds = kit.Spin - st[3];
+            if (dp == 0 && dc <= 0 && ds == 0) break;
+            pcl[0] += dp;
+            pcl[1] += Math.Max(dc, 0);                                      // controle: 30 é o teto do cliente
+            pcl[3] += ds;
+        }
+        club.Set("pcl", pcl);
+    }
+
+    /// <summary>Cria o jogador; null se o personagem/cores são inválidos ou o jogador já existe.</summary>
+    public async Task<Player?> CreateAsync(long accountId, int characterTypeId, int hairColor, int shirtColor)
+    {
+        if (!IsCreatableCharacter(characterTypeId) || !data.Exists(characterTypeId) || hairColor is < 0 or > 2 || shirtColor is < 0 or > 2)
+            return null;
+        if (await store.LoadAsync(accountId) != null) return null;
+        var parts = new JsonArray();
+        foreach (var t in data.DefaultParts(characterTypeId)) parts.Add(t);
+        var character = new JsonObject { ["hair"] = hairColor, ["shirt"] = shirtColor, ["parts"] = parts };
+        var items = new List<NewItem> { new(characterTypeId, 1, character, Equip: true) };
+        if (data.Exists(start.ClubSet)) items.Add(new(start.ClubSet, 1, Equip: true));
+        if (data.Exists(start.Ball)) items.Add(new(start.Ball, start.BallCount, Equip: true));
+        return await store.CreateAsync(accountId, new NewPlayer(start.Pang, start.Cookie, items));
+    }
+}

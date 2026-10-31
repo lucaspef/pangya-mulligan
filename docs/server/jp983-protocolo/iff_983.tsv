@@ -1,0 +1,72 @@
+iff	carregador983	nome983	reg983	conf	reg839_arquivo	dif_839	nosso_carregador	reg_nosso	estado	copias983	passos983	nosso_copias_passos
+Character.iff	00a29020	CItemManager::MakeCharMap	0x1a4	alta	0x18c	+24	?MakeCharMap@CItemManager@@AAEXPADH@Z	0x1a4	ok	0x1a4	0x1a4	0x1a4 / 0x1a4
+Part.iff	00a29130	CItemManager::MakePartMap	0x238	alta	0x220	+24	?MakePartMap@CItemManager@@AAEXPADH@Z	0x238	ok	0x238	0x238	0x238 / 0x238
+Club.iff	00a29260	CItemManager::MakeClubMap	0xf4	alta	0xdc	+24	?MakeClubMap@CItemManager@@AAEXPADH@Z	0xf4	ok	0xf4	0xf4	0xf4 / 0xf4
+ClubSet.iff	00a29370	CItemManager::MakeClubSetMap	0x104	alta	0xec	+24	?MakeClubSetMap@CItemManager@@AAEXPADH@Z	0x104	ok	0x104	0x104	0x104 / 0x104
+Ball.iff	00a29480	CItemManager::MakeBallMap	0x330	alta	0x318	+24	?MakeBallMap@CItemManager@@AAEXPADH@Z	0x330	ok	0x330	0x330	0x330 / 0x330
+Item.iff	00a29590	CItemManager::MakeItemMap	0xf8	alta	0xe0	+24	?MakeItemMap@CItemManager@@AAEXPADH@Z	0xf8	ok	0xf8	0xf8	0xf8 / 0xf8
+Caddie.iff	00a296a0	CItemManager::MakeCaddieMap	0xf8	alta	0xe0	+24	?MakeCaddieMap@CItemManager@@AAEXPADH@Z	0xf8	ok	0xf8	0xf8	0xf8 / 0xf8
+CaddieItem.iff	00a297b0	CItemManager::MakeCadItemMap	0x11c	alta	0x104	+24	?MakeCadItemMap@CItemManager@@AAEXPADH@Z	0x11c	ok	0x11c	0x11c	0x11c / 0x11c
+SetItem.iff	00a298c0	CItemManager::MakeSetItemMap	0x10c	alta	0xf4	+24	?MakeSetItemMap@CItemManager@@AAEXPADH@Z	0x10c	ok	0x10c	0x10c	0x10c / 0x10c
+Course.iff	00a299e0	CItemManager::MakeCourseMap	0x1d0	alta	0x1b8	+24	?MakeCourseMap@CItemManager@@AAEXPADH@Z	0x1d0	ok	0x1d0	0xb0,0x1d0	0x1d0 / 0xb0,0x1d0
+Match.iff	00a29e20	FUN_00a29e20	0x14c	alta	0x14c	+0	?MakeMatchMap@CItemManager@@AAEXPADH@Z	0x14c	ok	0x14c	0x14c	0x14c / 0x14c
+Title.iff	00a29ef0	FUN_00a29ef0	0x58	alta			?MakeTitleMap@CItemManager@@AAEXPADH@Z	0x58	ok	0x58	0x58	0x58 / 0x58
+Enchant.iff	00a29fa0	FUN_00a29fa0	0x10	media	0x10	+0	?MakeEnchantMap@CItemManager@@AAEXPADH@Z	0x10	ok		0x10	 / 0x10
+Skin.iff	00a2a030	FUN_00a2a030	0xf4	alta	0xdc	+24	?MakeSkinMap@CItemManager@@AAEXPADH@Z	0xf4	ok	0xf4	0xf4	0xf4 / 0xf4
+HairStyle.iff	00a2ac30	FUN_00a2ac30	0xc4	alta	0xac	+24	?MakeHairStyleMap@CItemManager@@AAEXPADH@Z	0xc4	ok	0xc4	0xc4	0xc4 / 0xc4
+ChildItem.iff	00a2ad30	FUN_00a2ad30	0x48	alta			?MakeChildItemMap@CItemManager@@AAEXPADH@Z	0x48	ok	0x48	0x48	0x48 / 0x48
+Mascot.iff	00a2b2c0	FUN_00a2b2c0	0x130	alta	0x118	+24	?MakeMascotMap@CItemManager@@AAEXPADH@Z	0x130	ok	0x130	0x130	0x130 / 0x130
+CounterItem.iff	00a2a9e0	FUN_00a2a9e0	0x118	media	0x100	+24	?MakeCounterItemMap983@CItemManager@@AAEXPADH@Z	0x118	ok	0x118		0x118 / 
+AuxPart.iff	00a2ade0	FUN_00a2ade0	0xe4	alta	0xcc	+24	?MakeAuxPartMap@CItemManager@@AAEXPADH@Z	0xe4	ok	0xe4	0xe4	0xe4 / 0xe4
+Achievement.iff	00a2aed0	FUN_00a2aed0	0x600	media	0x5e8	+24	?MakeAchievementMap983@CItemManager@@AAEXPADH@Z	0x600	ok	0x600		0x600 / 
+QuestStuff.iff	00a2aa90	FUN_00a2aa90	0x10c	media	0xf4	+24	?MakeQuestStuffMap983@CItemManager@@AAEXPADH@Z	0x10c	ok	0x10c		0x10c / 
+QuestItem.iff	00a2ab60	FUN_00a2ab60	0x110	media	0xf8	+24	?MakeQuestItemMap983@CItemManager@@AAEXPADH@Z	0x110	ok	0x110		0x110 / 
+Card.iff	00a2a120	FUN_00a2a120	0x180	alta	0x168	+24	?MakeCardMap@CItemManager@@AAEXPADH@Z	0x180	ok	0x180	0x180	0x180 / 0x180
+Furniture.iff	00a2a240	FUN_00a2a240	0x200	alta	0x1e8	+24	?MakeFurnitureMap@CItemManager@@AAEXPADH@Z	0x200	ok	0x200	0x200	0x200 / 0x200
+Desc.iff	00a2b3e0	FUN_00a2b3e0	0x204	alta	0x204	+0	?MakeDescMap@CItemManager@@AAEXPADH@Z	0x204	ok	0x204	0xf0,0x204	0x204 / 0xf0,0x204
+CadieMagicBox.iff	00a22d80	FUN_00a22d80	0x8c	baixa	0x8c	+0	?MakeCadieMagicBoxMap@CItemManager@@AAEXPADH@Z	0x70	DIFERE	0x27,0x70,0x8c	0x70,0x8c	0x27,0x70,0x8c,0x1c0 / 0x70
+CadieMagicBoxRandom.iff	00a2f310	FUN_00a2f310			0x10		?MakeRandomRecycleMap@CItemManager@@AAEXPADH@Z		nao_medido		0x10,0x1c0	 / 0x10,0x1c0
+FurnitureAbility.iff	00a232d0	FUN_00a232d0	0x3c	alta	0x3c	+0	?MakeFurnitureAbilityList@CItemManager@@AAEXPADH@Z	0x3c	ok	0x3c	0x3c	0x3c / 0x3c
+TikiRecipe.iff	009e9830	FUN_009e9830	0x34	alta	0x34	+0	?MakeTikiRecipeMap@CItemManager@@AAEXPADH@Z	0x34	ok	0x34	0x34	0x34 / 0x34
+TikiPointTable.iff	009e98b0	FUN_009e98b0	0x30	alta	0x30	+0	?MakeTikiPointTableMap@CItemManager@@AAEXPADH@Z	0x30	ok	0x30	0x30	0x30 / 0x30
+TikiSpecialTable.iff	009e9930	FUN_009e9930	0x3c	alta	0x3c	+0	?MakeTikiSpecialTableMap@CItemManager@@AAEXPADH@Z	0x3c	ok	0x3c	0x3c	0x3c / 0x3c
+CutinInfomation.iff	00a2b4a0	FUN_00a2b4a0	0xd0	alta	0xd0	+0	?MakeCutinInforMationTableMap@CItemManager@@AAEXPADH@Z	0xd0	ok	0xd0	0xd0	0xd0 / 0xd0
+SpecialPrizeItem.iff	00a2b610	FUN_00a2b610	0xc	media	0xc	+0	?MakeSpecialPrizeItemMap@CItemManager@@AAEXPADH@Z	0xc	ok		0xc	 / 0xc
+ShopLimitItem.iff	00a2a360	FUN_00a2a360	0x3c	alta	0x3c	+0	?MakeShopLimitItemMap983@CItemManager@@AAEXPADH@Z	0x3c	ok	0x3c	0x3c	0x3c / 0x3c
+PointShop.iff	00a2f610	FUN_00a2f610	0x14	media	0x14	+0	?MakePointShopMap983@CItemManager@@AAEXPADH@Z	0x14	ok		0x14	 / 0x14
+RandomBox.sff	00a3db10	FUN_00a3db10	0xe4	alta			?MakeRandomBoxMap@CItemManager@@AAEXPADH@Z	0xe4	ok	0xe4	0xe4	0xe4 / 0xe4
+NonVisibleItemTable.iff	00a2a410	FUN_00a2a410	0x2c	alta	0x2c	+0	?MakeNonVisibleItemMap@CItemManager@@AAEXPADH@Z	0x2c	ok	0x2c	0x2c	0x2c / 
+SubscriptionItemTable.iff	00a2a4b0	FUN_00a2a4b0	0x2c	alta	0x2c	+0	?MakeSubscriptionItemMap@CItemManager@@AAEXPADH@Z	0x2c	ok	0x2c	0x2c	0x2c / 
+ScratchItem.sff	00a2a550	FUN_00a2a550	0x30	alta			?MakeScratchItem983@CItemManager@@AAEXPADH@Z	0x30	ok	0x30	0x30	0x30 / 
+BongdariShopNormalItem.sff	00a31fe0	FUN_00a31fe0	0x10	media			?MakeBongdariShopNormalItem983@CItemManager@@AAEXPADH@Z	0x10	ok		0x10	 / 0x10
+BongdariShopRareItem.sff	00a32180	FUN_00a32180	0x30	alta			?MakeBongdariShopRareItem983@CItemManager@@AAEXPADH@Z	0x30	ok	0x30	0x30	0x30 / 0x30,0x270
+BroadCastNotices.sff	00a36150	FUN_00a36150	0x230	alta			?MakeBroadCastNotices983@CItemManager@@AAEXPADH@Z	0x240	DIFERE	0x230	0x230	0x230,0x240 / 0x240
+TwinsItemTable.iff	00a39aa0	FUN_00a39aa0	0x1c	alta	0x1c	+0	?MakeTwinsItemMap983@CItemManager@@AAEXPADH@Z		nao_medido	0x1c	0x1c	 / 
+LevelUpPrizeItem.iff	00a2a880	FUN_00a2a880			0xc0		?MakeLevelUpPrizeItemMap983@CItemManager@@AAEXPADH@Z		nao_medido	0xc0,0x1c4		0xc0,0x1c4 / 
+ErrorCodeInfo.iff	00a2a930	FUN_00a2a930	0x110	media	0x110	+0	?MakeErrorCodeInfoMap983@CItemManager@@AAEXPADH@Z	0x110	ok	0x110		0x110 / 
+ArtifactManaInfo.iff	00a2b770	FUN_00a2b770	0x98	media	0x98	+0	?MakeArtifactManaInfoMap983@CItemManager@@AAEXPADH@Z	0x98	ok	0x98		0x98 / 
+ScratchShopConfig.iff	009d9e60	FUN_009d9e60	0x14	media			?MakeScratchShopConfig983@CItemManager@@AAEXPADH@Z	0x14	ok		0x14	 / 0x14
+ScratchShopItem.iff	00a32230	FUN_00a32230	0x18	media			?MakeScratchShopItem983@CItemManager@@AAEXPADH@Z	0x18	ok		0x18	 / 0x18
+Ability.iff	00a2afa0	FUN_00a2afa0	0x50	media	0x50	+0	?MakeAbilityMap983@CItemManager@@AAEXPADH@Z	0x50	ok	0x50		0x50 / 
+ClubSetWorkShopLevelUpProb.iff	00a322d0	FUN_00a322d0	0x18	media	0x18	+0	?MakeWorkShopLevelUpProb983@CItemManager@@AAEXPADH@Z	0x18	ok		0x18	 / 0x18
+ClubSetWorkShopLevelUpLimit.iff	00a323e0	FUN_00a323e0	0x14	media	0x14	+0	?MakeWorkShopLevelUpLimit983@CItemManager@@AAEXPADH@Z	0x14	ok		0x14	 / 0x14
+ClubSetWorkShopRankUpExp.iff	00a324e0	FUN_00a324e0	0x1c	media	0x1c	+0	?MakeWorkShopRankUpExp983@CItemManager@@AAEXPADH@Z	0x1c	ok		0x1c	 / 0x1c
+ClubSetWorkShopChangeProb.sff	009d9f10	FUN_009d9f10	0x1c	media			?MakeWorkShopChangeProb983@CItemManager@@AAEXPADH@Z	0x1c	ok		0x1c	 / 0x1c
+ClubSetWorkShopChangeItem.sff	00a32590	FUN_00a32590	0x14	media			?MakeWorkShopChangeItem983@CItemManager@@AAEXPADH@Z	0x14	ok		0x14	 / 0x14
+AttendancePrizeConfig.sff	009d9f70	FUN_009d9f70	0x8c	alta			?MakeAttendancePrizeConfig983@CItemManager@@AAEXPADH@Z	0x8c	ok	0x8c	0x8c	0x8c / 0x8c
+AttendancePrizeItem.sff	00a32690	FUN_00a32690	0x14	media			?MakeAttendancePrizeItem983@CItemManager@@AAEXPADH@Z	0x14	ok		0x14	 / 0x14
+GrandPrixData.iff	00a2b820	FUN_00a2b820	0x330	media	0x330	+0	?MakeGrandPrixDataMap983@CItemManager@@AAEXPADH@Z	0x330	ok	0x330		0x330 / 
+GrandPrixSpecialHole.iff	00a3c200	FUN_00a3c200	0x14	media	0x14	+0	?MakeGrandPrixSpecialHoleMap983@CItemManager@@AAEXPADH@Z	0x14	ok		0x14	 / 0x14
+GrandPrixConditionEquip.iff	00a3b470	FUN_00a3b470	0x210	media	0x210	+0	?MakeGrandPrixConditionEquipMap983@CItemManager@@AAEXPADH@Z	0x210	ok	0x210	0x514	0x210 / 0x514
+GrandPrixRankReward.iff	00a3b6d0	FUN_00a3b6d0	0x4c	media	0x4c	+0	?MakeGrandPrixRankRewardMap983@CItemManager@@AAEXPADH@Z	0x4c	ok	0x4c	0x524	0x4c / 0x524
+GrandPrixAIOptionalData.sff	00a380b0	FUN_00a380b0	0x25c	media	0x25c	+0	?MakeGrandPrixAIMap983@CItemManager@@AAEXPADH@Z	0x25c	ok	0x25c	0x10	0x25c / 0x10
+AddonPart.iff	00a3bef0	FUN_00a3bef0	0x120	alta	0x120	+0	?MakeAddonPartMap983@CItemManager@@AAEXPADH@Z	0x120	ok	0x120	0x120,0x474	0x120 / 0x120,0x474
+SetEffectTable.iff	00a2b050	FUN_00a2b050	0x4c	media	0x38	+20	?MakeSetEffectTableMap983@CItemManager@@AAEXPADH@Z	0x4c	ok	0x4c		0x4c / 
+HoleCupDropItem.iff	00a2b8d0	?MakeSubscriptionItemMap@CItemManager@@AAEXPADH@Z	0x2c	media	0x2c	+0	?MakeHoleCupDropItemMap983@CItemManager@@AAEXPADH@Z	0x2c	ok	0x2c		0x2c / 
+MemorialShopRareItem.iff	00a32b50	FUN_00a32b50	0x5c	alta	0x44	+24	?MakeMemorialShopRareItem983@CItemManager@@AAEXPADH@Z	0x5c	ok	0x5c	0x5c	0x5c / 0x5c
+MemorialShopCoinItem.sff	00a32850	FUN_00a32850	0x40	alta	0x40	+0	?MakeMemorialShopCoinItem983@CItemManager@@AAEXPADH@Z	0x40	ok	0x40	0x40	0x40 / 0x40
+MemorialShopNormalItem.sff	00a32a10	FUN_00a32a10	0x48	alta			?MakeMemorialShopNormalItem983@CItemManager@@AAEXPADH@Z	0x48	ok	0x48	0x48	0x48 / 0x48
+MemorialShopRareItem.sff	00a32b50	FUN_00a32b50	0x5c	alta			?MakeMemorialShopRareItem983@CItemManager@@AAEXPADH@Z	0x5c	ok	0x5c	0x5c	0x5c / 0x5c
+AlchemyConfig.iff	009da020	FUN_009da020					?MakeAlchemyConfig983@CItemManager@@AAEXPADH@Z		nao_medido			 / 
+CharacterMastery.iff	00a32d70	FUN_00a32d70	0x3c	alta	0x3c	+0	?MakeCharacterMastery983@CItemManager@@AAEXPADH@Z	0x3c	ok	0x3c	0x3c	0x3c / 0x3c
+CaddieVoiceTable.iff	00a32e20	FUN_00a32e20	0x86	alta	0x86	+0	?MakeCaddieVoiceTable983@CItemManager@@AAEXPADH@Z	0x86	ok	0x84	0x86	0x84 / 0x86

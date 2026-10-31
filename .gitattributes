@@ -1,0 +1,10 @@
+* -text
+*.sh text eol=lf
+*.py text eol=lf
+*.sql text eol=lf
+*.cs text=auto
+*.md text=auto
+*.bin binary
+*.bmp binary
+*.ico binary
+*.png binary

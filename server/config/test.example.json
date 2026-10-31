@@ -1,0 +1,27 @@
+// Configuração usada pelos testes automáticos (banco pangya_test, apagado e recriado a cada execução).
+{
+  "Web": { "Port": 0, "AutoRegister": false },
+  "Login": { "Ports": [0], "ServerUid": 10101 },
+  "Game": { "Id": 30201, "Name": "Teste", "Port": 0, "MaxUsers": 100, "Channels": [ { "Name": "Canal 1", "MaxUsers": 2 } ] },
+  "Network": {
+    "BindIp": "127.0.0.1",
+    "PublicIp": "127.0.0.1"
+  },
+  "Database": {
+    "ConnectionString": "Host=127.0.0.1;Port=5432;Database=pangya_test;Username=pangya;Password=CHANGE_ME"
+  },
+  "Logging": {
+    "Level": "Info",
+    "Dir": ""
+  },
+  "Data": {
+    "IffPath": "data/pangya.iff"
+  },
+  "Limits": {
+    "MaxConnectionsPerIp": 50,
+    "MaxPacketsPerSecond": 1000,
+    "MaxPacketSize": 8192,
+    "MaxLoginAttemptsPerMinute": 1000,
+    "IdleTimeoutSeconds": 120
+  }
+}

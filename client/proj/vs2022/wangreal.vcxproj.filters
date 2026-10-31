@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src"><UniqueIdentifier>{34EF91A0-2E99-5173-B93B-60637269E146}</UniqueIdentifier></Filter>
+    <Filter Include="src\engine"><UniqueIdentifier>{33BD976F-432A-5379-A402-F6767583523E}</UniqueIdentifier></Filter>
+    <Filter Include="src\wangreal"><UniqueIdentifier>{C5F04D1E-5D6B-5501-AC41-D637CE1AE75C}</UniqueIdentifier></Filter>
+    <Filter Include="src\wangreal\wdinput"><UniqueIdentifier>{C94A10D9-6A3C-5A94-93F3-B6ABB10E7DAF}</UniqueIdentifier></Filter>
+    <Filter Include="src\wangreal\wime"><UniqueIdentifier>{3A0AC4A9-9A1A-544D-AF7A-20A1F5283ED8}</UniqueIdentifier></Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(JP983Root)src\wangreal\shparam.cpp"><Filter>src\wangreal</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wd3d.cpp"><Filter>src\wangreal</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wd3d8.cpp"><Filter>src\wangreal</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wdinput\directinput.cpp"><Filter>src\wangreal\wdinput</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wdinput\dikeyboard.cpp"><Filter>src\wangreal\wdinput</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wdinput\dimouse.cpp"><Filter>src\wangreal\wdinput</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wime\wime.cpp"><Filter>src\wangreal\wime</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\device.cpp"><Filter>src\wangreal</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\wxshadermtl.cpp"><Filter>src\engine</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\wvdshnames.cpp"><Filter>src\engine</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\bitmap.cpp"><Filter>src\engine</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\wdxtc.cpp"><Filter>src\engine</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\langtable.cpp"><Filter>src\wangreal</Filter></ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\wmath.cpp"><Filter>src\engine</Filter></ClCompile>
+    <ResourceCompile Include="$(JP983Root)src\wangreal\wangreal.rc"><Filter>src\wangreal</Filter></ResourceCompile>
+  </ItemGroup>
+</Project>

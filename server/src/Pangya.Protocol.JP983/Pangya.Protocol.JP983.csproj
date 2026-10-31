@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Cliente JP "R7.983" (2017): login próprio; game server = o do KR 645 com ids e structs traduzidos. -->
+  <ItemGroup>
+    <ProjectReference Include="..\Pangya.Core\Pangya.Core.csproj" />
+    <ProjectReference Include="..\Pangya.Domain\Pangya.Domain.csproj" />
+    <ProjectReference Include="..\Pangya.Protocol.KR645\Pangya.Protocol.KR645.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,33 @@
+// V3: layout do 983 das classes vistas por src/projectg/approachdesc.cpp (gerado por tools/v3/gen.py; não editar à mão).
+// unidade: src/projectg/approachdesc.cpp
+V3_SIZE(Mission_1, 0x84) // 983: push 0x84; call operator new em 008556ef, construtor 00853fc0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_10, 0x84) // 983: push 0x84; call operator new em 008558de, construtor 00855600 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_11, 0x84) // 983: push 0x84; call operator new em 00855915, construtor 008546a0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_12, 0x84) // 983: push 0x84; call operator new em 0085594c, construtor 00854750 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_13, 0x84) // 983: push 0x84; call operator new em 00855983, construtor 00854810 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_14, 0x84) // 983: push 0x84; call operator new em 008559ba, construtor 008548c0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_15, 0x84) // 983: push 0x84; call operator new em 008559f1, construtor 00854970 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_16, 0x84) // 983: push 0x84; call operator new em 00855a28, construtor 00854a20 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_17, 0x84) // 983: push 0x84; call operator new em 00855a5f, construtor 00854ae0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_18, 0x84) // 983: push 0x84; call operator new em 00855a96, construtor 00854bb0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_19, 0x84) // 983: push 0x84; call operator new em 00855acd, construtor 00854c70 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_2, 0x84) // 983: push 0x84; call operator new em 00855726, construtor 00854070 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_20, 0x84) // 983: push 0x84; call operator new em 00855b04, construtor 00854d20 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_21, 0x84) // 983: push 0x84; call operator new em 00855b3b, construtor 00854de0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_22, 0x84) // 983: push 0x84; call operator new em 00855b72, construtor 00854ea0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_23, 0x84) // 983: push 0x84; call operator new em 00855ba9, construtor 00854f60 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_24, 0x84) // 983: push 0x84; call operator new em 00855be0, construtor 00855010 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_25, 0x84) // 983: push 0x84; call operator new em 00855c17, construtor 008550d0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_26, 0x84) // 983: push 0x84; call operator new em 00855c4e, construtor 00855180 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_27, 0x84) // 983: push 0x84; call operator new em 00855c85, construtor 00855240 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_28, 0x84) // 983: push 0x84; call operator new em 00855cbc, construtor 00855300 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_29, 0x84) // 983: push 0x84; call operator new em 00855cf3, construtor 008553c0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_3, 0x84) // 983: push 0x84; call operator new em 0085575d, construtor 00854120 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_30, 0x84) // 983: push 0x84; call operator new em 00855d23, construtor 00855490 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_31, 0x84) // 983: push 0x84; call operator new em 00855d53, construtor 00855540 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_4, 0x84) // 983: push 0x84; call operator new em 00855794, construtor 008541e0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_5, 0x84) // 983: push 0x84; call operator new em 008557cb, construtor 008542a0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_6, 0x84) // 983: push 0x84; call operator new em 00855802, construtor 00854350 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_7, 0x84) // 983: push 0x84; call operator new em 00855839, construtor 00854400 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_8, 0x84) // 983: push 0x84; call operator new em 00855870, construtor 008544c0 (rtti=1; 1 new); unidade por new
+V3_SIZE(Mission_9, 0x84) // 983: push 0x84; call operator new em 008558a7, construtor 00854570 (rtti=1; 1 new); unidade por new

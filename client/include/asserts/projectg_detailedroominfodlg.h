@@ -1,0 +1,39 @@
+// V3: layout do 983 das classes vistas por src/projectg/detailedroominfodlg.cpp (gerado por tools/v3/gen.py; não editar à mão).
+// unidade: src/projectg/detailedroominfodlg.cpp
+V3_SIZE(FrDtRoomDlg, 0x260) // 983: push 0x260; call operator new em 0051ebda, construtor 00acf350 (mapa=2; 2 new); unidade por construtor
+V3_ANOT(FrDtRoomDlg, m_bGrandPrix983, 0x24c) // anot: anotação do cabeçalho src/projectg/detailedroominfodlg.h:67
+V3_ANOT(FrDtRoomDlg, m_pGrandPrix983, 0x250) // anot: anotação do cabeçalho src/projectg/detailedroominfodlg.h:68
+V3_OFF(sGPInfo983, typeId, 0x04) // 983: anotação do cabeçalho include/jp/grandprix983.h:31
+V3_OFF(sGPInfo983, ticket, 0x08) // 983: anotação do cabeçalho include/jp/grandprix983.h:32
+V3_OFF(sGPInfo983, listId, 0x0c) // 983: anotação do cabeçalho include/jp/grandprix983.h:34
+V3_OFF(sGPInfo983, name, 0x12) // 983: anotação do cabeçalho include/jp/grandprix983.h:36
+V3_OFF(sGPInfo983, m_54, 0x54) // 983: anotação do cabeçalho include/jp/grandprix983.h:37
+V3_OFF(sGPInfo983, m_58, 0x58) // 983: anotação do cabeçalho include/jp/grandprix983.h:38
+V3_OFF(sGPInfo983, bmpName, 0x5c) // 983: anotação do cabeçalho include/jp/grandprix983.h:39
+V3_OFF(sGPInfo983, m_85, 0x85) // 983: anotação do cabeçalho include/jp/grandprix983.h:40
+V3_OFF(sGPInfo983, m_86, 0x86) // 983: anotação do cabeçalho include/jp/grandprix983.h:41
+V3_OFF(sGPInfo983, m_87, 0x87) // 983: anotação do cabeçalho include/jp/grandprix983.h:42
+V3_OFF(sGPInfo983, course, 0x8c) // 983: anotação do cabeçalho include/jp/grandprix983.h:44
+V3_OFF(sGPInfo983, startHole, 0x90) // 983: anotação do cabeçalho include/jp/grandprix983.h:45
+V3_OFF(sGPInfo983, nHole, 0x94) // 983: anotação do cabeçalho include/jp/grandprix983.h:46
+V3_OFF(sGPInfo983, minLevel, 0x95) // 983: anotação do cabeçalho include/jp/grandprix983.h:47
+V3_OFF(sGPInfo983, maxLevel, 0x96) // 983: anotação do cabeçalho include/jp/grandprix983.h:48
+V3_OFF(sGPInfo983, m_98, 0x98) // 983: anotação do cabeçalho include/jp/grandprix983.h:50
+V3_OFF(sGPInfo983, m_9c, 0x9c) // 983: anotação do cabeçalho include/jp/grandprix983.h:51
+V3_OFF(sGPInfo983, m_ac, 0xac) // 983: anotação do cabeçalho include/jp/grandprix983.h:53
+V3_OFF(sGPInfo983, prize, 0xb4) // 983: anotação do cabeçalho include/jp/grandprix983.h:55
+V3_OFF(sGPInfo983, prizeCount, 0xc8) // 983: anotação do cabeçalho include/jp/grandprix983.h:56
+V3_OFF(sGPInfo983, prizeExtra, 0xdc) // 983: anotação do cabeçalho include/jp/grandprix983.h:57
+V3_OFF(sGPInfo983, open, 0xf0) // 983: anotação do cabeçalho include/jp/grandprix983.h:58
+V3_OFF(sGPInfo983, start, 0x100) // 983: anotação do cabeçalho include/jp/grandprix983.h:59
+V3_OFF(sGPInfo983, end, 0x110) // 983: anotação do cabeçalho include/jp/grandprix983.h:60
+V3_OFF(sGPInfo983, prevTypeId, 0x124) // 983: anotação do cabeçalho include/jp/grandprix983.h:62
+V3_OFF(sGPInfo983, desc, 0x12c) // 983: anotação do cabeçalho include/jp/grandprix983.h:64
+V3_OFF(sGPRoomItem983, pInfo, 0x00) // 983: anotação do cabeçalho include/jp/grandprix983.h:74
+V3_OFF(sGPRoomItem983, pRoom, 0x04) // 983: anotação do cabeçalho include/jp/grandprix983.h:75
+V3_OFF(sGPRoomItem983, kind, 0x0c) // 983: anotação do cabeçalho include/jp/grandprix983.h:81
+V3_OFF(sGPRoomItem983, state, 0x10) // 983: anotação do cabeçalho include/jp/grandprix983.h:82
+V3_OFF(sGPRoomItem983, openTime, 0x18) // 983: anotação do cabeçalho include/jp/grandprix983.h:84
+V3_OFF(sGPRoomItem983, opts, 0x20) // 983: anotação do cabeçalho include/jp/grandprix983.h:85
+V3_OFF(sGPRoomItem983, title, 0x24) // 983: anotação do cabeçalho include/jp/grandprix983.h:86
+V3_OFF(sGPRoomItem983, bEnabled, 0x40) // 983: anotação do cabeçalho include/jp/grandprix983.h:87

@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Win32"><Configuration>Release</Configuration><Platform>Win32</Platform></ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32"><Configuration>Debug</Configuration><Platform>Win32</Platform></ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals"><ProjectGuid>{EB2A89BA-7A5F-5EBB-9D6C-F44F2A1AB270}</ProjectGuid><RootNamespace>terc</RootNamespace><Keyword>Win32Proj</Keyword><VCProjectVersion>17.0</VCProjectVersion><WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion></PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType><PlatformToolset>v143</PlatformToolset><CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries><WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType><PlatformToolset>v143</PlatformToolset><CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries><WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="JP983.props" />
+  </ImportGroup>
+  <PropertyGroup><OutDir>$(JP983Root)build\vs2022\$(Configuration)\</OutDir><IntDir>$(JP983Root)build\vs2022\$(Configuration)\terc\</IntDir>
+    <TargetName>terc</TargetName><LinkIncremental>false</LinkIncremental><GenerateManifest>false</GenerateManifest><EmbedManifest>false</EmbedManifest></PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion></InlineFunctionExpansion>
+      <StringPooling>false</StringPooling>
+      <CallingConvention>FastCall</CallingConvention>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <OmitFramePointers>false</OmitFramePointers>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(JP983Root)src\fresh\third_party\zlib-1.2.2</AdditionalIncludeDirectories>
+      <AdditionalOptions></AdditionalOptions>
+      <SDLCheck>false</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ProcessorNumber>$(NUMBER_OF_PROCESSORS)</ProcessorNumber>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion></InlineFunctionExpansion>
+      <StringPooling>false</StringPooling>
+      <CallingConvention>FastCall</CallingConvention>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <OmitFramePointers>false</OmitFramePointers>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;JP983_VS_DEBUG</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(JP983Root)src\fresh\third_party\zlib-1.2.2</AdditionalIncludeDirectories>
+      <AdditionalOptions></AdditionalOptions>
+      <SDLCheck>false</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ProcessorNumber>$(NUMBER_OF_PROCESSORS)</ProcessorNumber>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\autofit\autofit.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\bdf\bdf.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\cff\cff.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftbase.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftbbox.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftbdf.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftbitmap.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\cache\ftcache.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\builds\win32\ftdebug.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftglyph.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftgxval.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\gzip\ftgzip.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftinit.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\lzw\ftlzw.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftmm.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftotval.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftpfr.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftstroke.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftsynth.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftsystem.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\fttype1.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftwinfnt.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\base\ftxf86.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\pcf\pcf.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\pfr\pfr.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\psaux\psaux.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\pshinter\pshinter.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\psnames\psmodule.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\raster\raster.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\sfnt\sfnt.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\smooth\smooth.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\truetype\truetype.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\type1\type1.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\cid\type1cid.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\type42\type42.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\lib\freetype-2.2.1\src\winfonts\winfnt.c">
+      <ObjectFileName>$(IntDir)freetype\</ObjectFileName>
+      <AdditionalIncludeDirectories>$(JP983Root)src\engine\lib\freetype-2.2.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>FT2_BUILD_LIBRARY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\adler32.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\compress.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\crc32.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\deflate.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\gzio.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\infback.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\inffast.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\inflate.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\inftrees.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\trees.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\uncompr.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\zlib-1.2.2\zutil.c">
+      <ObjectFileName>$(IntDir)zlib-1.2.2\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\png.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngerror.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngget.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngmem.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngpread.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngread.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngrio.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngrtran.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngrutil.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngset.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngtrans.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngwio.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngwrite.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngwtran.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\fresh\third_party\libpng-1.2.8\pngwutil.c">
+      <ObjectFileName>$(IntDir)libpng-1.2.8\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lapi.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lauxlib.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lbaselib.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lcode.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ldblib.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ldebug.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ldo.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ldump.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lfunc.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lgc.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\linit.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\liolib.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\llex.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lmathlib.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lmem.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\loadlib.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lobject.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lopcodes.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\loslib.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lparser.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lstate.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lstring.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lstrlib.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ltable.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ltablib.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\ltm.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lundump.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lvm.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\shared\LuaSystem\Lua\src\lzio.c">
+      <ObjectFileName>$(IntDir)src\</ObjectFileName>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

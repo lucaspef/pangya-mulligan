@@ -1,0 +1,107 @@
+// V3: layout do 983 das classes vistas por src/projectg/bongdarishopdlg.cpp (gerado por tools/v3/gen.py; não editar à mão).
+// unidade: src/projectg/bongdarishopdlg.cpp
+V3_SIZE(FrAboutShopDlg, 0x150) // 983: push 0x150; call operator new em 008b62f3, construtor 008b3e80 (mapa=2; 2 new); unidade por construtor
+V3_ANOT(FrAboutShopDlg, m_pImg, 0x144) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:532
+V3_ANOT(FrAboutShopDlg, m_pImg2, 0x148) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:533
+V3_ANOT(FrAboutShopDlg, m_mode, 0x14c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:534
+V3_SIZE(FrBongdariShopDlg, 0xb30) // 983: push 0xb30; call operator new em 0065543a, construtor 008c0340 (mapa=2; 2 new); unidade por construtor
+V3_ANOT(FrBongdariShopDlg, m_silhouette, 0x114) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:242
+V3_ANOT(FrBongdariShopDlg, m_bonusBall, 0x1c8) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:243
+V3_ANOT(FrBongdariShopDlg, m_bonusBallCount, 0x22c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:244
+V3_ANOT(FrBongdariShopDlg, m_pBonusBallModel, 0x230) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:245
+V3_ANOT(FrBongdariShopDlg, m_pBongdariModel, 0x244) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:246
+V3_ANOT(FrBongdariShopDlg, m_pCloseBn, 0x248) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:247
+V3_ANOT(FrBongdariShopDlg, m_pBongdari, 0x24c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:248
+V3_ANOT(FrBongdariShopDlg, m_pBonusBall, 0x250) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:249
+V3_ANOT(FrBongdariShopDlg, m_pDefaultSilhouette, 0x264) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:250
+V3_ANOT(FrBongdariShopDlg, m_pShadow, 0x268) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:251
+V3_ANOT(FrBongdariShopDlg, m_pTextBongdariClick, 0x26c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:253
+V3_ANOT(FrBongdariShopDlg, m_pTextBonusBallClick, 0x270) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:255
+V3_ANOT(FrBongdariShopDlg, m_clickTextOffset, 0x27c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:260
+V3_ANOT(FrBongdariShopDlg, m_clickTextDir, 0x280) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:261
+V3_ANOT(FrBongdariShopDlg, m_bBongdariPressed, 0x281) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:262
+V3_ANOT(FrBongdariShopDlg, m_bUsingBonusBall, 0x282) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:263
+V3_ANOT(FrBongdariShopDlg, m_bAnimating, 0x283) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:264
+V3_ANOT(FrBongdariShopDlg, m_cursorArea, 0x284) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:265
+V3_ANOT(FrBongdariShopDlg, m_hoverBonusBall, 0x294) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:266
+V3_ANOT(FrBongdariShopDlg, m_cursor, 0x298) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:267
+V3_ANOT(FrBongdariShopDlg, m_pFontBong, 0x29c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:268
+V3_ANOT(FrBongdariShopDlg, m_pFontWind, 0x2a0) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:269
+V3_ANOT(FrBongdariShopDlg, m_pFontBongRed, 0x2a4) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:270
+V3_ANOT(FrBongdariShopDlg, m_pEmoti, 0x2a8) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:271
+V3_ANOT(FrBongdariShopDlg, m_moving, 0x2ac) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:272
+V3_ANOT(FrBongdariShopDlg, m_bChildDlgOpen, 0x3b0) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:273
+V3_ANOT(FrBongdariShopDlg, m_couponCount, 0x3c0) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:277
+V3_ANOT(FrBongdariShopDlg, m_feeType, 0x3cc) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:280
+V3_ANOT(FrBongdariShopDlg, m_feeTextY, 0x3d0) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:281
+V3_ANOT(FrBongdariShopDlg, m_feeTextAlpha, 0x3d4) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:282
+V3_ANOT(FrBongdariShopDlg, m_bShowDiscountTimes, 0x3d8) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:283
+V3_ANOT(FrBongdariShopDlg, m_bShowDiscountCount, 0x3d9) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:284
+V3_ANOT(FrBongdariShopDlg, m_discountTextY, 0x3dc) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:285
+V3_ANOT(FrBongdariShopDlg, m_discountTextAlpha, 0x3e0) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:286
+V3_ANOT(FrBongdariShopDlg, m_stateTimer, 0x3e4) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:287
+V3_ANOT(FrBongdariShopDlg, m_pTotalItemBn, 0x3e8) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:288
+V3_ANOT(FrBongdariShopDlg, m_pOvBg983, 0x454) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:306
+V3_ANOT(FrBongdariShopDlg, m_pOvComboBg983, 0x458) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:307
+V3_ANOT(FrBongdariShopDlg, m_pOvPointSlot983, 0x45c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:308
+V3_ANOT(FrBongdariShopDlg, m_pOvMemPointSlot983, 0x460) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:309
+V3_ANOT(FrBongdariShopDlg, m_pOvMemBack983, 0x464) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:310
+V3_ANOT(FrBongdariShopDlg, m_pOvMemShopBg983, 0x478) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:311
+V3_ANOT(FrBongdariShopDlg, m_pOvMemDrop983, 0x47c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:312
+V3_ANOT(FrBongdariShopDlg, m_pOvTxtExplanBong983, 0x488) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:313
+V3_ANOT(FrBongdariShopDlg, m_pOvTxtExplanMem983, 0x48c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:314
+V3_ANOT(FrBongdariShopDlg, m_pOvRareMask983, 0x490) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:315
+V3_ANOT(FrBongdariShopDlg, m_pOvCoinList983, 0x494) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:316
+V3_ANOT(FrBongdariShopDlg, m_pOvSelect983, 0x498) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:317
+V3_ANOT(FrBongdariShopDlg, m_pOvSelectDis983, 0x49c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:318
+V3_ANOT(FrBongdariShopDlg, m_pOvBongSelect983, 0x4a0) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:319
+V3_ANOT(FrBongdariShopDlg, m_pOvBongSelectDis983, 0x4a4) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:320
+V3_ANOT(FrBongdariShopDlg, m_pOvAgainDis983, 0x4a8) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:321
+V3_ANOT(FrBongdariShopDlg, m_pOvAgain983, 0x4ac) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:322
+V3_ANOT(FrBongdariShopDlg, m_pOvMainDis983, 0x4b0) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:323
+V3_ANOT(FrBongdariShopDlg, m_pOvMain983, 0x4b4) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:324
+V3_ANOT(FrBongdariShopDlg, m_pOvCoinSlot983, 0x4b8) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:325
+V3_ANOT(FrBongdariShopDlg, m_cfgBackY983, 0x4d4) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:327
+V3_ANOT(FrBongdariShopDlg, m_cfgPointSlotY983, 0x4dc) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:328
+V3_ANOT(FrBongdariShopDlg, m_cfgPointFontY983, 0x4e4) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:329
+V3_ANOT(FrBongdariShopDlg, m_cfgGachaY983, 0x4ec) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:330
+V3_ANOT(FrBongdariShopDlg, m_cfgListFrameY983, 0x4f4) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:331
+V3_ANOT(FrBongdariShopDlg, m_cfgDistanceCamera983, 0x4fc) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:332
+V3_ANOT(FrBongdariShopDlg, m_cfgEffectAlpha983, 0x500) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:333
+V3_ANOT(FrBongdariShopDlg, m_cfgEffectImgY983, 0x504) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:334
+V3_ANOT(FrBongdariShopDlg, m_cfgCoinIconH983, 0x50c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:335
+V3_ANOT(FrBongdariShopDlg, m_cfgAddListTextY983, 0x514) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:336
+V3_ANOT(FrBongdariShopDlg, m_f51c_983, 0x51c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:337
+V3_ANOT(FrBongdariShopDlg, m_effectAlpha983, 0x520) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:338
+V3_ANOT(FrBongdariShopDlg, m_f524_983, 0x524) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:339
+V3_ANOT(FrBongdariShopDlg, m_cfgEffectTimeFail983, 0x528) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:340
+V3_ANOT(FrBongdariShopDlg, m_cfgShowResultDlg983, 0x52c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:341
+V3_ANOT(FrBongdariShopDlg, m_cfgDolpiniAngleY983, 0x530) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:342
+V3_ANOT(FrBongdariShopDlg, m_cfgDolpiniFootDown983, 0x538) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:343
+V3_ANOT(FrBongdariShopDlg, m_f540_983, 0x540) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:344
+V3_ANOT(FrBongdariShopDlg, m_cfgAddBongdariY983, 0x544) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:345
+V3_ANOT(FrBongdariShopDlg, m_cfgStartImgY983, 0x54c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:346
+V3_ANOT(FrBongdariShopDlg, m_cfgBsOverY983, 0x554) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:347
+V3_ANOT(FrBongdariShopDlg, m_cfgMsOverY983, 0x55c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:348
+V3_ANOT(FrBongdariShopDlg, m_cfgShopDisableY983, 0x564) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:349
+V3_ANOT(FrBongdariShopDlg, m_f570_983, 0x56c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:350
+V3_ANOT(FrBongdariShopDlg, m_cfgAddCloseGachaY983, 0x574) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:351
+V3_ANOT(FrBongdariShopDlg, m_cfgAddIconY983, 0x578) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:352
+V3_ANOT(FrBongdariShopDlg::sItemSilhouette, bonusBallIndex, 0x00) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:220
+V3_ANOT(FrBongdariShopDlg::sItemSilhouette, pBitmap, 0x04) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:221
+V3_ANOT(FrBongdariShopDlg::sItemSilhouette, typeId, 0x08) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:222
+V3_ANOT(FrBongdariShopDlg::sItemSilhouette, grade, 0x0c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:224
+V3_ANOT(FrBongdariShopDlg::sItemSilhouette, state, 0x0d) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:225
+V3_ANOT(FrBongdariShopDlg::sItemSilhouette, emotiTime, 0x10) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:228
+V3_ANOT(FrBongdariShopDlg::sMovingData, velocity, 0x00) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:205
+V3_ANOT(FrBongdariShopDlg::sMovingData, target, 0x0c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:206
+V3_ANOT(FrBongdariShopDlg::sMovingData, pos, 0x18) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:208
+V3_ANOT(FrBongdariShopDlg::sMovingData, depth, 0x24) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:210
+V3_ANOT(FrBongdariShopDlg::sMovingData, bounceCount, 0x28) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:211
+V3_ANOT(FrBongdariShopDlg::sMovingData, state, 0x2c) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:213
+V3_ANOT(FrBongdariShopDlg::sMovingData, rotSpeed, 0x30) // anot: anotação do cabeçalho src/projectg/bongdarishopdlg.h:214
+V3_SIZE(FrBongdarishopNoticeDlg, 0x150) // 983: push 0x150; call operator new em 008c147a, construtor 008c1340 (mapa=2; 2 new); unidade por construtor
+V3_SIZE(FrBongdarishopRareItemDlg, 0x120) // 983: push 0x120; call operator new em 008b72f3, construtor 008b4280 (mapa=2; 2 new); unidade por construtor
+V3_SIZE(FrBongdarishopWarningDlg, 0x120) // 983: push 0x120; call operator new em 008b75c3, construtor 008b4330 (mapa=2; 2 new); unidade por construtor
+V3_SIZE(FrClosedBonusBallResultDlg, 0x250) // 983: push 0x250; call operator new em 00671aea, construtor 008bbd40 (mapa=2; 2 new); unidade por construtor
+V3_SIZE(FrTotalItemDlg, 0x1f0) // 983: push 0x1f0; call operator new em 008be9aa, construtor 008be620 (mapa=2; 2 new); unidade por construtor

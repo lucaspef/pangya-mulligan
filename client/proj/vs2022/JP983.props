@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Propriedades do cliente. Dependências externas e variáveis: client\COMPILAR.md. -->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserMacros">
+    <JP983Root>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\'))</JP983Root>
+    <!-- Cabeçalhos do WTL: variável de ambiente JP983_WTL ou /p:JP983Wtl=... -->
+    <JP983Wtl Condition="'$(JP983Wtl)'==''">$(JP983_WTL)</JP983Wtl>
+    <!-- D3DX 9: JP983_D3DX_INCLUDE + JP983_D3DX_LIB (ou /p:), ou o DirectX SDK de junho/2010 pelo DXSDK_DIR que o instalador define -->
+    <JP983DxInclude Condition="'$(JP983DxInclude)'==''">$(JP983_D3DX_INCLUDE)</JP983DxInclude>
+    <JP983DxLib Condition="'$(JP983DxLib)'==''">$(JP983_D3DX_LIB)</JP983DxLib>
+    <JP983DxInclude Condition="'$(JP983DxInclude)'=='' And '$(DXSDK_DIR)'!=''">$(DXSDK_DIR)Include</JP983DxInclude>
+    <JP983DxLib Condition="'$(JP983DxLib)'=='' And '$(DXSDK_DIR)'!=''">$(DXSDK_DIR)Lib\x86</JP983DxLib>
+    <!-- Pasta da sua cópia do jogo, com \ no fim. Vazia = sem cópia pós-build. F5 usa esta pasta como diretório de trabalho -->
+    <JP983Jogo Condition="'$(JP983Jogo)'==''"></JP983Jogo>
+    <!-- Opcional: updatelist servido à pasta do jogo; o pós-build refaz nele fcrc/fsize de ProjectG.exe e wangreal.dll -->
+    <JP983UpdateList Condition="'$(JP983UpdateList)'==''"></JP983UpdateList>
+    <!-- true = endereços do servidor no próprio exe (padrão 127.0.0.1:30101; ambiente JP983_LOGIN, JP983_WEB, JP983_WWW) -->
+    <JP983ServerConfig Condition="'$(JP983ServerConfig)'==''">true</JP983ServerConfig>
+    <JP983Defs Condition="'$(JP983ServerConfig)'=='true'">JP983_SERVER_CONFIG</JP983Defs>
+    <UseMultiToolTask>true</UseMultiToolTask>
+    <EnforceProcessCountAcrossBuilds>true</EnforceProcessCountAcrossBuilds>
+  </PropertyGroup>
+  <Target Name="JP983CheckDeps" BeforeTargets="PrepareForBuild">
+    <Error Condition="'$(MSBuildProjectName)'=='ProjectG' And !Exists('$(JP983Wtl)\atlapp.h')" Text="WTL não encontrado: defina JP983_WTL com a pasta que contém atlapp.h (client\COMPILAR.md)." />
+    <Error Condition="'$(MSBuildProjectName)'!='terc' And '$(MSBuildProjectName)'!='updlist' And !Exists('$(JP983DxInclude)\d3dx9.h')" Text="D3DX 9 não encontrado: defina JP983_D3DX_INCLUDE e JP983_D3DX_LIB ou instale o DirectX SDK de junho/2010 (client\COMPILAR.md)." />
+    <Error Condition="'$(MSBuildProjectName)'!='terc' And '$(MSBuildProjectName)'!='updlist' And !Exists('$(JP983DxLib)\d3dx9.lib')" Text="d3dx9.lib não encontrada: defina JP983_D3DX_LIB (client\COMPILAR.md)." />
+  </Target>
+</Project>

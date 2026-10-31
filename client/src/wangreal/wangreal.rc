@@ -1,0 +1,35 @@
+// Recursos da wangreal.dll 983: versao (igual ao device.rc do 645) + manifesto (o que o VS2010 embute).
+#pragma code_page(949)
+LANGUAGE 0x12, 0x01
+
+1 VERSIONINFO
+FILEVERSION 1, 0, 0, 1
+PRODUCTVERSION 1, 0, 0, 1
+FILEFLAGSMASK 0x3fL
+FILEFLAGS 0x0L
+FILEOS 0x40004L
+FILETYPE 0x2L
+FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "041204b0"
+        BEGIN
+            VALUE "CompanyName", "PangYa Mulligan"
+            VALUE "FileDescription", "Wangreal Engine: Special build for Pangya"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "PangYa Mulligan"
+            VALUE "LegalCopyright", "AGPL-3.0, see NOTICE.md"
+            VALUE "OriginalFilename", "wangreal.dll"
+            VALUE "ProductName", "PangYa Mulligan"
+            VALUE "ProductVersion", "1, 0, 0, 1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0412, 1200
+    END
+END
+
+LANGUAGE 0x09, 0x01
+2 24 "wangreal.manifest"

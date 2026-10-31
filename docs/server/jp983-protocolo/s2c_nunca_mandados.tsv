@@ -1,0 +1,197 @@
+id_jp	id_kr	o_que_e	gatilho	classe	nota
+0x4	0x4	login: flag de autorização dos pais (m_needParentAgree)	login (junto do 0x02 no KR)	so_kr	só grava a flag; menor de idade do KR
+0x5	0x5	login: evento PC bang de presença ("PC방 출석 이벤트", u8 3, n, typeid)	login	pc_bang	só age com u8 == 3
+0x7	—	login: lista de n nicks (n × 25 B) para a janela de nick do lobby (msg 0x6E)	criação de nick?	?	no KR não há case 7 (o 0xD2 lê igual e vai para msg 0x61); no JP o 0xAC2B0B vai para msg 0x6E, a mesma do 0x0E; a referência não manda
+0x8	0x8	login: liga/desliga PC bang (EnablePcBang(u32 == 1))	login	pc_bang
+0xb	0xb	login: ticket de autenticação (str -> m_authTicket)	login	menor	a referência não manda; não conferi onde o JP usa
+0xd	0xd	login: resultado de definir o nick (u32 código; 0 = str nick e msg 0x249)	resposta ao pedido de definir o nick	menor	alternativa ao fluxo da referência (0x0E + 0x01 D9); erros 1..6, 10
+0xe	0xe	login: resultado da verificação de nick (u32 código; 0 = "사용 가능한 대화명" + str nick; 12 = u32 erro)	resposta a C->S 0x07 (verificar nick)	falta	sem ele a criação de nick do JP não anda; hoje o servidor manda 0x01 D8 e para (JpLoginHandler: "criação ainda não implementada")
+0xf	0xf	login: primeiro acesso/tutorial (u8, str id, u32 0, u32 5, str data, str chave)	empurrado no primeiro login, antes do 0x01 D8/D9	falta	a referência manda em FIRST_LOGIN e FIRST_SET; acerta gênero e tutorial; se o nome difere do id abre msg 0x1E(0xC)
+0x11	0x11	login: resultado de salvar o personagem inicial (u8; 0 = ok, outro = "캐릭터 설정에 실패"; 0xE2 tem caminho próprio no JP)	resposta a C->S 0x08 (escolher personagem)	falta	parte da criação de conta; a referência manda 0x11 e depois o login completo
+0x32	0x30	nada (case vazio)	—	morto	cai no break comum 0x9D78A7, junto de 0x62 e 0x7A
+0x34	0x32	amigo trocou de nick (u32 uid, str nick -> BuddyMGR)	empurrado quando um amigo troca o nick	menor	só atualiza o nome na lista de amigos
+0x37	0x35	alias do 0x83 (convite / mudança direta de sala: u16 0, uid, tipo, sala, ...; responde C->S 0x24)	empurrado (convite)	menor	o KR faz fallthrough 0x35 -> 0x81; o servidor já manda o 0x83 (KR 0x81)
+0x38	0x36	pede ao cliente que consulte as cartas não lidas (o cliente responde C->S 0xE4)	empurrado	menor	o servidor já avisa carta nova pelo 0x33 (KR 0x31) e responde ao 0xE4
+0x39	0x37	chat de guilda pelo game server ("길드:nick> texto", 3 str)	empurrado	menor	no JP o chat de guilda vai pelo mensageiro (MSN 0x30 sub 0x113, como na referência)
+0x41	0x3f	linha de chat vermelha do sistema (str)	empurrado (aviso)	menor	também na sala de avatar; o servidor usa 0x40/0x42
+0x43	0x41	"X (nível N, sexo S) entrou no jogo" (u32 nível, u8 sexo, str nick)	empurrado (aviso de login)	menor	só mensagem no chat
+0x4f	0x4d	tira o jogador do canal (limpa canal e salas, volta à lista de canais)	empurrado (saída forçada do canal)	menor	a referência não manda
+0x54	0x52	mesmo tratador do 0x67: GolfRule msg 0x8F(1)	empurrado no fim do jogo	?	no KR é case 0x52 com fallthrough para 0x65; a referência só usa o 0x67
+0x5e	0x5c	u32 uid: se for outro jogador da partida, o caddie toca "caddie_XXX" e zera a barra do jogador da vez	empurrado em jogo	?	não achei o que dispara
+0x62	0x60	nada (case vazio)	—	morto	break comum 0x9D78A7
+0x67	0x65	fim de jogo para quem ainda está jogando (GolfRule 0x8F(1): o cliente fecha a rodada)	empurrado quando o jogo acaba antes (Match decidido, tempo)	falta	a referência manda no Match, no PangBattle e no Versus a quem ainda está PLAYING
+0x69	0x67	resultado da devolução de item na my room ("환불") com itens, pang e cookie	resposta à devolução (repay)	morto	o pedido (CShopMain::Repay, JP 0x1E) é código morto no 983
+0x75	0x73	"enviou um pacote de dados inválido" (sem dados)	resposta a pacote inválido	menor	só mensagem
+0x77	0x75	início do jogo: u32 taxa (exp/pang); o cliente zera os rivais e reenvia o equipamento (C->S 0x0C tipo 7: personagem, caddie, taco, bola)	empurrado no início do jogo (a referência manda a taxa de pang junto do 0x230/0x231)	falta	o servidor nunca manda; a taxa e o reenvio do equipamento não acontecem (o jogo começa mesmo assim)
+0x7a	0x78	nenhum tratador (break comum)	—	morto	o servidor já deixou de mandar (commit 5bf093d)
+0x7e	0x7c	sai do jogo/sala com motivo (u16; 0xFFFF = volta ao lobby; no golfe espera 5 s; o JP manda status ao MSN)	empurrado (saída forçada)	menor	o servidor tira da sala pelo 0x4C (KR 0x4A SLeftRoom)
+0x81	0x7f	votação de expulsão: "expulsar X? Concorda?" (str nick, u32)	empurrado (o mestre pede a votação)	menor	o servidor expulsa direto e ignora o voto (C->S 0x27 KR)
+0x82	0x80	jogador expulso da sala (u32 guid; se for eu, volta à lista de salas)	empurrado (expulsão)	menor	o servidor já tira o expulso com o 0x4C e atualiza as vagas
+0x87	0x85	caddie equipado/trocado (u8 tem, sCaddieInfo 0x19)	empurrado	menor	o servidor usa outros pacotes de caddie (recontratar: KR 0x91 -> JP 0x93)
+0x88	0x86	atualiza o número da sala dos jogadores do lobby (n × {u32 guid, u16 sala})	empurrado no lobby	menor	o servidor atualiza a lista do lobby por outro pacote
+0x8a	0x88	pede ao cliente que reenvie o resultado da tacada (GolfRule 0x93 -> SendShotResult)	empurrado em jogo	menor	só para recuperar dessincronia
+0x8e	0x8c	ícone de ausente/dormindo na vaga da sala (u32 guid, u8 1/0)	resposta ao C->S de ausente (KR 0x32 CIdle)	falta	o servidor ignora o CIdle ("ausente é só visual"); falta repassar à sala; também tratado na sala de avatar
+0x8f	0x8d	u32 uid: GolfRule 0x83 -> Skip() (pula a cena)	empurrado em jogo	menor
+0x94	0x92	resposta da denúncia do jogo (u8: 0 = recebida, 1 = já denunciou)	resposta ao C->S de denúncia (KR 0x3A CReport)	falta	o servidor ignora o CReport; a referência responde 0x94; sem ele a janela de confirmação não aparece
+0x97	0x95	tipo da sala (u32 -> m_roomType)	empurrado	menor	lobby e golfe
+0x98	0x96	galeria (espectador GM): dados do jogador observado (lobby: bloco 0x31C6; golfe: uid + bloco + extras)	GM (modo galeria)	falta	só para GM; o servidor não tem galeria (CGmGallery/CGmObserve ignorados)
+0x99	0x97	galeria: pede o estado de cada jogador (n uids); o cliente responde C->S 0x40 com taco, frame, posição etc.	GM (galeria)	falta	só GM
+0x9b	0x99	jogo em massa: estado de observador por jogador (u32 uid, u32 estado)	GM/galeria	menor	só em modos em massa
+0x9d	0x9b	galeria: dados do jogador observado (bloco 0x31C6)	GM (galeria)	falta	só GM; igual ao 0x98, no tratador comum
+0xa4	0xa2	resposta da fita de replay (u16 quantidade, u32 typeid) -> CheckReplayAvailable	resposta ao uso da fita de replay (KR 0x4A)	falta	o servidor só manda a contagem (KR 0xA5); a referência responde 0xA4
+0xa8	0xa6	tira da sala todas as vagas menos uma (u32 guid) e os GMs ocultos	empurrado	?	não achei o uso
+0xa9	0xa7	"< SYSTEM INFO >" com as taxas atuais (chuva, bônus de pang, drop, item) (u32 tipo, u32 valor)	GM	menor	só mensagem
+0xab	0xa9	prêmio por placar de cada jogador (n × {uid, sWinningPrize}: item por par/birdie/eagle/albatroz)	empurrado no início do jogo (evento)	menor	só se houver evento de prêmio por placar
+0xac	0xaa	bloqueio de chat de outro jogador na partida (u32 uid, u8)	resposta ao bloqueio de chat (a referência responde 0xAC)	falta	pouca coisa: o cliente só aplica se o uid não for o dele
+0xad	0xab	"X está em [canal]" / "X não foi encontrado em [servidor]" (str nick, u8 canal)	resposta a procurar jogador	?	não achei o pedido; comum e golfe
+0xae	0xac	lista de vagas secundária (m_slotList2: 0 limpa, 1 junta, 2 tira; vaga 0x15C)	empurrado	?	o lobby usa para achar o mestre; provável galeria
+0xaf	0xad	modo Family: exp ganho e subida de nível (u8 nível, u32 exp)	empurrado	?	CFamilyTask vem do g_starmode; parece modo offline
+0xb1	0xaf	junta/atualiza itens no inventário (n × WarehouseItem 0xC4) e status "em jogo" no MSN	empurrado	menor	o servidor usa 0x73/0xA7 (KR 0x71/0xA5)
+0xb3	0xb1	fim de jogo, variante do 0x66/0x91 (n resultados; PangBattle +2 u32; com placar de time)	empurrado no fim	menor	o servidor manda o 0x66 (KR 0x64) com os dados do PangBattle
+0xb4	0xb2	lista de troféus especiais (u8 tipo, u8, u8 n, n×12)	login (ref manda 2×: temporada atual e anteriores)	menor	só tem efeito se houver troféu especial; o servidor não tem; lista vazia = nada muda
+0xb6	0xb4	loja: item por tempo removido (u32 → Shop msg 193)	empurrado pelo servidor	menor	ref não manda; aviso na loja
+0xbb	0xb9	SET_EVENT: máscara de evento da sala (bit1 = "todos com roupa de evento")	sala/evento	evento_travado	só aviso no chat; ref não manda
+0xbc	0xba	espectador: entrar em sala em andamento (resultado + RoomInfo 221 + slots)	resposta ao pedido de assistir (lobby/golf)	falta	recurso "assistir" (galeria) não existe no servidor; 0xBC já está em NotConvertedYet (sala 178→221, slot 338→348); resultados 0xB/0x10 só mostram mensagem
+0xbd	0xbb	espectador: sincronizar partida (clima, vento, tempo, jogadores)	após 0xBC, em partida	falta	mesmo recurso do 0xBC (GalleryMode)
+0xbe	0xbc	espectador: pausa/espera da partida (GolfRule msg 0x9e)	em partida, só galeria	falta	mesmo recurso do 0xBC
+0xc0	0xbe	dados da guilda para o cartão do usuário (DB 0x1c)	resposta a pedido de info de guilda	menor	guilda do JP é web; ref não manda
+0xc1	0xbf	histórico de guild match (u32 guilda, u16 n, n×0x32)	resposta a pedido	menor	guilda web no JP; ref não manda
+0xc3	0xc1	BEFORE_START_COUNT (Lobby msgs 0x2b/0x58)	?	?	sem leitura; não achei quem dispara; ref não manda
+0xc5	0xc3	resultado de apagar item (u8 ok, u32 tid, u32 qtd[, u32 id]) + mensagem "N itens apagados"	resposta ao C->S 0x64 (apagar item)	falta	o servidor responde 0xA5+0xA8 (KR); a ref responde 0xC5 (1/tid/qtd/id, -1 erro); sem ele o cliente não mostra a mensagem nem tira o item pela tela
+0xc6	0xc4	RESTORE: tira 1 de jogos/desconexões/sem-maneira das estatísticas	empurrado (perdão de penalidade)	menor	só contadores locais
+0xcb	0xc9	resposta de mensagem de 1 linha (u32 ok [+cookies]) / "cookies insuficientes"	resposta	menor	letreiro do JP já funciona por 0x50/0x96/0xCA (JpSystems.Ticker)
+0xcf	0xcd	lista de quests antigas (u16 n, n×{u32 tid,u8})	login/lobby	menor	sistema de quest do KR antigo; JP usa missões diárias próprias; ref não manda
+0xd0	0xce	atualizar itens por lista de guid (modo, total, n, guid[, u16])	empurrado	?	ref não manda; não achei gatilho
+0xd1	0xcf	evento de mapa (máscara) no lobby	evento	evento_travado	ref não manda
+0xd2	0xd0	evento de bingo ligado	evento	evento_travado	ref não manda
+0xd4	0xd2	aviso de caddies com contrato vencido (u32 n, n×0x19) → janela no lobby	login (ref: LoginManager caso 33)	falta	servidor já tem renovação (0x39/0x91) mas não avisa no login
+0xd7	0xd5	GameGuard CSAuth2	anti-cheat	morto	JP chama a rotina GGC; não se aplica
+0xd8	0xd6	troféus de guilda (u8, u8 n, n×4)	login	menor	guilda web; ref não manda
+0xda	0xd8	controle de serviço (JP u64; KR u32 + RealMyRoom 0x22f com conteúdo 0x56)	login	menor	ref não manda e funciona
+0xdb	—	NEW_ITEM_FAILED: u32; 4 = "já possui este item"	resposta a compra/recebimento	menor	só do JP; só mensagem
+0xdf	0xdd	atualizar um item (WarehouseItem 196)	empurrado	menor	servidor usa 0xA5/0x216; 0xDF já está em NotConvertedYet
+0xe0	0xde	string (KR: m_packetNickname; ref: UPDATE_PATCH_VERSION)	?	menor	sem efeito visível
+0xee	0xec	loja pessoal bloqueada/liberada (sanção) mensagem	GM	menor	moderação
+0xf1	0xef	fim do login (ref: "call messenger"): limpa guild list, entra direto em sala (manda C->S 0xB4) se houver destino	login	menor	ref manda em todo login; mensageiro do JP já funciona sem ele; só falta o "entrar direto na sala do amigo"
+0xf2	0xf0	contagem regressiva (u8 → msg 0x6b)	?	?	não achei gatilho
+0xf4	0xf2	golf: tela de espera liga/desliga (Screen msg 0x1cf)	em partida	?	ref não manda
+0xf7	0xf5	mudar de lobby para lobby (destrava UI + msg)	resposta	?	não achei o pedido correspondente
+0xf8	0xf6	aviso de desligamento automático (tipo 0: notícia em N min; 1: chat)	GM/servidor	menor	útil para desligamento programado; ref não manda
+0xf9	0xf7	atualizar info do servidor (sGameServerInfo 0x5c: taxas/eventos)	GM muda taxas (ref manda ao recarregar/alterar rate)	menor	só se houver troca de taxa ao vivo
+0xfd	0xfb	evento de pontos: pontos	evento	evento_travado
+0xfe	0xfc	evento de pontos: resultado da troca	evento	evento_travado
+0xff	0xfd	evento de pontos: totais restantes	evento	evento_travado
+0x100	0xfe	evento de pontos: status/inscritos	evento	evento_travado
+0x101	0xff	login de netcafe	login (ref manda)	pc_bang	caso vazio no JP (nenhum desvio no despachante)
+0x107	0x105	CHECK_PARAN_KID (loja, msg 511)	loja	so_kr	portal coreano Paran
+0x108	0x106	resultado de troca de nick grátis (0 ok + nick → MSN 0x22; 2 nick em uso; ...)	resposta à troca de nick	menor	servidor recusa troca de nick (0x4E u32 7)
+0x109	0x107	abrir envelope de Ano Novo 0x1A00003B (u8 + bloco 0x14)	resposta	evento_travado	o envelope atual vai por 0xDA (KR); este é outro item sazonal
+0x10a	0x108	lista de presentes novos (card pack)	—	morto	caso vazio no JP (nenhum desvio no despachante)
+0x10c	0x10a	código do motivo da desconexão (u32)	antes de derrubar (GM kick)	menor	KR 0x10A cai fora do ServerId (−1)
+0x10d	0x10b	abrir caixa de presente de evento (u8 + bloco 0x14)	resposta	evento_travado	conteúdo 0x1d; KR 0x10B cai fora do ServerId
+0x10e	0x10c	histórico das últimas 5 partidas (5×0x34)	resposta ao C->S JP 0x9C (perfil)	falta	JP 0x9C vira KR 0x99 (CAfterChannel) e é ignorado; KR 0x10C também cai fora do ServerId (seria +2)
+0x110	0x10e	resultado do toolkit de GM (0: manda MSN 0x21; 2: lista de prêmios)	GM	menor	KR 0x10E fora do ServerId
+0x111	0x10f	flags de bloqueio (bit 0x10 = letreiro bloqueado)	GM/sanção	menor	KR 0x10F fora do ServerId
+0x112	0x110	primeira conexão / anúncio da página inicial	login	menor	conteúdo 0x15
+0x114	0x112	janela de aviso (0/1 nível insuficiente; 2 premiação não acabou)	recusa do servidor	menor	KR 0x112 fora do ServerId
+0x115	0x113	tabela de taxa de voz/efeito (str nome + 100 bytes)	início de partida (ref: R_BIGBONGDARI, VOICE_CLUB)	menor	cosmético; no KR é CBonusTicket (conteúdo 0x32); KR 0x113 fora do ServerId
+0x11a	0x116	relatório do Tiki (u32 n, SYSTEMTIME, n×0x83)	resposta ao pergaminho de relatório (C->S JP 0xAB)	falta	JP 0xAB não tem par no KR (ClientId −1); ref responde 0x11A; baixo
+0x11b	0x117	jogador saiu com relatório do Tiki (u32 uid)	torneio	menor	parte do relatório do Tiki; ref manda em Tourney
+0x11c	0x118	"top page feature" (u8 0/1/2 em Doc+0x11038; 1 também manda msg 0xCF ao lobby)	empurrado pelo servidor	menor	trava 0x14 ligada no JP; no KR só grava o valor. Ref manda u8 1 ao entregar o item do Ticket Report no fim do torneio
+0x11e	0x11A	World Tour: confirmação do presente (u8; ≠0 → MSN 0x29 uid, índice)	resposta ao pedido de presente do World Tour	evento_travado	botão do World Tour (conteúdo 0x1F) desligado no JP 983
+0x120	0x11C	tutorial: grau do presente da missão (u8 → TutorialMain msg 0x153)	junto com o 0x11F (tutorial) quando há presente	menor	servidor manda 0x11F com presente 0 e entrega o prêmio por carta; só faltaria a janela de presente
+0x126	0x11E	nada (case vazio)	-	morto	KR: case 0x11e só faz break; o JP também não lê nada
+0x127	0x11F	Halloween 2007: info do evento (u32 mapas, u32 presentes)	login/evento	evento_travado	conteúdo Halloween (0x22) desligado no JP
+0x128	0x120	Halloween 2007: presente (u32 qtd → janela; MSN 0x21 nick uid)	evento	evento_travado	confere IsLocalContent(0x22) = desligado
+0x129	0x121	abrir caixa/pouch no My Room: u8 res, u32 caixa, i32 qtd, u32 n, n × 20 (itens)	resposta ao C->S 0xB2 (JP) = abrir caixa no My Room	falta	o KR manda 0x121 (LuckyPouch), mas ServerId(0x121) = -1 e ele não vai; e o JP 0xB2 vira KR 0xAA (S4Box), que só conhece 2 caixas e responde 0x1A2. Layout difere do KR (rx_cmp "difere")
+0x12a	0x122	resultado do Ticket Report (u32 código 0..15 → avisos; 0 = ok)	resposta ao C->S 0xAA (JP, usar Ticket Report no torneio)	falta	JP 0xAA não tem par no KR (cai como "sem par"); ref manda u32 0 depois de salvar o jogo do jogador que saiu
+0x130	0x128	sala: tira o slot do convidado (u32 uid)	convite cancelado/recusado/expirado (broadcast na sala)	menor	trava 0x55 ligada; nosso convite (via MSN, 0xB2→0x127/0x81) não cria slot de convidado, então não há o que tirar
+0x139	0x131	cards com período: remove n efeitos (u16 n, n × 0x41)	empurrado quando um efeito de card expira	menor	lista só vai no login (0x137/0x138); expirar durante a sessão fica visível até relogar
+0x13a	0x132	Quick Start (matching): pedido de pareamento (u32 uid, str nick, u8)	empurrado ao alvo do matching	falta	conteúdo 0x5A ligado e o JP manda 0xBE/0xBF/0xC0; servidor responde sempre 0x13B "sem alvo"
+0x13c	0x134	Quick Start: estado do matching (u8, u8)	matching	falta	parte do Quick Start (baixo)
+0x13d	0x135	Quick Start: posição da sala (u32 uid, u8, u16 sala → cliente manda 0xB4/0x43)	matching achou sala	falta	sem isso o matching nunca leva à sala
+0x13e	0x136	Quick Start: matching cancelado (aviso)	matching cancelado	falta	parte do Quick Start (baixo)
+0x13f	0x137	Quick Start: meus interesses (u8 n, n × u8)	login / após salvar interesses	menor	ref manda no login com 0; janela abre sem seleção
+0x140	0x138	Quick Start: resposta de atualizar interesses (u8; 0 = "falha ao atualizar")	resposta ao C->S 0xBE/0xBF	menor	servidor ignora 0xBE/0xBF; sem resposta não aparece erro
+0x142	0x13A	card com período: apagar efeito (u32 res, 0x41)	resposta a pedido de apagar efeito de card	?	não achei o C->S que pede isso no JP
+0x143	0x13B	nada (case vazio)	-	morto	KR: break; JP não lê
+0x144	0x13C	Quick Start: lista de interesses para mostrar (u8 n, n × 0x43)	login/matching	menor	ref manda no login com n=0
+0x145	0x13D	caixa de presentes/pacote de cards (KR, trava 0x5B)	-	morto	o JP 983 não lê nada nesse id (rx_cmp "difere")
+0x156	0x14E	perfil: equipamento	resposta ao C->S 0x2F (perfil)	ja_mandado	KR 0x14E -> JP 0x156 (JpTranslator.Profile)
+0x157	0x14F	perfil: entrada/dados do membro	resposta ao 0x2F	ja_mandado	KR 0x14F -> 0x157 (ProfileMember)
+0x158	0x150	perfil: estatísticas	resposta ao 0x2F	ja_mandado	KR 0x150 -> 0x158 (StatsToJp)
+0x159	0x151	perfil: troféus	resposta ao 0x2F	ja_mandado	GameHandler.MyRoom.cs:262, só troca id
+0x15a	0x152	perfil: troféus especiais	resposta ao 0x2F	ja_mandado	toClient[0x152] (tira os do GP para o 0x257)
+0x15b	0x153	perfil: troféus de guilda (lista vazia)	resposta ao 0x2F	ja_mandado	GameHandler.MyRoom.cs:274 (u16 0)
+0x15c	0x154	perfil: recordes por curso	resposta ao 0x2F	ja_mandado	toClient[0x154] (+ lista "assist" vazia)
+0x15e	0x156	perfil: personagem	resposta ao 0x2F	ja_mandado	toClient[0x156] -> 0x15E (444 -> 513)
+0x161	0x159	cards com período: troca a peça de um efeito (u16 n, n × 0x41)	empurrado	menor	efeitos só no login
+0x162	0x15A	cards com período: adiciona efeitos (u16 n, n × 0x41)	empurrado (ex.: card encaixado/usado)	menor	o uso do card já responde 0x160 (KR 0x158), que o cliente aplica
+0x164	0x15C	correio antigo: operação ok (recarrega a lista)	resposta do correio antigo	morto	o correio do JP usa 0x211..0x215 (JpSystems.Mail)
+0x165	0x15D	correio antigo: erro (u32 código)	resposta do correio antigo	morto	idem
+0x167	0x15F	aviso "N cartas passaram do prazo de guarda; retire os itens"	login (cartas vencidas)	menor	o mesmo código do KR 0x15F; só importa se o correio vencer cartas
+0x169	-	troféus do próprio jogador por temporada (u8 temporada, 0x4E)	login (ref: temporada atual 5 e anteriores)	falta	só JP; ref manda 2× no login. Baixo; conferir se a aba de troféus do próprio jogador aparece vazia
+0x16a	-	semente do efeito de mascote (u32)	início da partida, para cada jogador	falta	só JP (VersusBase da ref); sem ela os efeitos aleatórios de mascote podem divergir entre jogadores. Baixo/médio
+0x173	0x178	Dolfini Locker: travar/destravar (u32 res, u8 travado)	resposta ao C->S do locker	ja_mandado	GameHandler.MyRoom.cs:50 (0x178 -> 0x173)
+0x174	0x179	Dolfini Locker: trocar senha (u32)	resposta	ja_mandado	GameHandler.MyRoom.cs:49
+0x175	0x17A	(locker) nada	-	morto	KR realmyroom: return 1 sem ler
+0x176	0x17B	Dolfini Locker: definir senha (u32)	resposta	ja_mandado	GameHandler.MyRoom.cs:48; trava 0x70 ligada no JP
+0x177	0x17C	(locker) nada	-	morto	KR realmyroom: return 1 sem ler
+0x178	0x17D	"card stack" (u16 n, n × 14) para Doc	empurrado	menor	no KR só guarda na Doc; ref não manda
+0x17a	0x17F	cards com período: troca tid/uid da peça (4 × u32)	empurrado quando a peça muda	menor	efeitos só no login
+0x17b	0x180	"comeback" (u16 1 → aviso no lobby)	login/evento	evento_travado	confere IsLocalContent(0x71) = desligado no JP
+0x17c	0x181	sem leitura: cliente manda MSN 0x29 (login, login) e limpa estado	empurrado	?	no KR fica no RealMyRoom; não identifiquei o MSN 0x29 do JP com strings
+0x17d	0x182	atualiza dwFlagBlock (u32; bit 8 = bloqueio de chat no avatar)	GM/bloqueio ao vivo	menor	flagBlock só vai no login (0); útil para GM silenciar sem relogar
+0x17e	0x183	móvel do My Room: uso ok (u32, u32 → msg 0x245)	resposta ao uso de móvel com função	falta	trava 0x75 ligada; servidor não trata o uso de móvel (baixo)
+0x17f	0x184	móvel do My Room: falha (u8 código: não tem, já usou hoje, ...)	resposta ao uso de móvel	falta	par do 0x17E
+0x182	0x187	troca direta entre jogadores (sub 0..7)	resposta/empurrado da troca (C->S 0xD9 JP)	evento_travado	o ator PrivateTrade do JP é criado sob IsLocalContent(0x76) = desligado (0x7b49e0); servidor também ignora (SPEC-troca-direta)
+0x187	0x18C	Ticket (troca de tickets): estado/contagem	evento	evento_travado	IsLocalContent(0x77) desligado (Ticket Exchange)
+0x189	0x18E	evento de missão: abrir (DecodeMissionInfo, msg 0x6f)	resposta a C->S 0xE1 (REQ_MISSION_EVENT_OPEN)	evento_travado	JP checa IsLocalContent(0x80), fora da lista ligada; KR checa 0x83
+0x18a	0x18F	evento de missão: prêmio (u32 resultado)	resposta a C->S 0xE2	evento_travado	IsLocalContent(0x80)
+0x18b	0x190	bingo: info (u32 res, guid[16], u32, u32 n, u32)	resposta a C->S 0xE3	evento_travado	fecha a espera e depois checa IsLocalContent(0x82); mensagens 10/9/1 de erro
+0x18c	0x191	bingo: prêmio (u32, u32 n, n × u32)	resposta ao bingo	evento_travado	IsLocalContent(0x82)
+0x191	0x196	ntAvatarChatTask (sala de avatar)	empurrado	morto	o case do 983 cai direto no fim da função (não lê nada)
+0x193	0x198	cookies "outside cash" (u64) + RefreshAllCookie	empurrado (recarga de cash)	menor	só atualiza o saldo de cookies na tela; o servidor já manda cookies por outros pacotes
+0x194	0x199	upgrade de caddie na loja (u32 res 0..3; ok: u32 id, u32 pang, sCaddieInfo 25)	resposta a C->S 0xEA (KR 0xEC, REQUEST_UPGRADE_CADDIE)	falta	o KR645 não trata o C->S 0xEC (cai em "pacote não tratado"); a loja fica sem resposta. Erros: 1 não tem o caddie, 2 falhou, 3 erro desconhecido
+0x195	0x19A	estatística de cursos de temporadas passadas (u8 temporada, u32 n, n × (u8 curso, MapStat 43))	empurrado (login/perfil)	menor	só a aba de temporadas antigas do perfil
+0x198	0x19D	moeda do Special Shuffle Course para o dono da sala (u32 tid, u32 qtd) + aviso	empurrado no fim da partida SSC	falta	baixa: o servidor tem o modo 14 (SSC) mas não dá a moeda ao dono nem avisa
+0x1a9	-	anti-bot: u8 opção, u32 ttl em ms (cria temporizador)	empurrado no login (referência: LoginManager)	menor	sem ele o cliente só não liga o temporizador
+0x1ac	-	lista de n strings de 14 bytes (limpa e preenche uma lista do doc)	?	?	não identifiquei o sistema (sem string; funções 0x63f760/0x6414c0)
+0x1b0	-	resultado do pedido na loja SelfDesign (UCC) no My Room (u8 0 ok, 1 falhou; "[SelfDeSign_Shop] Unknown Message CODE")	resposta a um pedido da loja SelfDesign	?	C->S não identificado; fecha a espera (msg 2) e mostra "pedido concluído/falhou"
+0x1b1	-	UCCs de todos (u32 hora, u32 tamanho, dados LZO) para o cache de UCC	resposta a C->S 0xFE (REQ_ALL_UCC_FROM_ALL_PLAYER)	falta	baixa: o tradutor JP engole o 0xFE (JpTranslator.JpOnly "quiet"); sem isso os desenhos UCC não carregam
+0x1b2	-	CRealMyRoomTask u32	?	?	não lido
+0x1d9	-	nível e exp no jogo (u32 nível, u32 exp)	empurrado quando ganha exp fora da partida (correio, ticket report)	menor	só atualiza o nível/exp guardados na hora
+0x1dd	-	ack para o Gateway msg 0x30a sub 0 (passa o pacote ao handler) ou sub 4 com o código	resposta a pedido de um handler do Gateway	?	não achei qual handler registra a msg 0x30a
+0x1de	-	idem, sub 1 (u32)	resposta (Gateway 0x30a)	?	mesma família do 0x1DD
+0x1df	-	idem, sub 2 (u32)	resposta (Gateway 0x30a)	?	mesma família do 0x1DD
+0x1e0	-	idem, sub 3 (3 × u32)	resposta (Gateway 0x30a)	?	mesma família do 0x1DD
+0x1ed	-	aviso de erro da partida em massa (códigos 0x39FBF3..+0x15), ex.: "diferença de tempo grande, volta forçada ao lobby"	empurrado (dessincronia)	menor	só mensagem de erro/expulsão
+0x1f6	-	CLobbyTask sem leitura	empurrado ao entrar no canal (referência)	morto	o case do 983 não faz nada
+0x1f7	-	fim da tacada de outro jogador (u32 oid, u8 buraco, 0x57 bytes) -> "ShotTrajectoryForMassGame"	resposta/broadcast do C->S 0x12F (SHOT_END_LOCATION_DATA)	falta	o tradutor JP engole o 0x12F; nos modos em massa (torneio/GP/GZ) não aparece a trajetória dos outros
+0x1fd	-	raspadinha nova: jogar (u32 res; ok: u32 n, n × 20 bytes)	resposta a C->S 0x12B (REQ_NEW_SCRATCH_PLAY)	falta	média: 0x12B não está nas faixas do ClientId nem no JpOnly; depende também do 0x1EB (abrir)
+0x202	-	u32 -> Gateway msg 0x7534 sub 2	?	?	0x7534 também é usado no lobby (0x59ee6b); sistema não identificado
+0x21c	-	só código de erro (u32 != 0 -> popup)	resposta	menor	sem efeito em sucesso; pedido não identificado
+0x21f	-	família conquistas/missão (u32 res; ok: u32 n, lista do doc+0x384c)	resposta	?	o servidor já usa 0x21D/0x21E/0x220/0x22C-0x22E; provável atualização parcial
+0x221	-	família conquistas (u32 res; ok: u32 n, n × u32 id buscados em doc+0x384c)	resposta	?	idem 0x21F
+0x222	-	família conquistas (u32 res; ok: u32 n, n × u32)	resposta	?	idem 0x21F
+0x223	-	família conquistas (u32 res; ok: u32 n, lista)	resposta	?	idem 0x21F
+0x224	-	só código de erro (u32 != 0 -> popup)	resposta	menor	sem efeito em sucesso
+0x230	-	"começou o jogo" 1: msg 1 ao ator principal	broadcast no início de GP/GZ/bot GM (referência)	menor	a referência manda 0x230 e 0x231 juntos; sem leitura
+0x231	-	"começou o jogo" 2: msg 2 (fecha a espera)	broadcast no início de GP/GZ/bot GM	menor	idem
+0x235	-	10 × u32 gravados no doc (+0xA36)	empurrado (referência: EQUIP_ITEM_UPDATE, sem uso)	menor	provável lista de itens equipados; o servidor já manda o equipamento por outros pacotes
+0x24a	-	u32 res; ok monta chamada "isGift(TRUE/FALSE)"	resposta	?	vizinho da presença (0x248/0x249); pedido não identificado
+0x24d	-	evento da oficina: abrir (Gateway 0x753c sub 0, conteúdo 0xAE WorkShop2013)	resposta a pedido do evento da oficina	menor	o servidor já responde o C->S 0x172 com 0x24E (sub 1 do mesmo handler)
+0x25b	-	GP: u32 res; ok -> Gateway 0x753e sub 2 (conteúdo 0xAF Grand Prix)	resposta a pedido do GP	?	pedido do GP não identificado
+0x25d	-	troféus especiais do GP (u8 opção 0/4/5, u32, u32 n, n × 12)	empurrado no login (referência manda temporada atual e anteriores)	falta	baixa: sem ele a lista de troféus especiais do GP fica vazia; layout difere da fonte (bloco 0xC a menos)
+0x276	-	desconectar jogador (u32 motivo)	empurrado (servidor derruba)	menor	o servidor fecha o socket; só perde o motivo
+0x277	-	evento Arin 2014: só erro (fecha espera; u32 != 0 -> popup)	resposta a C->S 0x192 (ARIN_EVENT_2014_OPEN) e afins	evento_travado	conteúdo 0xB0 (CArinBirthDay2014Doc), evento de data
+0x278	-	evento Arin 2014: Gateway 0x753f sub 3	resposta	evento_travado	idem
+0x279	-	evento Arin 2014: Gateway 0x753f sub 2	resposta	evento_travado	idem
+0x27a	-	evento Arin 2014: Gateway 0x753f sub 1 (passa o pacote)	resposta	evento_travado	idem
+0x27b	-	evento Arin 2014: Gateway 0x753f sub 4	resposta	evento_travado	idem
+0x27c	-	evento Arin 2014: Gateway 0x753f (sub do handler)	resposta	evento_travado	idem
+0x27d	-	evento Arin 2014: só erro (fecha espera, popup)	resposta	evento_travado	idem
+0x1389	0x1F5	ranking: página	resposta ao C->S 0x00 do ranking	ja_mandado	JpRanking soma 0x1194 aos ids 0x1F5..0x1F8 do RankingHandler
+0x138a	0x1F6	ranking: ficha do jogador	resposta ao C->S 0x01 do ranking	ja_mandado	JpRanking.User converte o personagem
+0x138b	0x1F7	ranking: recalculando	resposta durante o recálculo	ja_mandado	JpRanking
+0x138c	0x1F8	ranking: busca	resposta ao C->S 0x02 do ranking	ja_mandado	JpRanking

@@ -1,0 +1,495 @@
+despachante	id	estado	leituras_983	leituras_fonte
+CTask::OnPacketCommon	0x2f	igual	D1 D4 P(0x23) EB(0x4b) >MSN P(0x14) >MSN	D1 D4
+CTask::OnPacketCommon	0x30	igual	D2 D1 D4 DS D4 D4 DB(0x91) DB(0x91) P(0x19) E4 >MSN D4 DS DS D1 D1 D4 D4 D4 D4 D4 D4 D4 D4 D4 DS DB(0x91) D4 D4 D1 D2 D2 DB(0x91) P(0x1d) E1 >MSN D4 D4 D4 D4 D1 DB(0x6d) D1 D1 D4 D4 DB(0x4b) DB(0x54) P(0x16) >MSN D4 D4 D4 DS D4 P(0xa5) >GAME	D2 D1 D4 DS D4 D4 DB(0x91) DB(0x91) D4 DS DS D1 D1 D4 D4 D4 D4 D4 D4 D4 D4 D4 DS DB(0x91) D4 D4 D1 D2 D2 DB(0x91) D4 D4 D4 D4 D1 DB(0x6d) D1 D1 D4 D4 DB(0x4b) DB(0x54) D4 D4 D4 DS D4
+CTask::OnPacketCommon	0x32	igual		
+CTask::OnPacketCommon	0x33	igual	P(0xe4) >GAME	
+CTask::OnPacketCommon	0x34	igual	D4 DS	D4 DS
+CTask::OnPacketCommon	0x38	igual	P(0xe4) >GAME	
+CTask::OnPacketCommon	0x39	igual	DS DS DS	DS DS DS
+CTask::OnPacketCommon	0x40	igual	D1 DS DS D4 D4 D4 D4 D4 D8 D1	D1 DS DS D4 D4 D4 D4 D4 D8 D1
+CTask::OnPacketCommon	0x41	igual	DS	DS
+CTask::OnPacketCommon	0x42	igual	DS	DS
+CTask::OnPacketCommon	0x43	igual	D4 D1 DS	D4 D1 DS
+CTask::OnPacketCommon	0x44	igual	D1 D1 D4 DS DB(0x31c6) DB(0x10) D1 D1 D2 D2 D2 D4 D8 D4 D4 P(0x55) E1 >GAME P(0x23) EB(0x4b) >MSN P(0xfe) E4 >GAME D4	D1 D1 D4 DS DB(0x31c6) DB(0x10) D1 D1 D2 D2 D2 D4 D8 D4 D4 D4
+CTask::OnPacketCommon	0x45	igual	DB(0x109) DB(0x4e) D1 DB(0x2b)	DB(0x109) DB(0x4e) D1 DB(0x2b)
+CTask::OnPacketCommon	0x46	igual	D1 D1 DB(0xc8) DB(0xc8) DB(0xc8) DB(0xc8)	D1 D1 DB(0xc8) DB(0xc8) DB(0xc8) DB(0xc8)
+CTask::OnPacketCommon	0x47	igual	D1 D1 D2 DB(0xdd) DB(0xdd) DB(0xdd) DB(0xdd)	D1 D1 D2 DB(0xdd) DB(0xdd) DB(0xdd) DB(0xdd)
+CTask::OnPacketCommon	0x4b	igual	D4 D1 D4 DB(0x201) D4 DB(0x19) D4 DB(0x1c) D4 D4 D4 DB(0x3e) D4 D4 DB(0x4)	D4 D1 D4 DB(0x201) D4 DB(0x19) D4 DB(0x1c) D4 D4 D4 DB(0x3e) D4 D4 DB(0x4)
+CTask::OnPacketCommon	0x4c	igual	D2 P(0x23) EB(0x4b) >MSN	D2
+CTask::OnPacketCommon	0x4d	igual	D1 DB(0x55)	D1 DB(0x55)
+CTask::OnPacketCommon	0x4e	igual	D1 D4	D1 D4
+CTask::OnPacketCommon	0x4f	igual		
+CTask::OnPacketCommon	0x50	igual	D4 DS D8 P(0x22) ES >MSN	D4 DS D8
+CTask::OnPacketCommon	0x51	igual	D1 D4	D1 D4
+CTask::OnPacketCommon	0x52	igual	D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1	D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1
+CTask::OnPacketCommon	0x62	igual		
+CTask::OnPacketCommon	0x6b	igual	D1 D1 DB(0x201) DB(0x28) D4 DB(0x18) DB(0x3e) D4 DB(0x10) DB(0x8) D4	D1 D1 DB(0x201) DB(0x28) D4 DB(0x18) DB(0x3e) D4 DB(0x10) DB(0x8) D4
+CTask::OnPacketCommon	0x70	igual	D2 D2 DB(0x201)	D2 D2 DB(0x201)
+CTask::OnPacketCommon	0x71	igual	D2 D2 DB(0x19)	D2 D2 DB(0x19)
+CTask::OnPacketCommon	0x72	igual	DB(0x74)	DB(0x74)
+CTask::OnPacketCommon	0x73	igual	D2 D2 DB(0xc4)	D2 D2 DB(0xc4)
+CTask::OnPacketCommon	0x75	igual		
+CTask::OnPacketCommon	0x76	igual	D1 D1 D1 D1 D1 DB(0x10) DB(0x31c6) DB(0x10) D1 DB(0x41)	D1 D1 D1 D1 D1 DB(0x10) DB(0x31c6) DB(0x10) D1 DB(0x41)
+CTask::OnPacketCommon	0x77	igual	D4 P(0xc) E1 EB(0x10) >GAME	D4
+CTask::OnPacketCommon	0x7a	difere		D1 D2 D2 D2 DB(0xfb)
+CTask::OnPacketCommon	0x7e	igual	D2 P(0x23) EB(0x4b) >MSN	D2
+CTask::OnPacketCommon	0x84	igual	D1 DS DS P(0xde) ES >GAME	D1 DS DS
+CTask::OnPacketCommon	0x87	igual	D1 DB(0x19)	D1 DB(0x19)
+CTask::OnPacketCommon	0x89	igual	D4 D1 D4	D4 D1 D4
+CTask::OnPacketCommon	0x8d	igual	D4	D4
+CTask::OnPacketCommon	0x93	igual	D1 D4 D8	D1 D4 D8
+CTask::OnPacketCommon	0x95	igual	D2 D4 D8	D2 D4 D8
+CTask::OnPacketCommon	0x96	igual	D8	D8
+CTask::OnPacketCommon	0x9a	igual	D4	D4
+CTask::OnPacketCommon	0x9d	igual	DB(0x31c6)	DB(0x31c6)
+CTask::OnPacketCommon	0x9f	igual	D1 DB(0x5c) D1 DB(0x55)	D1 DB(0x5c) D1 DB(0x55)
+CTask::OnPacketCommon	0xa1	igual	D1 D4 DB(0x12d)	D1 D4 DB(0x12d)
+CTask::OnPacketCommon	0xa2	igual	DS D4	DS D4
+CTask::OnPacketCommon	0xa7	igual	D1 D4 D4 D2	D1 D4 D4 D2
+CTask::OnPacketCommon	0xa9	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0xaa	igual	D2 DB(0x26) D2 D2 DB(0x10) D2 D2 DB(0x10)	D2 DB(0x26) D2 D2 DB(0x10) D2 D2 DB(0x10)
+CTask::OnPacketCommon	0xad	igual	DS D1	DS D1
+CTask::OnPacketCommon	0xb1	igual	D1 DB(0xc4)	D1 DB(0xc4)
+CTask::OnPacketCommon	0xb4	igual	D1 D1 D1 DB(0xc)	D1 D1 D1 DB(0xc)
+CTask::OnPacketCommon	0xb9	igual	D1	D1
+CTask::OnPacketCommon	0xba	igual	DB(0x10)	DB(0x10)
+CTask::OnPacketCommon	0xbb	igual	D4	D4
+CTask::OnPacketCommon	0xc5	igual	D1 D4 D4 D4	D1 D4 D4 D4
+CTask::OnPacketCommon	0xc6	igual		
+CTask::OnPacketCommon	0xc8	igual	D8	D8
+CTask::OnPacketCommon	0xc9	igual	DS DS	DS DS
+CTask::OnPacketCommon	0xca	igual	D2 D4	D2 D4
+CTask::OnPacketCommon	0xcb	difere	D4	D4 D8
+CTask::OnPacketCommon	0xce	igual	D1 D2 D4	D1 D2 D4
+CTask::OnPacketCommon	0xd0	igual	D1 D2 D2 D4 D2	D1 D2 D2 D4 D2
+CTask::OnPacketCommon	0xd1	igual	D1	D1
+CTask::OnPacketCommon	0xd2	igual		
+CTask::OnPacketCommon	0xd5	igual	D4	D4
+CTask::OnPacketCommon	0xd7	igual		
+CTask::OnPacketCommon	0xd8	igual	D1 D1 DB(0x4)	D1 D1 DB(0x4)
+CTask::OnPacketCommon	0xda	igual	D8	D8
+CTask::OnPacketCommon	0xdb	igual	D4	D4
+CTask::OnPacketCommon	0xdd	igual	D4 D4 DB(0x14)	D4 D4 DB(0x14)
+CTask::OnPacketCommon	0xde	igual	D4 D4 D4	D4 D4 D4
+CTask::OnPacketCommon	0xdf	igual	DB(0xc4)	DB(0xc4)
+CTask::OnPacketCommon	0xe0	igual	DS	DS
+CTask::OnPacketCommon	0xe1	igual	D1 DB(0x3e) P(0x9a) E1 E4 ES >GAME	D1 DB(0x3e)
+CTask::OnPacketCommon	0xe3	igual	D4 DS	D4 DS
+CTask::OnPacketCommon	0xe4	igual	D4 DS D4	D4 DS D4
+CTask::OnPacketCommon	0xe5	igual	D4 DS D4	D4 DS D4
+CTask::OnPacketCommon	0xe6	igual	D4 DB(0x16) DS D4 D4 DB(0xac)	D4 DB(0x16) DS D4 D4 DB(0xac)
+CTask::OnPacketCommon	0xe7	igual	D4	D4
+CTask::OnPacketCommon	0xe8	igual	D4 DS D4 DS	D4 DS D4 DS
+CTask::OnPacketCommon	0xe9	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0xea	igual	D4 D8	D4 D8
+CTask::OnPacketCommon	0xeb	igual	D4 DB(0x16) D4 D4 DB(0xac)	D4 DB(0x16) D4 D4 DB(0xac)
+CTask::OnPacketCommon	0xec	igual	D4 D1 D8 DB(0xac) D1 DB(0xc4) DB(0xc4) DB(0x19) DB(0x3a)	D4 D1 D8 DB(0xac) D1 DB(0xc4) DB(0xc4) DB(0x19) DB(0x3a)
+CTask::OnPacketCommon	0xed	igual	DS D4 DB(0xac) D4	DS D4 DB(0xac) D4
+CTask::OnPacketCommon	0xee	igual	D1	D1
+CTask::OnPacketCommon	0xf1	igual	P(0xb4) E1 E2 >GAME	
+CTask::OnPacketCommon	0xf2	igual	D1	D1
+CTask::OnPacketCommon	0xf5	igual		
+CTask::OnPacketCommon	0xf6	igual		
+CTask::OnPacketCommon	0xf7	igual		
+CTask::OnPacketCommon	0xf8	igual	D1 D2 D2	D1 D2 D2
+CTask::OnPacketCommon	0xf9	igual	DB(0x5c)	DB(0x5c)
+CTask::OnPacketCommon	0xfa	igual	D2 D4 D1 D2 D4	D2 D4 D1 D2 D4
+CTask::OnPacketCommon	0xfb	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0xfc	igual	D1 DB(0x5c)	D1 DB(0x5c)
+CTask::OnPacketCommon	0xfd	igual	D4	D4
+CTask::OnPacketCommon	0xfe	igual	D4	D4
+CTask::OnPacketCommon	0xff	igual	D4 DB(?)	D4 DB(?)
+CTask::OnPacketCommon	0x100	igual	D4 DB(?)	D4 DB(?)
+CTask::OnPacketCommon	0x101	igual		
+CTask::OnPacketCommon	0x102	igual	D4 D4 D8 D8	D4 D4 D8 D8
+CTask::OnPacketCommon	0x108	igual	D1 DS P(0x22) ES >MSN	D1 DS
+CTask::OnPacketCommon	0x109	igual	D1 DB(0x14)	D1 DB(?)
+CTask::OnPacketCommon	0x10a	difere		D2 DB(0xfb)
+CTask::OnPacketCommon	0x10b	igual	D4 D4 D4	D4 D4 D4
+CTask::OnPacketCommon	0x10c	igual	D4	D4
+CTask::OnPacketCommon	0x10d	igual	D1 DB(0x14)	D1 DB(0x14)
+CTask::OnPacketCommon	0x10e	igual	DB(0x104)	DB(0x104)
+CTask::OnPacketCommon	0x10f	difere	D4	D4 D1 D1
+CTask::OnPacketCommon	0x110	igual	D4 D4 D4 DB(0x14) P(0x21) ES E4 >MSN	D4 D4 D4 DB(0x14)
+CTask::OnPacketCommon	0x111	igual	D4	D4
+CTask::OnPacketCommon	0x112	igual	D1	D1
+CTask::OnPacketCommon	0x113	igual		
+CTask::OnPacketCommon	0x114	igual	D4	D4
+CTask::OnPacketCommon	0x116	igual	D2 DB(0x37)	D2 DB(0x37)
+CTask::OnPacketCommon	0x117	igual	D4 D4 P(0x16b) E4 >MSN	D4 D4
+CTask::OnPacketCommon	0x118	igual	D2 DB(0x2c)	D2 DB(0x2c)
+CTask::OnPacketCommon	0x119	igual	D4 D1 D4 P(0x27) ES E4 >MSN P(0x16b) E4 >MSN	D4 D1 D4
+CTask::OnPacketCommon	0x11c	igual	D1	D1
+CTask::OnPacketCommon	0x11d	igual	D4 D1	D4 D1
+CTask::OnPacketCommon	0x11e	igual	D1 P(0x29) E4 E4 >MSN	D1
+CTask::OnPacketCommon	0x11f	igual	D1 D1 DB(0xc)	D1 D1 DB(0xc)
+CTask::OnPacketCommon	0x126	igual		
+CTask::OnPacketCommon	0x127	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0x128	igual	D4 P(0x21) ES E4 >MSN	D4
+CTask::OnPacketCommon	0x12a	igual	D4 D4 P(0x21) ES E4 D4 DS DS	D4 D4 D4 DS DS
+CTask::OnPacketCommon	0x12b	igual	D4 DB(0x6b)	D4 DB(0x6b)
+CTask::OnPacketCommon	0x12d	igual	D4 D2 DB(0x1b)	D4 D2 DB(0x1b)
+CTask::OnPacketCommon	0x12e	igual	D1 D1 D4 D4 DS DS D4 DS D1 DB(0xc4) D4 DS D2 D4 D4 D4 DS D2 D1 D4 DS D1	D1 D1 D4 D4 DS DS D4 DS D1 DB(0xc4) D4 DS D2 D4 D4 D4 DS D2 D1 D4 DS D1
+CTask::OnPacketCommon	0x131	difere	D1 D1 DB(0x5) DB(0x5)	D1 DB(0x5) D1 DB(0x5)
+CTask::OnPacketCommon	0x132	igual	D4	D4
+CTask::OnPacketCommon	0x133	igual	D1 DB(0xb)	D1 DB(0xb)
+CTask::OnPacketCommon	0x134	igual	D1 DB(0x15)	D1 DB(0x15)
+CTask::OnPacketCommon	0x135	igual		
+CTask::OnPacketCommon	0x136	igual		
+CTask::OnPacketCommon	0x137	igual	D2 DB(0x41)	D2 DB(0x41)
+CTask::OnPacketCommon	0x138	igual	D4 D2 DB(0x3a)	D4 D2 DB(0x3a)
+CTask::OnPacketCommon	0x139	igual	D2 DB(0x41)	D2 DB(0x41)
+CTask::OnPacketCommon	0x140	igual	D1	D1
+CTask::OnPacketCommon	0x142	igual	D4 DB(0x41)	D4 DB(0x41)
+CTask::OnPacketCommon	0x143	igual		
+CTask::OnPacketCommon	0x144	igual	D1 DB(0x43)	D1 DB(0x43)
+CTask::OnPacketCommon	0x145	difere		D1 D1 D2 DB(0xfb)
+CTask::OnPacketCommon	0x147	igual	D1	D1
+CTask::OnPacketCommon	0x149	igual	D1	D1
+CTask::OnPacketCommon	0x14b	igual	D1	D1
+CTask::OnPacketCommon	0x14d	igual	D1	D1
+CTask::OnPacketCommon	0x153	igual	D1 D1 D4 DS D1 D1 D4 DS D1	D1 D1 D4 DS D1 D1 D4 DS D1
+CTask::OnPacketCommon	0x154	igual	D4 DB(0x3a) D1 DB(0x3a) D4	D4 DB(0x3a) D1 DB(0x3a) D4
+CTask::OnPacketCommon	0x156	igual	D1 D4 DB(0x74)	D1 D4 DB(0x74)
+CTask::OnPacketCommon	0x157	igual	D1 D4 D2 DB(0x12d) D4	D1 D4 D2 DB(0x12d) D4
+CTask::OnPacketCommon	0x158	igual	D1 D4 DB(0x109)	D1 D4 DB(0x109)
+CTask::OnPacketCommon	0x159	igual	D1 D4 DB(0x4e)	D1 D4 DB(0x4e)
+CTask::OnPacketCommon	0x15a	igual	D1 D4 D2 DB(0xc)	D1 D4 D2 DB(0xc)
+CTask::OnPacketCommon	0x15b	igual	D1 D4 D2 DB(0x4)	D1 D4 D2 DB(0x4)
+CTask::OnPacketCommon	0x15c	difere	D1 D4 D4 DB(0x2b) D4 DB(0x2b)	D1 D4 D4 DB(0x2b)
+CTask::OnPacketCommon	0x15d	igual	D4 DB(0x4d)	D4 DB(0x4d)
+CTask::OnPacketCommon	0x15e	igual	D4 DB(0x201)	D4 DB(0x201)
+CTask::OnPacketCommon	0x160	difere	D4 D4 D1 DB(0x3a)	D4 DB(0x3a) D1 D4
+CTask::OnPacketCommon	0x161	igual	D2 DB(0x41)	D2 DB(0x41)
+CTask::OnPacketCommon	0x162	igual	D2 DB(0x41)	D2 DB(0x41)
+CTask::OnPacketCommon	0x164	igual		
+CTask::OnPacketCommon	0x165	igual	D4	D4
+CTask::OnPacketCommon	0x167	igual	D4	D4
+CTask::OnPacketCommon	0x169	igual	D1 DB(0x4e)	D1 DB(0x4e)
+CTask::OnPacketCommon	0x16a	so_983	D4	
+CTask::OnPacketCommon	0x178	igual	D2 DB(0xe)	D2 DB(0xe)
+CTask::OnPacketCommon	0x17a	igual	D4 D4 D4 D4	D4 D4 D4 D4
+CTask::OnPacketCommon	0x17c	igual	P(0x29) ES ES >MSN	
+CTask::OnPacketCommon	0x181	igual	D4 D4 D4	D4 D4 D4
+CTask::OnPacketCommon	0x182	igual		
+CTask::OnPacketCommon	0x188	igual	D1 D4 D4 D1	D1 D4 D4 D1
+CTask::OnPacketCommon	0x193	igual	D8	D8
+CTask::OnPacketCommon	0x195	igual	D1 D4 D1 DB(0x2b)	D1 D4 D1 DB(0x2b)
+CTask::OnPacketCommon	0x197	igual	D1 D4 D4 D4	D1 D4 D4 D4
+CTask::OnPacketCommon	0x199	igual		
+CTask::OnPacketCommon	0x1a9	igual	D1 D4	D1 D4
+CTask::OnPacketCommon	0x1ac	igual	D4 DB(0xe)	D4 DB(0xe)
+CTask::OnPacketCommon	0x1ad	igual	D4 DS	D4 DS
+CTask::OnPacketCommon	0x1b1	so_983	D4 D4 DB(?)	
+CTask::OnPacketCommon	0x1d3	igual	D4 D4 DS	D4 D4 DS
+CTask::OnPacketCommon	0x1d4	igual	D4 DS	D4 DS
+CTask::OnPacketCommon	0x1d9	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0x1dd	igual	D4	D4
+CTask::OnPacketCommon	0x1de	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0x1df	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0x1e0	igual	D4 D4 D4 D4	D4 D4 D4 D4
+CTask::OnPacketCommon	0x1e7	igual	D4	D4
+CTask::OnPacketCommon	0x1e8	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0x1e9	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0x1ea	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0x1ed	igual	D4	D4
+CTask::OnPacketCommon	0x1ef	igual	D4 D4 D4 D4	D4 D4 D4 D4
+CTask::OnPacketCommon	0x1f8	igual	D4 DB(0x4) DB(0x4) DB(0x4)	D4 DB(0x4) DB(0x4) DB(0x4)
+CTask::OnPacketCommon	0x1f9	igual	D4 D4 D4	D4 D4 D4
+CTask::OnPacketCommon	0x1fa	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0x1fd	igual	D4 D4 DB(0x14)	D4 D4 DB(0x14)
+CTask::OnPacketCommon	0x202	igual	D4	D4
+CTask::OnPacketCommon	0x20e	difere	D4 D4	D4 D4 D4 D4
+CTask::OnPacketCommon	0x210	igual	D4 D4 DB(0xc4)	D4 D4 DB(0xc4)
+CTask::OnPacketCommon	0x211	igual	D4 D4 D4 D4 DB(0xc4)	D4 D4 D4 D4 DB(0xc4)
+CTask::OnPacketCommon	0x212	igual	D4 D4 DS DS DS D1 D4 DB(0x37)	D4 D4 DS DS DS D1 D4 DB(0x37)
+CTask::OnPacketCommon	0x213	igual	D4 P(0x29) E4 E4 >MSN	D4
+CTask::OnPacketCommon	0x214	igual	D4	D4
+CTask::OnPacketCommon	0x215	igual	D4 D4 D4 D4 DB(0xc4)	D4 D4 D4 D4 DB(0xc4)
+CTask::OnPacketCommon	0x216	so_983	D4 D4	
+CTask::OnPacketCommon	0x21b	so_983	D4 D4 D4 DB(0x14) D8 D8	
+CTask::OnPacketCommon	0x21c	igual	D4	D4
+CTask::OnPacketCommon	0x21d	difere	D4 D4 D4	D4 D4 D4 D1 D4 D4 D4
+CTask::OnPacketCommon	0x21e	so_983	D4 D4 D4	
+CTask::OnPacketCommon	0x21f	so_983	D4 D4	
+CTask::OnPacketCommon	0x220	igual	D4	D4
+CTask::OnPacketCommon	0x221	so_983	D4 D4 D4	
+CTask::OnPacketCommon	0x222	so_983	D4 D4 D4	
+CTask::OnPacketCommon	0x223	so_983	D4 D4	
+CTask::OnPacketCommon	0x224	igual	D4	D4
+CTask::OnPacketCommon	0x225	igual	D4	D4
+CTask::OnPacketCommon	0x226	igual	D4	D4
+CTask::OnPacketCommon	0x227	igual	D4	D4
+CTask::OnPacketCommon	0x228	igual	D4	D4
+CTask::OnPacketCommon	0x229	igual	D4	D4
+CTask::OnPacketCommon	0x22a	igual	D4 D4	D4 D4
+CTask::OnPacketCommon	0x22b	igual	D4	D4
+CTask::OnPacketCommon	0x22c	igual	D4	D4
+CTask::OnPacketCommon	0x22d	igual	D4	D4
+CTask::OnPacketCommon	0x22e	igual		
+CTask::OnPacketCommon	0x22f	so_983	D4 D4 D4	
+CTask::OnPacketCommon	0x230	igual		
+CTask::OnPacketCommon	0x231	igual		
+CTask::OnPacketCommon	0x235	igual	D4	D4
+CTask::OnPacketCommon	0x23d	igual	D4	D4
+CTask::OnPacketCommon	0x23e	igual	D4	D4
+CTask::OnPacketCommon	0x23f	igual	D4	D4
+CTask::OnPacketCommon	0x240	igual	D4	D4
+CTask::OnPacketCommon	0x241	igual		
+CTask::OnPacketCommon	0x242	igual	D4	D4
+CTask::OnPacketCommon	0x243	igual	D4	D4
+CTask::OnPacketCommon	0x245	igual	D4	D4
+CTask::OnPacketCommon	0x246	igual	D4	D4
+CTask::OnPacketCommon	0x247	igual	D4	D4
+CTask::OnPacketCommon	0x248	igual	D4 P(0x16f) >GAME	D4
+CTask::OnPacketCommon	0x249	igual	D4	D4
+CTask::OnPacketCommon	0x24a	igual	D4	D4
+CTask::OnPacketCommon	0x24d	igual	D4	D4
+CTask::OnPacketCommon	0x24e	igual	D4	D4
+CTask::OnPacketCommon	0x24f	igual	D4	D4
+CTask::OnPacketCommon	0x250	igual	D4	D4
+CTask::OnPacketCommon	0x251	igual	D4	D4
+CTask::OnPacketCommon	0x253	igual	D4	D4
+CTask::OnPacketCommon	0x254	igual	D4 D2 P(0x23) EB(0x4b) >MSN	D4 D2
+CTask::OnPacketCommon	0x256	so_983	D4	
+CTask::OnPacketCommon	0x257	so_983	D1 D4 D2 DB(0xc)	
+CTask::OnPacketCommon	0x25a	igual	D4	D4
+CTask::OnPacketCommon	0x25b	igual	D4	D4
+CTask::OnPacketCommon	0x25d	difere	D1 D4 D4 DB(0xc)	D1 D4 D4 DB(0xc) DB(0xc)
+CTask::OnPacketCommon	0x264	so_983	D4 D4 D4 D4 D4	
+CTask::OnPacketCommon	0x26a	igual	D4	D4
+CTask::OnPacketCommon	0x26c	so_983	D4 D4 D4 DB(0x14) D8 D8	
+CTask::OnPacketCommon	0x26d	igual	D4	D4
+CTask::OnPacketCommon	0x26e	so_983	D4	
+CTask::OnPacketCommon	0x26f	so_983	D4 D4	
+CTask::OnPacketCommon	0x270	so_983	D4 D4	
+CTask::OnPacketCommon	0x271	so_983	D4 D4	
+CTask::OnPacketCommon	0x272	so_983	D4 D4	
+CTask::OnPacketCommon	0x273	so_983	D4 D4	
+CTask::OnPacketCommon	0x274	igual	D4 D4 D4	D4 D4 D4
+CTask::OnPacketCommon	0x276	igual	D4	D4
+CTask::OnPacketCommon	0x277	igual	D4	D4
+CTask::OnPacketCommon	0x278	igual	D4	D4
+CTask::OnPacketCommon	0x279	igual	D4	D4
+CTask::OnPacketCommon	0x27a	igual	D4	D4
+CTask::OnPacketCommon	0x27b	igual	D4	D4
+CTask::OnPacketCommon	0x27c	igual	D4	D4
+CTask::OnPacketCommon	0x27d	igual	D4	D4
+CTask::OnPacketCommon	0x1389	igual	D1 D1 D1 D1 D1 D4 D4 D2 D4 D4 D4 D4 D2 D1 DS DS D1 D4 D4 D4 D4 D2 D1 DS DS	D1 D1 D1 D1 D1 D4 D4 D2 D4 D4 D4 D4 D2 D1 DS DS D1 D4 D4 D4 D4 D2 D1 DS DS
+CTask::OnPacketCommon	0x138a	igual	D1 DB(0x27c)	D1 DB(0x27c)
+CTask::OnPacketCommon	0x138b	igual		
+CTask::OnPacketCommon	0x138c	igual	D1 D1 D1 D1 D1 D4 D4 D2 D4 D4 D4 D4 D2 D1 DS DS D2	D1 D1 D1 D1 D1 D4 D4 D2 D4 D4 D4 D4 D2 D1 DS DS D2
+CLobbyTask::OnPacket	0x1	igual		
+CLobbyTask::OnPacket	0x2	igual	D1 DB(0x5c)	D1 DB(0x5c)
+CLobbyTask::OnPacket	0x3	igual	D4 DS	D4 DS
+CLobbyTask::OnPacket	0x4	igual	D1	D1
+CLobbyTask::OnPacket	0x5	igual	D1 D4 D4	D1 D4 D4
+CLobbyTask::OnPacket	0x6	igual	DB(0x240)	DB(0x240)
+CLobbyTask::OnPacket	0x7	igual	D4 DB(0x19)	D4 DB(0x19)
+CLobbyTask::OnPacket	0x8	igual	D4	D4
+CLobbyTask::OnPacket	0x9	igual	D1 DB(0x5c)	D1 DB(0x5c)
+CLobbyTask::OnPacket	0xb	igual	DS	DS
+CLobbyTask::OnPacket	0xd	igual	D4 D4 DS	D4 D4 DS
+CLobbyTask::OnPacket	0xe	igual	D4 D4 DS	D4 D4 DS
+CLobbyTask::OnPacket	0xf	igual	D1 DS D4 D4 DS DS	D1 DS D4 D4 DS DS
+CLobbyTask::OnPacket	0x10	igual	DS	DS
+CLobbyTask::OnPacket	0x11	igual	D1 D4	D1 D4
+CLobbyTask::OnPacket	0x37	igual	D2 D4 D1 D2 D4 DS D4 P(0x24) E4 >MSN D2 D4	D2 D4 D1 D2 D4 DS D4 D2 D4
+CLobbyTask::OnPacket	0x48	igual	D1 D2 D1 DB(0x15c) DB(0x201) D1 DB(0x15c) DB(0x15c) DB(0x201) D4 D4 DB(0x15c)	D1 D2 D1 DB(0x15c) DB(0x201) D1 DB(0x15c) DB(0x15c) DB(0x201) D4 D4 DB(0x15c)
+CLobbyTask::OnPacket	0x49	igual	D1 D1 D4 DB(0xdd) P(0x23) EB(0x4b) >MSN	D1 D1 D4 DB(0xdd)
+CLobbyTask::OnPacket	0x4a	igual	D2 D1 D1 D1 D1 D1 D4 D4 D1 D1 D1 D4 D4 D4 D1 DS	D2 D1 D1 D1 D1 D1 D4 D4 D1 D1 D1 D4 D4 D4 D1 DS
+CLobbyTask::OnPacket	0x6c	igual	D4 D1	D4 D1
+CLobbyTask::OnPacket	0x6d	igual	D4 D1 D1 D4 D8 D8 D1	D4 D1 D1 D4 D8 D8 D1
+CLobbyTask::OnPacket	0x6e	igual	D4 D1 DB(0x8) D4 D4 D4 D2	D4 D1 DB(0x8) D4 D4 D4 D2
+CLobbyTask::OnPacket	0x78	igual	D4 D1	D4 D1
+CLobbyTask::OnPacket	0x79	igual	D4 D4 D1 D1 D4 D4 DB(0x60) DB(0x18)	D4 D4 D1 D1 D4 D4 DB(0x60) DB(0x18)
+CLobbyTask::OnPacket	0x7c	igual	D4 D2	D4 D2
+CLobbyTask::OnPacket	0x7d	igual	D4 D1	D4 D1
+CLobbyTask::OnPacket	0x7f	igual	D1 D4	D1 D4
+CLobbyTask::OnPacket	0x81	igual	DS D4	DS D4
+CLobbyTask::OnPacket	0x82	igual	D4	D4
+CLobbyTask::OnPacket	0x83	igual	D2 D4 D1 D2 D4 DS D4 P(0x24) E4 >MSN D2 D4	D2 D4 D1 D2 D4 DS D4 D2 D4
+CLobbyTask::OnPacket	0x84	igual	D1 DS DS P(0xde) ES >?	D1 DS DS
+CLobbyTask::OnPacket	0x86	igual	D4 DB(0xc) DB(0x12)	D4 DB(0xc) DB(0x12)
+CLobbyTask::OnPacket	0x88	igual	D4 D4 D2	D4 D4 D2
+CLobbyTask::OnPacket	0x8c	igual		
+CLobbyTask::OnPacket	0x8e	igual	D4 D1	D4 D1
+CLobbyTask::OnPacket	0x96	igual	D8	D8
+CLobbyTask::OnPacket	0x97	igual	D4	D4
+CLobbyTask::OnPacket	0x98	igual	DB(0x31c6)	DB(0x31c6)
+CLobbyTask::OnPacket	0xa8	igual	D4	D4
+CLobbyTask::OnPacket	0xae	igual	D1 D4 DB(0x15c) D1 DB(0x15c)	D1 D4 DB(0x15c) D1 DB(0x15c)
+CLobbyTask::OnPacket	0xb0	igual	DS DS	DS DS
+CLobbyTask::OnPacket	0xb2	igual	D4 D4 D4 DB(0x6d)	D4 D4 D4 DB(0x6d)
+CLobbyTask::OnPacket	0xbc	igual	D1 DB(0xdd) D4 D1 DB(0x15c) DB(0x31c6) DB(0x31c6) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1	D1 DB(0xdd) D4 D1 DB(0x15c) DB(0x31c6) DB(0x31c6) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1
+CLobbyTask::OnPacket	0xbf	igual	D1 DB(0x9)	D1 DB(0x9)
+CLobbyTask::OnPacket	0xc0	igual	DB(0x1c)	DB(0x1c)
+CLobbyTask::OnPacket	0xc1	igual	D4 D2 DB(0x32)	D4 D2 DB(0x32)
+CLobbyTask::OnPacket	0xc2	igual	D4 D2 D2 D1 D1	D4 D2 D2 D1 D1
+CLobbyTask::OnPacket	0xc3	igual		
+CLobbyTask::OnPacket	0xc4	igual	D4 D1 DB(0x4) DS	D4 D1 DB(0x4) DS
+CLobbyTask::OnPacket	0xcf	igual	D2 D4 D1	D2 D4 D1
+CLobbyTask::OnPacket	0xd4	igual	D4 DB(0x19)	D4 DB(0x19)
+CLobbyTask::OnPacket	0x11b	igual	D4	D4
+CLobbyTask::OnPacket	0x12f	igual	D2 D4 D1 D2 D4 DS D4 P(0x29) E4 P(0x28) E4 E1 E2 E4 ES E4 >MSN	D2 D4 D1 D2 D4 DS D4
+CLobbyTask::OnPacket	0x130	igual	D4	D4
+CLobbyTask::OnPacket	0x13a	igual	D4 DS D1	D4 DS D1
+CLobbyTask::OnPacket	0x13b	igual	D1	D1
+CLobbyTask::OnPacket	0x13c	igual	D1 D1	D1 D1
+CLobbyTask::OnPacket	0x13d	igual	D4 D1 D2 P(0xb4) E1 E2 >GAME P(0x43) >GAME	D4 D1 D2
+CLobbyTask::OnPacket	0x13e	igual		
+CLobbyTask::OnPacket	0x13f	igual	D1 D1	D1 D1
+CLobbyTask::OnPacket	0x17b	igual	D2	D2
+CLobbyTask::OnPacket	0x17d	igual	D4	D4
+CLobbyTask::OnPacket	0x187	igual	D1 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D1 D4 D4 D4	D1 D4 D4 D4 D4 D4 D4 D4 D4 D4 D4 D1 D4 D4 D4
+CLobbyTask::OnPacket	0x189	igual		
+CLobbyTask::OnPacket	0x18a	igual	D4	D4
+CLobbyTask::OnPacket	0x18b	igual	D4 DB(0x10) D4 D4 D4	D4 DB(0x10) D4 D4 D4
+CLobbyTask::OnPacket	0x18c	igual	D4 D4 D4	D4 D4 D4
+CLobbyTask::OnPacket	0x198	igual	D4 D4	D4 D4
+CLobbyTask::OnPacket	0x1f6	igual		
+CLobbyTask::OnPacket	0x24b	igual	D4	D4
+CGolfTask::OnPacket	0x48	igual	D1 D2 D1 DB(0x15c) DB(0x201) DB(0x15c) DB(0x201) D4 D4 DB(0x15c)	D1 D2 D1 DB(0x15c) DB(0x201) DB(0x15c) DB(0x201) D4 D4 DB(0x15c)
+CGolfTask::OnPacket	0x53	igual	D4	D4
+CGolfTask::OnPacket	0x54	igual		
+CGolfTask::OnPacket	0x55	igual	D4 DB(0x32)	D4 DB(0x32)
+CGolfTask::OnPacket	0x56	igual	D4 DB(0x4)	D4 DB(0x4)
+CGolfTask::OnPacket	0x57	igual	D4 DB(0x5)	D4 DB(0x5)
+CGolfTask::OnPacket	0x58	igual	D4 D1	D4 D1
+CGolfTask::OnPacket	0x59	igual	D4 D1	D4 D1
+CGolfTask::OnPacket	0x5a	igual	D4 D4 D4	D4 D4 D4
+CGolfTask::OnPacket	0x5b	igual	D1 D1 D1 D1 D1	D1 D1 D1 D1 D1
+CGolfTask::OnPacket	0x5c	igual	D4	D4
+CGolfTask::OnPacket	0x5d	igual	D4 D2	D4 D2
+CGolfTask::OnPacket	0x5e	igual	D4	D4
+CGolfTask::OnPacket	0x60	igual	DB(0xc)	DB(0xc)
+CGolfTask::OnPacket	0x61	igual	D4	D4
+CGolfTask::OnPacket	0x63	igual	D4 D2	D4 D2
+CGolfTask::OnPacket	0x64	igual	DB(0x26)	DB(0x26)
+CGolfTask::OnPacket	0x65	igual	D4	D4
+CGolfTask::OnPacket	0x66	igual	D1 D4 D4 DB(0x21) D1 D1 D1	D1 D4 D4 DB(0x21) D1 D1 D1
+CGolfTask::OnPacket	0x67	igual		
+CGolfTask::OnPacket	0x6c	igual	D4 D1	D4 D1
+CGolfTask::OnPacket	0x6d	igual	D4 D1 D1 D4 D8 D8 D1	D4 D1 D1 D4 D8 D8 D1
+CGolfTask::OnPacket	0x6e	igual	D4 D1 DB(0x8) D4 D4 D4 D2	D4 D1 DB(0x8) D4 D4 D4 D2
+CGolfTask::OnPacket	0x78	igual	D4 D1	D4 D1
+CGolfTask::OnPacket	0x79	igual	D4 P(0x2f) E4 E1 >GAME D4 D4 D1 D1 D4 D4 DB(0x60) DB(0x18)	D4 D4 D4 D1 D1 D4 D4 DB(0x60) DB(0x18)
+CGolfTask::OnPacket	0x7c	igual	D4 D2	D4 D2
+CGolfTask::OnPacket	0x7e	igual	D2	D2
+CGolfTask::OnPacket	0x84	igual	D1 DS DS	D1 DS DS
+CGolfTask::OnPacket	0x8a	igual		
+CGolfTask::OnPacket	0x8b	igual	D4 D1	D4 D1
+CGolfTask::OnPacket	0x8c	igual		
+CGolfTask::OnPacket	0x8f	igual	D4	D4
+CGolfTask::OnPacket	0x90	igual		
+CGolfTask::OnPacket	0x91	igual	D1 D4 D4 DB(0x21) D1 D1 D1	D1 D4 D4 DB(0x21) D1 D1 D1
+CGolfTask::OnPacket	0x92	igual		
+CGolfTask::OnPacket	0x94	igual	D1	D1
+CGolfTask::OnPacket	0x97	igual	D4	D4
+CGolfTask::OnPacket	0x98	igual	D4 DB(0x31c6) D1 D1 D1 D1 D1 D1 D1 DB(0xfb)	D4 DB(0x31c6) D1 D1 D1 D1 D1 D1 D1 DB(0xfb)
+CGolfTask::OnPacket	0x99	igual	D1 D4 P(0x40) EB(0xfb) E1 E4 >GAME	D1 D4
+CGolfTask::OnPacket	0x9b	igual	D4 D4	D4 D4
+CGolfTask::OnPacket	0x9c	igual	D1 D4	D1 D4
+CGolfTask::OnPacket	0x9e	igual	D1 D1 D1	D1 D1 D1
+CGolfTask::OnPacket	0xa3	igual	D4 D1	D4 D1
+CGolfTask::OnPacket	0xa4	igual	D2 D4	D2 D4
+CGolfTask::OnPacket	0xab	igual	D1 D4 D1 D1 D4 DB(0x1c)	D1 D4 D1 D1 D4 DB(0x1c)
+CGolfTask::OnPacket	0xac	igual	D4 D1	D4 D1
+CGolfTask::OnPacket	0xad	igual	DS D1	DS D1
+CGolfTask::OnPacket	0xae	igual	D1 D4 DB(0x15c) D1 DB(0x15c)	D1 D4 DB(0x15c) D1 DB(0x15c)
+CGolfTask::OnPacket	0xb0	igual	DS DS	DS DS
+CGolfTask::OnPacket	0xb3	igual	D1 D4 D4 DB(0x21) D1 D1 D1	D1 D4 D4 DB(0x21) D1 D1 D1
+CGolfTask::OnPacket	0xbc	igual	D1 DB(0xdd) D4 D1 DB(0x15c) DB(0x31c6) DB(0x31c6) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1 DB(0x15c)	D1 DB(0xdd) D4 D1 DB(0x15c) DB(0x31c6) DB(0x31c6) D1 D1 D1 D1 D4 D4 D4 D4 D1 D1 D1 DB(0x15c)
+CGolfTask::OnPacket	0xbd	igual	D1 D1 D1 D1 D1 D4 D4 D1 DB(0xfb)	D1 D1 D1 D1 D1 D4 D4 D1 DB(0xfb)
+CGolfTask::OnPacket	0xbe	igual		
+CGolfTask::OnPacket	0xc2	igual	D4 D2 D2 D1 D1	D4 D2 D2 D1 D1
+CGolfTask::OnPacket	0xc7	igual	DB(0x4) D4	DB(0x4) D4
+CGolfTask::OnPacket	0xc8	igual	D8	D8
+CGolfTask::OnPacket	0xcc	igual	D4 D1 DB(0x800)	D4 D1 DB(0x800)
+CGolfTask::OnPacket	0xf4	igual	D1	D1
+CGolfTask::OnPacket	0x115	igual	DS DB(0x64)	DS DB(0x64)
+CGolfTask::OnPacket	0x14e	igual	D1 DB(0x18)	D1 DB(0x18)
+CGolfTask::OnPacket	0x14f	igual	D1 D1 D1 D4 D4 DS	D1 D1 D1 D4 D4 DS
+CGolfTask::OnPacket	0x150	igual	D1 DB(0x18) P(0x2f) E4 E1 >GAME	D1 DB(0x18)
+CGolfTask::OnPacket	0x151	igual		
+CGolfTask::OnPacket	0x18d	igual	D1 D4 D4 DB(0xb8) D2	D1 D4 D4 DB(0xb8) D2
+CGolfTask::OnPacket	0x1ec	igual	DB(0x8) P(0x12d) EB(0x8) >GAME	DB(0x8)
+CGolfTask::OnPacket	0x1ee	igual		
+CGolfTask::OnPacket	0x1f0	igual		
+CGolfTask::OnPacket	0x1f1	igual		
+CGolfTask::OnPacket	0x1f2	igual		
+CGolfTask::OnPacket	0x1f3	igual		
+CGolfTask::OnPacket	0x1f4	igual	D4	D4
+CGolfTask::OnPacket	0x1f5	igual		
+CGolfTask::OnPacket	0x1f7	igual	D4 D1 DB(0x57)	D4 D1 DB(0x57)
+CGolfTask::OnPacket	0x200	igual	D4	D4
+CGolfTask::OnPacket	0x201	igual		
+CGolfTask::OnPacket	0x203	igual	D4 D4	D4 D4
+CGolfTask::OnPacket	0x236	igual	D4	D4
+CGolfTask::OnPacket	0x237	igual	D4	D4
+CGolfTask::OnPacket	0x24c	igual	D4	D4
+CGolfTask::OnPacket	0x255	igual		
+CGolfTask::OnPacket	0x258	igual	D4	D4
+CGolfTask::OnPacket	0x259	igual	D4	D4
+CGolfTask::OnPacket	0x25c	igual	D4 D4	D4 D4
+CGolfTask::OnPacket	0x265	igual	D4	D4
+CGolfTask::OnPacket	0x266	igual	D4	D4
+CGolfTask::OnPacket	0x26b	igual	D4	D4
+CGolfTask::OnPacket	0x27e	igual	D4	D4
+CGolfTask::OnPacket	0x27f	igual	D4	D4
+CGolfTask::OnPacket	0x280	igual	D4	D4
+CGolfTask::OnPacket	0x281	igual	D4	D4
+CRealMyRoomTask::OnPacket	0x69	igual	D1 D1 DB(0x26) D8 D8	D1 D1 DB(0x26) D8 D8
+CRealMyRoomTask::OnPacket	0xa5	difere	D1 D1 D1 D4 D1 D1 D4 D8	D1 D1 D1 D4 D8 D1 D1 D4 D8
+CRealMyRoomTask::OnPacket	0xcd	igual	D1 D4 D4 D2	D1 D4 D4 D2
+CRealMyRoomTask::OnPacket	0xe2	igual	D1 D4 DS D8	D1 D4 DS D8
+CRealMyRoomTask::OnPacket	0x11a	difere_bloco	D4 DB(0x10) DB(0x83)	D4 DB(0x10) DB(0x7f)
+CRealMyRoomTask::OnPacket	0x129	difere	D1 D1 D4 D4 D4 DB(0x14)	D1 D4 D4 D4 DB(0x14) D1
+CRealMyRoomTask::OnPacket	0x12c	igual	D4	D4
+CRealMyRoomTask::OnPacket	0x168	igual	DB(0x15c) DB(0x201)	DB(0x15c) DB(0x201)
+CRealMyRoomTask::OnPacket	0x16c	igual	D4 P(0xd5) >? P(0xcd) E4 E2 >?	D4
+CRealMyRoomTask::OnPacket	0x16d	igual	D2 D2 D1 DB(0xb0)	D2 D2 D1 DB(0xb0)
+CRealMyRoomTask::OnPacket	0x16e	igual	D4	D4
+CRealMyRoomTask::OnPacket	0x16f	igual	D4	D4
+CRealMyRoomTask::OnPacket	0x170	igual	D4 D4	D4 D4
+CRealMyRoomTask::OnPacket	0x171	igual	D4	D4
+CRealMyRoomTask::OnPacket	0x172	igual	D8	D8
+CRealMyRoomTask::OnPacket	0x173	igual	D4 D1	D4 D1
+CRealMyRoomTask::OnPacket	0x174	igual	D4	D4
+CRealMyRoomTask::OnPacket	0x175	igual		
+CRealMyRoomTask::OnPacket	0x176	igual	D4	D4
+CRealMyRoomTask::OnPacket	0x177	igual		
+CRealMyRoomTask::OnPacket	0x17e	igual	D4 D4	D4 D4
+CRealMyRoomTask::OnPacket	0x17f	igual	D1	D1
+CRealMyRoomTask::OnPacket	0x18f	igual	D1 D4 D4	D1 D4 D4
+CRealMyRoomTask::OnPacket	0x190	igual	D1 D4 D4	D1 D4 D4
+CRealMyRoomTask::OnPacket	0x19d	igual	D4 D4 D4 D4	D4 D4 D4 D4
+CRealMyRoomTask::OnPacket	0x1b0	igual	D1	D1
+CRealMyRoomTask::OnPacket	0x1b2	igual	D4	D4
+ntAvatarChatTask::OnPacket	0x40	igual	D1 DS DS D4	D1 DS DS D4
+ntAvatarChatTask::OnPacket	0x41	igual	DS	DS
+ntAvatarChatTask::OnPacket	0x48	igual	D1 D2 D1 DB(0x15c) DB(0x201) D1 DB(0x15c) DB(0x201) DB(0x15c) DB(0x201) D4 D4 DB(0x15c)	D1 D2 D1 DB(0x15c) DB(0x201) D1 DB(0x15c) DB(0x201) DB(0x15c) DB(0x201) D4 D4 DB(0x15c)
+ntAvatarChatTask::OnPacket	0x78	igual	D4 D1	D4 D1
+ntAvatarChatTask::OnPacket	0x7c	igual	D4 D2	D4 D2
+ntAvatarChatTask::OnPacket	0x81	igual	DS D4	DS D4
+ntAvatarChatTask::OnPacket	0x84	igual	D1 DS DS P(0xde) ES >?	D1 DS DS
+ntAvatarChatTask::OnPacket	0x8e	igual	D4 D1	D4 D1
+ntAvatarChatTask::OnPacket	0x94	igual	D1	D1
+ntAvatarChatTask::OnPacket	0x9e	igual	D1 D1 D1	D1 D1 D1
+ntAvatarChatTask::OnPacket	0xc4	igual	D4 D1 DB(0x4) DB(0x4) DB(0x4) D4 DB(0x4) DB(0x4) DB(0x4) DS D4	D4 D1 DB(0x4) DB(0x4) DB(0x4) D4 DB(0x4) DB(0x4) DB(0x4) DS D4
+ntAvatarChatTask::OnPacket	0x191	igual		
+ntAvatarChatTask::OnPacket	0x196	igual	D4 DB(0x4)	D4 DB(0x4)
+CShopTask::OnPacket	0x68	difere	D4 D4 D4 D4 D4 D8 D8 DB(0x10) DB(0x10)	D4 D4 D4 D4 D4 D8 D8 DB(0x10) DB(0x10) D4
+CShopTask::OnPacket	0x6a	igual	D4 D8 D8 P(0x29) E4 E4 >MSN DB(0x10) DB(0x10) D4	D4 D8 D8 DB(0x10) DB(0x10) D4
+CShopTask::OnPacket	0xb0	igual		
+CShopTask::OnPacket	0xb6	igual	D4	D4
+CShopTask::OnPacket	0x107	igual	D1	D1
+CShopTask::OnPacket	0x12d	igual	D4 D2 DB(0x1b)	D4 D2 DB(0x1b)
+CShopTask::OnPacket	0x194	igual	D4 D4 D4 DB(0x19)	D4 D4 D4 DB(0x19)
+CTutorialTask::OnPacket	0x11f	igual	D1 D1 D4 DB(0xc)	D1 D1 D4 DB(0xc)
+CTutorialTask::OnPacket	0x120	igual	D1	D1
+CGhostTask::OnPacket	0x13a	igual	DS D1	DS D1
+CFamilyTask::OnPacket	0xaf	igual	D1 D4	D1 D4
+CItemBuff::ProcessPacket	0x0	so_fonte		D1 DB(?)
+CItemBuff::ProcessPacket	0x1	so_fonte		D4
+CItemBuff::ProcessPacket	0x2	so_fonte		D4 D4 DB(?)

@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Pangya.Core/Pangya.Core.csproj" />
+    <Project Path="src/Pangya.Data/Pangya.Data.csproj" />
+    <Project Path="src/Pangya.Domain/Pangya.Domain.csproj" />
+    <Project Path="src/Pangya.Game/Pangya.Game.csproj" />
+    <Project Path="src/Pangya.Messenger/Pangya.Messenger.csproj" />
+    <Project Path="src/Pangya.Login/Pangya.Login.csproj" />
+    <Project Path="src/Pangya.Protocol.JP983/Pangya.Protocol.JP983.csproj" />
+    <Project Path="src/Pangya.Protocol.KR645/Pangya.Protocol.KR645.csproj" />
+    <Project Path="src/Pangya.Ranking/Pangya.Ranking.csproj" />
+    <Project Path="src/Pangya.Server/Pangya.Server.csproj" />
+    <Project Path="src/Pangya.Web/Pangya.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Pangya.Tests/Pangya.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/StructGen/StructGen.csproj" />
+  </Folder>
+</Solution>

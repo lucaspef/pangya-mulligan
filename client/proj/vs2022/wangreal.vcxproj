@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Win32"><Configuration>Release</Configuration><Platform>Win32</Platform></ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32"><Configuration>Debug</Configuration><Platform>Win32</Platform></ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals"><ProjectGuid>{EA817B70-3989-5D5D-A903-9471B05F5388}</ProjectGuid><RootNamespace>wangreal</RootNamespace><Keyword>Win32Proj</Keyword><VCProjectVersion>17.0</VCProjectVersion><WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion></PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType><PlatformToolset>v143</PlatformToolset><CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries><WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType><PlatformToolset>v143</PlatformToolset><CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries><WholeProgramOptimization>false</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="JP983.props" />
+  </ImportGroup>
+  <PropertyGroup><OutDir>$(JP983Root)build\vs2022\$(Configuration)\</OutDir><IntDir>$(JP983Root)build\vs2022\$(Configuration)\wangreal\</IntDir>
+    <TargetName>wangreal</TargetName><LinkIncremental>false</LinkIncremental><GenerateManifest>false</GenerateManifest><EmbedManifest>false</EmbedManifest></PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>false</StringPooling>
+      <CallingConvention>FastCall</CallingConvention>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <OmitFramePointers>false</OmitFramePointers>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_MBCS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(JP983Root)tools\vs\compat_msvc;$(WindowsSdkDir)Include\$(TargetPlatformVersion)\shared;$(VCToolsInstallDir)atlmfc\include;$(JP983Root)include;$(JP983Root)include\engine;$(JP983Root)src\shared;$(JP983DxInclude)</AdditionalIncludeDirectories>
+      <AdditionalOptions></AdditionalOptions>
+      <ForcedIncludeFiles>jp983_msvc_novo.h</ForcedIncludeFiles>
+      <SDLCheck>false</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ProcessorNumber>$(NUMBER_OF_PROCESSORS)</ProcessorNumber>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <BaseAddress>0x10000000</BaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention></DataExecutionPrevention>
+      <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries><AdditionalLibraryDirectories>$(JP983DxLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OptimizeReferences>false</OptimizeReferences>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>d3dx9.lib;d3d9.lib;dxguid.lib;imm32.lib;dinput8.lib;winmm.lib;kernel32.lib;user32.lib;msvcrt.lib;vcruntime.lib;ucrt.lib;msvcprt.lib;oldnames.lib;legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;legacy_stdio_float_rounding.obj;gdi32.lib</AdditionalDependencies>
+      <ModuleDefinitionFile>$(JP983Root)src\wangreal\wangreal.def</ModuleDefinitionFile>
+    </Link>
+    <PostBuildEvent><Command>if not &quot;$(JP983Jogo)&quot;==&quot;&quot; if exist &quot;$(JP983Jogo)&quot; (copy /Y &quot;$(TargetPath)&quot; &quot;$(JP983Jogo)$(TargetFileName)&quot; &amp;&amp; if not &quot;$(JP983UpdateList)&quot;==&quot;&quot; if exist &quot;$(JP983UpdateList)&quot; &quot;$(OutDir)updlist.exe&quot; &quot;$(JP983UpdateList)&quot; &quot;$(JP983Jogo)$(TargetFileName)&quot;)</Command><Message>Copia para JP983Jogo</Message></PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <StringPooling>false</StringPooling>
+      <CallingConvention>FastCall</CallingConvention>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <OmitFramePointers>false</OmitFramePointers>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_MBCS;JP983_VS_DEBUG</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(JP983Root)tools\vs\compat_msvc;$(WindowsSdkDir)Include\$(TargetPlatformVersion)\shared;$(VCToolsInstallDir)atlmfc\include;$(JP983Root)include;$(JP983Root)include\engine;$(JP983Root)src\shared;$(JP983DxInclude)</AdditionalIncludeDirectories>
+      <AdditionalOptions></AdditionalOptions>
+      <ForcedIncludeFiles>jp983_msvc_novo.h</ForcedIncludeFiles>
+      <SDLCheck>false</SDLCheck>
+      <ConformanceMode>false</ConformanceMode>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ProcessorNumber>$(NUMBER_OF_PROCESSORS)</ProcessorNumber>
+      <RemoveUnreferencedCodeData>false</RemoveUnreferencedCodeData>
+      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <BaseAddress>0x10000000</BaseAddress>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention></DataExecutionPrevention>
+      <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries><AdditionalLibraryDirectories>$(JP983DxLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <OptimizeReferences>false</OptimizeReferences>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapFileName>$(OutDir)$(TargetName).map</MapFileName>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TargetMachine>MachineX86</TargetMachine>
+      <AdditionalDependencies>d3dx9.lib;d3d9.lib;dxguid.lib;imm32.lib;dinput8.lib;winmm.lib;kernel32.lib;user32.lib;msvcrt.lib;vcruntime.lib;ucrt.lib;msvcprt.lib;oldnames.lib;legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;legacy_stdio_float_rounding.obj;gdi32.lib</AdditionalDependencies>
+      <ModuleDefinitionFile>$(JP983Root)src\wangreal\wangreal.def</ModuleDefinitionFile>
+    </Link>
+    <PostBuildEvent><Command>if not &quot;$(JP983Jogo)&quot;==&quot;&quot; if exist &quot;$(JP983Jogo)&quot; (copy /Y &quot;$(TargetPath)&quot; &quot;$(JP983Jogo)$(TargetFileName)&quot; &amp;&amp; if not &quot;$(JP983UpdateList)&quot;==&quot;&quot; if exist &quot;$(JP983UpdateList)&quot; &quot;$(OutDir)updlist.exe&quot; &quot;$(JP983UpdateList)&quot; &quot;$(JP983Jogo)$(TargetFileName)&quot;)</Command><Message>Copia para JP983Jogo</Message></PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="$(JP983Root)src\wangreal\shparam.cpp">
+      <ObjectFileName>$(IntDir)src\wangreal\</ObjectFileName>
+      <PreprocessorDefinitions>WANGREAL_DEVICE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wd3d.cpp">
+      <ObjectFileName>$(IntDir)src\wangreal\</ObjectFileName>
+      <PreprocessorDefinitions>WANGREAL_DEVICE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wd3d8.cpp">
+      <ObjectFileName>$(IntDir)src\wangreal\</ObjectFileName>
+      <PreprocessorDefinitions>WANGREAL_DEVICE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wdinput\directinput.cpp">
+      <ObjectFileName>$(IntDir)src\wangreal\wdinput\</ObjectFileName>
+      <PreprocessorDefinitions>WANGREAL_DEVICE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wdinput\dikeyboard.cpp">
+      <ObjectFileName>$(IntDir)src\wangreal\wdinput\</ObjectFileName>
+      <PreprocessorDefinitions>WANGREAL_DEVICE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wdinput\dimouse.cpp">
+      <ObjectFileName>$(IntDir)src\wangreal\wdinput\</ObjectFileName>
+      <PreprocessorDefinitions>WANGREAL_DEVICE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\wime\wime.cpp">
+      <ObjectFileName>$(IntDir)src\wangreal\wime\</ObjectFileName>
+      <PreprocessorDefinitions>WANGREAL_DEVICE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\device.cpp">
+      <ObjectFileName>$(IntDir)src\wangreal\</ObjectFileName>
+      <PreprocessorDefinitions>WANGREAL_DEVICE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\wxshadermtl.cpp">
+      <ObjectFileName>$(IntDir)src\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\wvdshnames.cpp">
+      <ObjectFileName>$(IntDir)src\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\bitmap.cpp">
+      <ObjectFileName>$(IntDir)src\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\wdxtc.cpp">
+      <ObjectFileName>$(IntDir)src\engine\</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\wangreal\langtable.cpp">
+      <ObjectFileName>$(IntDir)src\wangreal\</ObjectFileName>
+      <PreprocessorDefinitions>WANGREAL_DEVICE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ClCompile Include="$(JP983Root)src\engine\wmath.cpp">
+      <ObjectFileName>$(IntDir)src\engine\</ObjectFileName>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="$(JP983Root)src\wangreal\wangreal.rc">
+      <AdditionalOptions>/c949</AdditionalOptions>
+    </ResourceCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
