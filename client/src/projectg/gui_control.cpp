@@ -4094,7 +4094,7 @@ void CAuxMenuUI::Process(float dt)
 
 void CAuxMenuUI::SetUnplayable()
 {
-	if (GOLFDOC()->m_unused176[6])
+	if (GOLFDOC()->m_bDropRequest)
 	{
 		return;
 	}
@@ -4111,7 +4111,7 @@ void CAuxMenuUI::SetUnplayable()
 		(GolfBall().m_groundType != 0 && GolfBall().m_groundType != 1 &&
 			GolfBall().m_groundType != 2))
 	{
-		GOLFDOC()->m_unused176[6] = true;
+		GOLFDOC()->m_bDropRequest = true;
 		if ((GOLFDOC()->m_gameMode & ~0x200) != 0)
 		{
 			MsgObject msg(NULL, M983(0x78), 0x200, 0, 0, 0, 0);

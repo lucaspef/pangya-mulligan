@@ -242,8 +242,9 @@ n = 0 o pacote é `u32 hora, u32 código`.
 (bots contam na posição mas não entram): `u32 uid, u32 posição (1..3), u8 cabelo, u8 camisa, u32[24] peças (typeid),
 u32[5] anéis/aux, u32[24] ids das peças` = **222** bytes por entrada. Ordenado por posição.
 
-**0x25D** (login, opcional): troféus especiais do GP, `u8 temporada (5 atual / 0 outras), u32 n, u32 n, n × 12`
-(`TrofelEspecialInfo` 12 B) [EXE: `D1 D4 D4 DB(0xc)`]. **0x257** (perfil): `u8 temporada, u32 uid, i16 n, n × 12`
+**0x25D** (login): troféus do GP, `u8 temporada, u32 ignorado, u32 n, n × 12` [EXE: `D1 D4 D4 DB(0xc)`]; tipo 4/5 é a lista
+que o My Room mostra, tipo 0 vai para outra que ele não lê (mandamos 5; SPEC-jp983-game.md §Troféus). O **0x25C** só dá o
+tid à janela de prêmio: quem põe o troféu no My Room na hora é o 0x216. **0x257** (perfil): `u8 temporada, u32 uid, i16 n, n × 12`
 [EXE: `D1 D4 D2 DB(0xc)`]. Não são necessários para jogar.
 
 ---

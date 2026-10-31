@@ -90,6 +90,12 @@ public sealed class WebConfig
     public bool AdminEnabled { get; set; }
     /// <summary>IPs que podem abrir o painel (padrão: só a própria máquina).</summary>
     public string[] AdminAllowedIps { get; set; } = ["127.0.0.1", "::1"];
+    /// <summary>Web do jogo ("game-web" no Run): porta que o cliente JP usa para updatelist e Translation.</summary>
+    public int GamePort { get; set; } = 30091;
+    /// <summary>Pasta com patch/updatelist e, opcional, Translation/Read.aspx (gerados pelo usuário, fora do git).</summary>
+    public string GameDir { get; set; } = "data/gameweb";
+    /// <summary>Endereço do web do jogo; vazio usa Network.BindIp.</summary>
+    public string? GameBindIp { get; set; }
 }
 
 public sealed class LoginConfig

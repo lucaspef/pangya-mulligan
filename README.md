@@ -19,6 +19,7 @@ Aqui, o jogo volta a respirar. Cliente e servidor foram reconstruídos em códig
 
 ## 🚀 Como começar
 
+- **Do clone limpo à tela de login:** [`client/COMPILAR.md`, seção "Rodar"](client/COMPILAR.md#rodar-do-clone-limpo-até-a-tela-de-login). O `client/tools/run-local.ps1` faz o caminho inteiro.
 - Cliente: [`client/COMPILAR.md`](client/COMPILAR.md)
 - Servidor: [`docs/server/COMECANDO.md`](docs/server/COMECANDO.md)
 - Contribuir: [`CONTRIBUTING.md`](CONTRIBUTING.md)

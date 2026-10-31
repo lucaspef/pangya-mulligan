@@ -121,6 +121,8 @@ public sealed partial class GameHandler(Connection conn, GameContext ctx) : ICon
     public Func<Domain.Achievements.AchievementCounters.GameEnd, Task>? ClubMastery { get; set; }
     /// <summary>Quantidade nova da bola no cliente (JP: 0x216); null = KR 0xA5.</summary>
     public Action<ItemChange>? BallSpent { get; set; }
+    /// <summary>Troféu especial dado fora de partida (GM): o JP põe na lista do cliente; (typeid, qtd).</summary>
+    public Action<int, int>? TrophyGiven { get; set; }
 
     public ValueTask OnConnectedAsync()
     {

@@ -147,11 +147,18 @@ public static class KrToJp
         var g = k.Slice(91, 74);                                                        // sGuildRoomInfo
         w.Bytes(g[..8]).Bytes(g.Slice(50, 12)).Bytes(g.Slice(62, 12)).U16((ushort)MarkNo(g.Slice(50, 12))).U16((ushort)MarkNo(g.Slice(62, 12)))
             .Fixed(Cp949.Read(g.Slice(8, 21)), 20).Fixed(Cp949.Read(g.Slice(29, 21)), 20);
-        return w.Bytes(k.Slice(165, 8)).U8(0).Bytes(k.Slice(173, 4)).U8(ModeToJp(k[177])).U32(artifact).U32(flags).Zeros(16);
+        return w.Bytes(k.Slice(165, 8)).U8(0).Bytes(k.Slice(173, 4)).U8(RealType(k[177])).U32(artifact).U32(flags).Zeros(16);
     }
 
     /// <summary>Special Shuffle Course: modo 14 no KR, 18 no JP (os outros modos têm o mesmo número).</summary>
     public static byte ModeToJp(byte krMode) => krMode == 14 ? (byte)18 : krMode;
+    /// <summary>
+    /// Tipo real (+0xC4): 0xFF nas salas comuns, senão o cliente recusa todo artefato (983 00479bc0, mana_limited). Do 11 em
+    /// diante (especiais) é o próprio modo; prática, Grand Zodiac e Grand Prix são trocados em JpTranslator.PracticeRoom.
+    /// </summary>
+    public static byte RealType(byte krMode) => krMode < FirstSpecialMode ? NoRealType : ModeToJp(krMode);
+    public const byte NoRealType = 0xFF;
+    const byte FirstSpecialMode = 11;
     public static byte ModeFromJp(byte jpMode) => jpMode == 18 ? (byte)14 : jpMode;
     /// <summary>"Tipo de exibição" do JP (referência: Room.cs): os modos acima de 14 do JP aparecem como torneio (4).</summary>
     public static byte TipoShow(byte krMode) => krMode == 14 ? (byte)4 : krMode;

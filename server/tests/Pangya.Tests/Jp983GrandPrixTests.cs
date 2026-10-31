@@ -127,6 +127,9 @@ public partial class Jp983GameTests
         await g.ExpectAsync(0x258);
         var trophy = await g.ExpectAsync(0x25C);
         Assert.Equal((0u, (uint)data.GrandPrixRankRewards(d.Link)[0].Trophy), (trophy.U32(), trophy.U32()));
+        var won = await g.ExpectAsync(0x216);                                           // sem novo login: entra no My Room
+        won.Skip(4 + 4 + 1);
+        Assert.Equal((uint)data.GrandPrixRankRewards(d.Link)[0].Trophy, won.U32());
         var cleared = await g.ExpectAsync(0x25A);
         Assert.Equal((0u, (uint)d.Link, 1u), (cleared.U32(), cleared.U32(), cleared.U32()));
         int gpTrophy = data.GrandPrixRankRewards(d.Link)[0].Trophy;

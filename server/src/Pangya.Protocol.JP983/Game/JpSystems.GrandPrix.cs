@@ -164,7 +164,11 @@ public sealed partial class JpSystems : IGrandPrixSink
                 if (rr.Trophy != 0 && !QuitRate.NoTrophy(kr.Player))
                 {
                     conn.SendTranslated(new PacketWriter(SGpTrophy).U32(0).U32((uint)rr.Trophy));
-                    if (kr.Context.SpecialTrophies is { } trophies) await trophies.AddAsync(kr.Player.AccountId, rr.Trophy, 1);
+                    if (kr.Context.SpecialTrophies is { } trophies)
+                    {
+                        await trophies.AddAsync(kr.Player.AccountId, rr.Trophy, 1);
+                        TrophyWon(rr.Trophy, 1);
+                    }
                 }
             }
             await GiveAsync(rewards);

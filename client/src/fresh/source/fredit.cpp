@@ -595,6 +595,7 @@ void FrEdit::OnDraw()
 		}
 		m_bScrollUpdate = false;
 	}
+	int spaceWidth = (int)GDI()->GetTextExtendOld983(" "); // 983 (00bf9aab): uma vez, no estilo do edit, nao no de cada linha
 	for (; !(yPos + m_lineHeight + m_topMargin - 1 < m_rect.h)
 			? false
 			: it != m_lineList.end();
@@ -609,9 +610,9 @@ void FrEdit::OnDraw()
 		if (IsEditStyle(ES_READ_ONLY))
 			RemoveColornLastSpace(line->text.c_str(), noColor);
 		int xOffset = 0;
-		int spaceWidth = (int)GDI()->GetTextExtendOld983(" ");
 		int compLeftOffset = 0;
-		if (!line->text.empty() || m_align == rightAlign)
+		int wordOffset = 0;
+		if (!line->text.empty()) // 983 (00bf9acb): linha vazia nao alinha, nem a direita (o 645 alinhava)
 		{
 			int diff = (int)(m_rect.w -
 				m_leftMargin * (m_bSymmetry ? 2.0f : 1.0f) -
@@ -641,7 +642,6 @@ void FrEdit::OnDraw()
 			if (!IsEditStyle(ES_READ_ONLY) &&
 				width > m_rect.w - m_leftMargin * 2)
 				compLeftOffset = (int)(width - (m_rect.w - m_leftMargin * 2));
-			int wordOffset = 0;
 			cTokenV token_color;
 			if (token_color.Init(line->text.c_str(), line->text.length()))
 			{
@@ -664,12 +664,15 @@ void FrEdit::OnDraw()
 							WPoint pos(m_leftMargin + (float)wordOffset +
 									xOffset + m_rect.x,
 								yPos + m_rect.y + m_topMargin);
+							// 983 (00bf9dec): sem composicao a senha sai tambem na passada de medida, 2x no mesmo lugar
+							if (m_editText[ETT_COMP].empty())
+								GDI()->PrintText(pos, 0, password.c_str(), NULL);
 							wordOffset += (int)GDI()->PrintText(pos, 0,
 								password.c_str(), NULL);
 						}
 						else
 						{
-							if (token_color.GetPos() == token_color.GetLen() &&
+							if (IsEditStyle(ES_READ_ONLY) && token_color.GetPos() == token_color.GetLen() &&
 								(text[strlen(text) - 1] == ' ' ||
 									text[strlen(text) - 1] == '\t'))
 								text[strlen(text) - 1] = 0;
@@ -691,6 +694,13 @@ void FrEdit::OnDraw()
 											(float)wordOffset + xOffset +
 											m_rect.x - compLeftOffset,
 										yPos + m_rect.y + m_topMargin);
+									// 983 (00bfa00e): palavra rolada recortada na margem, e o recorte do edit nao volta
+									if (compLeftOffset)
+									{
+										WRect clip(m_leftMargin + m_rect.x, m_topMargin + m_rect.y,
+											m_rect.w - m_leftMargin * 2.0f, m_rect.h - m_topMargin * 2.0f);
+										GDI()->SetClippingArea(&clip);
+									}
 									// 983 (00bfa02e/00bfa08d): somente-leitura desenha pelo FrEmoticon::PrintText (00c097e0),
 									// que força o alfa 0xff na cor do texto; o GDI só no texto editável
 									wordOffset += IsEditStyle(ES_READ_ONLY)
@@ -698,6 +708,8 @@ void FrEdit::OnDraw()
 											  0xffffffff)
 										: (int)GDI()->PrintText(pos, 0, text,
 											  NULL);
+									if (compLeftOffset)
+										GDI()->SetClippingArea(NULL);
 								}
 								if (exist_space)
 								{
@@ -752,21 +764,25 @@ void FrEdit::OnDraw()
 				} while (exist_color);
 			}
 		}
+		// 983 (00bfa2ab): cursor e IME descontam o excesso do texto desenhado, nao o do trecho antes do cursor
+		int caretLeftOffset = 0;
+		if (!IsEditStyle(ES_READ_ONLY) && wordOffset > m_rect.w - m_leftMargin * 2)
+			caretLeftOffset = (int)(wordOffset - (m_rect.w - m_leftMargin * 2));
 		bool caretShown = false;
 		WPoint caretTop;
 		if (m_caret > 0.0f && curLine == m_selectedLine &&
 			m_nFlags.GetFlag(0x10) && m_dwStyle.GetFlag(FWS_KEYEVENT))
 		{
-			float w = !m_password && IsEmoticonStyle()
-				? emo->GetTextWidth(m_editText[ETT_FRONT].c_str())
-				: GDI()->GetTextExtendOld983(m_editText[ETT_FRONT].c_str());
+			// 983 (00bfa339): sempre o GDI (o 645 media emoticon); senha = a linha mascarada, nao o trecho antes do cursor
+			std::string masked;
+			if (m_password)
+				MakePassword(line->text.c_str(), masked);
+			float w = GDI()->GetTextExtendOld983(m_password ? masked.c_str() : m_editText[ETT_FRONT].c_str());
 			if (!m_editText[ETT_COMP].empty())
-				w += !m_password && IsEmoticonStyle()
-					? emo->GetTextWidth(m_editText[ETT_COMP].c_str())
-					: GDI()->GetTextExtendOld983(m_editText[ETT_COMP].c_str());
+				w += GDI()->GetTextExtendOld983(m_editText[ETT_COMP].c_str());
 			WPoint pe, ps;
 			ps.x = pe.x =
-				(w + m_leftMargin + xOffset) + m_rect.x - compLeftOffset;
+				(w + m_leftMargin + xOffset) + m_rect.x - caretLeftOffset;
 			ps.y = m_topMargin + (float)yPos + m_rect.y;
 			pe.y =
 				GDI()->GetFontHeight() + (float)m_topMargin + yPos + m_rect.y;
@@ -783,7 +799,7 @@ void FrEdit::OnDraw()
 				float w = GDI()->GetTextExtendOld983(m_editText[ETT_FRONT].c_str());
 				if (!m_editText[ETT_COMP].empty())
 					w += GDI()->GetTextExtendOld983(m_editText[ETT_COMP].c_str());
-				caretTop.x = (w + m_leftMargin + xOffset) + m_rect.x - compLeftOffset;
+				caretTop.x = (w + m_leftMargin + xOffset) + m_rect.x - caretLeftOffset;
 				caretTop.y = m_rect.y + (float)yPos + m_topMargin;
 			}
 			WndManager()->IME_ShowCandWindow(this, caretTop);
@@ -797,7 +813,7 @@ void FrEdit::OnDraw()
 			sCompStr comp;
 			ime->GetCompositionString(&comp);
 			float x = m_leftMargin + m_rect.x + (float)xOffset +
-				GDI()->GetTextExtendOld983(m_editText[ETT_FRONT].c_str()) - (float)compLeftOffset;
+				GDI()->GetTextExtendOld983(m_editText[ETT_FRONT].c_str()) - (float)caretLeftOffset;
 			float y = m_rect.y + (float)yPos + (float)m_topMargin +
 				(float)GDI()->GetFontHeight() + 2.0f;
 			if (comp.dwCompClsLen && comp.dwCompAttrLen && comp.pCompCls[1])

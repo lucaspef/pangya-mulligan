@@ -25,6 +25,7 @@ public sealed partial class JpSystems : IAchievementSink
     public async Task AfterLoginAsync()
     {
         await LoadGrandPrixAsync();
+        await SendTrophiesAsync();
         await SendInvitesAsync();
         _ = PremiumLoopAsync();                                             // premium: liga/vence (conferido a cada 20 s)
         if (achievements == null) return;

@@ -1772,7 +1772,7 @@ void CGolfRule::OnReportInit(int param)
 
 void CGolfRule::OnReportBtnUp()
 {
-	if (GOLFDOC()->m_unused176[7])
+	if (GOLFDOC()->m_bStopRequest)
 	{
 		FrForm* pForm =
 			CreateForm<FrForm>(g_pFresh->GetManager(), this, "notify", NULL);
@@ -13970,7 +13970,7 @@ bool CGolfRule::CancelDropDlgResult(int result, FrForm*)
 	m_pCancelDropDlg = NULL;
 	if (result == 1)
 	{
-		GOLFDOC()->m_unused176[6] = 0;
+		GOLFDOC()->m_bDropRequest = 0;
 		ChangeGameMode(8);
 	}
 	return true;

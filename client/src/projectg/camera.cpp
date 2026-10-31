@@ -258,7 +258,7 @@ void CCamera::ProcessMousePick(float dt)
 	else
 	{
 		point.y = GolfBall().m_radius + point.y;
-		if (GOLFDOC()->m_unused176[6])
+		if (GOLFDOC()->m_bDropRequest)
 		{
 			WVector ballToPin;
 			ballToPin = GolfBall().m_pos - GetPinPos();
@@ -277,7 +277,7 @@ void CCamera::ProcessMousePick(float dt)
 						pointToPin.Magnitude() >
 							ballToPin.Magnitude() - 25.6f)))
 			{
-				GOLFDOC()->m_unused176[6] = 0;
+				GOLFDOC()->m_bDropRequest = 0;
 				if (OnlinePlay() && GOLFDOC()->m_tutorialMode == 15)
 				{
 					WSendPacket packet((enumClientPacket)0x19);
@@ -359,7 +359,7 @@ void CCamera::ProcessToSpot(float dt)
 			g_audio->PlaySfx("camera_move_to_spot");
 			break;
 		case 0x200:
-			if (GOLFDOC()->m_unused176[6])
+			if (GOLFDOC()->m_bDropRequest)
 				break;
 		case 0x8000:
 			SendMsg(this, "GolfRule", M983(0x78), 0x40000, 0, 0, 0);
@@ -684,7 +684,7 @@ void CCamera::FixedCamera(float dt)
 		return;
 	if ((bool)((Doc()->m_myInfo.info.dwIdentity >> 1) & 1))
 		return;
-	if (GOLFDOC()->m_unused176[6])
+	if (GOLFDOC()->m_bDropRequest)
 		return;
 
 	for (int i = 3; i < 10; ++i)

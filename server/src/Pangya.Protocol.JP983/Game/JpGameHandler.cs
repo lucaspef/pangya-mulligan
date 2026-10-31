@@ -66,6 +66,7 @@ public sealed class JpGameHandler : IConnectionHandler
         translator.GrandPrixLobby = systems.GrandPrixLobby;
         translator.GrandPrixStarted = systems.ConsumeTicketAsync;
         translator.ItemSpent = systems.SpendAsync;
+        Kr.TrophyGiven = systems.TrophyWon;
         systems.WorldTour = ctx.WorldTour;
         systems.Boxes = ctx.Boxes;
         Kr.ClubMastery = async g =>                                                 // fim da partida

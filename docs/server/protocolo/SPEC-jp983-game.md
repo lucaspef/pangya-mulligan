@@ -92,9 +92,34 @@ referência JP da comunidade (`Server/JP/GameServer`, AGPL-3.0: `GameService.req
      mín, u32 nível máx`).
    - **0x96** cookie `u64`; **0x11F** tutorial `u16 3, u32[3]`; **0x131** Treasure Hunter `u8 1, u8 22, 22 × (u8, u32)`;
      cards **0x135**, **0x138** `u32 0, u16 0`, **0x136**, **0x137** `u16 0` (vazios por enquanto).
-   - A referência manda ainda 0x1A9, 0x101, 0x102, 0xF1, 0x144, 0x13F, 0x181, 0x169, 0xB4, 0x158, 0x25D, 0x210…
+   - A referência manda ainda 0x1A9, 0x101, 0x102, 0xF1, 0x144, 0x13F, 0x181, 0x158, 0x210…
      (conquistas, temporadas, correio): ainda não mandados; ver no teste se o cliente precisa de algum.
 4. C->S **0x04** `u8 canal` -> **0x4E** `u8 1` ok / 2 cheio / 3 não existe (`+ i32 código` só no erro 6).
+
+## Troféus (My Room)
+
+Depois do 0x44 de login (ele chama ClearInventory e apaga as listas), em `JpSystems.Trophies.cs`. Tipo: 4/5 = temporada
+atual, 0 = antigas, 1-3 e > 5 o cliente ignora; mandamos 5. Cada 0xB4/0x25D substitui a lista daquele tipo.
+
+| Pacote | Corpo | Origem |
+|---|---|---|
+| 0x169 | u8 tipo, u16[13][3] (78 B): faixa × ouro/prata/bronze, tid 0x2C0i000j | `totals.trophies` |
+| 0xB4 | u8 tipo, u8 0, u8 n, n × (guid, tid, qtd) | `special_trophies` 0x2D/0x2E |
+| 0x25D | u8 tipo, u32 n, u32 n, n × (uid, tid, qtd) | `special_trophies` 0x2F |
+| 0x1FA | u32 tid, u32 guid: +1 especial na sessão | Grand Zodiac, GM |
+| 0x216 | registro kind 2 com tid 0x2F, id != 0: soma a diferença | fim do GP, GM |
+
+O banco não tem id por troféu: o tid faz de guid. O cliente só soma no 0x1FA com o guid igual ao da lista (senão cria outra
+linha) e recusa o 0x216 com uid 0 (0x1e8557). O u16[13][3] também vai no 0x44 e no 0x45 (fim de partida). Normais só vêm de
+torneio com 10+ jogadores (`Trophy.ByPosition`).
+
+## Tipo real da sala (RoomInfo +0xC4 = 196; no 0x49, offset 200 do pacote com o i16 e o id)
+
+0xFF nas salas comuns (modos 0..10), como a referência (`type_extend`). Conferido em todos os usos do cliente: só comparam com
+valores de 11 em diante ou com 0x12/0x14/0x15, e `(tipo < 11 || tipo > 14)` dá igual; só o 00479bc0 muda: sem 0xFF marca todo
+artefato como `mana_limited`. GAME_TYPE_USEMAX é 18 (Special Shuffle), não 0xFF. Os especiais ficam com o tipo: Grand Zodiac
+11/13/14, Special Shuffle 18, prática 19 (`JpTranslator.PracticeRoom`), GP 0x14. Na **lista de salas** (0x47) o byte vem só do
+modo: uma sala de GP/GZ/prática sai 0xFF ali, porque essa troca é feita para a sala atual do jogador.
 
 ## Estado
 - Entrada até o canal: implementada, testada com o cliente falso (`tests/Pangya.Tests/Jp983GameTests.cs`, que monta os

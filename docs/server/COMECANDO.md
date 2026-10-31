@@ -94,6 +94,7 @@ Os servidores sobem em segundo plano. Acompanhe com `tail -f logs/server.out`; q
 | Servidor | Porta |
 |---|---|
 | Web (login HTTP, cadastro, uploads, painel) | 30080 |
+| Web do jogo JP (`game-web`: updatelist e Translation; veja `client/COMPILAR.md`) | 30091 |
 | Login | 30101 |
 | Game | 30201 |
 | Mensageiro | 30303 |

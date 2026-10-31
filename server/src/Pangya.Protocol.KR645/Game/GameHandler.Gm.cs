@@ -192,7 +192,7 @@ public sealed partial class GameHandler
                 foreach (var uid in targets)
                 {
                     if (ctx.Notes != null && !await ctx.Notes.Store.ExistsAsync(uid)) continue;
-                    await trophies.AddAsync(uid, tid, Math.Clamp(qty, 1, 99));
+                    await GiveTrophyAsync(trophies, uid, tid, Math.Clamp(qty, 1, 99));
                     given++;
                 }
                 Audit(action, string.Join(',', targets), $"troféu 0x{tid:X8} x{qty} -> {given}");
@@ -233,11 +233,18 @@ public sealed partial class GameHandler
             }
             long? uid = ctx.Mail != null ? await ctx.Mail.Store.AccountByNickAsync(parts[0]) : null;
             if (uid is not { } target) { GmReply("Jogador nao encontrado."); return; }
-            await trophies.AddAsync(target, tid, Math.Clamp(qty, 1, 99));
+            await GiveTrophyAsync(trophies, target, tid, Math.Clamp(qty, 1, 99));
             Audit("trophy", parts[0], $"0x{tid:X8} x{qty}");
             GmReply($"Trofeu 0x{tid:X8} dado a {parts[0]}.");
         }
         catch (Exception e) { Log.Error($"{conn} !trofeu falhou", e); }
+    }
+
+    /// <summary>Grava o troféu; com o jogador online, o JP mostra na hora (<see cref="TrophyGiven"/>).</summary>
+    async Task GiveTrophyAsync(Domain.Players.ISpecialTrophyStore trophies, long uid, int tid, int qty)
+    {
+        await trophies.AddAsync(uid, tid, qty);
+        (ctx.World.Find(uid) as GameHandler)?.TrophyGiven?.Invoke(tid, qty);
     }
 
     static bool TryTypeId(string s, out int tid) => s.StartsWith("0x", StringComparison.OrdinalIgnoreCase)

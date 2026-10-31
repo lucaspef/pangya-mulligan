@@ -118,7 +118,7 @@ public sealed class JpZodiacOutput(Room room, IZodiacPointsStore? points = null)
         foreach (var me in results)
         {
             if (Handler(me.Player) is not { } h) continue;
-            if (me.Trophy != 0) h.Connection.SendTranslated(new PacketWriter(STrophy).U32((uint)me.Trophy).I32(0));
+            if (me.Trophy != 0) h.Connection.SendTranslated(new PacketWriter(STrophy).U32((uint)me.Trophy).I32(me.Trophy));
             h.Connection.SendTranslated(new PacketWriter(STimeOver));
             var w = new PacketWriter(SStandings, 16 + results.Count * 80).U32(me.Player.Complete ? 1u : 2u).U32((uint)results.Count);
             foreach (var r in results)

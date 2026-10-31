@@ -20,6 +20,10 @@ atual (`JpTranslator*.cs`, `KrToJp.cs`, KR `GameHandler*.cs`, `MassGame.cs`). Id
 
 ## 1. Praticar (tipo 19)
 
+**Status do equipamento**: no Praticar o `gameType` da sala é 4 (massa), então o 0x76 não traz sUserInfo (`u8 tipo, u32 1,
+SYSTEMTIME`) e o cliente monta o status do próprio inventário (`SetEquipCharCaddieInfoFromMyInfo` + `SetPlayerLevel`). O
+servidor só grava e ecoa a troca (0x0C -> 0x4B tipo 3, 0x20 -> 0x6B); não há status dele nesse caminho.
+
 ### 1.1 Criar a sala: C->S 0x08 (KR 0x08)
 
 | off | tipo | campo | prática |

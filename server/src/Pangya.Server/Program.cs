@@ -1,5 +1,5 @@
 // Pangya.Server — roda os servidores num processo.
-//   Pangya.Server [--config arquivo.json] [web] [login] [game] [game-jp] [messenger] [ranking]   (sem nomes: usa "Run";
+//   Pangya.Server [--config arquivo.json] [web] [game-web] [login] [game] [game-jp] [messenger] [ranking]   (sem nomes: usa "Run";
 //                                              messenger e ranking precisam do game no mesmo processo)
 //   Pangya.Server [--config ...] server-add <id> <tipo> <nome> <endereço> <porta> [máx]   servidor fixo na lista
 //   Pangya.Server [--config ...] server-remove <id>
@@ -27,6 +27,12 @@ for (int i = 0; i < args.Length; i++)
 
 return await ServerHost.RunAsync("pangya", configPath, async (cfg, ct) =>
 {
+    // só o web do jogo: não precisa de banco
+    if ((rest.Count > 0 ? rest.ToArray() : cfg.Run) is ["game-web"])
+    {
+        await GameWeb.RunAsync(cfg, ct);
+        return;
+    }
     await using var s = new ServerServices(cfg);
     var applied = await Migrator.RunAsync(s.Db, ct);
     if (applied.Count > 0) Log.Info("migrações aplicadas: " + string.Join(", ", applied));
@@ -228,6 +234,7 @@ return await ServerHost.RunAsync("pangya", configPath, async (cfg, ct) =>
         tasks[i] = names[i] switch
         {
             "web" => WebServer.RunAsync(s, ct, game?.World),
+            "game-web" => GameWeb.RunAsync(cfg, ct),
             "login" => LoginServer.RunAsync(s, ct),
             "game" => game!.RunAsync(ct),
             "game-jp" => gameJp!.RunAsync(ct),
@@ -235,7 +242,7 @@ return await ServerHost.RunAsync("pangya", configPath, async (cfg, ct) =>
             "ranking-jp" => rankingJp!.RunAsync(ct),
             "messenger" => messenger!.RunAsync(ct),
             "ranking" => ranking!.RunAsync(ct),
-            _ => throw new ArgumentException($"servidor desconhecido: {names[i]} (use web, login, game, game-jp, messenger, messenger-jp, ranking, ranking-jp)"),
+            _ => throw new ArgumentException($"servidor desconhecido: {names[i]} (use web, game-web, login, game, game-jp, messenger, messenger-jp, ranking, ranking-jp)"),
         };
     await Task.WhenAll(tasks);
 });

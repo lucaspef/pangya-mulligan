@@ -83,8 +83,7 @@ foi testado com a ordem nova (o 645 é da mesma família de código; se der prob
 
 **Faltas, por importância**
 9. Início de jogo com a taxa (0x77 = KR 0x75) e semente do efeito de mascote (0x16A).
-10. Raspadinha nova (0x1FD), Ticket Report do torneio (0x12A), uso de móvel no My Room (0x17E/0x17F), troféus do jogador e
-    especiais do GP no login (0x169, 0x25D), UCC de todos (0x1B1), ícone de ausente (0x8E),
+10. Raspadinha nova (0x1FD), Ticket Report do torneio (0x12A), uso de móvel no My Room (0x17E/0x17F), UCC de todos (0x1B1), ícone de ausente (0x8E),
     moeda do Special Shuffle (0x198), bloqueio de chat (0xAC).
 11. Só GM: modo galeria/espectador (0x98, 0x99, 0x9D, 0xBC–0xBE).
 
