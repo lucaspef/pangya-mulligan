@@ -456,7 +456,7 @@ public:
 		CStaticPetGrp();
 		~CStaticPetGrp();
 
-		void Build(const std::vector<sModel*> models, int num);
+		void Build(const std::vector<sModel*>& models);
 		void Clear();
 		virtual void Display();
 

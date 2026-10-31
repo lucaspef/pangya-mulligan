@@ -290,7 +290,7 @@ void CItemWindow::ExecuteNow(bool bSound)
 
 void CItemWindow::OnClosed(float delta)
 {
-	if (PLAYER(GOLFDOC()->m_currentPlayer)->item != 0)
+	if (CHelpMsg::IsInstantiated() && PLAYER(GOLFDOC()->m_currentPlayer)->item != 0)
 		CHelpMsg::Instance()->SetItemHelpMsg(
 			PLAYER(GOLFDOC()->m_currentPlayer)->item);
 }

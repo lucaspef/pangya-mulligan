@@ -105,7 +105,7 @@ ON_FRESH_VI("warningmsg", FRCMD_INIT, FrGrandPrixOpenDlg::OnWarningMsgInit)
 ON_FRESH_VI("title", FRCMD_INIT, FrGrandPrixOpenDlg::OnTitleInit)
 ON_FRESH_VI("specialrule", FRCMD_INIT, FrGrandPrixOpenDlg::OnSpecialRuleInit)
 ON_FRESH_VV("ok", FRCMD_LBUTTONUP, FrGrandPrixOpenDlg::OnOk)
-ON_FRESH_VV("cancel", FRCMD_LBUTTONUP, FrGrandPrixOpenDlg::OnCancel)
+ON_FRESH_VV("cancel", FRCMD_LBUTTONUP, FrGrandPrixOpenDlg::OnCancelBtnUp983)
 
 END_FRESH_MSGMAP()
 
@@ -117,7 +117,7 @@ void FrGrandPrixOpenDlg::Init983(const sGPEnter983* pEnter)
 	m_pTimeFont = (WTitleFontEx*)pEnter->m_0c;
 }
 
-void FrGrandPrixOpenDlg::OnCancel()
+void FrGrandPrixOpenDlg::OnCancelBtnUp983()
 {
 	Close(FrCANCEL, true);
 }

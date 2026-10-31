@@ -2451,7 +2451,8 @@ CGolfRule::CGolfRule()
 		m_replayBaseBonusPang = 0;
 	}
 
-	Doc()->m_goStopMode = false; // 983: aqui ha `call 00b3b1e0` (devolve o endereco de um objeto estatico, 00f03b10) e nenhuma gravacao; nao reproduzido
+	Doc()->m_goStopMode = false;
+	CItemSoundTable::Instance(); // 983 0068b0fb: carrega a tabela de sons na carga da partida, nao na 1a tacada
 
 	m_pPredictShotUI = new CSimpleUI("[impact.png");
 	m_pPredictShotUI->Add("Pangya", WRect(0.0f, 18.0f, 128.0f, 18.0f), false);

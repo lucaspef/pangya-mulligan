@@ -2235,12 +2235,13 @@ void FrRankFormEx::OnProc(const float deltaTime)
 		return;
 	s_keyTimer = 0.0f;
 
-	if (g_input->GetDown("PAGE_UP", false))
+	// 983 00788ad0: Get (tecla presa), nao GetDown; segurar rola de 0,05 em 0,05 s
+	if (g_input->Get("PAGE_UP", false))
 		list->GetScrollBar()->ScrollUp(1);
-	else if (g_input->GetDown("PAGE_DOWN", false))
+	else if (g_input->Get("PAGE_DOWN", false))
 		list->GetScrollBar()->ScrollDown(1);
 
-	if (g_input->GetDown("HOME", false))
+	if (g_input->Get("HOME", false))
 	{
 		std::list<FrListItem*>& items = list->m_itemList;
 		int row = 0;

@@ -4947,6 +4947,7 @@ unsigned long CItemManager::GetIndexAbilityItem(unsigned long dwTid)
 	case 0x8000884:
 	case 0x8000886:
 	case 0x8000887:
+	case 0x801880d:
 	case 0x801a80e:
 	case 0x801a817:
 	case 0x801a818:
@@ -5198,6 +5199,7 @@ unsigned long CItemManager::GetIndexAbilityItem(unsigned long dwTid)
 	case 0x831480c:
 	case 0x839c800:
 	case 0x839c80c:
+	case 0x70000085:
 		return 10;
 	case 0x8026800:
 	case 0x8026801:

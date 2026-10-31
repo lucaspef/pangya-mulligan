@@ -2735,7 +2735,7 @@ void WPolySoup::xBuildTnLBuffers()
 	if (m_bBuildTnL)
 	{
 		m_baseModel->pet->xUpdateTnLBuffers(true);
-		m_staticPetGrp.Build(m_model, m_modelNum);
+		m_staticPetGrp.Build(m_model);
 	}
 }
 unsigned char WPolySoup::OverlapCamera(int index)
@@ -3575,7 +3575,7 @@ w_mesh* WPolySoup::smAddSmapPack(SmInFragList* fragList, cFile* file,
 
 	w_mesh* mesh = new w_mesh; // 983: construtor zera
 
-	mesh->texHandle = texHandle;
+	mesh->originalTexHandle = mesh->texHandle = texHandle; // 983 0094368c: +0x84 e +0x38
 	mesh->drawFlag = (texHandle & 0x7ff) | 0x21100000;
 	mesh->diffuse = 0xffffff;
 	mesh->alpha = 1.0f;
@@ -5063,8 +5063,8 @@ void WPolySoup::DigHolecup(WBone* bone, std::vector<sCupVtx>& cup,
 	if (m_holecupTex == 0)
 		m_holecupTex = g_resrcmng->LoadTexture("holecup.dds", 0, 0, 0);
 
-	hole->texHandle = m_holecupTex;
-	hole->drawFlag = (m_holecupTex & 0x7ff) | 0x8000000;
+	hole->originalTexHandle = hole->texHandle = m_holecupTex; // 983 00945184: +0x38 e +0x84
+	hole->drawFlag = (m_holecupTex & 0x7ff) | 0x10000000; // 983 0094519c (0x8000000 era o bit do 645)
 	hole->diffuse = 0xffffff;
 	hole->alpha = 1.0f;
 
@@ -5246,9 +5246,12 @@ WPolySoup::CStaticPetGrp::~CStaticPetGrp()
 	Clear();
 }
 
-void WPolySoup::CStaticPetGrp::Build(const std::vector<sModel*> models, int num)
+// 983 0092c810: vector por referencia, conta = size() (SetAdditionModel sobe m_modelNum sem crescer o vector)
+void WPolySoup::CStaticPetGrp::Build(const std::vector<sModel*>& models)
 {
 	Clear();
+
+	const int num = (int)models.size();
 
 	int groups = 0;
 	int i = 0;

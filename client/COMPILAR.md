@@ -42,14 +42,24 @@ Você precisa da sua própria cópia do cliente JP. O executável compilado não
 2. Mantenha na pasta do jogo as DLLs que vieram com a sua cópia:
    - `mss32.dll`, do Miles Sound System;
    - `ijl15.dll`, do Intel JPEG Library. Use a original da sua cópia. Uma `ijl15.dll` com remendos para o exe original não é necessária.
-3. Instale o [DirectX End-User Runtimes (junho de 2010)](https://www.microsoft.com/download/details.aspx?id=8109), que fornece `d3dx9_43.dll`, e o Visual C++ Redistributable x86.
-4. Suba o servidor (`docs/server/COMECANDO.md`). O exe sai com `JP983_SERVER_CONFIG` ligado e aponta para o servidor local. Para outro endereço, defina antes de abrir o jogo:
+3. Instale o [DirectX End-User Runtimes (junho de 2010)](https://www.microsoft.com/download/details.aspx?id=8109), que fornece `d3dx9_43.dll` de 32 bits em `SysWOW64`, e o Visual C++ Redistributable x86.
+4. Confira o registro. O jogo lê o valor `IntegratedPak` em `HKLM\SOFTWARE\WOW6432Node\Ntreev\Pangya_Jp`, com o nome do pak base, como `ProjectG800j+.pak`. Quem grava esse valor é o instalador do jogo; sem ele, o jogo mostra um erro de arquivo e não abre.
+5. Suba o servidor (`docs/server/COMECANDO.md`). Ele atende login e páginas, mas **não** o web da porta 30091; veja o item seguinte.
+6. Forneça o web do jogo em `http://localhost:30091`. **Este serviço não faz parte do repositório**, porque entrega dados da sua cópia do jogo. Ele precisa responder, com `Content-Length` e sem `chunked`:
+   - `GET /Translation/Read.aspx`: textos do jogo. Sem isso, a carga para em "string load failed.";
+   - `GET /patch/updatelist`: lista cifrada de arquivos. Sem isso, o jogo não abre.
+7. Mantenha o `updatelist` de acordo com o exe. Ele guarda tamanho e CRC de `ProjectG.exe`; se não bater, o jogo acusa o exe como danificado. Cada compilação muda o CRC: use `/p:JP983UpdateList=<arquivo>` ou rode `updlist <updatelist> ProjectG.exe wangreal.dll`.
+8. Abra `ProjectG.exe`. Ele pede administrador (`requireAdministrator` no manifesto).
+
+O exe sai com `JP983_SERVER_CONFIG` ligado e aponta para o servidor local. Para outro endereço, defina as variáveis abaixo **no mesmo prompt elevado** de onde o jogo será aberto. A elevação do UAC descarta as variáveis de um prompt comum, e o jogo volta ao padrão sem aviso.
 
 | Variável | Padrão | Serviço |
 |---|---|---|
 | `JP983_LOGIN` | `127.0.0.1:30101` | Login, `host:porta` |
 | `JP983_WEB` | `http://localhost:30091` | Web do jogo |
 | `JP983_WWW` | `http://localhost:30080` | Páginas e emblemas |
+
+Use `localhost`, não `127.0.0.1`, em `JP983_WEB`.
 
 Opcional: `/p:JP983UpdateList=<arquivo>` faz o pós-build refazer tamanho e CRC dos dois arquivos no `updatelist`. `/p:JP983ServerConfig=false` tira a configuração embutida.
 

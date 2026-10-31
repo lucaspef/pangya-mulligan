@@ -57,7 +57,7 @@ protected:
 	void OnTitleInit(int param); // 0055ad10
 	void OnSpecialRuleInit(int param); // 0055ad80
 	void OnOk(); // 0055b0e0 (pela entrada 0055b1e0)
-	void OnCancel(); // 0055aab0
+	void OnCancelBtnUp983(); // 0055aab0: so pelo msgmap; o 983 nao sobrepoe FrForm::OnCancel (slot 34, ESC)
 
 	void SetTexts983(); // 0055b9d0: regra especial, aviso pelo estado, horários só no canal de evento
 	void CheckTip983(int id, float x, float y, float w, float h, const std::string& text); // 0055bbe0
