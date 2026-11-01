@@ -24,6 +24,12 @@ TestResults/
 *.iff
 *.pet
 *.mpet
+*.gbin
+*.sbin
+*.sgbin
+*.aibin
+*.wep
+*.dds
 *.sav
 *.dmp
 
