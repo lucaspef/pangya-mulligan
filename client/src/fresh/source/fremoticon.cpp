@@ -393,9 +393,10 @@ int FrEmoticon::GetIconIndex(const char* key)
 	return -1;
 }
 
+// 983 00c09040: K2L no nome (e o que o GetIconIndex compara); sem ele o seletor insere a chave crua do xml
 const char* FrEmoticon::GetIconName(int index)
 {
-	return m_Emoticons[index]->Name.c_str();
+	return K2L_Compatibility(m_Emoticons[index]->Name.c_str());
 }
 int FrEmoticon::GetIconNum()
 {

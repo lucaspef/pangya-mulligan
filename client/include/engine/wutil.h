@@ -59,3 +59,6 @@ inline bool Custom_IsLeadByte(unsigned char letter)
 {
 	return (letter >= 0x80 && letter < 0xa0) || (unsigned char)(letter + 0x20) <= 0x1c;
 }
+
+// Texto do jogo é sempre Shift-JIS; o 983 usa CP_ACP, que só acerta em Windows japonês.
+enum { GAME_CODEPAGE = 932 };

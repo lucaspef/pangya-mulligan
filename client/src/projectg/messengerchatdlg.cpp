@@ -187,7 +187,7 @@ void FrMessengerChatDlg::AddChatLine(std::string name, std::string msg)
 		wchar_t text[260];
 		wchar_t line[260];
 		char bytes[260];
-		int length = MultiByteToWideChar(CP_ACP, 0, msg.c_str(),
+		int length = MultiByteToWideChar(GAME_CODEPAGE, 0, msg.c_str(),
 			strlen(msg.c_str()) + 1, text, 260);
 		int index = 0;
 		int extra = 0;
@@ -222,7 +222,7 @@ void FrMessengerChatDlg::AddChatLine(std::string name, std::string msg)
 			}
 			end += extra;
 			wcsncpy(line, text + start, end - start);
-			if (WideCharToMultiByte(CP_ACP, 0, line, -1, bytes, 260, NULL,
+			if (WideCharToMultiByte(GAME_CODEPAGE, 0, line, -1, bytes, 260, NULL,
 					NULL) > 1)
 			{
 				m_pChatView->SetFontColor2(0xffeeeeee);

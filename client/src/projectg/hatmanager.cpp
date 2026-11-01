@@ -416,7 +416,7 @@ bool __fastcall BABO_STR::WStrStr(char* out, unsigned short* str, int strLen,
 	}
 	if (found)
 	{
-		WideCharToMultiByte(0, 0, (LPCWSTR)str, -1, out, 0x400, NULL, NULL);
+		WideCharToMultiByte(GAME_CODEPAGE, 0, (LPCWSTR)str, -1, out, 0x400, NULL, NULL);
 	}
 	return found;
 }
@@ -498,7 +498,7 @@ bool __fastcall BABO_STR::WStrStr_JP(char* out, unsigned short* str, int strLen,
 		found = true;
 		static const char* s_rep = K2L_Compatibility("\xa2\xbe");
 		int wl =
-			MultiByteToWideChar(0, 0, s_rep, (int)strlen(s_rep) + 1, wrep, 32);
+			MultiByteToWideChar(GAME_CODEPAGE, 0, s_rep, (int)strlen(s_rep) + 1, wrep, 32);
 		unsigned short* q = &str[i];
 		for (int cnt = p - q; cnt > 0; cnt--, q++)
 		{
@@ -510,7 +510,7 @@ bool __fastcall BABO_STR::WStrStr_JP(char* out, unsigned short* str, int strLen,
 	}
 	if (found)
 	{
-		WideCharToMultiByte(0, 0, (LPCWSTR)str, -1, out, 0x400, NULL, NULL);
+		WideCharToMultiByte(GAME_CODEPAGE, 0, (LPCWSTR)str, -1, out, 0x400, NULL, NULL);
 	}
 	return found;
 }
@@ -1215,10 +1215,10 @@ bool ChatManager::Filtering(char* str)
 		return false;
 	}
 	bool bFound = false;
-	int wlen = MultiByteToWideChar(0, 0, str, (int)strlen(str) + 1, wstr, 1024);
+	int wlen = MultiByteToWideChar(GAME_CODEPAGE, 0, str, (int)strlen(str) + 1, wstr, 1024);
 	for (int i = 0; i < m_chatFilterNum; i++)
 	{
-		int wordLen = MultiByteToWideChar(0, 0, m_chatFilter[i],
+		int wordLen = MultiByteToWideChar(GAME_CODEPAGE, 0, m_chatFilter[i],
 			(int)strlen(m_chatFilter[i]) + 1, wword, 1024);
 		if (BABO_STR::WStrStr(str, wstr, wlen, wword, wordLen, false))
 		{
@@ -1388,7 +1388,7 @@ const char* ChatManager::FilteringNick(char* nick)
 		return NICK_ERR_SIZE;
 	}
 	int wlen =
-		MultiByteToWideChar(0, 0, nick, (int)strlen(nick) + 1, wnick, 1024);
+		MultiByteToWideChar(GAME_CODEPAGE, 0, nick, (int)strlen(nick) + 1, wnick, 1024);
 	for (int i = 0; i < wlen - 1; i++)
 	{
 		if (wnick[i] == 0x20)
@@ -1416,7 +1416,7 @@ const char* ChatManager::FilteringNick(char* nick)
 	{
 		for (int i = 0; i < m_nickFilterNum; i++)
 		{
-			int wordLen = MultiByteToWideChar(0, 0, m_nickFilter[i].word,
+			int wordLen = MultiByteToWideChar(GAME_CODEPAGE, 0, m_nickFilter[i].word,
 				(int)strlen(m_nickFilter[i].word) + 1, wword, 1024);
 			if (m_nickFilter[i].type == 1)
 			{
@@ -1448,7 +1448,7 @@ int ChatManager::FilteringGuildString(const char* str, int minLen, int maxLen,
 	if (minLen <= (int)strlen(str) && (int)strlen(str) <= maxLen)
 	{
 		int wlen =
-			MultiByteToWideChar(0, 0, str, (int)strlen(str) + 1, wstr, 1024);
+			MultiByteToWideChar(GAME_CODEPAGE, 0, str, (int)strlen(str) + 1, wstr, 1024);
 		for (int i = 0; i < wlen - 1; i++)
 		{
 			if (bOption && wstr[i] == L' ')
@@ -1463,7 +1463,7 @@ int ChatManager::FilteringGuildString(const char* str, int minLen, int maxLen,
 		memset(wword, 0, sizeof(wword));
 		for (int i = 0; i < m_nickFilterNum; i++)
 		{
-			int wordLen = MultiByteToWideChar(0, 0, m_nickFilter[i].word,
+			int wordLen = MultiByteToWideChar(GAME_CODEPAGE, 0, m_nickFilter[i].word,
 				(int)strlen(m_nickFilter[i].word) + 1, wword, 1024);
 			if (m_nickFilter[i].type == 1)
 			{
@@ -1500,7 +1500,7 @@ const char* ChatManager::FilteringEmoticon(unsigned short* str)
 	int iconNum = emoticon->GetIconNum();
 	std::string alias[2];
 	char name[256];
-	WideCharToMultiByte(0, 0, (LPCWSTR)str, -1, name, 256, 0, 0);
+	WideCharToMultiByte(GAME_CODEPAGE, 0, (LPCWSTR)str, -1, name, 256, 0, 0);
 	if (strstr(name, "-"))
 	{
 		return K2L_Compatibility("\xbf\xaa\xc0\xa7 \xc0\xcc\xb8\xf0\xc6\xbc\xc4\xdc\xc0\xba \xb4\xd0\xb3\xd7\xc0\xd3\xbf\xa1 \xbb\xe7\xbf\xeb\xc7\xd2 \xbc\xf6 \xbe\xf8\xbd\xc0\xb4\xcf\xb4\xd9");

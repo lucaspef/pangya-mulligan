@@ -76,7 +76,7 @@ void FrGiftAlarmDlg::MakeSenderMsg(const char* msg, char** const lines)
 		int lead = 0, other = 0;
 		for (int i = length - 1; i >= 20; --i)
 		{
-			if (IsDBCSLeadByte(msg[i]))
+			if (Custom_IsLeadByte(msg[i]))
 				++lead;
 			else
 				++other;

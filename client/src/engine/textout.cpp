@@ -205,7 +205,7 @@ void CTextOut::UpdateText(_TEXTSET* textset)
 			unsigned short code =
 				(unsigned char)value | ((unsigned char)text[i + 1] << 8);
 			wchar_t Uni[16];
-			MultiByteToWideChar(0, 0, (const char*)&code, 2, Uni, 1);
+			MultiByteToWideChar(GAME_CODEPAGE, 0, (const char*)&code, 2, Uni, 1);
 			code = Uni[0];
 			m_pFontSet->Render(code, &w, &h);
 			i += 2;
