@@ -68,7 +68,7 @@ Essas perdas ocorrem ao reimportar um `.gbin`. Compilar um projeto novo não pas
 | `.pet` gerado no `WPuppet` real e física da tacada | Provado no mesmo teste |
 | Cair na água, entrar no buraco e terminar a partida | **Não provado.** O teste parou na primeira tacada |
 
-Até esse teste, continua valendo o aviso do FairwayED: nenhum buraco compilado foi carregado pelo jogo.
+Buraco sem objetos exige o cliente com a correção de `WPolySoup::LoadModels983`. Antes dela, a lista de objetos animados do cenário anterior continuava valendo e o jogo caía ao carregar.
 
 ## Problema conhecido
 
