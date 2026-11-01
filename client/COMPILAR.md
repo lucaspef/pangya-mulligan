@@ -76,6 +76,8 @@ Depois de **cada compilação**, rode o script de novo: o CRC do exe muda, e sem
 
 Parâmetros: `-NoCopy` não mexe no exe da pasta, `-NoServer` usa um servidor que já está no ar e `-NoGame` faz tudo, menos abrir o jogo. Veja também `-Login`, `-Web` e `-Www`, abaixo.
 
+`ProjectG.exe` e `wangreal.dll` precisam ser do mesmo build: copie sempre os dois. Com o `wangreal.dll` original e o exe compilado, o jogo fecha logo na abertura com heap corrompido (`c0000374` no `jp983_stubs.log`).
+
 ### Web do jogo
 
 O nome `game-web` no `Run` do servidor, em `Pangya.Web/GameWeb.cs`, atende em `Web.GamePort` (30091). Sozinho, ele não precisa de banco. Serve dois caminhos, sempre com `Content-Length` e sem `chunked`, lidos de `Web.GameDir` (`server/data/gameweb`) a cada pedido:

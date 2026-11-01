@@ -498,9 +498,11 @@ int WxTnLBuffer::xCreateBuffers(WVideoDev* pVideo, WPuppet* pPet)
 	m_xpPet = pPet;
 	m_xpVideo = pVideo;
 	xUpdateMaxBoneNum983();
-	return xDetermineProperty(pPet->GetRootBone(), 1, pPet->GetLightMode(),
-			   &paletteByGrp) |
-		xAllocBuffers(1);
+	// A ordem importa: xAllocBuffers percorre as listas de xDetermineProperty, e os operandos de "|" nao tem ordem
+	// definida. Num "a() | b()" o compilador pode chamar xAllocBuffers antes e deixar o VB sem handle (issue #1).
+	int iResult = xDetermineProperty(pPet->GetRootBone(), 1,
+		pPet->GetLightMode(), &paletteByGrp);
+	return iResult | xAllocBuffers(1);
 }
 
 // 983 (00bd5c00): sem mapa (vertices ja transformados, nao ha paleta no desenho).
@@ -510,9 +512,9 @@ int WxTnLBuffer::xCreateStaticBuffers(WVideoDev* pVideo, WPuppet** ppPets,
 	m_xiFlag |= 2;
 	m_xpPet = ppPets[0];
 	m_xpVideo = pVideo;
-	return xDetermineProperty(m_xpPet->GetRootBone(), nPets,
-			   ppPets[0]->GetLightMode(), 0) |
-		xAllocBuffers(nPets);
+	int iResult = xDetermineProperty(m_xpPet->GetRootBone(), nPets,
+		ppPets[0]->GetLightMode(), 0); // antes de xAllocBuffers: ver xCreateBuffers
+	return iResult | xAllocBuffers(nPets);
 }
 
 // 983 (00bd59c0): o bit de ossos (0x800) vale para todas as malhas do boneco se alguma tiver ossos (m_xuMaxBoneNum983),
