@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: MIT
+// fairwayed.rc
+1 ICON "fairwayed.ico"
+
+1 VERSIONINFO
+FILEVERSION 1,20,0,0
+PRODUCTVERSION 1,20,0,0
+BEGIN
+	BLOCK "StringFileInfo"
+	BEGIN
+		BLOCK "040904B0"
+		BEGIN
+			VALUE "FileDescription", "FairwayED\0"
+			VALUE "ProductName", "FairwayED\0"
+			VALUE "FileVersion", "1.20\0"
+		END
+	END
+	BLOCK "VarFileInfo"
+	BEGIN
+		VALUE "Translation", 0x0409, 0x04B0
+	END
+END

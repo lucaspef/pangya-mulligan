@@ -1,0 +1,36 @@
+{
+  "course": "blue",
+  "course_dir": "data/round02_blue",
+  "hole": 1,
+  "par": 4,
+  "terrain": {
+    "size": [800, 1400],
+    "cell": 10,
+    "base_height": 0,
+    "tile": 32,
+    "hills": [
+      { "x": -260, "z": 120, "radius": 240, "height": 22 },
+      { "x": 300, "z": -180, "radius": 200, "height": 16 },
+      { "x": 40, "z": -40, "radius": 160, "height": 6 },
+      { "x": 260, "z": 520, "radius": 180, "height": 14 }
+    ]
+  },
+  "tee": [-40, -520],
+  "pins": [[70, 470], [95, 500], [45, 505]],
+  "zones": [
+    { "type": "fairway", "points": [[-40, -420], [-70, -160], [10, 120], [60, 340]], "width": 120 },
+    { "type": "green", "center": [70, 480], "rx": 78, "rz": 62, "rot": 20, "height": 3.0, "falloff": 30, "tilt": [0.004, -0.008] },
+    { "type": "tee", "rect": [-62, -540, -18, -496], "height": 2.5, "falloff": 10 },
+    { "type": "bunker", "center": [-30, 440], "rx": 34, "rz": 20, "rot": -25 },
+    { "type": "bunker", "center": [165, 455], "rx": 22, "rz": 32, "rot": 10 },
+    { "type": "bunker", "center": [-110, 60], "rx": 26, "rz": 18 },
+    { "type": "water", "center": [170, 110], "rx": 96, "rz": 130, "rot": 0, "level": -2.0 }
+  ],
+  "flyover": [[-40, -520], [-70, -160], [10, 120], [60, 340], [70, 470]],
+  "wind": [
+    { "script": "2.0 200 0", "box": [-400, -30, 200, 400, 300, 700] }
+  ],
+  "areas": [
+    { "script": "*extra", "box": [-62, 0, -540, -18, 60, -496] }
+  ]
+}
