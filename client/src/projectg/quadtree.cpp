@@ -2072,7 +2072,7 @@ void CQuadTree::GetObjList(Waabb aabb, unsigned char mask)
 					}
 				}
 			}
-			if (k >= 0)
+			if (k >= 0 && k < PolyObjNum(pSoup))	// m_aniObjs ainda e do cenario anterior; buraco sem objetos deixa a lista vazia
 			{
 				sQuadPuppetHolder* pHolder = PolyObjs(pSoup)[k];
 				if (pHolder != NULL && (pHolder->noCollision & mask) == 0)
@@ -2274,7 +2274,7 @@ void CQuadTree::GetObjList(WVector start, const WVector& ray, unsigned char mask
 					}
 				}
 			}
-			if (k >= 0)
+			if (k >= 0 && k < PolyObjNum(pSoup))	// m_aniObjs ainda e do cenario anterior; buraco sem objetos deixa a lista vazia
 			{
 				sQuadPuppetHolder* pHolder = PolyObjs(pSoup)[k];
 				if (pHolder != NULL && (pHolder->noCollision & mask) == 0)

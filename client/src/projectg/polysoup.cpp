@@ -1417,6 +1417,8 @@ bool WPolySoup::LoadModels983()
 
 		GetPVS().Reserve((short)animatedNum);
 	}
+	else
+		GetPVS().Reserve(0);	// buraco sem objetos: sem isso os m_aniObjs do cenario anterior continuam valendo
 	return true;
 }
 
