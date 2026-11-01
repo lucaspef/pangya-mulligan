@@ -9,12 +9,12 @@
     nova e abre o jogo com JP983_WEB apontando para ele. O jogo pede elevação, que descarta variáveis; por isso elas são
     definidas dentro do processo elevado.
 
-.PARAMETER Pak        O ProjectG999.pak gerado.
+.PARAMETER Pak        O projectg_zz_mulligan.pak gerado.
 .PARAMETER GameDir    Pasta de teste do jogo. Nunca use a sua cópia original.
 .PARAMETER Updlist    updlist.exe do build do cliente.
 
 .EXAMPLE
-    powershell -ExecutionPolicy Bypass -File tools\mapmaker\instalar.ps1 -Pak saida\ProjectG999.pak -GameDir D:\Testes\PangYa -Updlist client\build\vs2022\Release\updlist.exe
+    powershell -ExecutionPolicy Bypass -File tools\mapmaker\instalar.ps1 -Pak saida\projectg_zz_mulligan.pak -GameDir D:\Testes\PangYa -Updlist client\build\vs2022\Release\updlist.exe
 #>
 [CmdletBinding()]
 param(

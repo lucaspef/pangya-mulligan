@@ -19,7 +19,7 @@ Sai em `saida/`:
 | `loose/data/.../map/<curso>_<nn>.sbin` | Sombra vazia. Precisa existir: a do buraco original não serve para esta malha |
 | `loose/data/.../map/mm_*.dds` | Texturas DXT1 geradas pelo script |
 | `loose/data/.../text/<curso>_property.xml` | Superfícies. Com `--base-property`, as do curso original mais as nossas |
-| `ProjectG999.pak` | Os arquivos acima, menos o `.wep` |
+| `projectg_zz_mulligan.pak` | Os arquivos acima, menos o `.wep` |
 | `preview.png` | Vista de cima |
 
 Sem `--base-property` o XML traz só as nossas superfícies. Serve para testar o buraco, mas os outros buracos do curso ficam com superfícies erradas enquanto o pak estiver instalado.
@@ -47,7 +47,7 @@ Uma zona tem `type` (`tee`, `fairway`, `rough`, `green`, `bunker`, `water`) e um
 
 ## Instalar para testar
 
-O buraco novo entra substituindo um buraco que existe: o pak usa o mesmo caminho de arquivo, e o cliente procura primeiro no último pak enganchado. `ProjectG999.pak` fica por último porque a ordem é numérica.
+O buraco novo entra substituindo um buraco que existe: o pak usa o mesmo caminho de arquivo, e o cliente procura primeiro no último pak enganchado. A ordem é a de `strcmp` sobre o nome, com maiúsculas antes de minúsculas: `ProjectG999.pak` perderia para `ProjectG_Jp_Blue.pak`, que guarda os buracos, e para `projectg_mland.pak`. Por isso o nome é `projectg_zz_mulligan.pak`.
 
 Um pak só entra se estiver no updatelist. Com `client/tools/run-local.ps1`, copie o pak para a pasta do jogo e rode o script, que refaz a lista. Se a porta 30091 pertence a outra pasta, use `instalar.ps1`, que sobe um web próprio na 30092.
 

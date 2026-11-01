@@ -5,7 +5,7 @@ uso:  mapmaker.py <hole.json> -o <saida> [--base-property <curso>_property.xml] 
 
 Saída:
   <saida>/loose/...          árvore de dados: .wep, .pet, .gbin, .sbin, .dds, _property.xml
-  <saida>/ProjectG999.pak    o mesmo em pak; instalado na pasta do jogo, vence os paks originais
+  <saida>/projectg_zz_mulligan.pak    o mesmo em pak; instalado na pasta do jogo, vence os paks originais
 
 Só usa a biblioteca padrão do Python. O .gbin sai do compilador do FairwayED (tools/bin/fwcompile.exe).
 Formato da entrada e instalação: tools/mapmaker/README.md.
@@ -26,7 +26,7 @@ FWCOMPILE = os.path.join(HERE, '..', 'bin', 'fwcompile.exe')
 
 # nomes de ponto que o cliente procura (FindTeePinPoints983, PlaceHoleCup), em CP949 no arquivo
 TEE, TEE2, PIN = '시작점', '시작점2', '끝점'
-PAK_NAME = 'ProjectG999.pak'    # número alto: o cliente engancha por último, e o último enganchado é o primeiro procurado
+PAK_NAME = 'projectg_zz_mulligan.pak'    # o cliente engancha por strcmp e procura do último para o primeiro: precisa ordenar depois de projectg_mland.pak
 
 # superfície: textura, cor base, cor de variação, propriedades do _property.xml (o "pet" decide o tipo de chão no cliente)
 SURFACES = {

@@ -64,8 +64,9 @@ Essas perdas ocorrem ao reimportar um `.gbin`. Compilar um projeto novo não pas
 | Winding do terreno | Provado contra `wind_01.pet`: mesma regra em 2.660 de 2.660 triângulos |
 | Pak novo lido por um leitor independente | Provado: 10 de 10 arquivos idênticos |
 | Cliente abre com o pak no updatelist | Provado: passa da verificação de arquivos sem erro |
-| Cliente carrega o buraco e se joga nele | **Não provado.** Falta entrar em Praticar |
-| `.pet` gerado no `WPuppet` real, cup, física, água | **Não provado.** Só o jogo exercita esse código |
+| Cliente carrega o buraco e se joga nele | Provado em Praticar, Blue Lagoon, buraco 1: carrega, mostra 322y e par 4, a tacada voa 293y e o jogo reconhece o Rough |
+| `.pet` gerado no `WPuppet` real e física da tacada | Provado no mesmo teste |
+| Cair na água, entrar no buraco e terminar a partida | **Não provado.** O teste parou na primeira tacada |
 
 Até esse teste, continua valendo o aviso do FairwayED: nenhum buraco compilado foi carregado pelo jogo.
 
