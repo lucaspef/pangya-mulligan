@@ -83,14 +83,14 @@ Logo, **arquivo solto só vale para nome que não existe em nenhum pak**. Para t
 
 ### Trocar um modelo existente
 
-O exemplo troca a bola padrão. O item Comet (`0x14000000`) tem `Data = ball_low`.
+O exemplo troca a bola padrão. O item Comet (`0x14000000`) tem `Data = ball_low`. Para ver o resultado, troque o modelo da bola que a conta tem equipada: o campo `Data` do item em `Ball.iff` dá o nome.
 
 ```bat
 python modelmaker.py build examples\bola_mulligan.gltf -o ball_low.pet --bone Ball_Low --texture bola_mulligan.png
-python modelmaker.py pak ProjectG999.pak data/ball/ball_low.pet=ball_low.pet data/ball/bola_mulligan.png=examples\bola_mulligan.png
+python modelmaker.py pak projectg_zz_modelos.pak data/ball/ball_low.pet=ball_low.pet data/ball/bola_mulligan.png=examples\bola_mulligan.png
 ```
 
-1. Copie `ProjectG999.pak` para a pasta do jogo.
+1. Copie `projectg_zz_modelos.pak` para a pasta do jogo. O nome importa: o cliente monta os paks por `strcmp`, e um pak chamado `ProjectG999.pak` perde para `ProjectG_Jp_*.pak` e `projectg_*.pak`.
 2. Refaça o updatelist com `updlist --generate <pasta do jogo> <updatelist servido>`. **Pak fora do updatelist não é montado**: a lista define o que entra, e os paks são ordenados pelo número do nome.
 3. Abra o jogo normalmente. Nada muda no servidor.
 
@@ -125,8 +125,8 @@ Sem `--pak` não há `pangya.fx`, e modelos com vários ossos saem errados. Isso
 
 1. Com o jogo fechado, instale o pak e refaça o updatelist, como acima.
 2. Suba servidor e web com `client\tools\run-local.ps1 -GameDir <pasta>`.
-3. Entre com uma conta local que tenha a bola Comet equipada.
-4. Abra uma partida ou o Practice. A bola deve aparecer listrada de vermelho, com faixa azul.
+3. Entre com uma conta local que tenha equipada a bola do modelo trocado.
+4. Abra uma partida ou o Practice. A bola deve aparecer listrada de vermelho, com faixa azul, também no medidor de tacada. Foi assim que o teste passou, com `ball_30`, modelo da Premium Sakura.
 5. Para desfazer, apague o pak e refaça o updatelist.
 
 ## Correções sobre o CaddieRig original
