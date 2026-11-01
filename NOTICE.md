@@ -45,6 +45,7 @@ Vale sempre o aviso presente nos próprios arquivos.
 | KMlocal 1.7.2, David Mount, com partes da ANN | `client/src/projectg/jp/km*.cpp`, `client/src/projectg/jp/kc*.cpp`, `client/include/jp/kmlocal/` | GNU GPL v2 ou posterior (no cabeçalho), usada aqui sob a versão 3 |
 | XUnzip 1.3, Lucian Wischik, com zlib 1.1.3 e minizip 0.15 | `client/src/engine/xunzip.cpp` | Conforme os avisos de zlib e minizip no arquivo |
 | FairwayED e wshared, FairwayED and CaddieRig contributors | `tools/fairwayed/`, `tools/fairwayed/wshared/` | MIT (`LICENSE` em cada pasta). Os autores avisam que partes seguem a descompilação do cliente e não concedem direitos sobre o código ou os dados da Ntreev |
+| CaddieRig e wshared, CaddieRig contributors e FairwayED contributors | `tools/caddierig/`, `tools/caddierig/wshared/` | MIT (`LICENSE` em cada pasta), com correções nossas listadas em `tools/README.modelos.md`. Ressalva dos autores: parte segue a decompilação do cliente do jogo e não concede direitos sobre código ou dados da Ntreev |
 
 Dependências externas, instaladas por cada pessoa e não incluídas aqui: Windows SDK e ATL (Microsoft), D3DX 9 (Microsoft), WTL e, em tempo de execução, Miles Sound System e Intel JPEG Library da cópia do jogo. Quem distribuir binários é responsável por verificar a compatibilidade dessas licenças.
 
