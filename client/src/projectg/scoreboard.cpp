@@ -6619,10 +6619,10 @@ void CScore::OnLoad()
 	}
 	if (m_images.size())
 	{
-		sNoticeImage& image =
-			m_images[Doc()->GetMyPartTidList().m_charTid & 0x3ffffff];
-		if (image.name.size() && m_pScore)
-			m_pScore->SetPPL(MakeStr("%s/%s", SCORE_PPL_DIR, image.name.c_str()));
+		// issue #3: o 983 (00798096) indexa sem limite; com score_ppl.ini curto a posicao sai do vetor e name vira lixo
+		const unsigned int charIndex = Doc()->GetMyPartTidList().m_charTid & 0x3ffffff;
+		if (charIndex < m_images.size() && m_images[charIndex].name.size() && m_pScore)
+			m_pScore->SetPPL(MakeStr("%s/%s", SCORE_PPL_DIR, m_images[charIndex].name.c_str()));
 	}
 }
 
