@@ -378,7 +378,7 @@ void ShotTrajectoryForMassGame::OnInit()
 bool ShotTrajectoryForMassGame::BuildTrajectory(const sMassGameShot* shot, std::vector<WVector>* positions,
 	int* pFirstBoundIndex)
 {
-	WVector vel(0.0f, 0.0f, 0.0f);
+	WVector vel;
 	m_pBall->Reset(vel);
 	*m_pBall = GolfBall();
 	CGolfBall& ball = GolfBall();

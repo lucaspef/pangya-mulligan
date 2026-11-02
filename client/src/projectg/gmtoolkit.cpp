@@ -213,7 +213,7 @@ bool CGMToolkit::PhraseSaperator(const char* command)
 				{
 					if (*p != '\0')
 					{
-						if (pos < (int)sizeof(word) - 1) word[pos++] = *p;
+						word[pos++] = *p;
 						inWord = true;
 					}
 
@@ -227,7 +227,7 @@ bool CGMToolkit::PhraseSaperator(const char* command)
 					m_stringBuffer[m_stringCount - remain] = new char[size];
 					memset(m_stringBuffer[m_stringCount - remain], 0, size);
 					strcpy(m_stringBuffer[m_stringCount - remain], word);
-					memset(word, 0, sizeof(word));
+					memset(word, 0, 64);
 					remain--;
 					pos = 0;
 					inWord = false;
@@ -1073,11 +1073,11 @@ eGMToolResult CGMToolkit::CommandShowPrize(eGMToolkitStatus status)
 		if (prize->type == 0)
 		{
 			if (prize->start == prize->end)
-				_snprintf_s(buffer, _TRUNCATE,
+				sprintf(buffer,
 					K2L_Compatibility("[%02d] \xb9\xfc\xc0\xa7 : %d\xb5\xee, \xbe\xc6\xc0\xcc\xc5\xdb : %s, \xbc\xf6\xb7\xae : %d"),
 					number, prize->start, name, prize->count);
 			else
-				_snprintf_s(buffer, _TRUNCATE,
+				sprintf(buffer,
 					K2L_Compatibility("[%02d] \xb9\xfc\xc0\xa7 : %d\xb5\xee \xba\xce\xc5\xcd %d\xb5\xee \xb1\xee\xc1\xf6, \xbe\xc6\xc0\xcc\xc5\xdb : %s, \xbc\xf6\xb7\xae : %d"),
 					number, prize->start, prize->end, name, prize->count);
 		}
@@ -1109,7 +1109,7 @@ eGMToolResult CGMToolkit::CommandShowPrize(eGMToolkitStatus status)
 				break;
 			}
 
-			_snprintf_s(buffer, _TRUNCATE,
+			sprintf(buffer,
 				K2L_Compatibility("[%02d] \xb9\xfc\xc0\xa7 : %s, \xbe\xc6\xc0\xcc\xc5\xdb : %s, \xbc\xf6\xb7\xae : %d"),
 				number, range, name, prize->count);
 		}
@@ -1525,12 +1525,12 @@ eGMToolResult CGMToolkit::CommandGoldenBell(eGMToolkitStatus status)
 		m_pConfirmPacket->Encode4(typeId);
 		m_pConfirmPacket->Encode4(count);
 		char buffer[128] = "\0";
-		_snprintf_s(buffer, _TRUNCATE,
+		sprintf(buffer,
 			K2L_Compatibility("\xc5\xb8\xc0\xd4ID : %d, \xbe\xc6\xc0\xcc\xc5\xdb : %s, \xbc\xf6\xb7\xae : %d"),
 			typeId, name, count);
 		Display(buffer, 0xc6ff85);
 		memset(buffer, 0, sizeof(buffer));
-		_snprintf_s(buffer, _TRUNCATE,
+		sprintf(buffer,
 			K2L_Compatibility("\xc7\xf6\xc0\xe7 \xb7\xeb\xbe\xc8\xc0\xc7 \xc0\xaf\xc0\xfa\xbf\xa1\xb0\xd4 \xc0\xa7\xc0\xc7 \xbe\xc6\xc0\xcc\xc5\xdb\xc0\xbb \xc1\xf6\xb1\xde \xc7\xcf\xbd\xc3\xb0\xda\xbd\xc0\xb4\xcf\xb1\xee?. [/Y, /N]"));
 		Display(buffer, 0xc6ff85);
 		m_confirmWaitTag = GM_CMD_GOLDENBELL;
@@ -1684,20 +1684,20 @@ eGMToolResult CGMToolkit::CommandSetPrize(eGMToolkitStatus status)
 							unsigned int start = prize->start;
 							memset(buffer, 0, sizeof(buffer));
 							if (end == start)
-								_snprintf_s(buffer, _TRUNCATE,
+								sprintf(buffer,
 									K2L_Compatibility("\xb9\xfc   \xc0\xa7 : %d\xb5\xee"), start);
 							else
-								_snprintf_s(buffer, _TRUNCATE,
+								sprintf(buffer,
 									K2L_Compatibility("\xb9\xfc   \xc0\xa7 : %d\xb5\xee \xba\xce\xc5\xcd %d\xb5\xee \xb1\xee\xc1\xf6 "),
 									start, end);
 
 							Display(buffer, 0xc6ff85);
 							memset(buffer, 0, sizeof(buffer));
-							_snprintf_s(buffer, _TRUNCATE, K2L_Compatibility("\xbe\xc6\xc0\xcc\xc5\xdb : %s"),
+							sprintf(buffer, K2L_Compatibility("\xbe\xc6\xc0\xcc\xc5\xdb : %s"),
 								name);
 							Display(buffer, 0xc6ff85);
 							memset(buffer, 0, sizeof(buffer));
-							_snprintf_s(buffer, _TRUNCATE, K2L_Compatibility("\xbc\xf6   \xb7\xae : %d\xb0\xb3"),
+							sprintf(buffer, K2L_Compatibility("\xbc\xf6   \xb7\xae : %d\xb0\xb3"),
 								prize->count);
 						}
 						else
@@ -1731,19 +1731,19 @@ eGMToolResult CGMToolkit::CommandSetPrize(eGMToolkitStatus status)
 							}
 
 							memset(buffer, 0, sizeof(buffer));
-							_snprintf_s(buffer, _TRUNCATE, K2L_Compatibility("\xb9\xfc   \xc0\xa7 : %s"), range);
+							sprintf(buffer, K2L_Compatibility("\xb9\xfc   \xc0\xa7 : %s"), range);
 							Display(buffer, 0xc6ff85);
 							memset(buffer, 0, sizeof(buffer));
-							_snprintf_s(buffer, _TRUNCATE, K2L_Compatibility("\xbe\xc6\xc0\xcc\xc5\xdb : %s"),
+							sprintf(buffer, K2L_Compatibility("\xbe\xc6\xc0\xcc\xc5\xdb : %s"),
 								name);
 							Display(buffer, 0xc6ff85);
 							memset(buffer, 0, sizeof(buffer));
-							_snprintf_s(buffer, _TRUNCATE, K2L_Compatibility("\xbc\xf6   \xb7\xae : %d\xb0\xb3"),
+							sprintf(buffer, K2L_Compatibility("\xbc\xf6   \xb7\xae : %d\xb0\xb3"),
 								prize->count);
 						}
 
 						Display(buffer, 0xc6ff85);
-						_snprintf_s(buffer, _TRUNCATE,
+						sprintf(buffer,
 							K2L_Compatibility("\xbc\xb3\xc1\xa4\xc7\xcf\xbd\xc3\xb0\xda\xbd\xc0\xb4\xcf\xb1\xee?. [/Y, /N]"));
 						Display(buffer, 0xc6ff85);
 						m_pPrize = prize;
@@ -1857,12 +1857,12 @@ eGMToolResult CGMToolkit::CommandGiveItem(eGMToolkitStatus status)
 			m_pConfirmPacket->Encode4(typeId);
 			m_pConfirmPacket->Encode4(count);
 			char buffer[128] = "\0";
-			_snprintf_s(buffer, _TRUNCATE,
+			sprintf(buffer,
 				K2L_Compatibility("\xc5\xb8\xc0\xd4ID : %d, \xbe\xc6\xc0\xcc\xc5\xdb : %s, \xbc\xf6\xb7\xae : %d"),
 				typeId, name, count);
 			Display(buffer, 0xc6ff85);
 			memset(buffer, 0, sizeof(buffer));
-			_snprintf_s(buffer, _TRUNCATE,
+			sprintf(buffer,
 				K2L_Compatibility("'%s' \xb4\xd4\xbf\xa1\xb0\xd4 \xc0\xa7\xc0\xc7 \xbe\xc6\xc0\xcc\xc5\xdb\xc0\xbb \xc1\xf6\xb1\xde \xc7\xcf\xbd\xc3\xb0\xda\xbd\xc0\xb4\xcf\xb1\xee? [/Y, /N]"),
 				m_stringBuffer[1]);
 			Display(buffer, 0xc6ff85);

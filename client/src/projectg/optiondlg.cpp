@@ -142,7 +142,7 @@ FrOptionDlg::sGameTab::sGameTab()
 	m_ppCtrl[14] = (FrWnd**)&m_pCutinDisplayBtn;
 	m_ppCtrl[15] = (FrWnd**)&m_pBindMouseCursorBtn;
 
-	m_bEnableChangeNick = false;
+	m_bEnableChangeNick = true;
 }
 
 void FrOptionDlg::sGameTab::SetSelected(bool bSelected)
@@ -1006,7 +1006,7 @@ void FrOptionDlg::gOnChangeNickBtnUp()
 	if (m_bApply)
 		m_bOK = false;
 
-	strncpy_s(nick, m_gameTab.m_pNickEdit->GetLine(1, false), _TRUNCATE); // charlimit padrao do FrEdit = 255
+	strcpy(nick, m_gameTab.m_pNickEdit->GetLine(1, false));
 
 	const char* err = Doc()->m_chatManager.FilteringNick(nick);
 	if (err)
@@ -2142,13 +2142,15 @@ void FrOptionDlg::SetTab(eTabType type)
 
 	// JP 983: sem troca de apelido
 	if (type == TAB_GAME)
-	{
-		if (m_gameTab.m_pStatic[6])
-			m_gameTab.m_pStatic[6]->SetVisible(false);
-		if (m_gameTab.m_pNickEdit)
-			m_gameTab.m_pNickEdit->SetVisible(false);
-		if (m_gameTab.m_pChangeNickBtn)
-			m_gameTab.m_pChangeNickBtn->SetVisible(false);
+	{ 
+//ativa a edicao do nickname
+			m_gameTab.m_pStatic[6]->SetVisible(true); 
+			m_gameTab.m_pNickEdit->SetVisible(true); 
+			m_gameTab.m_pChangeNickBtn->SetVisible(true);
+			//ativa a barra escolar
+			m_gameTab.m_pStatic[7]->SetVisible(true); 
+			m_gameTab.m_pSchoolEdit->SetVisible(true); 
+			m_gameTab.m_pChangeSchoolBtn->SetVisible(true);
 	}
 }
 

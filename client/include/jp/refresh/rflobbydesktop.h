@@ -28,7 +28,7 @@ public:
 	{
 		m_layer = 0;
 		RFSize size = RFSceneManager::GetManager983()->GetRoot983()->GetSize();
-		SetRect(RFRect(0, 0, size.width, size.height)); // 005f6a50: esquerda, cima, direita, baixo
+		SetRect(RFRect(0, size.width, 0, size.height)); // 005f6a50: esquerda, direita, cima, baixo
 		SetPreDraw(true);
 	}
 	// 005f69e0 (embutida no OnDestroy das derivadas): tira a área de trabalho do RFManager

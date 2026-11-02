@@ -505,8 +505,6 @@ void WMilesSoundSystem::Play(int handle, int loop, bool bReplace)
 		break;
 	case W_SOUND_3D:
 	{
-		if (!m_sound[handle].data3d->data)
-			break;
 		int last = m_sound[handle].data3d->lastHandle;
 		m_sound[handle].data3d->lastHandle = handle;
 		if (!m_bAllowOverlap)
@@ -759,19 +757,14 @@ void WMilesSoundSystem::LoadSample3D(msample3d* sample)
 {
 	int size = AIL_file_size(sample->name);
 	sample->data = AIL_file_read(sample->name, NULL);
-	// 983 00924520 nao testa: som ausente de outro pak ou decodificacao falha daria NULL/lixo ao Miles; fica mudo como o 2D
-	if (!sample->data)
-		return;
-	void* data = NULL;
+	void* data;
 	switch (AIL_file_type(sample->data, size))
 	{
 	case AILFILETYPE_ADPCM_WAV:
 	{
 		AILSOUNDINFO info;
-		// 983 tambem ignora o retorno: ADPCM curto/sem chunk data de outro pak deixava info sem valor (data_ptr lixo) ao decompress; fica mudo
-		memset(&info, 0, sizeof(info));
-		if (AIL_WAV_info(sample->data, &info))
-			AIL_decompress_ADPCM(&info, &data, NULL);
+		AIL_WAV_info(sample->data, &info);
+		AIL_decompress_ADPCM(&info, &data, NULL);
 		AIL_mem_free_lock(sample->data);
 		sample->data = data;
 	}

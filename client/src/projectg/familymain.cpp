@@ -1460,11 +1460,11 @@ void CFamilyMain::OnDownBtnStart()
 
 		IFF_STRUCT::sClubSet* pClubSet =
 			ItemManager()->FindClubSet(Doc()->m_userInfo[i].clubInfo.tid);
-		if (pClubSet != NULL &&
-			((Doc()->m_userInfo[i].stat.Level < pClubSet->c.Level &&
+		if ((pClubSet != NULL &&
+				Doc()->m_userInfo[i].stat.Level < pClubSet->c.Level &&
 				!pClubSet->c.IsUnderLvl) ||
 			(Doc()->m_userInfo[i].stat.Level > pClubSet->c.Level &&
-				pClubSet->c.IsUnderLvl)))
+				pClubSet->c.IsUnderLvl))
 		{
 			Doc()->m_userInfo[i].clubInfo.tid = 0x10000000;
 		}

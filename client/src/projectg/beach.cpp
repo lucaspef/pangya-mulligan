@@ -91,10 +91,10 @@ void CBeach::Render()
 		}
 	}
 
-	// 983 6f8021/6f8068/6f80a5: or 0xc00 + fldcw antes do fistp = trunca (B1666), fator 0.8 em double
-	BYTE g = 255 - (BYTE)(int)(((255 - (g_lightset.ambient2 >> 8)) & 0xff) * (double)0.8f);
-	BYTE r = 255 - (BYTE)(int)(((255 - (g_lightset.ambient2 >> 16)) & 0xff) * (double)0.8f);
-	BYTE b = 255 - (BYTE)(int)(((255 - g_lightset.ambient2) & 0xff) * (double)0.8f);
+	// 983: fistp (arredonda), fator 0.8 em double
+	BYTE g = 255 - (BYTE)(int)floor(((255 - (g_lightset.ambient2 >> 8)) & 0xff) * (double)0.8f + 0.5);
+	BYTE r = 255 - (BYTE)(int)floor(((255 - (g_lightset.ambient2 >> 16)) & 0xff) * (double)0.8f + 0.5);
+	BYTE b = 255 - (BYTE)(int)floor(((255 - g_lightset.ambient2) & 0xff) * (double)0.8f + 0.5);
 	unsigned long color = (r << 16) | (g << 8) | b;
 
 	for (unsigned char j = 0; j < m_layer.size(); j++)
@@ -125,9 +125,8 @@ void CBeach::Render()
 				if (bEdge)
 					vtr[n].diffuse = color | 0xff000000;
 				else
-					// 983 6f82c5: or 0xc00 + fistp qword = trunca (B1667)
 					vtr[n].diffuse = color |
-						((unsigned long)m_layer[(j + start) % m_layer.size()].alpha
+						((int)floor(m_layer[(j + start) % m_layer.size()].alpha + 0.5)
 							<< 24);
 			}
 

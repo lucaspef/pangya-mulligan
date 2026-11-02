@@ -616,7 +616,7 @@ sTS_Macro* ts_Parser::CommandAnalyst(const char* pszLine)
 			}
 
 			if (pszCopy)
-				delete[] pszCopy;
+				delete pszCopy;
 		}
 	}
 
@@ -876,14 +876,11 @@ bool ts_Parser::PushMacro(const char* pszLine, sTS_Macro& macro)
 			switch (GetKeyword(szTypes[i]))
 			{
 			case TSK_GETPOINT:
-			{
-				// mapa sem o ponto: a origem no lugar do endereco 0x24 que o destino lia
-				static float s_noPoint[3] = {0.0f, 0.0f, 0.0f};
-				int point = (int)CSharedDoc::Instance()
-								->m_pGolfDoc->m_pPolySoup->FindPoint(szVals[i]);
-				sprintf(szVals[i], "%d", point ? point + 0x24 : (int)s_noPoint);
+				sprintf(szVals[i], "%d",
+					(int)CSharedDoc::Instance()
+							->m_pGolfDoc->m_pPolySoup->FindPoint(szVals[i]) +
+						0x24);
 				break;
-			}
 			case TSK_CAST_INT:
 				sprintf(szVals[i], "%d", InsertSymbolTable(szVals[i]));
 				break;

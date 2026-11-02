@@ -224,7 +224,7 @@ void CWind::CheckSpecialWind()
 		WSliceStr slice(area->name);
 		char name[64];
 		WVector vec;
-		slice.Get("*fx", "%63s %f %f %f", name, &vec.x, &vec.y, &vec.z);
+		slice.Get("*fx", "%s %f %f %f", name, &vec.x, &vec.y, &vec.z);
 		// 983 006c9ae0: o desvio do buraco (006c7fd0) entra aqui tambem, como no SetIntensity
 		m_specialDirection = SpecialHoleOffset983() + vec.y;
 		m_specialIntensity =
@@ -507,7 +507,7 @@ void CWind::SetIntensity(float intensity)
 			WSliceStr slice(area->name);
 			char name[64];
 			WVector vec;
-			slice.Get("*fx", "%63s %f %f %f", name, &vec.x, &vec.y, &vec.z);
+			slice.Get("*fx", "%s %f %f %f", name, &vec.x, &vec.y, &vec.z);
 			m_specialDirection = SpecialHoleOffset983() + vec.y;
 			m_specialIntensity = intensity;
 			m_fxMat.Reset();
@@ -552,7 +552,7 @@ void CWind::SetDirection(float direction)
 			WSliceStr slice(area->name);
 			char name[64];
 			WVector vec;
-			slice.Get("*fx", "%63s %f %f %f", name, &vec.x, &vec.y, &vec.z);
+			slice.Get("*fx", "%s %f %f %f", name, &vec.x, &vec.y, &vec.z);
 			m_specialDirection = direction;
 			m_fxMat.Reset();
 			m_fxMat.Rotate(vec);
@@ -634,7 +634,7 @@ void CWind::AddWindArea(const Waabb& area, char* desc)
 	switch (*desc)
 	{
 	case '*':
-		sscanf(desc + 1, "%f %f %f %7s", &wind.power, &wind.pitch, &wind.yaw,
+		sscanf(desc + 1, "%f %f %f %s", &wind.power, &wind.pitch, &wind.yaw,
 			difficulty);
 		wind.type = 1;
 		wind.wind = (m_intensity * wind.power) *
@@ -643,7 +643,7 @@ void CWind::AddWindArea(const Waabb& area, char* desc)
 				.za;
 		break;
 	case '+':
-		sscanf(desc + 1, "%f %f %f %7s", &wind.power, &wind.pitch, &wind.yaw,
+		sscanf(desc + 1, "%f %f %f %s", &wind.power, &wind.pitch, &wind.yaw,
 			difficulty);
 		wind.type = 0;
 		wind.wind = (m_intensity + wind.power) *
@@ -652,7 +652,7 @@ void CWind::AddWindArea(const Waabb& area, char* desc)
 				.za;
 		break;
 	case '-':
-		sscanf(desc + 1, "%f %f %f %7s", &wind.power, &wind.pitch, &wind.yaw,
+		sscanf(desc + 1, "%f %f %f %s", &wind.power, &wind.pitch, &wind.yaw,
 			difficulty);
 		wind.type = 2;
 		wind.wind = Max(0.0f, m_intensity - wind.power) *
@@ -661,7 +661,7 @@ void CWind::AddWindArea(const Waabb& area, char* desc)
 				.za;
 		break;
 	case '=':
-		sscanf(desc + 1, "%f %f %f %7s", &wind.power, &wind.pitch, &wind.yaw,
+		sscanf(desc + 1, "%f %f %f %s", &wind.power, &wind.pitch, &wind.yaw,
 			difficulty);
 		wind.type = 3;
 		wind.wind = wind.power *
@@ -670,7 +670,7 @@ void CWind::AddWindArea(const Waabb& area, char* desc)
 				.za;
 		break;
 	default:
-		sscanf(desc, "%f %f %f %7s", &wind.power, &wind.pitch, &wind.yaw,
+		sscanf(desc, "%f %f %f %s", &wind.power, &wind.pitch, &wind.yaw,
 			difficulty);
 		wind.type = 0;
 		wind.wind = (m_intensity + wind.power) *

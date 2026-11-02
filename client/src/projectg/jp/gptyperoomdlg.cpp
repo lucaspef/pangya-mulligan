@@ -971,12 +971,6 @@ void FrMassTypeRoomDlg::OnRoomGuildRankOwnerDraw(int param)
 			K2L_Compatibility("%d \xc1\xb6"), pMatchup->team);
 	}
 
-	if (!Doc()->HasRival(pMatchup->uid[0]) || !Doc()->HasRival(pMatchup->uid[1]))
-	{
-		pGDI->SetSpace(space);
-		return;
-	}
-
 	sRivalData* pRival;
 
 	pRival = &Doc()->m_rivalList[Doc()->GetIndex(pMatchup->uid[0])];
@@ -1405,8 +1399,7 @@ void FrGPTypeRoomDlg::Init983()
 		{
 			lua_system::lua_table_helper tbl = script->GetTable("grandprixroomuiname");
 			int count = lua_tinker::call<int, lua_tinker::table>(tbl.state, "get_array_size", tbl.table);
-			// o .lua real tem 8 nomes e so 5 tem lugar; o resto passava por cima de m_gpUiOffset983
-			for (int i = 1; i <= count && i <= (int)_countof(m_pGPUiBmp983); i++, ppBmp++)
+			for (int i = 1; i <= count; i++, ppBmp++)
 			{
 				const char* name = LUAIDX983(tbl).GetByIndex<const char*>(i);
 				if (name)
@@ -1417,7 +1410,7 @@ void FrGPTypeRoomDlg::Init983()
 			lua_system::lua_table_helper tbl = script->GetTable("grandprixroomuioffset");
 			int count = lua_tinker::call<int, lua_tinker::table>(tbl.state, "get_array_size", tbl.table);
 			sGPPoint983* pOffset = m_gpUiOffset983;
-			for (int i = 1; i <= count && i <= (int)_countof(m_gpUiOffset983); i++, pOffset++)
+			for (int i = 1; i <= count; i++, pOffset++)
 			{
 				float x = LUAIDX983(LUAIDX983(tbl).GetTableByIndex(i)).GetByIndex<float>(1);
 				float y = LUAIDX983(LUAIDX983(tbl).GetTableByIndex(i)).GetByIndex<float>(2);
@@ -1693,7 +1686,7 @@ void FrGPTypeRoomDlg::OnGPDetailInit(int param)
 	if (prizes.size() != 0)
 	{
 		std::string::size_type pos = prizes.find_last_of(",");
-		if (pos != std::string::npos && pos != 0) // nome vazio: erase(npos) lanca
+		if (pos != std::string::npos)
 			prizes.erase(pos - 1);
 		text.append(MakeStr(GetGameString(0x7546), prizes.c_str()));
 	}

@@ -25,8 +25,6 @@ CIntegrityCheck::~CIntegrityCheck()
 bool CIntegrityCheck::Report(const char* filename)
 {
 	m_fp = fopen(filename, "wt");
-	if (!m_fp)
-		return false;
 
 	ReportCharParts();
 
@@ -41,11 +39,11 @@ void CIntegrityCheck::Log(const char* format, ...)
 	va_list args;
 
 	va_start(args, format);
-	_vsnprintf(buf, sizeof(buf) - 1, format, args); // cheio sem -1 tambem nao termina
-	buf[sizeof(buf) - 1] = 0;
+	if (_vsnprintf(buf, sizeof(buf) - 1, format, args) == -1)
+		buf[sizeof(buf) - 1] = 0;
 	va_end(args);
 
-	fputs(buf, m_fp); // A929: caminho com '%' nao e formato
+	fprintf(m_fp, buf);
 }
 
 bool CompareByName(const sResName& a, const sResName& b)

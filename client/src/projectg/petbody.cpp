@@ -13,21 +13,13 @@
 
 extern WMatrix g_camera;
 
-#include "commonutil.h"
+const char* GetStrConst(const char* str, char* out);
 int Ceil(float value, float epsilon);
 int WisZero(const float& value, float epsilon);
 WMatrix RotMat(const WVector& axis, float angle);
 unsigned long ModifyColor(unsigned long color, float intensity);
 
 static WMatrix s_headMat(0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-
-// caddie de outro pak pode nao ter o osso
-static void SetBoneMatrix(WPuppet* pet, const char* name, const WMatrix& mat)
-{
-	WBone* bone = pet->FindBone(name);
-	if (bone)
-		bone->SetMatrix(mat, NULL);
-}
 
 CPetBody::CPetBody(const char* script, bool bOption)
 {
@@ -133,8 +125,10 @@ void CPetBody::UpdateLookBones()
 		{
 			if (!IsBasicMotion())
 				return;
-			SetBoneMatrix(m_pPet, "Bip01 Head", ~s_headMat * GetMatrix(BODY_HEAD1));
-			SetBoneMatrix(m_pPet, "Bip02 Ho02 Head", ~s_headMat * GetMatrix(BODY_HEAD2));
+			m_pPet->FindBone("Bip01 Head")->SetMatrix(
+				~s_headMat * GetMatrix(BODY_HEAD1), NULL);
+			m_pPet->FindBone("Bip02 Ho02 Head")->SetMatrix(
+				~s_headMat * GetMatrix(BODY_HEAD2), NULL);
 		}
 	}
 	if (m_pLookAt && m_bTwin983 && IsBasicMotion())
@@ -145,10 +139,14 @@ void CPetBody::UpdateLookBones()
 		m_lookDest.y = CalcDeltaAngle(to, fwd);
 		if (m_bLookTurn && Abs(m_lookDest.y) > 0.785398185f)
 		{
-			SetBoneMatrix(m_pPet, "Bip01 Pelvis", ~s_headMat * GetMatrix(BODY_PELVIS1));
-			SetBoneMatrix(m_pPet, "Bip02 Ho02 Pelvis", ~s_headMat * GetMatrix(BODY_PELVIS2));
-			SetBoneMatrix(m_pPet, "Bip01 Head", ~s_headMat * GetMatrix(BODY_HEAD1));
-			SetBoneMatrix(m_pPet, "Bip02 Ho02 Head", ~s_headMat * GetMatrix(BODY_HEAD2));
+			m_pPet->FindBone("Bip01 Pelvis")->SetMatrix(
+				~s_headMat * GetMatrix(BODY_PELVIS1), NULL);
+			m_pPet->FindBone("Bip02 Ho02 Pelvis")->SetMatrix(
+				~s_headMat * GetMatrix(BODY_PELVIS2), NULL);
+			m_pPet->FindBone("Bip01 Head")->SetMatrix(
+				~s_headMat * GetMatrix(BODY_HEAD1), NULL);
+			m_pPet->FindBone("Bip02 Ho02 Head")->SetMatrix(
+				~s_headMat * GetMatrix(BODY_HEAD2), NULL);
 		}
 	}
 }
@@ -468,7 +466,7 @@ void CPetBody::ParsePuppetScript(const char* script)
 					break;
 				}
 			} while (c != '\0');
-			if (count <= 1 || count >= (int)sizeof(cmd)) // frame de outro pak: nome longo nao e comando
+			if (count <= 1)
 				break;
 			strncpy(cmd, p, count);
 			cmd[count] = 0;
@@ -660,7 +658,7 @@ void CPetBody::PlaySfx(char* name)
 							   pPlayer->stroke[GOLFDOC()->m_currentHole - 1] -
 						GOLFDOC()->GetHoleData().par;
 				}
-				if (GolfBall().m_groundType == 2 && (diff == -2 || diff == -1) && strlen(name) + 4 < 64)
+				if (GolfBall().m_groundType == 2 && (diff == -2 || diff == -1))
 				{
 					char buf[64];
 					strncpy(buf, name, count);
@@ -764,9 +762,8 @@ WMatrix CPetBody::GetMatrix(eBody body)
 	case BODY_HEAD:
 	{
 		WBone* pHead = m_pPet->FindBoneByTail("Head");
-		if (pHead)
-			mat = RotMat(m_lookAngle.x, 0) * RotMat(m_lookAngle.y, 1) * s_headMat *
-				pHead->m_matrix;
+		mat = RotMat(m_lookAngle.x, 0) * RotMat(m_lookAngle.y, 1) * s_headMat *
+			pHead->m_matrix;
 		break;
 	}
 	case BODY_ROOT:
@@ -780,17 +777,15 @@ WMatrix CPetBody::GetMatrix(eBody body)
 	case BODY_HEAD2:
 	{
 		WBone* pHead = m_pPet->FindBone(body == BODY_HEAD1 ? "Bip01 Head" : "Bip02 Ho02 Head");
-		if (pHead)
-			mat = RotMat(m_lookAngle.x, 0) * RotMat(m_lookAngle.y, 1) * s_headMat *
-				pHead->m_matrix;
+		mat = RotMat(m_lookAngle.x, 0) * RotMat(m_lookAngle.y, 1) * s_headMat *
+			pHead->m_matrix;
 		break;
 	}
 	case BODY_PELVIS1:
 	case BODY_PELVIS2:
 	{
 		WBone* pPelvis = m_pPet->FindBone(body == BODY_PELVIS1 ? "Bip01 Pelvis" : "Bip02 Ho02 Pelvis");
-		if (pPelvis)
-			mat = RotMat(m_pelvisRot983.y, 1) * s_headMat * pPelvis->m_matrix;
+		mat = RotMat(m_pelvisRot983.y, 1) * s_headMat * pPelvis->m_matrix;
 		break;
 	}
 	}
@@ -802,8 +797,6 @@ void CPetBody::LookUpProcess(float dt)
 	if (m_pLookAt)
 	{
 		WBone* pHead = m_pPet->FindBoneByTail("Head");
-		if (!pHead)
-			return;
 		const WVector& head = pHead->m_matrix.pivot;
 		WVector d(m_pLookAt->x - head.x, m_pLookAt->y - head.y,
 			m_pLookAt->z - head.z);
@@ -997,8 +990,6 @@ void CPetBody::LookUp(WVector* target, bool bTurn)
 float CPetBody::GetAnimationLength(const char* name)
 {
 	w_motion_data* pMotion = m_pPet->FindMotionData(name);
-	if (!pMotion)
-		return 0.0f;
 	return pMotion->e - pMotion->s;
 }
 

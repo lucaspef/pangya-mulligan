@@ -1420,7 +1420,7 @@ public:
 
 	static eMapFlag GetMapFlag(eMapType type)
 	{
-		eMapFlag flag = MF_NONE;
+		eMapFlag flag;
 		switch (type)
 		{
 		case MAP_BLUE_LAGOON:

@@ -1,5 +1,5 @@
 #pragma once
-#include "commonutil.h"
+char* __cdecl MakeStr(const char* format, ...);
 
 class C3dFont
 {

@@ -7,11 +7,11 @@
   <PropertyGroup Label="Globals"><ProjectGuid>{EA817B70-3989-5D5D-A903-9471B05F5388}</ProjectGuid><RootNamespace>wangreal</RootNamespace><Keyword>Win32Proj</Keyword><VCProjectVersion>17.0</VCProjectVersion><WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion></PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType><PlatformToolset>v143</PlatformToolset><CharacterSet>MultiByte</CharacterSet>
+    <ConfigurationType>DynamicLibrary</ConfigurationType><PlatformToolset>v145</PlatformToolset><CharacterSet>MultiByte</CharacterSet>
     <UseDebugLibraries>false</UseDebugLibraries><WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType><PlatformToolset>v143</PlatformToolset><CharacterSet>MultiByte</CharacterSet>
+    <ConfigurationType>DynamicLibrary</ConfigurationType><PlatformToolset>v145</PlatformToolset><CharacterSet>MultiByte</CharacterSet>
     <UseDebugLibraries>false</UseDebugLibraries><WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -37,7 +37,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_MBCS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(JP983Root)tools\vs\compat_msvc;$(WindowsSdkDir)Include\$(TargetPlatformVersion)\shared;$(VCToolsInstallDir)atlmfc\include;$(JP983Root)include;$(JP983Root)include\engine;$(JP983Root)src\shared;$(JP983DxInclude)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
+      <AdditionalOptions></AdditionalOptions>
       <ForcedIncludeFiles>jp983_msvc_novo.h</ForcedIncludeFiles>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
@@ -82,7 +82,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_MBCS;JP983_VS_DEBUG</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(JP983Root)tools\vs\compat_msvc;$(WindowsSdkDir)Include\$(TargetPlatformVersion)\shared;$(VCToolsInstallDir)atlmfc\include;$(JP983Root)include;$(JP983Root)include\engine;$(JP983Root)src\shared;$(JP983DxInclude)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
+      <AdditionalOptions></AdditionalOptions>
       <ForcedIncludeFiles>jp983_msvc_novo.h</ForcedIncludeFiles>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>false</ConformanceMode>

@@ -38,7 +38,7 @@ void CTalkBox::SetText(const char* text, float time)
 	m_lines.clear();
 	m_lineNum = 0;
 	std::string str;
-	strncpy_s(m_text, text, _TRUNCATE); // E491: fala do chat, comprimento do pacote
+	strcpy(m_text, text);
 
 	sLine line;
 	line.color = 0;
@@ -58,8 +58,7 @@ void CTalkBox::SetText(const char* text, float time)
 				i++;
 				line.color = 0;
 
-				// 983 006f3860 sem teste: "/c" no fim passava do NUL e lia a fala anterior
-				for (int shift = 20; shift >= 0 && m_text[i]; shift -= 4, i++)
+				for (int shift = 20; shift >= 0; shift -= 4, i++)
 				{
 					char c = m_text[i];
 					if (c >= '0' && c <= '9')
@@ -87,7 +86,7 @@ void CTalkBox::SetText(const char* text, float time)
 		{
 			// 983 (006f37b0): byte lider Shift-JIS (0x80-0x9f, 0xe0-0xfc); o 645 testava & 0x80
 			unsigned char lead = (unsigned char)m_text[i];
-			if (((lead >= 0x80 && lead < 0xa0) || (unsigned char)(lead + 0x20) < 0x1d) && m_text[i + 1])
+			if ((lead >= 0x80 && lead < 0xa0) || (unsigned char)(lead + 0x20) < 0x1d)
 			{
 				bHan = true;
 				line.text[len++] = m_text[i++];

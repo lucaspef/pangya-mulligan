@@ -58,18 +58,11 @@ void CControlledRecord::Read(FILE* fp)
 	int size = 0;
 	fread(&count, sizeof(count), 1, fp);
 	fread(&size, sizeof(size), 1, fp);
-	if (count < 0 || size < 0)
-		return;
-	if ((size_t)size != m_recordSize) // quem le o registro usa m_recordSize: fita de outra versao so pula o bloco
-	{
-		_fseeki64(fp, (__int64)count * size, SEEK_CUR);
-		return;
-	}
 	for (int i = 0; i < count; ++i)
 	{
 		std::unique_ptr<char[]> p(new char[size]);
-		if (fread(p.get(), size, 1, fp) != 1 && size != 0)
-			break; // fita cortada
 		m_records.emplace_back(std::move(p));
 	}
+	for (int i = 0; i < count; ++i)
+		fread(m_records[i].get(), size, 1, fp);
 }

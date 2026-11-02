@@ -53,7 +53,7 @@ void FrUccSetInfoDlg::OnOkBtnUp()
 		return;
 
 	char nick[208];
-	strncpy_s(nick, m_pName->GetLine(1, false), _TRUNCATE); // charlimit padrao do FrEdit = 255
+	strcpy(nick, m_pName->GetLine(1, false));
 
 	const char* err = Doc()->m_chatManager.FilteringNick(nick);
 	if (err)

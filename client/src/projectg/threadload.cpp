@@ -78,7 +78,7 @@ void CThreadLoad::Load(const char* filename, int type)
 
 	if (m_hThread == NULL)
 	{
-		GameMessageBox(NULL, "_beginthreadex() Failed", K2L_Compatibility("\xb0\xe6\xb0\xed"), MB_OK);
+		MessageBoxA(NULL, "_beginthreadex() Failed", K2L_Compatibility("\xb0\xe6\xb0\xed"), MB_OK);
 		return;
 	}
 

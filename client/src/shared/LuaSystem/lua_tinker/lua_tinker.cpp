@@ -318,9 +318,7 @@ char* lua_tinker::read(lua_State *L, int index)
 template<>
 const char* lua_tinker::read(lua_State *L, int index)
 {
-	// nil ou tabela no lugar do texto (.lua de outro pak): "" em vez de NULL, os chamadores montam std::string e strcmp direto
-	const char* text = (const char*)lua_tostring(L, index);
-	return text ? text : "";
+	return (const char*)lua_tostring(L, index);
 }
 
 template<>

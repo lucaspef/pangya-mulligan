@@ -133,6 +133,7 @@ class FrSubEquipBar : public FrForm
 
 	void Open(bool (FrCmdTarget::*pFnResult)(int, FrForm*), eCategory category,
 		const WPoint& pos, eSubType subType);
+	bool SetClientEquipInfo(PANGYA_ITEM_GROUP group, unsigned long guid);
 	IFF_ITEM_COMMON* GetResult() { return m_pResult; }
 	unsigned long GetLastSelectedGuid() { return m_lastSelectedGuid; }
 	eCategory GetCategory() { return m_category; }

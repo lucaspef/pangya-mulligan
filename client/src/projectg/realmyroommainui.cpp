@@ -1319,8 +1319,7 @@ void CRealMyRoomMain::ShowPet(unsigned long tid)
 			sItemInfo* pInfo = GetMyItemInfo(ucc, name, 0);
 			char uccNames[24][9];
 			pExhibition->SetAutoRecoverCamera(false);
-			if (((ucc >> 13) & 0x1f) < 24)
-				strcpy(uccNames[(ucc >> 13) & 0x1f], name);
+			strcpy(uccNames[(ucc >> 13) & 0x1f], name);
 			CPartTidList parts = CSharedDoc::Instance()->GetMyPartTidList();
 			unsigned short flag = 0;
 			unsigned long uid = 0;
@@ -6889,8 +6888,7 @@ void CRealMyRoomMain::OnItemListOwnerDraw(int param)
 			pGI->Print11(pos1, 2, "%d\xb0\xb3", count);
 			IFF_STRUCT::sCard* pCard = ItemManager()->FindCard(
 				*(unsigned long*)((char*)pItem->pData + 4));
-			if (pCard)
-				DrawStatusCard(pGI, pItem, pCard->COM, 0.0f);
+			DrawStatusCard(pGI, pItem, pCard->COM, 0.0f);
 			return;
 		}
 		break;
@@ -7165,7 +7163,7 @@ toggle:
 		}
 		sItemInfo* pInfo = (sItemInfo*)pItem->pData;
 		if ((m_WRect_A18 + pItem->pos).IsInRect(mouse) && pInfo != NULL &&
-			ItemManager()->FindCommonItem(pInfo->tid) && !ItemManager()->FindCommonItem(pInfo->tid)->IsCash)
+			!ItemManager()->FindCommonItem(pInfo->tid)->IsCash)
 		{
 			unsigned int tid = pInfo->tid;
 			unsigned int nEquipped = 0;
@@ -8863,8 +8861,6 @@ bool CRealMyRoomMain::SelectItemList(FrListItem* pItem)
 		if ((pInfo->tid & 0xfc000000) == 0x70000000)
 		{
 			unsigned int index = (pInfo->tid >> 21) & 0x1f;
-			if (index >= 5)
-				break;
 			unsigned long old = m_pAuxParts[index];
 			m_pAuxParts[index] = pInfo->tid;
 			if (m_pExhibition)
@@ -9081,7 +9077,7 @@ bool CRealMyRoomMain::SelectItemList(FrListItem* pItem)
 		char* pGift = (char*)pItem->pData;
 		char date[32] = { 0 };
 		char time[32] = { 0 };
-		sscanf(pGift + 0xda, "%31s %31s", date, time);
+		sscanf(pGift + 0xda, "%s %s", date, time);
 		char* pDot = strchr(time, '.');
 		if (pDot)
 			*pDot = 0;
@@ -9189,8 +9185,7 @@ void CRealMyRoomMain::UnselectItemList(FrListItem* pItem)
 		unsigned long tid = ((sItemInfo*)pItem->pData)->tid;
 		if ((tid & 0xfc000000) == 0x70000000)
 		{
-			if (((tid >> 21) & 0x1f) < 5)
-				m_pAuxParts[(tid >> 21) & 0x1f] = 0;
+			m_pAuxParts[(tid >> 21) & 0x1f] = 0;
 			if (m_pExhibition)
 				m_pExhibition->GetPetFrame()->SetAuxPart(
 					(unsigned char)(((sItemInfo*)pItem->pData)->tid >> 21) &
@@ -9382,7 +9377,7 @@ int CRealMyRoomMain::GetItemNumInMyPocket(unsigned long tid)
 	{
 		IFF_STRUCT::sSetItem* pSet = ItemManager()->FindSetItem(tid);
 		unsigned char i = 0;
-		if (pSet && pSet->nElems > 0)
+		if (pSet->nElems > 0)
 		{
 			do
 			{
@@ -10418,7 +10413,7 @@ void CRealMyRoomMain::HandleMsg(const MsgObject& msg)
 			if (pPoint == NULL)
 				pPoint = (char*)pSoup->FindPoint(
 					MakeStr("\xb4\xeb\xc8\xad\xb9\xe6\xbd\xc3\xc0\xdb"));
-			WVector pos = pPoint ? *(WVector*)(pPoint + 0x24) : WVector(0.0f, 0.0f, 0.0f);
+			WVector pos = *(WVector*)(pPoint + 0x24);
 			pNew->SetPosition(pos);
 			pNew->SetAngle(pSlot->location[2]);
 			return;
@@ -10432,7 +10427,7 @@ void CRealMyRoomMain::HandleMsg(const MsgObject& msg)
 		if (pPoint == NULL)
 			pPoint = (char*)pSoup->FindPoint(
 				MakeStr("\xb4\xeb\xc8\xad\xb9\xe6\xbd\xc3\xc0\xdb"));
-		WVector pos = pPoint ? *(WVector*)(pPoint + 0x24) : WVector(0.0f, 0.0f, 0.0f);
+		WVector pos = *(WVector*)(pPoint + 0x24);
 		pos = GetPVS().GetGroundPoint(pos, false, NULL, false);
 		CRealMyRoom_Avatar* pMine =
 			CRealMyRoom_AvatarManager::Instance()->m_pAvatar;
@@ -10483,8 +10478,6 @@ void CRealMyRoomMain::HandleMsg(const MsgObject& msg)
 			unsigned long guid = *(unsigned long*)((char*)pAvatar + 0xdc);
 			if (IsLocalContent((localContentType_t)10))
 			{
-				if (Doc()->m_briefUserInfoMap.find(guid) == Doc()->m_briefUserInfoMap.end())
-					return;
 				sBriefUserInfo& user =
 					Doc()->m_briefUserInfoMap.find(guid)->second;
 				sBriefUserInfo info = user;
@@ -10617,8 +10610,6 @@ void CRealMyRoomMain::HandleMsg(const MsgObject& msg)
 			}
 			std::map<unsigned long, sBriefUserInfo>& users =
 				Doc()->m_briefUserInfoMap;
-			if (users.find(msg.param1) == users.end())
-				return;
 			sBriefUserInfo info = users.find(msg.param1)->second;
 			if (!info.IsIdentity(4))
 				return;
@@ -10837,7 +10828,7 @@ void CRealMyRoomMain::HandleMsg(const MsgObject& msg)
 				if (m_pExhibition != NULL)
 					pPuppet = *(WPuppet**)((char*)m_pExhibition + 0xa8);
 				CMascot::ChangeMascotMsgInTex((const char*)((char*)pInfo + 0xd),
-					pMascot, pPuppet, MakeStr("myroom%02d", *(unsigned long*)((char*)pMascot + 4) & 0x3ffffff));
+					pMascot, pPuppet, MakeStr("myroom%02d"));
 			}
 		}
 		if (*((char*)pInfo + 0x3e) != 0)

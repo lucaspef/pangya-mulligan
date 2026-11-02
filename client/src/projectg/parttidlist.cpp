@@ -43,7 +43,7 @@ bool CPartTidList::SetTids(unsigned long charTid, unsigned char hairColor,
 {
 	IFF_STRUCT::sChar* pChar = m_pItemManager->FindChar(charTid);
 
-	if (!pChar || pChar->nParts + pChar->nAcsries > 24) // contagens do IFF, listas de 24
+	if (!pChar)
 		return false;
 
 	// 983 008b3050: sem os tids fixos por personagem do 645 (charType 0..9 -> tids[15..22]); uids sempre copiados
@@ -130,8 +130,6 @@ bool CPartTidList::SetTid(unsigned long tid, unsigned long uid,
 	const char* name, unsigned short flag)
 {
 	unsigned char slot = (tid >> 13) & 0x1F;
-	if (slot >= 24) // grupo de 0x20 no tid, lista de 24
-		return false;
 	bool bSkip = false;
 	IFF_STRUCT::sPart* pPart;
 
@@ -176,8 +174,6 @@ bool CPartTidList::SetTid(unsigned long tid, unsigned long uid,
 		if (m_tid[i])
 		{
 			IFF_STRUCT::sPart* pOther = ItemManager()->FindPart(m_tid[i]);
-			if (pOther == NULL)
-				continue;
 			unsigned long overlap = pPart->PosMask & pOther->PosMask;
 
 			if (overlap)
@@ -366,8 +362,6 @@ unsigned long CPartTidList::GetOverlapped(unsigned long tid) const
 
 	IFF_STRUCT::sPart* pPart = m_pItemManager->FindPart(tid);
 	unsigned long ret = 0;
-	if (!pPart)
-		return 0;
 
 	for (int i = 0; i < m_partNum; i++)
 	{
@@ -394,8 +388,6 @@ bool CPartTidList::CanSetPart(unsigned long tid) const
 		return false;
 
 	IFF_STRUCT::sPart* pPart = m_pItemManager->FindPart(tid);
-	if (pPart == NULL)
-		return false;
 
 	for (int i = 0; i < m_defPartNum; i++)
 	{

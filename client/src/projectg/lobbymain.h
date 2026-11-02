@@ -12,7 +12,6 @@
 #include "frcombobox.h"
 
 class FrLoginDlg;
-class NewsReader;
 class FrJukeBoxDlg;
 class FrAvatarMotionDlg;
 struct sRoomListDoc983;
@@ -234,8 +233,6 @@ protected:
 	void OpenPCBangNoticeForm();
 	bool NeedsChangeNick();
 	void OpenNoteForm();
-	void OpenGuildNoticeForm983();
-	bool OnGuildNoticeDlgResult983(int, FrForm*);
 	void OnToppage_Init(int);
 	void OnToppage_Finish();
 	void OnToppage_PangysStudyUp();
@@ -334,7 +331,7 @@ protected:
 	FrArea* m_pToppageNew; // 294 ("new_2", 645 0x274)
 	Bitmap* m_pLoginBmp[3]; // 298
 	Bitmap* m_pNewBmp; // 2a4
-	NewsReader* m_pGuildNoticeObj; // 2a8 (983 00ab7f00: new 0x14 + ctor 00895470)
+	void* m_pGuildNoticeObj; // 2a8
 	FrForm* m_pGuildNoticeDlg; // 2ac
 	bool m_bCaddieWarning; // 2b0
 	sCaddieInfo m_caddieWarning[12]; // 2b1 (memset 0x12c no construtor)

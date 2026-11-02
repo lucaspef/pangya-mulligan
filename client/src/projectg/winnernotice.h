@@ -50,6 +50,8 @@ public:
 
 		void clear_data()
 		{
+			memset(msg, 0, sizeof(msg));
+
 			for (int i = 0; i < 10; i++)
 				msg[i].initdata();
 			str0 = "";

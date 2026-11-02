@@ -1,26 +1,54 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Release|Win32"><Configuration>Release</Configuration><Platform>Win32</Platform></ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|Win32"><Configuration>Debug</Configuration><Platform>Win32</Platform></ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
-  <PropertyGroup Label="Globals"><ProjectGuid>{47843F99-C7E2-5946-AE46-C02B2872E737}</ProjectGuid><RootNamespace>ProjectG</RootNamespace><Keyword>Win32Proj</Keyword><VCProjectVersion>17.0</VCProjectVersion><WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion></PropertyGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{47843F99-C7E2-5946-AE46-C02B2872E737}</ProjectGuid>
+    <RootNamespace>ProjectG</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType><PlatformToolset>v143</PlatformToolset><CharacterSet>MultiByte</CharacterSet>
-    <UseDebugLibraries>false</UseDebugLibraries><WholeProgramOptimization>false</WholeProgramOptimization>
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType><PlatformToolset>v143</PlatformToolset><CharacterSet>MultiByte</CharacterSet>
-    <UseDebugLibraries>false</UseDebugLibraries><WholeProgramOptimization>false</WholeProgramOptimization>
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="PropertySheets">
     <Import Project="JP983.props" />
   </ImportGroup>
-  <PropertyGroup><OutDir>$(JP983Root)build\vs2022\$(Configuration)\</OutDir><IntDir>$(JP983Root)build\vs2022\$(Configuration)\ProjectG\</IntDir>
-    <TargetName>ProjectG</TargetName><LinkIncremental>false</LinkIncremental><GenerateManifest>false</GenerateManifest><EmbedManifest>false</EmbedManifest></PropertyGroup>
-  <PropertyGroup><LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand><LocalDebuggerWorkingDirectory>$(JP983Jogo)</LocalDebuggerWorkingDirectory><DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor></PropertyGroup>
+  <PropertyGroup>
+    <OutDir>$(JP983Root)build\vs2022\$(Configuration)\</OutDir>
+    <IntDir>$(JP983Root)build\vs2022\$(Configuration)\ProjectG\</IntDir>
+    <TargetName>ProjectG</TargetName>
+    <LinkIncremental>false</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+    <EmbedManifest>false</EmbedManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand>
+    <LocalDebuggerWorkingDirectory>$(JP983Jogo)</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -38,7 +66,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>$(JP983Defs);NDEBUG;WIN32;_WINDOWS;_MBCS;REBANG_SEMANTIC_ONLY;JP983_POSTEFFECT;JP983_SERVER_CONFIG</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(JP983Root)tools\vs\compat_msvc;$(WindowsSdkDir)Include\$(TargetPlatformVersion)\shared;$(VCToolsInstallDir)atlmfc\include;$(JP983Root)include;$(JP983Root)include\engine;$(JP983Root)src\engine\lib\freetype-2.2.1\include;$(JP983Root)src\fresh\include;$(JP983Root)src\projectg;$(JP983Root)src\shared\thirties;$(JP983Wtl);$(JP983DxInclude)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/Zm200 /source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
+      <AdditionalOptions>/Zm200</AdditionalOptions>
       <ForcedIncludeFiles>jp983_msvc_novo.h</ForcedIncludeFiles>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
@@ -54,7 +82,8 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>false</DataExecutionPrevention>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries><AdditionalLibraryDirectories>$(JP983DxLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <AdditionalLibraryDirectories>$(JP983DxLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <GenerateMapFile>true</GenerateMapFile>
@@ -65,7 +94,10 @@
       <AdditionalOptions>/ignore:4099</AdditionalOptions>
       <AdditionalDependencies>$(IntDir)stubs\stubs983a.obj;msvcrt.lib;vcruntime.lib;ucrt.lib;msvcprt.lib;oldnames.lib;legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;legacy_stdio_float_rounding.obj;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;shlwapi.lib;comctl32.lib;vfw32.lib;ws2_32.lib;wininet.lib;dbghelp.lib;iphlpapi.lib;msimg32.lib;imm32.lib;winmm.lib;atls.lib;$(IntDir)implib\mss32.lib;$(OutDir)terc.lib;$(IntDir)implib\ijl15.lib</AdditionalDependencies>
     </Link>
-    <PostBuildEvent><Command>if not &quot;$(JP983Jogo)&quot;==&quot;&quot; if exist &quot;$(JP983Jogo)&quot; (copy /Y &quot;$(TargetPath)&quot; &quot;$(JP983Jogo)$(TargetFileName)&quot; &amp;&amp; if not &quot;$(JP983UpdateList)&quot;==&quot;&quot; if exist &quot;$(JP983UpdateList)&quot; &quot;$(OutDir)updlist.exe&quot; &quot;$(JP983UpdateList)&quot; &quot;$(JP983Jogo)$(TargetFileName)&quot;)</Command><Message>Copia para JP983Jogo</Message></PostBuildEvent>
+    <PostBuildEvent>
+      <Command>if not "$(JP983Jogo)"=="" if exist "$(JP983Jogo)" (copy /Y "$(TargetPath)" "$(JP983Jogo)$(TargetFileName)" &amp;&amp; if not "$(JP983UpdateList)"=="" if exist "$(JP983UpdateList)" "$(OutDir)updlist.exe" "$(JP983UpdateList)" "$(JP983Jogo)$(TargetFileName)")</Command>
+      <Message>Copia para JP983Jogo</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -84,7 +116,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>$(JP983Defs);NDEBUG;WIN32;_WINDOWS;_MBCS;REBANG_SEMANTIC_ONLY;JP983_POSTEFFECT;JP983_SERVER_CONFIG;JP983_VS_DEBUG</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(JP983Root)tools\vs\compat_msvc;$(WindowsSdkDir)Include\$(TargetPlatformVersion)\shared;$(VCToolsInstallDir)atlmfc\include;$(JP983Root)include;$(JP983Root)include\engine;$(JP983Root)src\engine\lib\freetype-2.2.1\include;$(JP983Root)src\fresh\include;$(JP983Root)src\projectg;$(JP983Root)src\shared\thirties;$(JP983Wtl);$(JP983DxInclude)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/Zm200 /source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
+      <AdditionalOptions>/Zm200</AdditionalOptions>
       <ForcedIncludeFiles>jp983_msvc_novo.h</ForcedIncludeFiles>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
@@ -100,7 +132,8 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>false</DataExecutionPrevention>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries><AdditionalLibraryDirectories>$(JP983DxLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <AdditionalLibraryDirectories>$(JP983DxLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <GenerateMapFile>true</GenerateMapFile>
@@ -111,7 +144,10 @@
       <AdditionalOptions>/ignore:4099</AdditionalOptions>
       <AdditionalDependencies>$(IntDir)stubs\stubs983a.obj;msvcrt.lib;vcruntime.lib;ucrt.lib;msvcprt.lib;oldnames.lib;legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;legacy_stdio_float_rounding.obj;kernel32.lib;user32.lib;gdi32.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;shlwapi.lib;comctl32.lib;vfw32.lib;ws2_32.lib;wininet.lib;dbghelp.lib;iphlpapi.lib;msimg32.lib;imm32.lib;winmm.lib;atls.lib;$(IntDir)implib\mss32.lib;$(OutDir)terc.lib;$(IntDir)implib\ijl15.lib</AdditionalDependencies>
     </Link>
-    <PostBuildEvent><Command>if not &quot;$(JP983Jogo)&quot;==&quot;&quot; if exist &quot;$(JP983Jogo)&quot; (copy /Y &quot;$(TargetPath)&quot; &quot;$(JP983Jogo)$(TargetFileName)&quot; &amp;&amp; if not &quot;$(JP983UpdateList)&quot;==&quot;&quot; if exist &quot;$(JP983UpdateList)&quot; &quot;$(OutDir)updlist.exe&quot; &quot;$(JP983UpdateList)&quot; &quot;$(JP983Jogo)$(TargetFileName)&quot;)</Command><Message>Copia para JP983Jogo</Message></PostBuildEvent>
+    <PostBuildEvent>
+      <Command>if not "$(JP983Jogo)"=="" if exist "$(JP983Jogo)" (copy /Y "$(TargetPath)" "$(JP983Jogo)$(TargetFileName)" &amp;&amp; if not "$(JP983UpdateList)"=="" if exist "$(JP983UpdateList)" "$(OutDir)updlist.exe" "$(JP983UpdateList)" "$(JP983Jogo)$(TargetFileName)")</Command>
+      <Message>Copia para JP983Jogo</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="$(JP983Root)src\fresh\source\stdafx.cpp">
@@ -5511,19 +5547,33 @@
       <ObjectFileName>$(IntDir)stubs\</ObjectFileName>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(JP983Root)tools\vs\compat_msvc;$(WindowsSdkDir)Include\$(TargetPlatformVersion)\shared;$(VCToolsInstallDir)atlmfc\include</AdditionalIncludeDirectories>
-      <DebugInformationFormat></DebugInformationFormat>
-      <InlineFunctionExpansion></InlineFunctionExpansion>
-      <BufferSecurityCheck></BufferSecurityCheck>
-      <OmitFramePointers></OmitFramePointers>
-      <StringPooling></StringPooling>
-      <AdditionalOptions>/source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <InlineFunctionExpansion>
+      </InlineFunctionExpansion>
+      <BufferSecurityCheck>
+      </BufferSecurityCheck>
+      <OmitFramePointers>
+      </OmitFramePointers>
+      <StringPooling>
+      </StringPooling>
+      <AdditionalOptions>
+      </AdditionalOptions>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="$(JP983Root)proj\vs2022\gerado\stubs983a.asm"><Command>ml /nologo /c /coff /Fo&quot;$(IntDir)stubs\stubs983a.obj&quot; &quot;%(FullPath)&quot;</Command><Outputs>$(IntDir)stubs\stubs983a.obj</Outputs><LinkObjects>false</LinkObjects><Message>ml stubs983a.asm</Message></CustomBuild>
+    <CustomBuild Include="$(JP983Root)proj\vs2022\gerado\stubs983a.asm">
+      <Command>ml /nologo /c /coff /Fo"$(IntDir)stubs\stubs983a.obj" "%(FullPath)"</Command>
+      <Outputs>$(IntDir)stubs\stubs983a.obj</Outputs>
+      <LinkObjects>false</LinkObjects>
+      <Message>ml stubs983a.asm</Message>
+    </CustomBuild>
     <ResourceCompile Include="$(JP983Root)proj\vs2022\gerado\projectg_f4.rc">
       <AdditionalIncludeDirectories>$(JP983Root)src\projectg;$(JP983Root)proj\vs2022\gerado</AdditionalIncludeDirectories>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\shared\packet_enum.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Target Name="JP983ImportLibs" BeforeTargets="ClCompile" Inputs="$(MSBuildProjectDirectory)\implib\mss32_stub.def;$(MSBuildProjectDirectory)\implib\ijl15_stub.def" Outputs="$(IntDir)implib\mss32.lib;$(IntDir)implib\ijl15.lib">

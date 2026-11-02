@@ -208,7 +208,7 @@ void CTextOut::UpdateText(_TEXTSET* textset)
 			MultiByteToWideChar(GAME_CODEPAGE, 0, (const char*)&code, 2, Uni, 1);
 			code = Uni[0];
 			m_pFontSet->Render(code, &w, &h);
-			i += text[i + 1] ? 2 : 1;
+			i += 2;
 		}
 		else
 		{

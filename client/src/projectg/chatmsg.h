@@ -108,8 +108,7 @@ public:
 	void SetAlwaysActive();
 	bool HasBeenPrinted();
 	void EnableCaretMove(bool enable) { m_bCaretMove = enable; }
-	enum { MAX_TEXT_BYTES = 1020 }; // m_szChat[1024] menos caractere de 2 bytes, composicao e zero
-	void SetBufLen(int len) { m_nMaxBytes = len < MAX_TEXT_BYTES ? len : MAX_TEXT_BYTES; }
+	void SetBufLen(int len) { m_nMaxBytes = len; }
 	void SetBufWidth(float width) { m_fMaxWidth = width; }
 	void Toggle(bool
 			toggle); // golfrule.cpp: inline in golfrule_pch_inl.h (chatmsg.cpp has it out of line)

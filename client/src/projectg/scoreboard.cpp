@@ -267,7 +267,7 @@ void FrRankForm::OnProc(const float deltaTime)
 				Doc()->m_teamResult[0].score, Doc()->m_teamResult[0].pang,
 				Doc()->m_teamResult[1].score, Doc()->m_teamResult[1].pang));
 		}
-		else if (m_tieUid != 0xffffffff && Doc()->HasRival(m_tieUid))
+		else if (m_tieUid != 0xffffffff)
 		{
 			if (Doc()->m_golfGame.gameType == 10)
 			{
@@ -439,7 +439,7 @@ void FrRankForm::OnRankOwnerDraw(int param)
 	WPoint rankPos(x + 21.0f, y + 3.0f);
 	if (gameType == 5)
 	{
-		const Bitmap* pTeam = m_pTeamRankBmp[pRival->team & 1];
+		const Bitmap* pTeam = m_pTeamRankBmp[pRival->team];
 		if (pTeam)
 			pGDI->DrawTexture(pTeam,
 				WRect(x + 12.0f, y + 2.0f, (float)pTeam->Width(), (float)pTeam->Height()),
@@ -855,8 +855,8 @@ void FrRankForm::SortRank()
 				else if (it->rank == m_memberCount)
 					m_lastUid = it->oid;
 			}
-			Doc()->m_teamResult[it->team & 1].score += it->rank;
-			Doc()->m_teamResult[it->team & 1].pang += it->totalPang;
+			Doc()->m_teamResult[it->team].score += it->rank;
+			Doc()->m_teamResult[it->team].pang += it->totalPang;
 		}
 		m_pList->SortItem(RankCompare);
 	}
@@ -957,8 +957,8 @@ void FrRankForm2::SortRank()
 						it->totalPang < it2->totalPang))
 					it->rank++;
 			}
-			Doc()->m_teamResult[it->team & 1].score += it->rank;
-			Doc()->m_teamResult[it->team & 1].pang += it->totalPang;
+			Doc()->m_teamResult[it->team].score += it->rank;
+			Doc()->m_teamResult[it->team].pang += it->totalPang;
 		}
 	}
 	m_pList->SortItem(RankCompare);
@@ -980,11 +980,11 @@ void FrRankForm2::OnRankOwnerDraw(int param)
 
 	if (Doc()->m_golfGame.gameType == 5)
 	{
-		if (m_pTeamRankBmp[pRival->team & 1])
-			pGDI->DrawTexture(m_pTeamRankBmp[pRival->team & 1],
+		if (m_pTeamRankBmp[pRival->team])
+			pGDI->DrawTexture(m_pTeamRankBmp[pRival->team],
 				WRect(pItem->pos.x + 12.0f, pItem->pos.y + 2.0f,
-					(float)m_pTeamRankBmp[pRival->team & 1]->Width(),
-					(float)m_pTeamRankBmp[pRival->team & 1]->Height()),
+					(float)m_pTeamRankBmp[pRival->team]->Width(),
+					(float)m_pTeamRankBmp[pRival->team]->Height()),
 				0xFFFFFFFF, 0);
 		pGDI->Print(WPoint(pItem->pos.x + 21.0f, pItem->pos.y + 3.0f), 1, "%d",
 			pRival->rank);
@@ -1716,11 +1716,11 @@ void CRankExData::DrawRankItem(FrListItem* pItem)
 
 	if (Doc()->m_golfGame.gameType == 5)
 	{
-		if (m_pTeamRankBmp[pRival->team & 1])
-			pGDI->DrawTexture(m_pTeamRankBmp[pRival->team & 1],
+		if (m_pTeamRankBmp[pRival->team])
+			pGDI->DrawTexture(m_pTeamRankBmp[pRival->team],
 				WRect(pItem->pos.x + 12.0f, pItem->pos.y + 2.0f,
-					(float)m_pTeamRankBmp[pRival->team & 1]->Width(),
-					(float)m_pTeamRankBmp[pRival->team & 1]->Height()),
+					(float)m_pTeamRankBmp[pRival->team]->Width(),
+					(float)m_pTeamRankBmp[pRival->team]->Height()),
 				0xFFFFFFFF, 0);
 		pGDI->Print(WPoint(pItem->pos.x + 21.0f, pItem->pos.y + 3.0f), 1, "%d",
 			pRival->rank);
@@ -1864,8 +1864,7 @@ void CRankExData::DrawStageArea()
 	FrGraphicInterface* pGDI = g_pFresh->GetManager()->GetGDI();
 	if (pGDI == NULL)
 		return;
-	if (m_leader == -1 || m_showLeader != -1 || m_pExhibition == NULL ||
-		!Doc()->HasRival(m_leader))
+	if (m_leader == -1 || m_showLeader != -1 || m_pExhibition == NULL)
 		return;
 
 	m_pExhibition->Display(0.0f, 0.0f);
@@ -2164,8 +2163,8 @@ void FrRankFormEx::SortRank()
 						it->totalPang < it2->totalPang))
 					it->rank++;
 			}
-			Doc()->m_teamResult[it->team & 1].score += it->rank;
-			Doc()->m_teamResult[it->team & 1].pang += it->totalPang;
+			Doc()->m_teamResult[it->team].score += it->rank;
+			Doc()->m_teamResult[it->team].pang += it->totalPang;
 		}
 	}
 	m_data.m_pList->SortItem(RankCompare);
@@ -2226,9 +2225,7 @@ void FrRankFormEx::OnProc(const float deltaTime)
 
 	m_data.OnProc(deltaTime);
 	FrListBox* list = m_data.m_pList;
-	// itemsize do layout com altura 0 (outro pak) dividia por zero a cada quadro
-	if (list->GetItemHeight() <= 0 ||
-		list->GetCurrentItemSize(true) <=
+	if (list->GetCurrentItemSize(true) <=
 		(int)list->GetRect().h / list->GetItemHeight())
 		return;
 
@@ -4514,7 +4511,7 @@ void FrScoreForm::OnPangListOwnerDraw(int param)
 		gdi->SetTextColor(color, 0xffffffff);
 		gdi->PrintText(pos, 1,
 			MakeStr("%I64d",
-				(__int64)(int)Doc()
+				(int)Doc()
 					->m_pGolfDoc->GetHoleData(Doc()->m_holeOrder[i])
 					.pang),
 			NULL);
@@ -4548,17 +4545,10 @@ void FrScoreForm::OnGolferListInit(int param)
 	}
 }
 
-// guild: espectador fica com m_teamPlayerGuid zerado (0xbf so grava quem joga) e o rival nao existe
-static bool IsGuildRowWithoutRival(void* data)
-{
-	return Doc()->m_golfGame.gameType == 6 &&
-		!Doc()->HasRival(Doc()->m_teamPlayerGuid[(unsigned int)data & 0xff]);
-}
-
 void FrScoreForm::OnGolferListOwnerDraw(int param)
 {
 	FrListItem* item = (FrListItem*)param;
-	if (!item || IsGuildRowWithoutRival(item->pData))
+	if (!item)
 		return;
 	FrGraphicInterface* gdi = g_pFresh->GetManager()->GetGDI();
 	if (!gdi)
@@ -5208,7 +5198,7 @@ void FrScoreForm::DrawDigit(FrGraphicInterface* gdi, char* text, WPoint pos,
 void FrScoreForm::DrawShot(FrListItem* item)
 {
 	FrGraphicInterface* gdi = g_pFresh->GetManager()->GetGDI();
-	if (!gdi || IsGuildRowWithoutRival(item->pData))
+	if (!gdi)
 		return;
 	float width = (float)m_pList[1]->GetItemWidth();
 	void* data = item->pData;
@@ -5391,7 +5381,7 @@ void FrScoreForm::DrawShot(FrListItem* item)
 void FrScoreForm::DrawVersus(FrListItem* item)
 {
 	FrGraphicInterface* gdi = g_pFresh->GetManager()->GetGDI();
-	if (!gdi || IsGuildRowWithoutRival(item->pData))
+	if (!gdi)
 		return;
 	float width = (float)m_pList[1]->GetItemWidth();
 	void* data = item->pData;
@@ -5481,7 +5471,7 @@ next:
 void FrScoreForm::DrawGraph(FrListItem* item)
 {
 	FrGraphicInterface* gdi = g_pFresh->GetManager()->GetGDI();
-	if (!gdi || IsGuildRowWithoutRival(item->pData))
+	if (!gdi)
 		return;
 	float width = (float)m_pList[1]->GetItemWidth();
 	void* data = item->pData;
@@ -5648,7 +5638,7 @@ void FrScoreForm::DrawPutt(FrListItem* item)
 void FrScoreForm::DrawPang(FrListItem* item)
 {
 	FrGraphicInterface* gdi = g_pFresh->GetManager()->GetGDI();
-	if (!gdi || IsGuildRowWithoutRival(item->pData))
+	if (!gdi)
 		return;
 	float width = (float)m_pList[1]->GetItemWidth();
 	void* data = item->pData;
@@ -5759,7 +5749,7 @@ void FrScoreForm::DrawPang(FrListItem* item)
 			{
 				narrow = true;
 				color = 0xffe98919;
-				text = MakeStr("%d", (int)pang);
+				text = MakeStr("%d", pang);
 			}
 			DrawDigit(gdi, text, WPoint(x, y), color, (FrGDI::eTextAlign)1,
 				narrow);
@@ -5802,7 +5792,7 @@ void FrScoreForm::DrawPang(FrListItem* item)
 			{
 				narrow = true;
 				color = 0xffe98919;
-				text = MakeStr("%d", (int)pang);
+				text = MakeStr("%d", pang);
 			}
 			DrawDigit(gdi, text, WPoint(x, y), color, (FrGDI::eTextAlign)1,
 				narrow);
@@ -6433,10 +6423,8 @@ void CScore::ImageSortByCharacterIndex(std::vector<sNoticeImage>& images)
 		{
 			const char* prefix = "score_notice_";
 			int index = 0;
-			// score_ppl.ini de outro pak: nome mais curto que o prefixo lia alem do texto; numero negativo escrevia antes de sorted
-			if (images[i].name.size() > strlen(prefix))
-				sscanf(images[i].name.c_str() + strlen(prefix), "%d", &index);
-			if (index >= 0 && index < 15)
+			sscanf(images[i].name.c_str() + strlen(prefix), "%d", &index);
+			if (index < 15)
 				sorted[index].name = images[i].name; // 983: std::string (00799c70)
 		}
 		images.assign(sorted.begin(), sorted.end());
@@ -7860,8 +7848,7 @@ void FrGrandPrixRankForm::Fn0078eb00_983()
 	// 983: Doc() lido uma vez e guardado (edi) para o m_rivalList
 	CSharedDoc* pDoc = Doc();
 	unsigned char index = pDoc->GetIndex(((pDoc->m_myInfo.info.dwIdentity >> 1) & 1) ? pDoc->m_myInfo.info.dwGalleryGuid : pDoc->m_myInfo.info.dwGuid);
-	if (index < pDoc->m_rivalList.size())
-		PlayRankSound983(GetRankType983(m_curHole983, &pDoc->m_rivalList[index]));
+	PlayRankSound983(GetRankType983(m_curHole983, &pDoc->m_rivalList[index]));
 	m_effect.m_mode = 1;
 	m_effect.Start(m_rect);
 	AfxGetTask()->GetMainActor()->SendMsg(NULL, "Screen", 0x248, 0, 0, 0, 0);
@@ -7877,7 +7864,7 @@ bool FrGrandPrixRankForm::LoadUi983(std::string filename)
 	lua_system::lua_table_helper posTable = script->GetTable("grandprix_rank_item_pos_table");
 	int count = lua_tinker::call<int, lua_tinker::table>(posTable.state, "get_array_size", posTable.table);
 	WPoint* pPoint = m_point983;
-	for (int i = 1; i <= count && i < (int)_countof(m_point983) * 2; i += 2)
+	for (int i = 1; i <= count; i += 2)
 	{
 		float x = ((LuaChild983&)posTable).GetByIndex(i);
 		float y = ((LuaChild983&)posTable).GetByIndex(i + 1);

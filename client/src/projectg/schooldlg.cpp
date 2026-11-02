@@ -85,11 +85,10 @@ void FrSchoolDlg::OnSearchBtnUp()
 	}
 	{
 		char line[8192];
-		// do tamanho da linha: GetToken nao limita
-		char code[8192];
-		char name[8192];
+		char code[64];
+		char name[128];
 		int count = 0;
-		while (file->Scan("%N", line))
+		while (file->Scan("%n", line))
 		{
 			int length = strlen(line);
 			cTokenV token;
@@ -335,7 +334,7 @@ bool FrSchoolDlg::OnInit()
 		char name[1024];
 		sJpSchool school;
 		m_dist0List.clear();
-		while (file->Scan("%d %1023s", &code, name))
+		while (file->Scan("%d %s", &code, name))
 		{
 			school.code = code;
 			school.name = name;

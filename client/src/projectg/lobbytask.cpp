@@ -245,7 +245,7 @@ int CLobbyTask::OnPacket(WReceivedPacket& packet)
 		// so limpa a lista quando este pacote fecha o total.
 		unsigned long total = packet.Decode4();
 		unsigned long received = packet.Decode4();
-		unsigned long count = packet.DecodeCount();
+		unsigned long count = packet.Decode4();
 
 		if (total == count + received)
 			Doc()->m_noteList.clear();
@@ -478,7 +478,7 @@ int CLobbyTask::OnPacket(WReceivedPacket& packet)
 				sUserPosition position;
 				position.iServerGUID = Doc()->m_gameServerUID;
 				position.iChannelUid = Doc()->m_curChannel.Uid;
-				wsprintf(position.csChannelName, "%.63s",
+				wsprintf(position.csChannelName, "%s",
 					Doc()->m_curChannel.Name);
 				position.iRoomIdx = Doc()->m_roomInfo.roomGuid;
 				position.iRoomType = Doc()->m_roomInfo.gameType;
@@ -1239,7 +1239,7 @@ int CLobbyTask::OnPacket(WReceivedPacket& packet)
 		char buf[0x12c];
 		memset(buf, 0, sizeof(buf));
 
-		int count = packet.DecodeCount();
+		int count = packet.Decode4();
 
 		for (int i = 0; i < count; i++)
 			packet.DecodeBuffer(buf + i * 0x19, 0x19);
@@ -1380,7 +1380,7 @@ int CLobbyTask::OnPacket(WReceivedPacket& packet)
 		if (hole != rival->hole)
 			break;
 
-		if (flag == 1 && hole >= 1 && hole <= 18) // E490: m_holeOrder vem do pacote
+		if (flag == 1)
 		{
 			rival->holeStroke[hole - 1] = stroke - rival->totalStroke;
 			rival->holeScore[hole - 1] = score - rival->totalScore;
@@ -1632,7 +1632,7 @@ int CLobbyTask::OnPacket(WReceivedPacket& packet)
 		AfxGetTask()->SendMsgToMainActor(MsgObject(NULL, M983(0x2), 0, 0, 0, 0, 0));
 
 		// 983 (00ac3733): a contagem passou a Decode4; -1 = a sala nao existe mais
-		int count = packet.DecodeCount();
+		int count = packet.Decode4();
 
 		if (count == -1)
 		{
@@ -1672,7 +1672,7 @@ int CLobbyTask::OnPacket(WReceivedPacket& packet)
 
 	case 0x88:
 	{
-		unsigned long count = packet.DecodeCount();
+		unsigned long count = packet.Decode4();
 
 		if (count == 0)
 			break;
@@ -1701,7 +1701,7 @@ int CLobbyTask::OnPacket(WReceivedPacket& packet)
 				 Doc()->m_rivalList.begin();
 			rival != Doc()->m_rivalList.end(); ++rival)
 		{
-			if (rival->state == 0 && rival->hole >= 1 && rival->hole <= 18) // E490: idem 0x6d
+			if (rival->state == 0)
 			{
 				unsigned char hole = rival->hole;
 
@@ -1714,11 +1714,9 @@ int CLobbyTask::OnPacket(WReceivedPacket& packet)
 				rival->holeScore[rival->hole - 1] = 5;
 				rival->totalScore += 5;
 
-				for (int step = 0; step < 18 && rival->hole != GetEndHole(); step++) // E490: ordem sem o ultimo buraco
+				while (rival->hole != GetEndHole())
 				{
 					rival->hole = Doc()->m_holeOrder[GetHoleIndex(rival->hole)];
-					if (rival->hole < 1 || rival->hole > 18)
-						break;
 					rival->holePang[rival->hole - 1] = 0;
 					rival->holeStroke[rival->hole - 1] =
 						Doc()->m_holePar[rival->hole - 1] + 5;
@@ -1857,7 +1855,7 @@ int CLobbyTask::OnPacket(WReceivedPacket& packet)
 		unsigned long gameTimeLimit = packet.Decode4();
 		Doc()->m_golfGame.gameTimeLimit = gameTimeLimit;
 
-		for (int i = 0; i < Doc()->m_golfGame.holes && i < 18; i++) // E490: holes do pacote
+		for (int i = 0; i < Doc()->m_golfGame.holes; i++)
 		{
 			Doc()->m_holeRandom[i] = packet.Decode4();
 			Doc()->m_courseMap[i] = packet.Decode1();	// 983: vem no pacote (00ac3d93); era m_holeRandom % 3
@@ -1945,10 +1943,6 @@ int CLobbyTask::OnPacket(WReceivedPacket& packet)
 
 		unsigned char scoreA = packet.Decode1();
 		unsigned char scoreB = packet.Decode1();
-
-		if (!Doc()->HasRival(uid))
-			break;
-
 		sRivalData* rivalA = &Doc()->m_rivalList[Doc()->GetIndex(uid)];
 		sRivalData* rivalB = Doc()->GetRival(uid);
 
@@ -2478,7 +2472,7 @@ int CLobbyTask::OnPacket(WReceivedPacket& packet)
 			break;
 
 		unsigned long value = packet.Decode4();
-		unsigned long count = packet.DecodeCount();
+		unsigned long count = packet.Decode4();
 		if (count == 0)
 			break;
 
@@ -3109,7 +3103,7 @@ int CLSLoginAckPostProcessor::Process(WReceivedPacket& packet)
 	{
 		std::string displayId;
 		packet.DecodeStr(displayId);
-		strncpy_s(Doc()->m_myInfo.info.sNick, displayId.c_str(), _TRUNCATE); // 983 005a28a2: +0x7b8 = nick, nao sDisplayID (+0x84b)
+		strcpy(Doc()->m_myInfo.info.sNick, displayId.c_str()); // 983 005a28a2: +0x7b8 = nick, nao sDisplayID (+0x84b)
 	}
 
 	m_pTask->GetActor("Lobby") << MsgObject(NULL, M983(0x1e), 4, 0, 0, 0, 0);

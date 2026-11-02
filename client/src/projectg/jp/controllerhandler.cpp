@@ -330,10 +330,8 @@ void CControllerHandler::OnLoad(const MsgObject& msg)
 		for (unsigned long i = 0; i < count; i++)
 		{
 			unsigned long ability = 0;
-			// at() lancaria; sem o objeto nao se sabe o tamanho do bloco: fita de outra versao ou cortada para aqui
-			if (fread(&ability, 4, 1, fp) != 1 || ability >= pList->size())
-				break;
-			CControlledObject* p = (*pList)[ability];
+			fread(&ability, 4, 1, fp);
+			CControlledObject* p = pList->at(ability);
 			if (p)
 				p->Load(fp);
 		}

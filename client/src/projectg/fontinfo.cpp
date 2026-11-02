@@ -1126,17 +1126,6 @@ CGuildInfo::~CGuildInfo()
 		delete Buffer2();
 		Buffer2() = NULL;
 	}
-	// 983 0053e750: as fontes proprias nao passam pelo CFontInfo::Clear
-	if (g_resrcmng != NULL && m_fontBlue.pFont != NULL)
-	{
-		g_resrcmng->Release(m_fontBlue.pFont);
-		m_fontBlue.pFont = NULL;
-	}
-	if (g_resrcmng != NULL && m_fontRed.pFont != NULL)
-	{
-		g_resrcmng->Release(m_fontRed.pFont);
-		m_fontRed.pFont = NULL;
-	}
 }
 
 void CGuildInfo::Process(float dt)
@@ -2308,7 +2297,6 @@ CShotCountInfo::CShotCountInfo()
 	Buffer() = new char[32];
 	m_align = 1;
 	m_pTikiData983 = NULL;
-	m_coin = NULL; // B1639: testado no Display e no dtor
 	if (IsGameType(0xb))
 		m_pTikiData983 =
 			CContentsDoc::Instance()->GetContainer((localContentType_t)0xaa);
@@ -2327,25 +2315,6 @@ CShotCountInfo::~CShotCountInfo()
 	{
 		g_resrcmng->Release(m_coin);
 		m_coin = NULL;
-	}
-	// 983 0053ea70: fontes do modo 7, mesma guarda do ctor
-	if (IsGameType(7) && g_resrcmng != NULL)
-	{
-		if (m_fontBlue.pFont != NULL)
-		{
-			g_resrcmng->Release(m_fontBlue.pFont);
-			m_fontBlue.pFont = NULL;
-		}
-		if (m_fontRed.pFont != NULL)
-		{
-			g_resrcmng->Release(m_fontRed.pFont);
-			m_fontRed.pFont = NULL;
-		}
-		if (m_fontGrey.pFont != NULL)
-		{
-			g_resrcmng->Release(m_fontGrey.pFont);
-			m_fontGrey.pFont = NULL;
-		}
 	}
 }
 
@@ -2420,9 +2389,9 @@ void CShotCountInfo::Display(float x, float y, unsigned char index)
 	else if (Doc()->m_golfGame.gameType == 6)
 	{
 		CSharedDoc* doc = Doc();
-		unsigned long guid = doc->m_teamPlayerGuid[index];
 		sprintf(Buffer(), "%d",
-			doc->HasRival(guid) ? doc->m_rivalList[doc->GetIndex(guid)].guildPoint : 0);
+			doc->m_rivalList[doc->GetIndex(doc->m_teamPlayerGuid[index])]
+				.guildPoint);
 	}
 	else
 		sprintf(Buffer(), "%d", GOLFDOC()->GetPlayer(index)->score);
@@ -2694,17 +2663,16 @@ void CAccuracyInfo::Display()
 	CUiFrameSetManager::NamedDim* offsetY = ui->FindNamedDim("d_impact_accuracy_y_offset");
 	if (strchr(Buffer(), '@') != NULL)
 	{
-		// 983 5395xx: alpha por or 0xc00 + fistp QWORD = corte, sem +0.5 (B1668)
 		unsigned long color;
 		if (IsLocalContent((localContentType_t)0x51 /*983: era 0x50; medido*/))
 		{
 			if (stricmp(Buffer(), "@Full") == 0 || stricmp(Buffer(), "@Bad") == 0 || AccuracyType() == 4)
-				color = (unsigned long)m_alpha << 24 | 0xffffff;
+				color = (int)(m_alpha + 0.5f) << 24 | 0xffffff;
 			else
-				color = (unsigned long)m_alpha << 24 | 0x8a8a8a;
+				color = (int)(m_alpha + 0.5f) << 24 | 0x8a8a8a;
 		}
 		else
-			color = (unsigned long)m_alpha << 24 | 0xffffff;
+			color = (int)(m_alpha + 0.5f) << 24 | 0xffffff;
 		if (offsetX != NULL && offsetY != NULL)
 		{
 			offsetX->Set((float)(m_x - 140.0), 4);
@@ -2716,7 +2684,7 @@ void CAccuracyInfo::Display()
 	{
 		offsetX->Set((float)(m_x - 140.0), 4);
 		offsetY->Set(-34.0f, 4);
-		ui->DrawFrameSet(std::string(Buffer2()), g_view, 0, (unsigned long)m_alpha << 24 | 0xffffff);
+		ui->DrawFrameSet(std::string(Buffer2()), g_view, 0, (int)(m_alpha + 0.5f) << 24 | 0xffffff);
 	}
 }
 
@@ -3212,7 +3180,6 @@ void CHoleInfo::Display()
 	if (GolfInt(GDOCOFS983(0x88)) != 0xf)
 		return;
 	unsigned long alphaB = (unsigned long)(int)m_alpha[1] << 24;
-	SetColor(alphaB | 0xffffff); // 983 0053bb56: o texto daqui usa o alfa 2, nao a cor do bloco de cima
 	if (m_state != 3 && Doc()->m_gameMode == 0)
 	{
 		_WRECT src;
@@ -3315,7 +3282,7 @@ void CHoleInfo::Display()
 			*GDOCPTR983(GOLFDOC(), 0x194) == 0 &&
 			GOLFDOC()->m_currentHole == Doc()->m_holeOrder[0])
 		{
-			m_align = 0; // 983 0053bea1: +0x20; zerar m_flicker aqui prendia o Flicker (estado 4) no 1o buraco
+			m_flicker = 0;
 			if (m_overlay[1] != NULL)
 			{
 				dst.x = g_view->GetWidth() * 0.5f - 106.0f;
@@ -6607,7 +6574,6 @@ void CPangInfo::HoleIn()
 		}
 		if ((m_flags & 4) != 0)
 		{
-			// 983 (0053d550): so o tipo 1 compara; o ramo do tipo 3 era do 645
 			unsigned char mine;
 			unsigned char other;
 			if (Doc()->m_golfGame.gameType == 1)
@@ -6622,9 +6588,17 @@ void CPangInfo::HoleIn()
 			}
 			else
 			{
-				m_case[9].flags = (m_case[9].flags & 0xfffff010) | 0x10;
-				m_case[9].field14 = 0.0f;
-				return;
+				if (Doc()->m_golfGame.gameType != 3)
+				{
+					m_case[9].flags = (m_case[9].flags & 0xfffff010) | 0x10;
+					m_case[9].field14 = 0.0f;
+					return;
+				}
+				CGolfDoc* doc = GOLFDOC();
+				sPlayerData* otherPlayer = PLAYER(1 - MyIndex());
+				other = otherPlayer->stroke[doc->m_currentHole - 1];
+				doc = GOLFDOC();
+				mine = PLAYER(MyIndex())->stroke[doc->m_currentHole - 1];
 			}
 			m_case[9].field14 = 0.0f;
 			if (mine > other)
@@ -6768,8 +6742,13 @@ void CPangInfo::AztecBonusWater()
 {
 	if (m_case[18].flags == 0x100)
 		return;
-	// 983 (005370a2): tabela de bolas 00b396c0 tipo 3, a mesma de BallBonus983; os 5 ids fixos eram do 645
-	__int64 bonus = CItemSoundTable::Instance().GetFixed983(PlayerCard(GOLFDOC()->m_currentPlayer), 3);
+	unsigned long card = PlayerCard(GOLFDOC()->m_currentPlayer);
+	__int64 bonus = 0;
+	if (card == 0x14000005 || card == 0x14000080 || card == 0x14000016 ||
+		card == 0x1400003c || card == 0x1400003d)
+	{
+		bonus = 1;
+	}
 	CCardManager::Instance()->SetPlayerIndex(GOLFDOC()->m_currentPlayer);
 	bonus += CCardManager::Instance()->GetCardBounceBonusUp();
 	if (GolfBall().m_state != 0)
@@ -7813,8 +7792,8 @@ void CCalipers::Process(float dt)
 	{
 		return;
 	}
-	if (GOLFDOC()->m_bar.calipers > 140.0f && m_target > 140.0f && (float)(m_target - 5.0) <= GOLFDOC()->m_bar.gauge &&
-		GOLFDOC()->m_bar.gauge <= (float)(m_target + 5.0))
+	if (GOLFDOC()->m_bar.calipers > 140.0f && m_target > 140.0f && m_target - 5.0 < GOLFDOC()->m_bar.gauge &&
+		GOLFDOC()->m_bar.gauge <= m_target + 5.0)
 	{
 		if (m_flashing == 0 && m_canFlash != 0 &&
 			((GOLFDOC()->m_shotPhase == 2 && *(int*)GDOCPTR983(GOLFDOC(), 0xf8) == -1) ||
@@ -8093,7 +8072,6 @@ void CHolePoseSkins::Display()
 		int alpha = float2int(m_alpha);
 		unsigned long color = alpha * 0x1000000 + 0xffffff;
 		_WRECT dst;
-		dst.y = 0.0f; // 983 00528da0 usa sem valor quando m_poseA falta no pak
 		if (overlay != NULL)
 		{
 			dst.w = (float)overlay->GetWidth();

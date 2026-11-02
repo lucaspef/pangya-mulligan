@@ -109,7 +109,7 @@ void NetResourceManager::Init()
 	// item 5): JP983_WWW=http://host:porta, senao o web 30080 do servidor local. SelfDesign/Report o rugburn nao desvia.
 	{
 		char www[96];
-		if (GetEnvironmentVariableA("JP983_WWW", www, sizeof(www)) - 1u >= sizeof(www) - 1) // ausente ou nao coube
+		if (!GetEnvironmentVariableA("JP983_WWW", www, sizeof(www)))
 			strcpy(www, "http://127.0.0.1:30080");
 		sprintf(m_download[RESOURCE_GUILD_EMBLEM].url, "%s/upload/club/mark/", www);
 	}
@@ -174,11 +174,6 @@ void NetResourceManager::Close()
 	DeleteCriticalSection(csUpload);
 }
 
-static std::string MakeEmblemPath(const char* root, const char* dir, const std::string& name)
-{
-	return std::string(root) + dir + "\\" + name;
-}
-
 int NetResourceManager::WorkDownloadThread()
 {
 	while (m_bRunning)
@@ -202,10 +197,11 @@ int NetResourceManager::WorkDownloadThread()
 			bool bHandled = false;
 			if (res.type == RESOURCE_GUILD_EMBLEM)
 			{
-				// pasta do jogo longa estourava path[256] na pilha
-				std::string path = MakeEmblemPath(m_rootDir, m_download[res.type].dir, res.filename);
+				char path[256];
+				sprintf(path, "%s%s\\%s", m_rootDir, m_download[res.type].dir,
+					res.filename.c_str());
 				WIN32_FIND_DATAA findData;
-				HANDLE hFind = FindFirstFileA(path.c_str(), &findData);
+				HANDLE hFind = FindFirstFileA(path, &findData);
 				if (hFind != INVALID_HANDLE_VALUE)
 				{
 					FindClose(hFind);
@@ -497,11 +493,13 @@ bool NetResourceManager::LoadBitmapA(const sResource& res)
 	EnterCriticalSection(&m_csDownload);
 	if (res.type == RESOURCE_GUILD_EMBLEM)
 	{
-		std::string path = MakeEmblemPath(m_rootDir, m_download[res.type].dir, res.filename);
-		Bitmap* bitmap = g_resrcmng->LoadBitmapA(path.c_str(), 0, true);
+		char path[256] = { 0 };
+		sprintf(path, "%s%s\\%s", m_rootDir, m_download[res.type].dir,
+			res.filename.c_str());
+		Bitmap* bitmap = g_resrcmng->LoadBitmapA(path, 0, true);
 		if (!bitmap)
 		{
-			DeleteFileA(path.c_str());
+			DeleteFileA(path);
 			LeaveCriticalSection(&m_csDownload);
 			return false;
 		}

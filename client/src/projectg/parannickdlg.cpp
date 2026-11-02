@@ -40,7 +40,7 @@ void FrParanNickDlg::OnOkBtnUp()
 	char nick[22];
 	const char* err;
 
-	strncpy_s(nick, m_pNick->GetLine(1, false), _TRUNCATE); // charlimit padrao do FrEdit = 255
+	strcpy(nick, m_pNick->GetLine(1, false));
 	err = Doc()->m_chatManager.FilteringNick(nick);
 
 	if (err)

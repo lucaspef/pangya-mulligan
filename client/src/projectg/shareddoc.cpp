@@ -36,7 +36,7 @@ extern "C" void __cdecl jp983_rastro(const char* fmt, ...); // A803 temporario
 #include "mathconsts.h"
 
 extern "C" __declspec(dllimport) int __cdecl mkdir(const char*);
-#include "commonutil.h"
+char* GetStr(char* str, char* out);
 void LineParse(const char* line, std::vector<std::string>& tokens);
 
 // 983: tabelas preenchidas por K2L_Compatibility num inicializador estatico (00cd37b0..)
@@ -239,8 +239,7 @@ void CSharedDoc::ClearJapanVars()
 	char* p;
 	int len;
 
-	// E494: 983 sem limite; pasta funda + id e senha estouravam a pilha
-	strncpy_s(cmdLine, GetCommandLineA(), _TRUNCATE);
+	strcpy(cmdLine, GetCommandLineA());
 
 	for (int i = 0; i < 3; i++)
 		args[i][0] = 0;
@@ -259,8 +258,7 @@ void CSharedDoc::ClearJapanVars()
 	{
 		len = strlen(args[1]);
 
-		// A951: so `"` (len 1) passava e fazia strncpy de (size_t)-1 e temp[-1]; 983 006498d0 igual
-		if (len >= 2 && args[1][0] == '"' && args[1][len - 1] == '"')
+		if (args[1][0] == '"' && args[1][len - 1] == '"')
 		{
 			strncpy(temp, &args[1][1], len - 2);
 			temp[len - 2] = 0;
@@ -273,7 +271,7 @@ void CSharedDoc::ClearJapanVars()
 
 	len = strlen(args[2]);
 
-	if (len >= 2 && args[2][0] == '"' && args[2][len - 1] == '"')
+	if (args[2][0] == '"' && args[2][len - 1] == '"')
 	{
 		strncpy(temp, &args[2][1], len - 2);
 		temp[len - 2] = 0;
@@ -1985,10 +1983,10 @@ sRivalData* CSharedDoc::GetRival(unsigned long uid)
 	for (it = m_guildMatchupList.begin(); it != m_guildMatchupList.end(); ++it)
 	{
 		if (uid == it->uid[0])
-			return HasRival(it->uid[1]) ? &m_rivalList[Doc()->GetIndex(it->uid[1])] : NULL;
+			return &m_rivalList[Doc()->GetIndex(it->uid[1])];
 
 		if (uid == it->uid[1])
-			return HasRival(it->uid[0]) ? &m_rivalList[Doc()->GetIndex(it->uid[0])] : NULL;
+			return &m_rivalList[Doc()->GetIndex(it->uid[0])];
 	}
 
 	return NULL;
@@ -2143,10 +2141,8 @@ void CSharedDoc::LogGstUpdateHole(unsigned long uid, unsigned char hole,
 
 void CSharedDoc::LoadSchoolName(char* const name, unsigned long id)
 {
-	// code e text do tamanho da linha: GetToken nao limita. name: 128 nos chamadores
 	char line[8192];
-	char code[8192];
-	char text[8192];
+	char code[64];
 	cFile* file = g_resrcmng->GetCFile("school.txt", 0xffff);
 
 	if (!file)
@@ -2155,19 +2151,17 @@ void CSharedDoc::LoadSchoolName(char* const name, unsigned long id)
 		return;
 	}
 
-	while (file->Scan("%N", line))
+	while (file->Scan("%n", line))
 	{
 		int length = strlen(line);
 		cTokenV token;
 		token.Init(line, length);
 
 		token.GetToken(code, " ", 1);
-		token.GetToken(text, "(\r\n", 3);
+		token.GetToken(name, "(\r\n", 3);
 
 		if (id == atoi(code))
 		{
-			strncpy(name, text, 127);
-			name[127] = 0;
 			CloseCFile(file);
 			return;
 		}
@@ -3049,12 +3043,17 @@ void CSharedDoc::LoadVisGroup(const char* filename)
 			if (*p == 0)
 				break;
 
-			// linha longa estourava char line[256] da pilha
-			std::string line;
+			char line[256];
+			char* q = line;
 			while (*p != '\n' && *p != '\r' && *p != 0)
-				line += *p++;
+			{
+				*q = *p++;
+				q++;
+			}
 
-			LineParse(line.c_str(), tokens);
+			*q = 0;
+
+			LineParse(line, tokens);
 
 			if (tokens.size() > 1)
 			{
@@ -3141,7 +3140,7 @@ bool CSharedDoc::CheckUnderLevelClubSet(unsigned long typeId)
 	bool bRet = true;
 	IFF_STRUCT::sClubSet* pClubSet = Doc()->m_itemManager.FindClubSet(typeId);
 
-	if (pClubSet && pClubSet->c.IsUnderLvl)
+	if (pClubSet->c.IsUnderLvl)
 	{
 		if (pClubSet->c.Level < m_myInfo.stat.Level)
 			bRet = false;

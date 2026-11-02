@@ -421,7 +421,7 @@ void FrWnd::SetWindowTextA(const char* lpszText)
 
 void FrWnd::GetWindowTextA(char* lpszTextBuf, unsigned int nBuffMax) const
 {
-	strncpy_s(lpszTextBuf, nBuffMax, m_wndText.c_str(), _TRUNCATE); // edit sem charlimit de outro layout
+	strcpy(lpszTextBuf, m_wndText.c_str());
 }
 
 void FrWnd::GetWindowTextA(std::string& outText) const

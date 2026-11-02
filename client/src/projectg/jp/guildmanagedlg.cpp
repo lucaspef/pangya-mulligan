@@ -145,10 +145,10 @@ void FrGuildManageDlg::DrawGroup983(int param)
 	switch (pEntry->state)
 	{
 	case 0:
-		strncpy_s(text, MakeStr(K2L_Compatibility("\xB1\xE6\xB5\xE5\xC3\xCA\xB4\xEB \xB4\xEB\xB1\xE2\xC0\xDA (%d)"), m_inviteCount), _TRUNCATE);
+		strcpy(text, MakeStr(K2L_Compatibility("\xB1\xE6\xB5\xE5\xC3\xCA\xB4\xEB \xB4\xEB\xB1\xE2\xC0\xDA (%d)"), m_inviteCount));
 		break;
 	case 1:
-		strncpy_s(text, MakeStr(K2L_Compatibility("\xB1\xE6\xB5\xE5\xB0\xA1\xC0\xD4 \xBD\xC2\xB3\xAB (%d)"), m_joinCount), _TRUNCATE);
+		strcpy(text, MakeStr(K2L_Compatibility("\xB1\xE6\xB5\xE5\xB0\xA1\xC0\xD4 \xBD\xC2\xB3\xAB (%d)"), m_joinCount));
 		break;
 	case 2:
 		text[0] = '\0';
@@ -195,7 +195,7 @@ void FrGuildManageDlg::OnMemberListOwnerDraw(int param)
 
 	pGDI->SetAlpha(m_wndAlpha * m_wndAlpha2);
 
-	const Bitmap* pSex = m_pSexIcon[(pEntry->sexIcon & 7) % 6]; // 983 008fafc0 só faz & 7: 6 e 7 saem do vetor
+	const Bitmap* pSex = m_pSexIcon[pEntry->sexIcon & 7];
 	WRect rect(pItem->pos.x + 10.0f, pItem->pos.y, pSex->Width(), pSex->Height());
 
 	if (pEntry->dw0 == m_selectUID)

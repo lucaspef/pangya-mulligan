@@ -171,8 +171,8 @@ void FrResultDlg::FindWinner()
 			if (Doc()->m_roomInfo.gameType == 10)
 				return;
 		}
-		Doc()->m_teamResult[it->team & 1].score += it->rank;
-		Doc()->m_teamResult[it->team & 1].pang += it->totalPang;
+		Doc()->m_teamResult[it->team].score += it->rank;
+		Doc()->m_teamResult[it->team].pang += it->totalPang;
 	}
 }
 
@@ -401,7 +401,7 @@ void FrResultDlg::OnMatchInit(int param)
 			return;
 		char name[80] = "";
 		if (Doc()->m_roomInfo.realGameType == GAME_TYPE_USEMAX)
-			strncpy_s(name, K2L_Compatibility("\xbc\xc5\xc7\xc3\xc4\xda\xbd\xba"), _TRUNCATE); // 983 00aecce0 (FUN_00b4ec60 = K2L_Compatibility)
+			strcpy(name, K2L_Compatibility("\xbc\xc5\xc7\xc3\xc4\xda\xbd\xba")); // 983 00aecce0 (FUN_00b4ec60 = K2L_Compatibility)
 		else
 			strcpy(name, pMatch->Name);
 		text = name;
@@ -760,7 +760,6 @@ void FrResultTeamDlg::OnStageInit(int param)
 	FrResultDlg::OnStageInit(param);
 	m_pGuildTrophy = NULL;
 	if (Doc()->m_golfGame.gameType == 6 &&
-		Doc()->HasRival(Doc()->m_teamPlayerGuid[0]) &&
 		Doc()->m_eventFlag ==
 			Doc()
 				->m_rivalList[Doc()->GetIndex(Doc()->m_teamPlayerGuid[0])]
@@ -782,14 +781,15 @@ bool FrResultTeamDlg::OnInit()
 			SetDesc(MakeStr(K2L_Compatibility("%49s \264\331\275\303 \307\321\271\370 \300\332\277\365\300\273 \260\241\270\256\274\274\277\344^^"), ""));
 		else
 		{
+			sRivalData* r0 =
+				&Doc()->m_rivalList[Doc()->GetIndex(Doc()->m_teamPlayerGuid[0])];
+			sRivalData* r1 =
+				&Doc()->m_rivalList[Doc()->GetIndex(Doc()->m_teamPlayerGuid[1])];
 			sRivalData* w = NULL;
-			for (int i = 0; i < 2 && !w; ++i)
-			{
-				unsigned long guid = Doc()->m_teamPlayerGuid[i];
-				if (Doc()->HasRival(guid) &&
-					Doc()->m_eventFlag == Doc()->m_rivalList[Doc()->GetIndex(guid)].team)
-					w = &Doc()->m_rivalList[Doc()->GetIndex(guid)];
-			}
+			if (Doc()->m_eventFlag == r0->team)
+				w = r0;
+			else if (Doc()->m_eventFlag == r1->team)
+				w = r1;
 			if (w)
 				SetDesc(MakeStr(K2L_Compatibility("%49s %s\261\346\265\345\260\241 \275\302\270\256\307\317\277\264\275\300\264\317\264\331."), "", w->guildName));
 		}
@@ -3369,12 +3369,12 @@ void FrUniteResultDlg::FindWinner()
 		switch (m_resultDlgType)
 		{
 		case 2:
-			Doc()->m_teamResult[it->team & 1].score += it->guildPoint;
-			Doc()->m_teamResult[it->team & 1].pang += it->totalPang;
+			Doc()->m_teamResult[it->team].score += it->guildPoint;
+			Doc()->m_teamResult[it->team].pang += it->totalPang;
 			break;
 		case 1:
-			Doc()->m_teamResult[it->team & 1].score += it->rank;
-			Doc()->m_teamResult[it->team & 1].pang += it->totalPang;
+			Doc()->m_teamResult[it->team].score += it->rank;
+			Doc()->m_teamResult[it->team].pang += it->totalPang;
 			break;
 		}
 	}

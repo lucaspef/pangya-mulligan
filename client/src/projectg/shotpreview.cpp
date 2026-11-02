@@ -69,17 +69,12 @@ ShotPreview::PangCoin::PangCoin(const WVector& pos, float scale, bool bDown)
 	++_PetReferenceCounter;
 	m_name = MakeStr("\xc6\xce\xc4\xda\xc0\xce_%d", _PetReferenceCounter);
 	m_matrix.Reset();
-	if (m_pPuppet)
-		CSceneManager::Instance()->RegisterElement(OBJ_ACTOR, m_pPuppet, NULL,
-			m_name.c_str(), 8, NULL);
+	CSceneManager::Instance()->RegisterElement(OBJ_ACTOR, m_pPuppet, NULL,
+		m_name.c_str(), 8, NULL);
 	m_matrix.pivot = pos;
 	m_pos = pos;
-	m_radius = 0.0f;
-	if (m_pPuppet)
-	{
-		m_pPuppet->CalcBound(NULL, true);
-		m_radius = scale * m_pPuppet->GetBoundSphere().radius;
-	}
+	m_pPuppet->CalcBound(NULL, true);
+	m_radius = scale * m_pPuppet->GetBoundSphere().radius;
 	if (bDown)
 		m_matrix.ym -= m_radius;
 	else
@@ -111,9 +106,8 @@ void ShotPreview::PangCoin::Restore()
 	if (m_pPuppet == NULL)
 	{
 		m_pPuppet = g_resrcmng->GetPuppet("coin.pet", false, true, false);
-		if (m_pPuppet)
-			CSceneManager::Instance()->RegisterElement(OBJ_ACTOR, m_pPuppet, NULL,
-				m_name.c_str(), 8, NULL);
+		CSceneManager::Instance()->RegisterElement(OBJ_ACTOR, m_pPuppet, NULL,
+			m_name.c_str(), 8, NULL);
 	}
 }
 
@@ -927,7 +921,7 @@ bool ShotPreview::Predict(std::vector<WVector>& positions,
 	float power = GolfClub().GetPower();
 	power = power * powerRatio;
 	GolfClub();
-	WVector vel(0.0f, 0.0f, 0.0f);
+	WVector vel;
 	m_pBall->Reset(vel);
 	*m_pBall = GolfBall();
 	CGolfBall& ball = GolfBall();
@@ -1243,18 +1237,16 @@ bool ShotPreview::Predict(std::vector<WVector>& positions,
 				switch (GolfClub().GetID())
 				{
 				case 0:
-					// B1651: 983 00845f92..0084606d: (lim - v) / d * k em double, como o tiro real (golfrule.cpp);
-					// o caso 2 era 2.0f / 100 (983 [00d16910] = 20.2) e a previa do spike descia quase reta
 					v = Min(GolfClub().GetPower() * powerRatio, 344.0f);
-					ball.m_vel.y = (float)(-8.0 - (344.0 - v) / 112.0 * 21.5);
+					ball.m_vel.y = -8.0f - (344.0f - v) * (21.5f / 112.0f);
 					break;
 				case 1:
 					v = Min(GolfClub().GetPower() * powerRatio, 306.0f);
-					ball.m_vel.y = (float)(-10.3 - (306.0 - v) / 105.0 * 20.5);
+					ball.m_vel.y = -10.3f - (306.0f - v) * (20.5f / 105.0f);
 					break;
 				case 2:
 					v = Min(GolfClub().GetPower() * powerRatio, 273.0f);
-					ball.m_vel.y = (float)(-10.8 - (273.0 - v) / 100.0 * 20.2);
+					ball.m_vel.y = -10.8f - (273.0f - v) * (2.0f / 100.0f);
 					break;
 				}
 				ball.m_vel *= powerRatio * 7.0f;

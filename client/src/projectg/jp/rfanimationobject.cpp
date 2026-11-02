@@ -69,7 +69,7 @@ static void LoadRect983(const rf::TiXmlElement* asset, RFRect* rect)
 {
 	RFRect r(0.0f, 0.0f, 0.0f, 0.0f);
 	const rf::TiXmlElement* element = asset->FirstChildElement("rect");
-	for (const rf::TiXmlAttribute* attribute = element ? element->FirstAttribute() : NULL; attribute; attribute = attribute->Next())
+	for (const rf::TiXmlAttribute* attribute = element->FirstAttribute(); attribute; attribute = attribute->Next())
 	{
 		if (!strcmp(attribute->Name(), "l"))
 			r.left = (float)atoi(attribute->Value());
@@ -88,15 +88,15 @@ void RFAnimationObject::Load(const rf::TiXmlNode* scene)
 {
 	for (const rf::TiXmlElement* asset = scene->FirstChildElement("asset"); asset; asset = asset->NextSiblingElement("asset"))
 	{
-		if (RFUtf8ToWide983(RFGetAttribute983(asset, "name")) != _asset)
+		if (RFUtf8ToWide983(asset->Attribute("name")) != _asset)
 			continue;
-		const char* type = RFGetAttribute983(asset, "type");
+		const char* type = asset->Attribute("type");
 		if (!strcmp(type, "IMAGE"))
 		{
 			LoadRect983(asset, &_rect);
 			_type983 = 0;
 			RFRenderer* renderer = RFManager::GetInstance()._renderer;
-			_texture = renderer->CreateTexture(RFUtf8ToWide983(RFGetAttribute983(asset, "path")));
+			_texture = renderer->CreateTexture(RFUtf8ToWide983(asset->Attribute("path")));
 		}
 		else if (!strcmp(type, "UI"))
 		{
@@ -106,19 +106,19 @@ void RFAnimationObject::Load(const rf::TiXmlNode* scene)
 		else if (!strcmp(type, "TEXT"))
 		{
 			// o 983 lê o texto e a fonte e não guarda nada (só o tipo)
-			std::wstring text = RFUtf8ToWide983(RFGetAttribute983(asset, "text"));
+			std::wstring text = RFUtf8ToWide983(asset->Attribute("text"));
 			std::wstring face;
-			face = RFUtf8ToWide983(RFGetAttribute983(asset->FirstChildElement("facename"), "val"));
-			atoi(RFGetAttribute983(asset->FirstChildElement("size"), "val"));
-			atoi(RFGetAttribute983(asset->FirstChildElement("style"), "val"));
-			atoi(RFGetAttribute983(asset->FirstChildElement("color"), "val"));
+			face = RFUtf8ToWide983(asset->FirstChildElement("facename")->Attribute("val"));
+			atoi(asset->FirstChildElement("size")->Attribute("val"));
+			atoi(asset->FirstChildElement("style")->Attribute("val"));
+			atoi(asset->FirstChildElement("color")->Attribute("val"));
 			_type983 = 2;
 		}
 	}
 
 	for (const rf::TiXmlElement* anim = scene->FirstChildElement("anim"); anim; anim = anim->NextSiblingElement("anim"))
 	{
-		if (RFUtf8ToWide983(RFGetAttribute983(anim, "name")) != _ani983)
+		if (RFUtf8ToWide983(anim->Attribute("name")) != _ani983)
 			continue;
 		const rf::TiXmlElement* key = anim->FirstChildElement("frame");
 		if (!key)
@@ -153,10 +153,10 @@ void RFAnimationObject::Load(const rf::TiXmlNode* scene)
 				GetXmlValue(key, "alpha", &frame.alpha);
 			const rf::TiXmlElement* sound = key->FirstChildElement("sound");
 			if (sound)
-				frame.sfx = RFUtf8ToWide983(RFGetAttribute983(sound, "val"));
+				frame.sfx = RFUtf8ToWide983(sound->Attribute("val"));
 			const rf::TiXmlElement* visible = key->FirstChildElement("visible");
 			if (visible)
-				frame.visible = atoi(RFGetAttribute983(visible, "val")) != 0;
+				frame.visible = atoi(visible->Attribute("val")) != 0;
 			track->_frames.push_back(frame);
 			key = key->NextSiblingElement("frame");
 		} while (key);
@@ -167,25 +167,24 @@ void RFAnimationObject::Load(const rf::TiXmlNode* scene)
 // 0042c890: <name val="…" easeValue="x1,y1,x2,y2"/>; sem easeValue = linear
 void RFAnimationObject::GetXmlValue(const rf::TiXmlNode* node, const std::string& name, RFFloatAnimationFrame* value)
 {
-	value->value = (float)atof(RFGetAttribute983(node->FirstChildElement(name.c_str()), "val"));
+	value->value = (float)atof(node->FirstChildElement(name.c_str())->Attribute("val"));
 	std::string ease;
-	const rf::TiXmlElement* element = node->FirstChildElement(name.c_str());
-	if (!element || !element->Attribute("easeValue"))
+	if (!node->FirstChildElement(name.c_str())->Attribute("easeValue"))
 		value->interpolation = new RFInterpolation;
 	else
 	{
-		ease = element->Attribute("easeValue");
+		ease = node->FirstChildElement(name.c_str())->Attribute("easeValue");
 		if (ease.size() != 0)
 		{
 			std::vector<char> buffer(ease.size() + 1);
 			memcpy(&buffer[0], ease.c_str(), ease.size());
 			char* context;
 			const char separator[] = ",";
-			float v[4] = {}; // easeValue com menos de 4 numeros: atof(NULL) derrubava
-			char* token = strtok_s(&buffer[0], separator, &context);
-			for (int i = 0; i < 4 && token; ++i, token = strtok_s(0, separator, &context))
-				v[i] = (float)atof(token);
-			value->interpolation = new RFBezierSpline(1024, RFVector2(v[0], v[1]), RFVector2(v[2], v[3]));
+			float x1 = (float)atof(strtok_s(&buffer[0], separator, &context));
+			float y1 = (float)atof(strtok_s(0, separator, &context));
+			float x2 = (float)atof(strtok_s(0, separator, &context));
+			float y2 = (float)atof(strtok_s(0, separator, &context));
+			value->interpolation = new RFBezierSpline(1024, RFVector2(x1, y1), RFVector2(x2, y2));
 		}
 	}
 }

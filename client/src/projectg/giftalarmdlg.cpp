@@ -204,7 +204,7 @@ void FrGiftAlarmDlg::OnGiftListOwnerDraw(int param)
 	if (!common)
 	{
 		icon = m_pArrivalMail;
-		_snprintf_s(name, _TRUNCATE, K2L_Compatibility("\306\355\301\366"));
+		wsprintf(name, K2L_Compatibility("\306\355\301\366"));
 	}
 	else
 	{

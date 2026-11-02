@@ -363,7 +363,7 @@ namespace S5
 			int state = 0;
 			for (char* p = pSrc; *p != '\0'; p++)
 			{
-				int value = s_base64Index[(unsigned char)*p];
+				int value = s_base64Index[*p];
 				if (value == -1)
 					continue;
 

@@ -345,10 +345,9 @@ char* FrBirthdayEventDlg::MakeMapInfoText(int mission, char* buf)
 			IFF_STRUCT::sDesc* desc = ItemManager()->FindDesc(i | 0x28000000);
 			if (desc)
 			{
-				// Desc de outro pak nao passa do buf[512]: o que nao coube fica fora
-				int n = _snprintf_s(buf + len, 512 - len, _TRUNCATE, "%s,\n", desc->Desc);
-				if (n > 0)
-					len += n;
+				wsprintf(buf + len, "%s,\n", desc->Desc,
+					(int)strlen(desc->Desc));
+				len = len + strlen(desc->Desc) + 2;
 			}
 		}
 	}
@@ -359,7 +358,7 @@ char* FrBirthdayEventDlg::MakeMapInfoText(int mission, char* buf)
 		return buf;
 	}
 	*buf = '\n';
-	_snprintf_s(buf + (len - 1), 512 - (len - 1), _TRUNCATE, "\n%s", K2L_Compatibility("\xbf\xcf\xc1\xd6"));
+	wsprintf(buf + (len - 1), "\n%s", K2L_Compatibility("\xbf\xcf\xc1\xd6"), 4);
 	return buf;
 }
 

@@ -828,8 +828,6 @@ void FrOnedayQuestComplete::SetDone983(const std::vector<sQuestDone983>& done)
 				continue;
 			int count = (int)IffDword983(pStuff, 0xf4 + i * 4);
 			IFF_ITEM_COMMON* pItem = ItemManager()->FindCommonItem(typeId);
-			if (pItem == NULL)
-				continue;
 			if (typeId == 0x6c000001)
 			{
 				if (pang == 0)

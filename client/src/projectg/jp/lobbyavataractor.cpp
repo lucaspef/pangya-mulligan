@@ -1152,11 +1152,12 @@ void LobbyAvatarActor::OnProcess(float delta)
 			// acabou um movimento que termina em "\xb3\xa1": sorteia outro movimento de espera
 			const char* name = pExh->GetMotionData()->name;
 			size_t len = strlen(name);
-			unsigned long tid = pExh->m_tid & 0x3ffffff;
-			int count = LOBBYMOTION983()->Count983(&tid); // 0 = personagem fora das 15 linhas da tabela (pak mais novo)
-			if (count != 0 && _stricmp("\xb3\xa1", pExh->GetMotionData()->name + len - 2) == 0)
+			if (_stricmp("\xb3\xa1", pExh->GetMotionData()->name + len - 2) == 0)
 			{
-				int index = rand() % count;
+				unsigned long tid = pExh->m_tid & 0x3ffffff;
+				int index = 0;
+				int count = LOBBYMOTION983()->Count983(&tid);
+				index = rand() % count;
 				unsigned long tid2 = pExh->m_tid & 0x3ffffff;
 				const char* motion = LOBBYMOTION983()->Get983(&tid2, &index);
 				int type = 5;

@@ -106,10 +106,10 @@ int CMascot::ChangeMascotMsgInTex(const char* msg,
 			int hTex = g_resrcmng->LoadTexture(pMascot->MsgTex, 0, 0, texName);
 			w_texlist* pTex = g_resrcmng->FindTexture(pMascot->MsgTex);
 
-			Bitmap* pBmp = (hTex && pTex) ?
-				g_resrcmng->LoadBitmap(pMascot->MsgTex, 0, false) : NULL;
-			if (pBmp)
+			if (hTex && pTex)
 			{
+				Bitmap* pBmp =
+					g_resrcmng->LoadBitmap(pMascot->MsgTex, 0, false);
 				RECT rc = { 0, 0, pBmp->Width(), pBmp->Height() };
 
 				FrGraphicInterface* pGDI = NULL;
@@ -305,9 +305,6 @@ void CMascot::ShowLuckyMsg983(unsigned long tid)
 
 		CChatMsg::Instance()->AddChatMsg(std::string(K2L_Compatibility(text.c_str())), 0xffffff00, false, false);
 	}
-
-	if (!ItemManager()->FindMascot(tid))
-		return;
 
 	CChatMsg::Instance()->AddChatMsg(std::string(MakeStr(
 		K2L_Compatibility("%s\xc0\xc7 \xb4\xc9\xb7\xc2\xc0\xb8\xb7\xce \xc6\xce\xbe\xdf \xc0\xd3\xc6\xd1\xc6\xae\xc1\xb8\xc0\xcc \xc4\xbf\xc1\xfd\xb4\xcf\xb4\xd9."),

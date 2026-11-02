@@ -144,9 +144,6 @@ int GameUnit::OnConnect(WReceivedPacket& packet)
 	packet.Decode1();
 	packet.Decode1();
 	int parseKey = packet.Decode1();
-	// E489: 983 indexa PublicKeyTable[16] sem limite; chave fora = mesma saida do cabecalho errado
-	if (parseKey > 15)
-		return FALSE;
 
 	m_socket.SetParseKey(parseKey);
 

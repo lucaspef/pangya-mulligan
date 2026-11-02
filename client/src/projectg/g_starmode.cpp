@@ -136,7 +136,7 @@ bool CGStarMode::SavePartsInfoCharacter(const sCharacterInfo& character,
 	bool result = true;
 	if (info)
 	{
-		char buffer[101] = { 0 }; // _snprintf cheio sem -1 nao termina
+		char buffer[101];
 		if (_snprintf(buffer, 100, K2L_Compatibility("%d"), character.tid & 0x3ffffff) < 0)
 			buffer[100] = 0;
 		unsigned int length = strlen(buffer);

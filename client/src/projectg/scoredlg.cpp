@@ -121,9 +121,15 @@ void FrScoreDlg::SetGuildPlayer(unsigned long uid)
 {
 	if (0)
 		DrawVersus(NULL);
-	unsigned long leftUid = Doc()->m_teamPlayerGuid[0];
-	unsigned long rightUid = Doc()->m_teamPlayerGuid[1];
-	if (uid != 0xffffff)
+	sRivalData* left = NULL;
+	sRivalData* right = NULL;
+	if (uid == 0xffffff)
+	{
+		left = &Doc()->m_rivalList[Doc()->GetIndex(Doc()->m_teamPlayerGuid[0])];
+		right =
+			&Doc()->m_rivalList[Doc()->GetIndex(Doc()->m_teamPlayerGuid[1])];
+	}
+	else
 	{
 		for (std::vector<sGuildMatchup>::iterator it =
 				 Doc()->m_guildMatchupList.begin();
@@ -131,16 +137,27 @@ void FrScoreDlg::SetGuildPlayer(unsigned long uid)
 		{
 			if (uid == it->uid[0] || uid == it->uid[1])
 			{
-				leftUid = it->uid[0];
-				rightUid = it->uid[1];
+				left =
+					&Doc()
+						 ->m_rivalList[Doc()->GetIndex(it->uid[0])];
+				right =
+					&Doc()
+						 ->m_rivalList[Doc()->GetIndex(it->uid[1])];
 				break;
 			}
 		}
+		if (!left && !right)
+		{
+			left =
+				&Doc()
+					 ->m_rivalList[Doc()->GetIndex(Doc()->m_teamPlayerGuid[0])];
+			right =
+				&Doc()
+					 ->m_rivalList[Doc()->GetIndex(Doc()->m_teamPlayerGuid[1])];
+		}
 	}
-	if (!Doc()->HasRival(leftUid) || !Doc()->HasRival(rightUid))
+	if (!left && !right)
 		return;
-	sRivalData* left = &Doc()->m_rivalList[Doc()->GetIndex(leftUid)];
-	sRivalData* right = &Doc()->m_rivalList[Doc()->GetIndex(rightUid)];
 	m_pMyData = NULL;
 	if (left->oid == Doc()->m_myInfo.info.dwGuid)
 		m_pMyData = left;

@@ -39,14 +39,11 @@ static bool GetClipboardText983(std::wstring& out)
 	if (!OpenClipboard(0))
 		return false;
 	HANDLE data = GetClipboardData(CF_UNICODETEXT);
-	const wchar_t* text = data ? (const wchar_t*)GlobalLock(data) : 0; // outro programa pode falhar em entregar o texto
-	if (text)
-	{
-		out.assign(text, wcslen(text));
-		GlobalUnlock(data);
-	}
+	const wchar_t* text = (const wchar_t*)GlobalLock(data);
+	out.assign(text, wcslen(text));
+	GlobalUnlock(data);
 	CloseClipboard();
-	return text != 0;
+	return true;
 }
 
 // 00464ec0
@@ -55,12 +52,7 @@ static bool SetClipboardText983(const std::wstring& text)
 	if (!OpenClipboard(0))
 		return false;
 	HGLOBAL mem = GlobalAlloc(GMEM_MOVEABLE, (text.size() + 1) * 2);
-	wchar_t* dst = mem ? (wchar_t*)GlobalLock(mem) : 0;
-	if (!dst)
-	{
-		CloseClipboard();
-		return false;
-	}
+	wchar_t* dst = (wchar_t*)GlobalLock(mem);
 	memcpy(dst, text.c_str(), (text.size() + 1) * 2);
 	GlobalUnlock(mem);
 	EmptyClipboard();
@@ -699,8 +691,6 @@ bool RFEdit::KeyDownCopyAndPaste(unsigned int key)
 		{
 			int lo = _shiftEnd < _shiftBegin ? _shiftEnd : _shiftBegin;
 			int hi = _shiftBegin < _shiftEnd ? _shiftEnd : _shiftBegin;
-			if (lo >= (int)_text.size()) // SetText nao zera a selecao
-				return true;
 			std::wstring copied;
 			if (hi >= (int)_text.size())
 				copied = _text.substr(lo);

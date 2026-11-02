@@ -25,8 +25,7 @@ bool LoadXMLVer(const char* filename, char* ver, int len)
 
 		const char* value = node->Value();
 
-		strncpy(ver, value, len - 1); // versao vem do XML do servidor; o buffer tem len
-		ver[len - 1] = 0;
+		strncpy(ver, value, strlen(value));
 
 		return true;
 	}
@@ -63,13 +62,8 @@ bool GetUrlFile(const char* url, const char* filename)
 	unsigned long dwWritten = 0;
 	do
 	{
-		dwRead = 0;
-		if (!InternetQueryDataAvailable(hUrl, &dwSize, 0, 0))
-			break;
-		if (dwSize > sizeof(buffer)) // resposta grande: buffer[10240] na pilha
-			dwSize = sizeof(buffer);
-		if (!InternetReadFile(hUrl, buffer, dwSize, &dwRead)) // conexao caiu: nao repete para sempre
-			break;
+		InternetQueryDataAvailable(hUrl, &dwSize, 0, 0);
+		InternetReadFile(hUrl, buffer, dwSize, &dwRead);
 		WriteFile(hFile, buffer, dwRead, &dwWritten, NULL);
 	} while (dwRead != 0);
 
@@ -83,9 +77,8 @@ unsigned int __stdcall RSSThreadFunc(void* pParam)
 {
 	RSSManager* pManager = (RSSManager*)pParam;
 	char szUrl[256] = { 0 };
-	// 983 009ac3c0: m_address/m_path de GetRSSFile_JP sao ID e KID; o 645 pedia NoticeRSS.aspx?gIdx= no site QA
-	sprintf(szUrl, "%s/rss.aspx?ID=%s&KID=%s", "https://www5.pangya.jp/on_client/club",
-		pManager->m_address.c_str(), pManager->m_path.c_str());
+	sprintf(szUrl, "%s/NoticeRSS.aspx?gIdx=%d\n",
+		"http://qa.club.pangya.gametree.co.kr/InGame", pManager->m_guildIdx);
 	if (GetUrlFile(szUrl, "guildlast.xml"))
 	{
 		pManager->CallBackFunction(0);

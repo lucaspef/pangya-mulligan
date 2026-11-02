@@ -1654,19 +1654,21 @@ void CTaskMain::ProcessOverBar()
 void CTaskMain::SendSubSelectionPacket(PANGYA_ITEM_GROUP group)
 {
 	CloseAllSubSelection();
-	// 983 00655e10: 0xc em toda categoria dentro de sala nao massiva (o 645 so trocava no personagem)
-	int id = 0xb;
-	if (IS_EXACTKINDOF(ntAvatarChatTask, AfxGetTask()) ||
-		(IS_EXACTKINDOF(CLobbyTask, AfxGetTask()) &&
-			CSharedDoc::Instance()->m_roomInfo.roomGuid != 0xffff &&
-			!IsMassGame(CSharedDoc::Instance()->m_roomInfo.holeType)))
+	int id;
+	if (IS_EXACTKINDOF(ntAvatarChatTask, AfxGetTask()))
 		id = 0xc;
+	else
+		id = 0xb;
 	if (group == 0x20)
 		group = (PANGYA_ITEM_GROUP)(m_subSelTypeId >> 26);
 	switch (group)
 	{
 	case PIG_CHAR:
 	{
+		if (IS_EXACTKINDOF(CLobbyTask, AfxGetTask()) &&
+			CSharedDoc::Instance()->m_roomInfo.roomGuid != 0xffff &&
+			!IsMassGame(CSharedDoc::Instance()->m_roomInfo.holeType))
+			id = 0xc;
 		WSendPacket pkt(id);
 		pkt.Encode1(4);
 		pkt.Encode4(m_subSelItemId);
@@ -2197,15 +2199,21 @@ bool CTaskMain::OnResultSubEquipBar(int result, FrForm*)
 			else
 			{
 				m_subSelTypeId = tid;
-				m_subSelItemId = m_pSubEquipBar->GetLastSelectedGuid(); // 983 00656440: envia mesmo sem achar o guid (00b21800 ignorado)
+				m_subSelItemId = m_pSubEquipBar->GetLastSelectedGuid();
+				if (!m_pSubEquipBar->SetClientEquipInfo(
+						(PANGYA_ITEM_GROUP)(tid >> 26), m_subSelItemId))
+				{
+					m_pSubEquipBar = NULL;
+					return true;
+				}
 			}
 		}
 		else
 		{
 			if (m_pSubEquipBar->GetCategory() == FrSubEquipBar::CATEGORY_CADDIE)
 			{
-				// 983 0065651e: grava 7 em +0x1cc e cai no zero seguinte: tirar o caddie nao manda pacote
 				CSharedDoc::Instance()->m_myInfo.userEquip.guidCaddie = 0;
+				group = PIG_CADDIE;
 			}
 			else if (m_pSubEquipBar->GetCategory() ==
 				FrSubEquipBar::CATEGORY_MASCOT)
@@ -3818,7 +3826,7 @@ char const* CTaskMain::MakeStatusString2(int a, int b, int c)
 	if (b != 0)
 	{
 		if (c != 0)
-			return MakeStr("%d(-%d)/%d", a, c, b);
+			return MakeStr("%d(-%d)/%d", a, c);
 		return MakeStr("%d/%d", a, b);
 	}
 	return MakeStr("%d", a);

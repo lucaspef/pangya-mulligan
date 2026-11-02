@@ -134,7 +134,7 @@ void CGolfRuleNewApproach::SetPlayer()
 			rival.finishOrder = slotList.size();
 			rival.level = (*it).level;
 			strcpy(rival.nickname, (*it).sNick);
-			strncpy(rival.guildName, (*it).sGuild, sizeof(rival.guildName)); // sGuild de 20 nao termina em 0
+			strcpy(rival.guildName, (*it).sGuild);
 			rival.guildUID = (*it).GuildId;
 
 			rival.guildEmblemVer983 = (*it).dwEmblemVer983; // 983
@@ -143,9 +143,9 @@ void CGolfRuleNewApproach::SetPlayer()
 			WVector diff;
 			diff = WVector(GOLFDOC()->GetHoleData().pin) - rival.ballPos;
 
-			// 983 006a98e0: sqrt * 10.0 * 0.3125 em double, fstp em float e so depois floor (B1664; antes 2 arredondamentos em float)
-			float dist = (float)(sqrtf(diff.x * diff.x + diff.z * diff.z) * 10.0 * 0.3125);
-			rival.approachDistance = (int)floor(dist);
+			rival.approachDistance = (int)floor(
+				(double)((sqrtf(diff.x * diff.x + diff.z * diff.z) * 10.0f) *
+					0.3125f));
 
 			rival.approachResultDistance = -1;
 			rival.approachTime = -1;

@@ -16,6 +16,7 @@
 
 extern WMatrix g_camera;
 
+const char* GetStrConst(const char* str, char* out);
 int Ceil(float value, float epsilon);
 int float2int(float value);
 WMatrix operator*(const WMatrix& left, float right);
@@ -326,8 +327,6 @@ void CNPC::SetGPCrowd983(const Waabb& area, const char* option)
 
 void CNPC::SetNPC(const std::vector<WVector>& points, const char* name)
 {
-	if (points.size() < 2) // caminho de mapa de outro pak: SetArea le m_path[1]
-		return;
 	if (strstr(name, "santa"))
 	{
 		if (NET()->IsConnected(WNetworkSystem::NET_GAME))
@@ -549,7 +548,7 @@ void CNPC::SetNPC(const Waabb& area, char* name)
 	unsigned long flags = 0;
 	int num;
 	slice.Get("*type", "%d", &type);
-	slice.Get("*pet", "%31s", petName);
+	slice.Get("*pet", "%s", petName);
 	switch (type)
 	{
 	case 0:
@@ -848,7 +847,7 @@ void CCreature::InitFx()
 		char cmd[32] = "\0";
 		char fx[32] = "\0";
 		char bone[32] = "\0";
-		sscanf(p, "%31s %31s %31s", cmd, fx, bone);
+		sscanf(p, "%s %s %s", cmd, fx, bone);
 		if (!box->bone || box->bone->m_flag.GetFlag(WBone::INVISIBLE))
 			continue;
 		char* ext = strrchr(fx, '.');
@@ -896,10 +895,9 @@ void CCreature::SetArea(const Waabb& area, unsigned long flags)
 	else
 		cellsY = 1.0f;
 	float cellsZ = (float)ceil((m_area.max.z - m_area.min.z) / m_cellSize);
-	// caixa de mapa sem largura: as andadas fazem cur % m_gridX
-	m_gridX = cellsX < 1.0f ? 1 : (int)cellsX;
+	m_gridX = (int)cellsX;
 	m_gridY = (int)cellsY;
-	m_gridZ = cellsZ < 1.0f ? 1 : (int)cellsZ;
+	m_gridZ = (int)cellsZ;
 	m_cellCount = m_gridY > 1 ? 4 : 2;
 	m_cellX = (m_area.max.x - m_area.min.x) / cellsX;
 	m_cellY = (m_area.max.y - m_area.min.y) / cellsY;
@@ -1145,7 +1143,7 @@ void CCreature::ParsePuppetScript(const char* script)
 				break;
 			}
 		} while (c != '\0');
-		if (count <= 1 || count >= (int)sizeof(cmd)) // frame de outro pak: nome longo nao e comando
+		if (count <= 1)
 			return;
 		strncpy(cmd, p, count);
 		cmd[count] = 0;

@@ -119,7 +119,7 @@ FrScratchDlg::FrScratchDlg()
 	m_resultTimer = 0;
 	m_response = -1;
 	m_bEnableRequest = true;
-	m_bScratchEnabled = false;
+	m_bScratchEnabled = true;//ativa o scratch
 	m_bSerialEnabled = true;
 	m_bResultPending = false;
 	m_changeIndex[0] = -1;
@@ -133,7 +133,12 @@ FrScratchDlg::FrScratchDlg()
 		WSendPacket send((enumClientPacket)0xc1);
 		send.Encode1(2);
 		send.Send(TO_GAME);
-	}
+	}//no s9 era esse id, consulte em packet_enum.h
+#ifdef JP983_SERVER_CONFIG
+	WSendPacket send((enumClientPacket)0x12A);
+	send.Encode1(2);
+	send.Send(TO_GAME);
+#endif 
 }
 
 FrScratchDlg::~FrScratchDlg()
@@ -144,7 +149,12 @@ FrScratchDlg::~FrScratchDlg()
 		WSendPacket send((enumClientPacket)0xc1);
 		send.Encode1(1);
 		send.Send(TO_GAME);
-	}
+	}//no s9 era esse id, consulte em packet_enum.h
+#ifdef JP983_SERVER_CONFIG
+	WSendPacket send((enumClientPacket)0x12A);
+	send.Encode1(2);
+	send.Send(TO_GAME);
+#endif 
 	if (m_pFont)
 		m_pFont->Erase();
 	if (g_resrcmng && m_pFont)
@@ -664,7 +674,7 @@ void FrScratchDlg::SetBmpScratchItem()
 		for (int k = 0; k < setCount; k++)
 		{
 			IFF_ITEM_COMMON* pItem = ItemManager()->FindCommonItem(typeIds[k]);
-			if (pItem == NULL || g_pFresh->GetBitmap(pItem->Icon) == NULL)
+			if (g_pFresh->GetBitmap(pItem->Icon) == NULL)
 				m_pItemBmp.push_back(g_pFresh->GetBitmap("equipitem_itemslot_empty.tga"));
 			else
 				m_pItemBmp.push_back(g_pFresh->GetBitmap(pItem->Icon));
@@ -678,12 +688,14 @@ void FrScratchDlg::SetBmpScratchItem()
 	sBonusBall* pBall = m_ball;
 	while (pBall->typeId != 0)
 	{
-		// tid fora do IFF tambem ocupa imagem: m_pItemBmp.at(i) vai ate m_ballCount, sem catch no jogo
 		IFF_ITEM_COMMON* pItem = ItemManager()->FindCommonItem(pBall->typeId);
-		if (pItem == NULL || g_pFresh->GetBitmap(pItem->Icon) == NULL)
-			m_pItemBmp.push_back(g_pFresh->GetBitmap("equipitem_itemslot_empty"));
-		else
-			m_pItemBmp.push_back(g_pFresh->GetBitmap(pItem->Icon));
+		if (pItem)
+		{
+			if (g_pFresh->GetBitmap(pItem->Icon) == NULL)
+				m_pItemBmp.push_back(g_pFresh->GetBitmap("equipitem_itemslot_empty"));
+			else
+				m_pItemBmp.push_back(g_pFresh->GetBitmap(pItem->Icon));
+		}
 		if ((pBall->typeId & 0xfc000000) == 0x24000000)
 		{
 			m_ballCount = 1;
@@ -695,7 +707,6 @@ void FrScratchDlg::SetBmpScratchItem()
 			return;
 	}
 	m_pItemBmp.push_back(g_pFresh->GetBitmap("scratch_text_nothing"));
-	m_ballCount = i + 1; // lista acabou antes da contagem do pacote
 }
 
 // 983 (008e6820): canto do primeiro item; os itens ficam em fila, 64 px um do outro, centrados no dialogo

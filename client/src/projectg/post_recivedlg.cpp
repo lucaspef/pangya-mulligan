@@ -995,7 +995,7 @@ int CPost_ReciveDlg::GetItemNumInMyPocket(unsigned long typeId)
 	if (group == 9 && (typeId & 0x3e00000) == 0x200000)
 	{
 		IFF_STRUCT::sSetItem* set = ItemManager()->FindSetItem(typeId);
-		for (unsigned char i = 0; set && i < set->nElems; ++i)
+		for (unsigned char i = 0; i < set->nElems; ++i)
 		{
 			if (typeId == 0 || (set->ElemIds[i] & 0xfc000000) != 0x4000000)
 			{

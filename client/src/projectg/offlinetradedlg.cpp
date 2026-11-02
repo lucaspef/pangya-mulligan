@@ -1177,7 +1177,7 @@ void CBuyingSlotDlg::OnDaysInit(int param)
 		m_pDays->SetLine(1, sDay[0].name, 0, false, 0);
 		m_price = furniture->COM[0];
 		m_pSlotPrice->ClearLine();
-		m_pSlotPrice->AddText(MakeStr("%d \xc6\xce", (int)m_price), false, true);
+		m_pSlotPrice->AddText(MakeStr("%d \xc6\xce", m_price), false, true);
 	}
 }
 
@@ -1192,7 +1192,7 @@ void CBuyingSlotDlg::OnDaysBtnDown()
 		{
 			m_price = furniture->COM[i];
 			m_pSlotPrice->ClearLine();
-			m_pSlotPrice->AddText(MakeStr("%d \xc6\xce", (int)m_price), false, true);
+			m_pSlotPrice->AddText(MakeStr("%d \xc6\xce", m_price), false, true);
 		}
 	}
 	RecalculatePang();
@@ -1205,7 +1205,7 @@ void CBuyingSlotDlg::OnPriceInit(int param)
 	{
 		char buf[32];
 		MakePriceStrA(buf, m_price);
-		strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+		strcat(buf, K2L_Compatibility("\xc6\xce"));
 		m_pPrice->SetLine(1, buf, 0, false, 0);
 	}
 }
@@ -1217,7 +1217,7 @@ void CBuyingSlotDlg::OnMyMoneyInit(int param)
 	{
 		char buf[32];
 		MakePriceStrA(buf, Doc()->m_myInfo.stat.i64Pang);
-		strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+		strcat(buf, K2L_Compatibility("\xc6\xce"));
 		m_pMyMoney->SetLine(1, buf, 0, false, 0);
 	}
 }
@@ -1232,13 +1232,13 @@ void CBuyingSlotDlg::OnMoneyLeftInit(int param)
 		if (left < 0)
 		{
 			MakePriceStrA(buf, m_price - Doc()->m_myInfo.stat.i64Pang);
-			strncat_s(buf, K2L_Compatibility("\xc6\xce \xba\xce\xc1\xb7"), _TRUNCATE); // 983 00a9ce23/00aac80b
+			strcat(buf, K2L_Compatibility("\xc6\xce \xba\xce\xc1\xb7")); // 983 00a9ce23/00aac80b
 			m_pMoneyLeft->SetLine(1, buf, 0xffff0000, false, 0);
 		}
 		else
 		{
 			MakePriceStrA(buf, left);
-			strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+			strcat(buf, K2L_Compatibility("\xc6\xce"));
 			m_pMoneyLeft->SetLine(1, buf, 0, false, 0);
 		}
 	}
@@ -1250,13 +1250,13 @@ void CBuyingSlotDlg::RecalculatePang()
 	if (m_pPrice)
 	{
 		MakePriceStrA(buf, m_price);
-		strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+		strcat(buf, K2L_Compatibility("\xc6\xce"));
 		m_pPrice->SetLine(1, buf, 0, false, 0);
 	}
 	if (m_pMyMoney)
 	{
 		MakePriceStrA(buf, Doc()->m_myInfo.stat.i64Pang);
-		strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+		strcat(buf, K2L_Compatibility("\xc6\xce"));
 		m_pMyMoney->SetLine(1, buf, 0, false, 0);
 	}
 	if (m_pMoneyLeft)
@@ -1265,13 +1265,13 @@ void CBuyingSlotDlg::RecalculatePang()
 		if (left < 0)
 		{
 			MakePriceStrA(buf, m_price - Doc()->m_myInfo.stat.i64Pang);
-			strncat_s(buf, K2L_Compatibility("\xc6\xce \xba\xce\xc1\xb7"), _TRUNCATE); // 983 00a9ce23/00aac80b
+			strcat(buf, K2L_Compatibility("\xc6\xce \xba\xce\xc1\xb7")); // 983 00a9ce23/00aac80b
 			m_pMoneyLeft->SetLine(1, buf, 0xffff0000, false, 0);
 		}
 		else
 		{
 			MakePriceStrA(buf, left);
-			strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+			strcat(buf, K2L_Compatibility("\xc6\xce"));
 			m_pMoneyLeft->SetLine(1, buf, 0, false, 0);
 		}
 	}
@@ -1331,7 +1331,7 @@ void CBuyingSlotDlg::OnSlotPriceInit(int param)
 	if (m_pSlotPrice)
 	{
 		m_pSlotPrice->ClearLine();
-		m_pSlotPrice->AddText(MakeStr("%d \xc6\xce", (int)m_price), false, true);
+		m_pSlotPrice->AddText(MakeStr("%d \xc6\xce", m_price), false, true);
 	}
 }
 

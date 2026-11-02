@@ -1,6 +1,5 @@
 #include "westpak.h"
 #include "wminmax.h"
-#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,7 +48,6 @@ struct sPak
 	HANDLE lock;
 	sPakinfo** list;
 	sPak* next;
-	int dataEnd; // inicio do diretorio
 };
 
 class cFilePacked : public cFile
@@ -188,7 +186,7 @@ bool cFileMap::Open(const char* filename)
 
 int cFileMap::Read(void* target, int size)
 {
-	if (m_pBuff && m_offset >= 0) // Seek com tamanho vindo do arquivo pode cair antes do inicio
+	if (m_pBuff)
 	{
 		size = Min(m_nLen - m_offset, size);
 		if (size > 0)
@@ -267,11 +265,13 @@ public:
 	~cFileMemory() { delete[] buffer; }
 	virtual int Read(void* target, int size)
 	{
-		size = Min(m_nLen - offset, size);
-		if (size <= 0)
-			return 0;
-		memcpy(target, buffer + offset, size);
-		offset += size;
+		if (offset + size > m_nLen)
+			size = m_nLen - offset;
+		if (size)
+		{
+			memcpy(target, buffer + offset, size);
+			offset += size;
+		}
 		return size;
 	}
 	virtual int GetByte(void)
@@ -295,7 +295,6 @@ public:
 			offset = m_nLen + position;
 			break;
 		}
-		offset = Max(0, Min(offset, m_nLen)); // como cFilePacked e cFileLZ
 	}
 	virtual int Tell(void) { return offset; }
 
@@ -303,20 +302,6 @@ private:
 	char* buffer;
 	int offset;
 };
-
-// Pak cortado ou de outro formato = ausente; o jogo segue com os demais
-static sPak* RefusePak(sPak* archive, cFile* file)
-{
-	if (archive->list)
-	{
-		delete[] (char*)archive->list[0];
-		delete[] (char*)archive->list;
-	}
-	CloseHandle(archive->lock);
-	delete archive;
-	CloseCFile(file);
-	return 0;
-}
 
 static sPak* OpenPAKFILE2(cFile* file)
 {
@@ -327,22 +312,18 @@ static sPak* OpenPAKFILE2(cFile* file)
 	archive->lock = CreateEventA(0, 0, 1, 0);
 	for (int slot = 0; slot < 256; slot++)
 		archive->hash[slot] = -1;
-	archive->list = 0;
-	archive->num = 0;
 	file->Seek(-9, 2);
-	int names = 0;
+	int names;
 	file->Read(&names, 4);
 	file->Read(archive, 4);
-	const int dirEnd = file->Tell() - 8;
-	// menor entrada no disco = 14 bytes
-	if (archive->num <= 0 || names < 0 || names > dirEnd ||
-		archive->num > (dirEnd - names) / 14)
-		return RefusePak(archive, file);
-	archive->dataEnd = names;
+	if (archive->num <= 0)
+	{
+		delete archive;
+		return 0;
+	}
 	archive->list = (sPakinfo**)new char[archive->num * 4];
-	const int dirSize = dirEnd - names + archive->num * 6;
-	// +8: nome do tipo 0x20 decifra em blocos de 8. Zerado: 590 nomes reais enchem namelen sem o 0
-	archive->list[0] = (sPakinfo*)new char[dirSize + 8]();
+	archive->list[0] =
+		(sPakinfo*)new char[file->Tell() - 8 + (archive->num * 6 - names)];
 	file->Seek(names, 0);
 	names = 0;
 	int index = 0;
@@ -352,8 +333,6 @@ static sPak* OpenPAKFILE2(cFile* file)
 		{
 			archive->list[index] = (sPakinfo*)((char*)archive->list[0] + names);
 			file->Read(&namelen, 1);
-			if (names + 0x14 + namelen > dirSize)
-				return RefusePak(archive, file);
 			file->Read(archive->list[index], 1);
 			if ((archive->list[index]->type & 0xf0) == 0)
 				archive->list[index]->type |= 0x10;
@@ -429,10 +408,7 @@ static sPak* OpenPAKFILE2(cFile* file)
 				names = names + 0x15 + namelen;
 			}
 			break;
-			default:
-				return RefusePak(archive, file);
 			}
-			archive->list[index]->filename[namelen] = 0;
 			index++;
 		} while (index < archive->num);
 	}
@@ -446,19 +422,29 @@ void __cdecl HookPAKFile(const char* filename)
 {
 	int handle = open(filename, 0x8000, 0);
 	if (handle != -1)
-		HookPAKFile(new cFileDefault(handle));
+	{
+		cFile* file = new cFileDefault(handle);
+		sPak* archive = OpenPAKFILE2(file);
+		archive->next = pak;
+		pak = archive;
+	}
 	else
-		HookPAKFile(GetCFile(filename, 0x8000, 0));
+	{
+		cFile* file = GetCFile(filename, 0x8000, 0);
+		if (file)
+		{
+			sPak* archive = OpenPAKFILE2(file);
+			archive->next = pak;
+			pak = archive;
+		}
+	}
 }
 
 void __cdecl HookPAKFile(cFile* file)
 {
 	sPak* archive = OpenPAKFILE2(file);
-	if (archive)
-	{
-		archive->next = pak;
-		pak = archive;
-	}
+	archive->next = pak;
+	pak = archive;
 }
 
 static void ReleasePAK(sPak* archive)
@@ -484,8 +470,6 @@ void __cdecl MakeLog(char* name)
 {
 	strcpy(logname, name);
 	FILE* stream = fopen(logname, "wt");
-	if (stream == NULL)
-		return;
 	fprintf(stream, "LogFile (%s %s)\n-------\n", "Oct 21 2011", "12:23:28");
 	fclose(stream);
 }
@@ -549,33 +533,26 @@ static cFile* GetCFileSub(const char* name, int buffersize, int flag)
 	if (logname[0] != 0)
 	{
 		FILE* stream = fopen(logname, "at");
-		if (stream != NULL)
-		{
-			fprintf(stream, "%s\n", name);
-			fclose(stream);
-		}
+		fprintf(stream, "%s\n", name);
+		fclose(stream);
 	}
 	for (sPak* archive = pak; archive != 0; archive = archive->next)
 	{
 		for (int index = 0; index < archive->num; index++)
 		{
-			sPakinfo* info = archive->list[index];
-			if (strcmpi(name, info->filename) == 0)
+			if (strcmpi(name, archive->list[index]->filename) == 0)
 			{
-				// Fora dos dados ou maior que o LZ alcanca (no maximo 8 para 1): ProjectG958 tem entradas assim
-				const bool packed = (info->type & 0xf) != 0;
-				if (info->offset < 0 || info->packedsize < 0 || info->size < 0 ||
-					info->offset > archive->dataEnd - info->packedsize ||
-					info->size / (packed ? 8 : 1) > info->packedsize)
-					continue;
-				switch (info->type & 0xf)
+				switch (archive->list[index]->type & 0xf)
 				{
 				case 0:
-					return new cFilePacked(archive, info, buffersize);
+					return new cFilePacked(archive, archive->list[index],
+						buffersize);
 				case 1:
-					return new cFileLZ(archive, info, buffersize);
+					return new cFileLZ(archive, archive->list[index],
+						buffersize);
 				case 3:
-					return new cFileLZ2(archive, info, buffersize);
+					return new cFileLZ2(archive, archive->list[index],
+						buffersize);
 				}
 			}
 		}
@@ -607,12 +584,9 @@ cFile* __cdecl GetCFile(const char* name, int buffersize, int flag)
 			*strrchr(directory, '\\') = 0;
 			makedirectory(directory);
 			FILE* stream = fopen(full, "wb");
-			if (stream != NULL)
-			{
-				for (int index = 0; index < file->Length(); index++)
-					fputc(file->GetByte(), stream);
-				fclose(stream);
-			}
+			for (int index = 0; index < file->Length(); index++)
+				fputc(file->GetByte(), stream);
+			fclose(stream);
 		}
 		file->Seek(0, 0);
 	}
@@ -620,12 +594,11 @@ cFile* __cdecl GetCFile(const char* name, int buffersize, int flag)
 }
 
 // 983 00baf3d0 (era stub no exe; chamado pelo WResourceManager::GetCFile 00b59d00 para os nomes da m_list1e4_983):
-// arquivo solto em disco pelo caminho exato, sem PAK. O 983 testa o handle contra 0: com o arquivo apagado depois de baixado
-// iria a new char[-1]; -1 volta ao PAK, que o chamador ja tenta em seguida. Nome provisorio.
+// arquivo solto em disco pelo caminho exato, sem PAK; o 983 testa o handle contra 0 (nao -1). Nome provisorio.
 cFile* __cdecl GetCFileRaw983(const char* path, int buffersize)
 {
 	int handle = open(path, 0x8000, 0);
-	if (handle == -1)
+	if (handle == 0)
 		return 0;
 	if (buffersize < 0)
 		return new cFileMemory(new cFileRaw(handle, 0x1000));
@@ -660,17 +633,12 @@ void __cdecl CloseCFile(cFile* file)
 		delete file;
 }
 
-// Sem ler argumentos por &format: va_list vale em qualquer compilador. buffer limita numero longo;
-// "%63s" limita o texto ao tamanho do destino.
 bool cFile::Scan(const char* format, ...)
 {
-	va_list ap;
+	int arg = 0;
 	char buffer[128];
-	const int bufferMax = sizeof(buffer) - 1;
 	int c = -1;
 	int length = (int)strlen(format);
-
-	va_start(ap, format);
 
 	for (int i = 0; i < length; i++)
 	{
@@ -680,23 +648,14 @@ bool cFile::Scan(const char* format, ...)
 			{
 				c = GetByte();
 				if (c == -1)
-				{
-					va_end(ap);
 					return false;
-				}
 			}
 			while (c == 10 || c == 9 || c == 13 || c == 32)
 			{
 				c = GetByte();
 				if (c == -1)
-				{
-					va_end(ap);
 					return false;
-				}
 			}
-			int width = 0;
-			while (format[i + 1] >= '0' && format[i + 1] <= '9')
-				width = width * 10 + format[++i] - '0';
 			switch (format[i + 1])
 			{
 			case 'X':
@@ -717,14 +676,11 @@ bool cFile::Scan(const char* format, ...)
 					}
 					c = GetByte();
 					if (c == -1)
-					{
-						va_end(ap);
 						return false;
-					}
 				}
 				if (flag)
 					code = -code;
-				*va_arg(ap, int*) = code;
+				*((int**)&format)[++arg] = code;
 			}
 			break;
 			case 'F':
@@ -740,16 +696,16 @@ bool cFile::Scan(const char* format, ...)
 				{
 					if (c == '.')
 						flag = 1;
-					if (code < bufferMax)
-						buffer[code] = (char)c;
+					buffer[code] = (char)c;
 					if ((c = GetByte()) == -1)
 					{
 						code++;
 						break;
 					}
 				}
-				buffer[code < bufferMax ? code : bufferMax] = 0;
-				*va_arg(ap, float*) = (float)atof(buffer);
+				buffer[code] = 0;
+				float code2 = (float)atof(buffer);
+				*((int**)&format)[++arg] = *(int*)&code2;
 			}
 			break;
 			case 'D':
@@ -761,64 +717,58 @@ bool cFile::Scan(const char* format, ...)
 				for (code = 0; (c >= '0' && c <= '9') || (!code && c == '-');
 					code++)
 				{
-					if (code < bufferMax)
-						buffer[code] = (char)c;
+					buffer[code] = (char)c;
 					if ((c = GetByte()) == -1)
 					{
 						code++;
 						break;
 					}
 				}
-				buffer[code < bufferMax ? code : bufferMax] = 0;
-				*va_arg(ap, int*) = atoi(buffer);
+				buffer[code] = 0;
+				*((int**)&format)[++arg] = atoi(buffer);
 			}
 			break;
 			case 'S':
 			case 's':
 			{
 				int code = 0;
-				char* target = va_arg(ap, char*);
+				char* target = ((char**)&format)[++arg];
 				for (code = 0; c != 10; code++)
 				{
 					if (c == 9 || c == 13 || c == 32 || c == -1)
 						break;
-					if (!width || code < width)
-						target[code] = (char)c;
+					target[code] = (char)c;
 					if ((c = GetByte()) == -1)
 					{
 						code++;
 						break;
 					}
 				}
-				target[width && code > width ? width : code] = 0;
+				target[code] = 0;
 			}
 			break;
 			case 'N':
 			case 'n':
 			{
 				int code = 0;
-				char* target = va_arg(ap, char*);
-				// %n: buffer de 1024; %N: de 8192 (tip.txt, school.txt); "%259n" limita a 259. O resto da linha e lido e descartado
-				const int maxLen = width ? width : format[i + 1] == 'N' ? 8191 : 1023;
+				char* target = ((char**)&format)[++arg];
 				for (code = 0; c != 10; code++)
 				{
 					if (c == 9 || c == 13 || c == -1)
 						break;
-					if (code < maxLen)
-						target[code] = (char)c;
+					target[code] = (char)c;
 					if ((c = GetByte()) == -1)
 					{
 						code++;
 						break;
 					}
 				}
-				target[code < maxLen ? code : maxLen] = 0;
+				target[code] = 0;
 			}
 			break;
 			}
 		}
 	}
-	va_end(ap);
 	if (c != -1 && c != 13)
 		Seek(-1, 1);
 	return true;
@@ -944,7 +894,7 @@ inline void cFileLZ::ReadBlock(void)
 	{
 		if (d1 & 1)
 		{
-			unsigned short d2 = 0; // fim dos dados: Read nao escreve
+			unsigned short d2;
 			cFilePacked::Read(&d2, 2);
 			unsigned short len = (d2 >> 12) + 2;
 			d2 = offset - (d2 & 0xfff);
@@ -953,8 +903,7 @@ inline void cFileLZ::ReadBlock(void)
 				unsigned short rest =
 					Min(Min((int)len, 0x2000 - (offset & 0x1fff)),
 						0x2000 - (d2 & 0x1fff));
-				// distancia < comprimento se sobrepoe: nunca ocorre nos paks do 983, so em pak de outra ferramenta
-				memmove(buffer + (offset & 0x1fff), buffer + (d2 & 0x1fff),
+				memcpy(buffer + (offset & 0x1fff), buffer + (d2 & 0x1fff),
 					rest);
 				offset += rest;
 				d2 += rest;
@@ -983,7 +932,7 @@ inline void cFileLZ2::ReadBlock(void)
 	{
 		if (d1 & 1)
 		{
-			unsigned short d2 = 0; // fim dos dados: Read nao escreve
+			unsigned short d2;
 			cFilePacked::Read(&d2, 2);
 			d2 ^= secutable[(raw >> 3) & 7];
 			unsigned short len = (d2 >> 12) + 2;
@@ -993,8 +942,7 @@ inline void cFileLZ2::ReadBlock(void)
 				unsigned short rest =
 					Min(Min((int)len, 0x2000 - (offset & 0x1fff)),
 						0x2000 - (d2 & 0x1fff));
-				// distancia < comprimento se sobrepoe: nunca ocorre nos paks do 983, so em pak de outra ferramenta
-				memmove(buffer + (offset & 0x1fff), buffer + (d2 & 0x1fff),
+				memcpy(buffer + (offset & 0x1fff), buffer + (d2 & 0x1fff),
 					rest);
 				offset += rest;
 				d2 += rest;

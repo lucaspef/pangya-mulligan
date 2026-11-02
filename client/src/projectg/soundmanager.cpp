@@ -179,10 +179,6 @@ _SFX_INFO* CSoundManager::LoadSfx(const char* name, const WVector* pos,
 {
 	if (!m_pMSS)
 		return NULL;
-	// nome/alias vindos de xml de outro pak sem limite: strcpy passava de name[64]/alias[32] (983 igual); nao cabe = mudo
-	if (strlen(name) >= sizeof(((_SFX_INFO*)0)->name) ||
-		(alias && strlen(alias) >= sizeof(((_SFX_INFO*)0)->alias)))
-		return NULL;
 	bool b3D = pos && flags != 5;
 	_SFX_INFO* pInfo = FindIdleSfx(name);
 	if (!pInfo)
@@ -387,7 +383,7 @@ void CSoundManager::PlayBGM(const char* name, bool bLoop, bool bFadeOut)
 			{
 				StopBGM(bFadeOut);
 				m_bgm = handle;
-				strncpy_s(m_bgmName, name, _TRUNCATE);
+				strcpy(m_bgmName, name);
 				m_pMSS->Play(m_bgm, !bLoop, true);
 				m_bBgmStopped983 = false;
 				jp983_rastro("B543 PlayBGM handle=%d playing=%d", handle, (int)m_pMSS->IsPlaying(m_bgm));

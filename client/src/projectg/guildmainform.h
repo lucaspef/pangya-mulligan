@@ -1,9 +1,6 @@
 #pragma once
 #include "vc10_layout.h"
 
-#include <list>
-#include <map>
-#include <string>
 #include "frform.h"
 
 class FrEdit;
@@ -54,20 +51,13 @@ namespace _guild
 		unsigned char m_unused1d4[0x14];
 		CGuildInfo* m_pLinkGuildInfo;
 		int m_guildActorParam;
-		// B1637: map e list com o tamanho do compilador (classe real em ingameguildlobbydlg.h); bytes fixos do VC10
-		// punham m_pCommandUserInfo +0xc adiante da real no cl 14.44. 983 SetCommandUserInfo 0066dfe0 grava +0x2d8
-		unsigned char m_unused1f0[0xc0];
-		unsigned char m_authControllers[sizeof(std::map<int, void*>)];
+		// D717: std::map m_authControllers (+0x2b0) tem 0x10 B (ingameguildlobbydlg.h, dono do ctor); 983 SetCommandUserInfo 0066dfe0 grava +0x2d8
+		unsigned char m_unused1f0[0xd0];
 		float m_talkTextOffset; // +0x2c0
 		float m_talkIconOffset; // +0x2c4
-		unsigned char m_memberItems[sizeof(std::list<void*>)];
-		void* m_pSearchArrow;
+		unsigned char m_unused2c8[0x10];
 		const GUILD_USER_LIST* m_pCommandUserInfo; // +0x2d8
-		unsigned char m_searchItems[sizeof(std::list<void*>)];
-		int m_memberPage;
-		int m_searchPage;
-		int m_searchMode;
-		unsigned char m_searchText[sizeof(std::string)];
+		unsigned char m_unused2dc[0x34];
 	};
 	C_ASSERT_VC10(sizeof(CGuildMainForm) == 0x310 && offsetof(CGuildMainForm, m_pCommandUserInfo) == 0x2d8);
 }

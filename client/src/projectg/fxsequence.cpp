@@ -56,7 +56,7 @@ bool CFxSequence::LoadFile(const char* filename)
 
 		char buf[1024];
 		int lineNo = 0;
-		while (file->Scan("%259n", buf)) // tokens de 260 (maior linha real: 142)
+		while (file->Scan("%n", buf))
 		{
 			lineNo++;
 			AddLine(buf, lineNo);
@@ -109,7 +109,7 @@ void CFxSequence::AddLine(const char* line, int lineNo)
 
 	sLine newLine;
 	newLine.line = lineNo;
-	if (isalpha((unsigned char)token0[0]))
+	if (isalpha(token0[0]))
 	{
 		newLine.time = -1;
 		strcpy(newLine.text, token0);
@@ -383,7 +383,7 @@ bool CFxSequence::ParseLine(const char* line, bool& bStop)
 	{
 		if (m_pCurSpray != NULL)
 		{
-			int killTime = 0;
+			int killTime;
 			sscanf(tok[0], "%d", &killTime);
 			m_pCurSpray->m_killTime = killTime;
 		}

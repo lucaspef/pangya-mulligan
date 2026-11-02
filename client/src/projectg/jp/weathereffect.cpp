@@ -141,9 +141,6 @@ void CWeatherEffect::AddEffect(int num, const char* sprName, int sprIndex, float
 
 	effect->frag = new sFrag[effect->num];
 	effect->spr = g_resrcmng->Get3DAniSpr(sprName, 0, sprWidth, sprHeight);
-	// pak sem o sprite, ou sem nenhum quadro (rand() % 0): sem o efeito
-	if (!effect->spr || effect->spr->GetSpriteNum() <= 0)
-		return;
 	effect->spr->SetRect(width, height, width * 0.5, height * 0.5);
 	effect->spr->SetColor(color);
 

@@ -103,37 +103,27 @@ void FrGraphicInterface::RefreshTextureCacheInfo(const Bitmap* pBitmap)
 }
 
 float FrGraphicInterface::Print(const WPoint& point, unsigned long align,
-	Format format, ...)
+	const char* format, ...)
 {
 	char buffer[2048];
 	va_list args;
 	va_start(args, format);
-	_vsnprintf(buffer, 0x7ff, format.text, args); // cheio sem -1 tambem nao termina
-	buffer[0x7ff] = 0;
+	if (_vsnprintf(buffer, 0x7ff, format, args) == -1)
+		buffer[0x7ff] = 0;
 	va_end(args);
 	return PrintText(point, align, buffer, 0);
 }
 
 float FrGraphicInterface::Print11(const WPoint& point, unsigned long align,
-	Format format, ...)
+	const char* format, ...)
 {
 	char buffer[2048];
 	va_list args;
 	va_start(args, format);
-	_vsnprintf(buffer, 0x7ff, format.text, args); // cheio sem -1 tambem nao termina
-	buffer[0x7ff] = 0;
+	if (_vsnprintf(buffer, 0x7ff, format, args) == -1)
+		buffer[0x7ff] = 0;
 	va_end(args);
 	return PrintText11(point, align, buffer, 0);
-}
-
-float FrGraphicInterface::Print(const WPoint& point, unsigned long align, const char* text)
-{
-	return PrintText(point, align, text, 0);
-}
-
-float FrGraphicInterface::Print11(const WPoint& point, unsigned long align, const char* text)
-{
-	return PrintText11(point, align, text, 0);
 }
 
 float FrGraphicInterface::PrintText(const WPoint& point, unsigned long align,

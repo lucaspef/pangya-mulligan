@@ -39,6 +39,8 @@
 #define OVERLAY_NEAR_Z 0.044f
 
 WMatrix RotMat(const WVector& axis, float angle);
+const char* __fastcall GetStrConst(const char* src, char* dest);
+const char* GetCharsTillSpace(const char* str, char* out);
 
 extern Fresh* g_pFresh;
 extern WMatrix g_camera;
@@ -954,8 +956,8 @@ void CRealMyRoom_Avatar::Render()
 	}
 	else
 	{
-		WBone* pelvis = m_pPetFrame->GetBonePet()->FindBone(BONE_PELVIS);
-		pos = pelvis ? pelvis->GetMatrix().pivot : m_position;
+		pos =
+			m_pPetFrame->GetBonePet()->FindBone(BONE_PELVIS)->GetMatrix().pivot;
 		pos = GetPVS().GetGroundPoint(pos, false, NULL, false);
 	}
 
@@ -1013,11 +1015,8 @@ void CRealMyRoom_Avatar::RenderOverlay(bool bDetail)
 	if (!g_view->InFrustum(m_pPetFrame->GetBonePet()->m_bound))
 		return;
 
-	WBone* headBone = m_pPetFrame->GetBonePet()->FindBone(BONE_HEADNUB);
-	if (!headBone)
-		return;
 	WVector head;
-	head = headBone->GetMatrix().pivot;
+	head = m_pPetFrame->GetBonePet()->FindBone(BONE_HEADNUB)->GetMatrix().pivot;
 
 	WVector screen = g_view->Projection(head);
 	if (!(screen.z <= OVERLAY_NEAR_Z) && !(screen.z >= 1.0f))
@@ -1168,7 +1167,7 @@ void CRealMyRoom_Avatar::ParsePuppetScript(const char* script)
 			}
 		}
 
-		if (cmdLen <= 1 || cmdLen >= (int)sizeof(s_command)) // frame de outro pak: nome longo nao e comando
+		if (cmdLen <= 1)
 			return;
 
 		strncpy(s_command, str, cmdLen);

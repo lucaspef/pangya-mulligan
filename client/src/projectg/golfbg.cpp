@@ -232,8 +232,7 @@ void CGolfBg::DoInitAfterLoad()
 	if (pGreen == NULL)
 		pGreen = GOLFDOC()->m_pPolySoup->FindPoint("\xb1\xd7\xb8\xae\xb5\xe5");
 
-	if (pGreen)
-		SetGridCenter(pGreen->pos);
+	SetGridCenter(pGreen->pos);
 	SetStartPoint(GOLFDOC()->GetHoleData().tee);
 	SetHolePoint(GOLFDOC()->GetHoleData().pin);
 

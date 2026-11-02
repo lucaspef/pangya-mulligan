@@ -1026,19 +1026,13 @@ unsigned char CClub::GetType(unsigned char index)
 
 void CClub::SetClub(const char* name)
 {
-	sClub* pClub = m_clubList.Find(name); // nome vem da fita: fora da lista fica o taco atual
-	if (pClub == NULL)
-		return;
-	m_pClub = pClub;
+	m_pClub = m_clubList.Find(name);
 	m_curIndex = m_pClub->index;
 }
 
 void CClub::SetClub(unsigned char index)
 {
-	sClub* pClub = SelectClub(index); // E492: indice vem do pacote 0x59; fora da lista fica o taco atual
-	if (pClub == NULL)
-		return;
-	m_pClub = pClub;
+	m_pClub = SelectClub(index);
 	m_curIndex = m_pClub->index;
 }
 
@@ -1056,20 +1050,14 @@ sClubSet* CClub::AddClubSet(unsigned long tid)
 			{
 				IFF_STRUCT::sClub* pIffClub =
 					ItemManager()->FindClub(pInfo->ClubIds[i]);
-				// pak sem o taco: pHead fica NULL e o enquadramento cai no padrao abaixo
-				if (pIffClub)
-				{
-					pSet->pHead[i] = g_resrcmng->GetPuppet(
-						MakeStr("%s.pet", pIffClub->Data), false, true, false);
-					pSet->pHeadSub[i] = g_resrcmng->GetPuppet(
-						MakeStr("%s.pet", pIffClub->Data), false, true, false);
-				}
-				if (pSet->pHead[i])
-					pSet->pHead[i]->CalcBound(NULL, true);
-				if (pSet->pHeadSub[i])
-					pSet->pHeadSub[i]->CalcBound(NULL, true);
-				w_bound_box* pCamera = pSet->pHead[i] ? pSet->pHead[i]->FindBoundBox("camera") : NULL;
-				w_bound_box* pTarget = pSet->pHead[i] ? pSet->pHead[i]->FindBoundBox("target") : NULL;
+				pSet->pHead[i] = g_resrcmng->GetPuppet(
+					MakeStr("%s.pet", pIffClub->Data), false, true, false);
+				pSet->pHead[i]->CalcBound(NULL, true);
+				pSet->pHeadSub[i] = g_resrcmng->GetPuppet(
+					MakeStr("%s.pet", pIffClub->Data), false, true, false);
+				pSet->pHeadSub[i]->CalcBound(NULL, true);
+				w_bound_box* pCamera = pSet->pHead[i]->FindBoundBox("camera");
+				w_bound_box* pTarget = pSet->pHead[i]->FindBoundBox("target");
 				sClubSet::sFrame& f = pSet->frame[i];
 				sClubSet::sGuide& g = pSet->guide[i];
 				g.diffuse = 0xffffff;

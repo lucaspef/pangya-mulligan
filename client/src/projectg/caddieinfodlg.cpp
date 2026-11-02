@@ -249,7 +249,7 @@ bool FrCaddieInfoDlg::OnInit()
 			pCaddie->MonthlyFee > 0 && m_pCaddieFee)
 		{
 			char fee[64];
-			_snprintf_s(fee, _TRUNCATE, K2L_Compatibility("%d \306\316"), pCaddie->MonthlyFee);
+			sprintf(fee, K2L_Compatibility("%d \306\316"), pCaddie->MonthlyFee);
 			m_pCaddieFee->SetLine(1, fee, 0, 0, false);
 			SetDesc(
 				K2L_Compatibility("'\301\366\261\336' \271\366\306\260\300\273 \264\255\267\257 \304\263\265\360\270\246 \300\347\260\355\277\353 \307\322 \274\366 \300\326\275\300\264\317\264\331."));

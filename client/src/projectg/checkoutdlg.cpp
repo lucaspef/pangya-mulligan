@@ -345,7 +345,7 @@ void FrCheckoutDlg::RecalculateTotalCookie(__int64 money, __int64 cookie,
 			if (need < 0)
 				need = 0;
 			MakePriceStrA(local, need);
-			strncat_s(local, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+			strcat(local, K2L_Compatibility("\xc6\xce"));
 			m_pPrice->SetLine(1, local, 0, false, 0);
 			if (m_price != 0)
 				bMoneyDue = true;
@@ -356,7 +356,7 @@ void FrCheckoutDlg::RecalculateTotalCookie(__int64 money, __int64 cookie,
 			__int64 need = diff;
 			if (need < 0)
 				need = 0;
-			_snprintf_s(local, _TRUNCATE, K2L_Compatibility("%I64d\xc4\xed\xc5\xb0"), need);
+			sprintf(local, K2L_Compatibility("%I64d\xc4\xed\xc5\xb0"), need);
 			m_pPriceCookie->SetLine(1, local, 0, false, 0);
 			if (diff != 0)
 			{
@@ -374,12 +374,12 @@ void FrCheckoutDlg::RecalculateTotalCookie(__int64 money, __int64 cookie,
 		if (m_pMyMoney)
 		{
 			MakePriceStrA(local, money);
-			strncat_s(local, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+			strcat(local, K2L_Compatibility("\xc6\xce"));
 			m_pMyMoney->SetLine(1, local, 0, false, 0);
 		}
 		if (m_pMyMoneyCookie)
 		{
-			_snprintf_s(local, _TRUNCATE, K2L_Compatibility("%I64d\xc4\xed\xc5\xb0"), cookie);
+			sprintf(local, K2L_Compatibility("%I64d\xc4\xed\xc5\xb0"), cookie);
 			m_pMyMoneyCookie->SetLine(1, local, 0, false, 0);
 		}
 		UpdateCouponPrice(); // 983 00a9e8d9: so com bCookie
@@ -650,7 +650,7 @@ void FrCheckoutDlg::SetPrice(int count)
 		if (need < 0)
 			need = 0;
 		MakePriceStrA(buf, need);
-		strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+		strcat(buf, K2L_Compatibility("\xc6\xce"));
 		m_pPrice->SetLine(1, buf, 0, false, 0);
 
 		__int64 fee = Doc()->m_myInfo.stat.i64Pang;
@@ -660,7 +660,7 @@ void FrCheckoutDlg::SetPrice(int count)
 			if (m_pMoneyLeft)
 			{
 				MakePriceStrA(buf, total - m_couponPang - fee);
-				strncat_s(buf, K2L_Compatibility("\xc6\xce \xba\xce\xc1\xb7"), _TRUNCATE);
+				strcat(buf, K2L_Compatibility("\xc6\xce \xba\xce\xc1\xb7"));
 				m_pMoneyLeft->SetLine(1, buf, 0xffff0000, false, 0);
 			}
 			m_bMoneyOk = false;
@@ -671,7 +671,7 @@ void FrCheckoutDlg::SetPrice(int count)
 			if (have > total)
 				have = total;
 			MakePriceStrA(buf, have - total + fee);
-			strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+			strcat(buf, K2L_Compatibility("\xc6\xce"));
 			m_pMoneyLeft->SetLine(1, buf, 0, false, 0);
 		}
 	}
@@ -685,7 +685,7 @@ void FrCheckoutDlg::SetPrice(int count)
 		__int64 need = m_priceCookie - m_couponCookie;
 		if (need < 0)
 			need = 0;
-		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("%I64d\xc4\xed\xc5\xb0"), need);
+		sprintf(buf, K2L_Compatibility("%I64d\xc4\xed\xc5\xb0"), need);
 		m_pPriceCookie->SetLine(1, buf, 0, false, 0);
 
 		__int64 fee = Doc()->m_cookie;
@@ -695,7 +695,7 @@ void FrCheckoutDlg::SetPrice(int count)
 			if (m_pMoneyLeftCookie)
 			{
 				MakePriceStrA(buf, m_priceCookie - m_couponCookie - fee);
-				strncat_s(buf, K2L_Compatibility("\xc4\xed\xc5\xb0 \xba\xce\xc1\xb7"), _TRUNCATE);
+				strcat(buf, K2L_Compatibility("\xc4\xed\xc5\xb0 \xba\xce\xc1\xb7"));
 				m_pMoneyLeftCookie->SetLine(1, buf, 0xffff0000, false, 0);
 			}
 			m_bCookieOk = false;
@@ -705,7 +705,7 @@ void FrCheckoutDlg::SetPrice(int count)
 			__int64 have = m_couponCookie;
 			if (have > m_priceCookie)
 				have = m_priceCookie;
-			_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("%d\xc4\xed\xc5\xb0"), have - m_priceCookie + fee);
+			sprintf(buf, K2L_Compatibility("%d\xc4\xed\xc5\xb0"), have - m_priceCookie + fee);
 			m_pMoneyLeftCookie->SetLine(1, buf, 0, false, 0);
 		}
 	}
@@ -1233,20 +1233,20 @@ void FrCheckoutDlg::OnCheckoutLBtnUp()
 	if (m_bHasCoupons && m_selCoupon >= 0)
 	{
 		CartItem* first = (CartItem*)(*items.begin())->pData;
-		char price[64] = ""; // 16 no 983; unidade traduzida
+		char price[16] = "";
 		if (m_price > 0)
 		{
 			__int64 total = (__int64)m_count * m_price;
-			_snprintf_s(price, _TRUNCATE, K2L_Compatibility("%I64d\xc6\xce"),
+			sprintf(price, K2L_Compatibility("%I64d\xc6\xce"),
 				total > m_couponPang ? total - m_couponPang : 0);
 		}
 		else if (m_priceCookie > 0)
 		{
-			_snprintf_s(price, _TRUNCATE, K2L_Compatibility("%I64d\xc4\xed\xc5\xb0"),
+			sprintf(price, K2L_Compatibility("%I64d\xc4\xed\xc5\xb0"),
 				m_priceCookie > m_couponCookie ? m_priceCookie - m_couponCookie : 0);
 		}
 		else
-			_snprintf_s(price, _TRUNCATE, K2L_Compatibility("0\xc4\xed\xc5\xb0"));
+			sprintf(price, K2L_Compatibility("0\xc4\xed\xc5\xb0"));
 		sprintf(desc,
 			K2L_Compatibility("\\c0xffff0000\\c%s\xc0\xbb(\xb8\xa6) \xb1\xb8\xc0\xd4\xc7\xcf\xbd\xc3\xb4\xc2\xb5\xa5 %s\xc0\xcc(\xb0\xa1) \xbc\xd2\xbf\xe4\xb5\xcb\xb4\xcf\xb4\xd9.\n\xc1\xa4\xb8\xbb \xb1\xb8\xc0\xd4\xc7\xcf\xbd\xc3\xb0\xda\xbd\xc0\xb4\xcf\xb1\xee?"),
 			first->pItem->c.Name, price);
@@ -1470,7 +1470,7 @@ void FrCheckoutDlg::OnCartOwnerDraw(int param)
 
 	// price label + unit
 	int labelWidth;
-	char unit[32]; // 8 no 983; unidade traduzida
+	char unit[8];
 	if (m_childCount > 0)
 	{
 		if (!m_bCookie && m_child[cart->option].flag)
@@ -1478,14 +1478,14 @@ void FrCheckoutDlg::OnCartOwnerDraw(int param)
 			labelWidth = float2int(
 				device->Print(WPoint(item->pos.x + 90.0f, item->pos.y + 34.0f),
 					0, K2L_Compatibility("\xb0\xa1    \xb0\xdd:   ")));
-			strncpy_s(unit, K2L_Compatibility("\xc4\xed\xc5\xb0"), _TRUNCATE);
+			strcpy(unit, K2L_Compatibility("\xc4\xed\xc5\xb0"));
 		}
 		else
 		{
 			labelWidth = float2int(
 				device->Print(WPoint(item->pos.x + 90.0f, item->pos.y + 34.0f),
 					0, K2L_Compatibility("\xb0\xa1    \xb0\xdd:   ")));
-			strncpy_s(unit, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+			strcpy(unit, K2L_Compatibility("\xc6\xce"));
 		}
 	}
 	else
@@ -1495,14 +1495,14 @@ void FrCheckoutDlg::OnCartOwnerDraw(int param)
 			labelWidth = float2int(
 				device->Print(WPoint(item->pos.x + 90.0f, item->pos.y + 34.0f),
 					0, K2L_Compatibility("\xb0\xa1    \xb0\xdd:   ")));
-			strncpy_s(unit, K2L_Compatibility("\xc4\xed\xc5\xb0"), _TRUNCATE);
+			strcpy(unit, K2L_Compatibility("\xc4\xed\xc5\xb0"));
 		}
 		else
 		{
 			labelWidth = float2int(
 				device->Print(WPoint(item->pos.x + 90.0f, item->pos.y + 34.0f),
 					0, K2L_Compatibility("\xb0\xa1    \xb0\xdd:   ")));
-			strncpy_s(unit, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
+			strcpy(unit, K2L_Compatibility("\xc6\xce"));
 		}
 	}
 
@@ -1539,17 +1539,14 @@ void FrCheckoutDlg::OnCartOwnerDraw(int param)
 	case 8:
 	{
 		IFF_STRUCT::sCadItem* pCad = ItemManager()->FindCadItem(tid);
-		if (pCad)
-			device->Print(
-				WPoint(labelWidth + 90.0f + item->pos.x, item->pos.y + 34.0f), 0,
-				"%d%s", (int)pCad->COM[cart->option], unit);
+		device->Print(
+			WPoint(labelWidth + 90.0f + item->pos.x, item->pos.y + 34.0f), 0,
+			"%d%s", (int)pCad->COM[cart->option], unit);
 		break;
 	}
 	case 0x10:
 	{
 		IFF_STRUCT::sMascot* pMascot = ItemManager()->FindMascot(tid);
-		if (pMascot == NULL)
-			break;
 		// 983: mascote de cash sem prazo (+0x82 == 0) mostra c.Price (+0x74); as outras, COM[opcao]
 		int mascotPrice = (pMascot->c.IsCash && pMascot->c.TimeFlag == 0) // 983 00a9fc5f
 			? (int)pMascot->c.Price : (int)pMascot->COM[cart->option];
@@ -1560,7 +1557,7 @@ void FrCheckoutDlg::OnCartOwnerDraw(int param)
 	}
 	default:
 		// 983 00a9fcbe: tipo 6 sub 0x100000 (pacote) = sItem.COM[opcao], antes dos botoes de compra
-		if ((tid >> 26) == 6 && (tid & 0x1f00000) == 0x100000 && ItemManager()->FindItem(tid))
+		if ((tid >> 26) == 6 && (tid & 0x1f00000) == 0x100000)
 			device->Print(
 				WPoint(labelWidth + 90.0f + item->pos.x, item->pos.y + 34.0f), 0,
 				"%d%s", (int)ItemManager()->FindItem(tid)->COM[cart->option], unit);
@@ -1864,7 +1861,7 @@ void FrCheckoutDlg::OnCartOwnerDraw(int param)
 			}
 			IFF_STRUCT::sItem* pIffItem = ItemManager()->FindItem(cart->pItem->c.TypeId);
 			cart->pCombo = &((DaysCombo*)&m_pDays)[item->no % 2 != 0];
-			if (pIffItem && cart->pCombo->bDirty)
+			if (cart->pCombo->bDirty)
 			{
 				cart->pCombo->pCombo->ClearList();
 				short* period = pIffItem->COM;
@@ -2345,12 +2342,12 @@ void FrCheckoutDlg::UpdateCouponPrice()
 	{
 		char text[32] = {0};
 		if (m_couponPang <= 0)
-			_snprintf_s(text, _TRUNCATE, K2L_Compatibility("0\xc6\xce"));
+			sprintf(text, K2L_Compatibility("0\xc6\xce"));
 		else
 		{
 			char price[0x20] = {0};
 			MakePriceStrA(price, m_couponPang);
-			_snprintf_s(text, _TRUNCATE, K2L_Compatibility("- %s\xc6\xce"), price);
+			sprintf(text, K2L_Compatibility("- %s\xc6\xce"), price);
 		}
 		m_pCouponPang->SetLine(1, text, 0, false, 0);
 	}
@@ -2358,9 +2355,9 @@ void FrCheckoutDlg::UpdateCouponPrice()
 	{
 		char text[32] = {0};
 		if (m_couponCookie <= 0)
-			_snprintf_s(text, _TRUNCATE, K2L_Compatibility("0\xc4\xed\xc5\xb0"));
+			sprintf(text, K2L_Compatibility("0\xc4\xed\xc5\xb0"));
 		else
-			_snprintf_s(text, _TRUNCATE, K2L_Compatibility("- %I64d\xc4\xed\xc5\xb0"), m_couponCookie);
+			sprintf(text, K2L_Compatibility("- %I64d\xc4\xed\xc5\xb0"), m_couponCookie);
 		m_pCouponCookie->SetLine(1, text, 0, false, 0);
 	}
 }

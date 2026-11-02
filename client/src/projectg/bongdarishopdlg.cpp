@@ -1309,7 +1309,7 @@ void FrBongdariShopDlg::OnSelectBongBnUp()
 	m_pSelectMemBn983->SetVisible(false);
 	m_pAutoStartBn983->SetVisible(true);
 	m_pNormalPlayBn983->SetVisible(true); // 008b3e40(1)
-	m_pComboPlayBn983->SetVisible(false);
+	m_pComboPlayBn983->SetVisible(true);
 	m_pAboutBn983->SetStatus((FrButton::eButMode)0);
 	m_pAboutBn983->Enable(true);
 	m_pCloseBn->Enable(true);
@@ -2582,13 +2582,15 @@ void FrBongdariShopDlg::EndPlay983()
 	if (!m_bAutoPlay983 || m_comboMode983 != 0)
 	{
 		m_pNormalPlayBn983->SetVisible(true); // 008b3e40(1)
-		m_pComboPlayBn983->SetVisible(false);
+		m_pComboPlayBn983->SetVisible(true);//mudei aqui
 		if (m_comboMode983 == 1)
 		{
-			RefreshTotalItem983(&m_listSecond983);
-			for (std::list<sBonusBall>::iterator it = m_listSecond983.begin();
-				it != m_listSecond983.end(); ++it)
-				UpdateListMyItem(&*it);
+			//não tava aparecendo a lista de itens ganho, eu adicionei aqui
+			RefreshTotalItem983(m_shopMode983 == 2 ? &m_listResult983 : &m_listTotalItem);
+			for (std::list<sBonusBall>::iterator it = m_listTotalItem.begin();
+				it != m_listTotalItem.end(); ++it)
+				UpdateListMyItem(&*it); 
+				//
 		}
 		else
 		{
@@ -4068,12 +4070,6 @@ void FrBongdarishopNoticeDlg::OnNoticeViewerBnUp()
 {
 	if (m_curIndex < 0)
 		return;
-	// bs_ppl.ini ausente ou vazio (pak de outra versao): m_images vazio com m_curIndex 0; o 983 indexa igual
-	if (m_curIndex >= (int)m_images.size())
-	{
-		Close(FrNONE, true);
-		return;
-	}
 	WPoint point;
 	point = g_pFresh->GetManager()->GetMousePos();
 	std::list<sNoticeImage::sBn>::iterator it;

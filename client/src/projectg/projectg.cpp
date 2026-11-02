@@ -156,8 +156,8 @@ void __cdecl TextOut(WView* view, float x, float y, const char* format, ...)
 	char text[2048];
 	va_list args;
 	va_start(args, format);
-	_vsnprintf(text, sizeof(text) - 1, format, args); // cheio sem -1 tambem nao termina
-	text[sizeof(text) - 1] = 0;
+	if (_vsnprintf(text, sizeof(text) - 1, format, args) == -1)
+		text[sizeof(text) - 1] = 0;
 	va_end(args);
 	g_font->Print(view, x, y, text, 0, 0xffffffff, NULL);
 }
@@ -636,10 +636,10 @@ bool CProjectG::Ready()
 	new CContentsDoc;
 	if (!CContentsDoc::Instance()->Initialize())
 		return false;
-	// 983 copia em 260 bytes; pasta funda + argumentos do launcher estouram a pilha
-	std::string commandLine(GetCommandLine());
-	strlwr(&commandLine[0]);
-	if (strstr(commandLine.c_str(), "-integrity"))
+	char commandLine[MAX_PATH];
+	strcpy(commandLine, GetCommandLine());
+	strlwr(commandLine);
+	if (strstr(commandLine, "-integrity"))
 	{
 		CIntegrityCheck check;
 		if (!check.Report("ResrcIntegrity.txt"))
@@ -704,9 +704,7 @@ bool CProjectG::Ready()
 		if (course > 127 && course != 253)
 			map = course - 128;
 		CItemManager* items = &Doc()->m_itemManager;
-		IFF_STRUCT::sCourse* pCourse = items->FindCourse(map | 0x28000000);
-		if (pCourse)
-			LOBBYBG_MAPNAME = pCourse->Data;
+		LOBBYBG_MAPNAME = items->FindCourse(map | 0x28000000)->Data;
 	}
 	ExecuteStartMode();
 	SYSTEM_INFO systemInfo;
@@ -950,7 +948,7 @@ void CProjectG::CheckScreenShot()
 			strcat(suffix, "G");
 			strcat(description, "(GUI");
 			if (!m_bHidePI)
-				strncat_s(description, K2L_Compatibility("\301\246\260\305)"), _TRUNCATE);
+				strcat(description, K2L_Compatibility("\301\246\260\305)"));
 		}
 		if (m_bHidePI)
 		{
@@ -959,8 +957,8 @@ void CProjectG::CheckScreenShot()
 				strcat(description, ", ");
 			else
 				strcat(description, "(");
-			strncat_s(description,
-				K2L_Compatibility("\260\263\300\316\301\244\272\270\301\246\260\305)"), _TRUNCATE);
+			strcat(description,
+				K2L_Compatibility("\260\263\300\316\301\244\272\270\301\246\260\305)"));
 		}
 		const char* format = COption::Instance()->dGetCaptureFormat();
 		mkdir("capture");
@@ -1032,11 +1030,11 @@ void CProjectG::CheckScreenShot()
 				g_resrcmng->VideoReference()->EndScene();
 			}
 			if (SaveScreenShot(filename))
-				_snprintf_s(captureMessage, _TRUNCATE,
+				sprintf(captureMessage,
 					K2L_Compatibility("\310\255\270\351%s\300\314 %s\277\241 \300\372\300\345\265\307\276\372\275\300\264\317\264\331."),
 					description, filename);
 			else
-				_snprintf_s(captureMessage, _TRUNCATE,
+				sprintf(captureMessage,
 					K2L_Compatibility("\275\272\305\251\270\260\274\246 \300\372\300\345\300\314 \275\307\306\320 \307\337\275\300\264\317\264\331."));
 			captureMessageTime = timeGetTime();
 			// 983 00a68e8b: so depois de salvar; o ramo avi deixa ligado durante a gravacao
@@ -1076,7 +1074,7 @@ void CProjectG::OpenDisconDlg(const char* text, bool gameServer)
 	}
 	else
 	{
-		GameMessageBox(NULL, text, K2L_Compatibility("\276\313\270\262"), 0);
+		MessageBox(NULL, text, K2L_Compatibility("\276\313\270\262"), 0);
 		if (gameServer == true)
 			OnGameServerResult(1, NULL);
 		else
@@ -1346,7 +1344,7 @@ void CProjectG::Paint()
 }
 
 // 983 00a62d40 / 00a62cb0: Ctrl+V (WinProc) liga o pedido; o chat (CChatMsg::Process 009a03b0) consome e le o texto
-// da area de transferencia do Windows (o 983 usa CF_TEXT, ate 0x3ff bytes: so acerta em Windows japones)
+// da area de transferencia do Windows (CF_TEXT, ate 0x3ff bytes)
 static bool s_bClipboardPaste983; // 983 00f0248a
 static bool s_bCtrlDown983;       // 983 00f02a68
 static bool s_bPasteKeyDown983;   // 983 00f02a67
@@ -1364,22 +1362,23 @@ bool ConsumeClipboardPaste983()
 
 const char* GetClipboardText983()
 {
-	memset(s_clipboardText983, 0, sizeof(s_clipboardText983));
-	if (IsClipboardFormatAvailable(CF_UNICODETEXT) && OpenClipboard(g_hwnd))
+	if (IsClipboardFormatAvailable(CF_TEXT) && OpenClipboard(g_hwnd))
 	{
-		HANDLE hMem = GetClipboardData(CF_UNICODETEXT);
+		HANDLE hMem = GetClipboardData(CF_TEXT);
 		if (hMem)
 		{
-			const wchar_t* src = (const wchar_t*)GlobalLock(hMem);
+			const unsigned char* src = (const unsigned char*)GlobalLock(hMem);
 			if (src)
 			{
-				// 0x1ff caracteres cabem em 0x3ff bytes sem partir um de 2 bytes
-				WideCharToMultiByte(GAME_CODEPAGE, 0, src, min(lstrlenW(src), 0x1ff), s_clipboardText983, 0x3ff, "?", NULL);
+				memset(s_clipboardText983, 0, sizeof(s_clipboardText983));
+				_mbsnbcpy((unsigned char*)s_clipboardText983, src, 0x3ff);
 				GlobalUnlock(hMem);
 			}
 		}
 		CloseClipboard();
+		return s_clipboardText983;
 	}
+	memset(s_clipboardText983, 0, sizeof(s_clipboardText983));
 	return s_clipboardText983;
 }
 
@@ -1418,7 +1417,7 @@ long __stdcall CProjectG::WinProc(HWND hwnd, unsigned int message,
 		if (!wParam)
 		{
 			std::string filename = (const char*)lParam;
-			GameMessageBox(NULL,
+			MessageBox(NULL,
 				MakeStr(
 					K2L_Compatibility("%s\306\304\300\317\277\241 \274\325\273\363\300\314 \271\337\260\337\265\307\276\372\275\300\264\317\264\331. \264\331\275\303 \275\307\307\340\307\330 \301\326\274\274\277\344."),
 					filename.c_str()),
@@ -1756,7 +1755,7 @@ bool CProjectG::SetVideoDevice()
 		char arg[0x40] = "";
 		GetEnvironmentVariableA("PANGYA_ARG_SUB", arg, sizeof(arg));
 		if (strcmp(arg, "noWindow") != 0)
-			GameMessageBox(g_hwnd,
+			MessageBox(g_hwnd,
 				K2L_Compatibility("\264\331\300\275\260\372 \260\260\300\272 \271\256\301\246\267\316 \275\307\307\340\307\322 \274\366 \276\370\275\300\264\317\264\331.\012\012* DirectX 9.0c \300\314\273\363\300\314 \274\263\304\241 \265\307\301\366 \276\312\276\322\260\305\263\252\012* \265\360\275\272\307\303\267\271\300\314 \276\356\264\360\305\315(\272\361\265\360\277\300\304\253\265\345)\300\307 \265\345\266\363\300\314\271\366\260\241 \303\326\275\305 \271\366\300\374\300\314 \276\306\264\317\260\305\263\252\012* \265\360\275\272\307\303\267\271\300\314 \276\356\264\360\305\315(\272\361\265\360\277\300\304\253\265\345)\300\307 \274\272\264\311\277\241 \271\256\301\246\260\241 \300\326\275\300\264\317\264\331.\012\012\306\316\276\337 \275\307\307\340\275\303 \263\252\277\300\264\302 \303\271 \310\255\270\351\277\241\274\255 [\275\307\307\340\271\256\301\246\272\270\260\355]\270\246 \264\255\267\257 \304\304\307\273\305\315 \301\244\272\270\270\246 \265\356\267\317\307\317\275\305 \310\304,  \012\306\316\276\337 \310\250\306\344\300\314\301\366\300\307 [\260\355\260\264\301\366\277\370->FAQ]\270\246 \300\320\276\356\272\270\275\303\261\342 \271\331\266\370\264\317\264\331."),
 				caption, MB_ICONERROR);
 		return false;
@@ -2024,8 +2023,7 @@ char* CProjectG::GetCurrentHdd()
 	WTL::CString directory = "";
 	directory = registry.ReadString("Install_Dir", "");
 	static char drive[255];
-	// sem instalador nao ha Install_Dir: "" faria o F11 do replay dizer que nao ha como ver o disco
-	_snprintf_s(drive, _TRUNCATE, "%s", directory.GetLength() ? (const char*)directory : g_executeDirectory);
+	sprintf(drive, "%s", (const char*)directory);
 	drive[2] = 0;
 	return drive;
 }

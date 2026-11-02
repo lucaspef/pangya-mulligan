@@ -77,13 +77,6 @@ inline int WIme::Check()
 		(this->m_property & IME_PROP_AT_CARET);
 }
 
-// Texto do IME sempre em Shift-JIS: a versão A do Imm (a do 983) converte para o CP_ACP, com '?' fora do Windows japonês.
-// Devolve os bytes escritos (count -1 inclui o 0 final); out NULL só mede.
-static int ToSjis(const wchar_t* text, int count, char* out, int size)
-{
-	return count ? WideCharToMultiByte(932, 0, text, count, out, size, "?", NULL) : 0;
-}
-
 // byte inicial de Shift-JIS (0x80..0x9f, 0xe0..0xfc)
 inline bool IsLeadByte(unsigned char c)
 {
@@ -198,7 +191,7 @@ int WIme::OnNotify(unsigned int dwCommand, long dwData)
 	case IMN_CHANGECANDIDATE:
 		if (IME_Enter())
 		{
-			DWORD size = ImmGetCandidateListW(this->m_hIMC, 0, NULL, 0);
+			DWORD size = ImmGetCandidateListA(this->m_hIMC, 0, NULL, 0);
 			if (size)
 			{
 				if (size > this->m_candSize)
@@ -211,18 +204,7 @@ int WIme::OnNotify(unsigned int dwCommand, long dwData)
 					this->m_candList = (CANDIDATELIST*)new char[size];
 					this->m_candSize = size;
 				}
-				ImmGetCandidateListW(this->m_hIMC, 0, this->m_candList, size);
-				if (this->m_candList->dwStyle != IME_CAND_CODE)
-					for (DWORD i = 0; i < this->m_candList->dwCount; ++i)
-					{
-						// no lugar: o Shift-JIS nunca ocupa mais que o texto largo
-						char sjis[256];
-						char* dst = (char*)this->m_candList + this->m_candList->dwOffset[i];
-						if (ToSjis((const wchar_t*)dst, -1, sjis, sizeof(sjis)))
-							strcpy(dst, sjis);
-						else
-							*dst = 0;
-					}
+				ImmGetCandidateListA(this->m_hIMC, 0, this->m_candList, size);
 				if (this->m_candList->dwSelection < this->m_candList->dwPageStart ||
 					this->m_candList->dwSelection >= this->m_candList->dwPageStart + this->m_candList->dwPageSize)
 				{
@@ -291,14 +273,17 @@ void WIme::PutString(char* str)
 
 int WIme::GetResultString()
 {
-	static char str[256];
+	static char str[128];
+	DWORD dwBuf;
 	if (IME_Enter())
 	{
-		wchar_t wide[127];
-		const LONG size = ImmGetCompositionStringW(m_hIMC, GCS_RESULTSTR, wide, sizeof(wide));
-		if (size > 0)
+		dwBuf = ImmGetCompositionStringA(m_hIMC, GCS_RESULTSTR, NULL, 0);
+		if (dwBuf > 0)
 		{
-			str[ToSjis(wide, size / sizeof(wchar_t), str, sizeof(str) - 1)] = 0;
+			if (dwBuf > 127)
+				dwBuf = 127;
+			ImmGetCompositionStringA(m_hIMC, GCS_RESULTSTR, str, dwBuf);
+			str[dwBuf] = 0;
 			ProcessResultString(str);
 		}
 		Leave();
@@ -313,37 +298,37 @@ int WIme::GetCompString(long flag)
 		return 0;
 	}
 
-	// cláusula e atributo vêm por caractere largo; o jogo lê por byte do Shift-JIS
-	wchar_t wide[0x1ff];
-	LONG count = ImmGetCompositionStringW(this->m_hIMC, GCS_COMPSTR, wide, sizeof(wide));
-	count = count > 0 ? count / sizeof(wchar_t) : 0;
-
-	this->m_compStrLen = flag & GCS_COMPSTR ? ToSjis(wide, count, this->m_compStr, sizeof(this->m_compStr) - 1) : 0;
-	this->m_compStr[this->m_compStrLen] = 0;
-
-	this->m_compAttrLen = 0;
-	this->m_compAttr[0] = 0;
+	if (flag & GCS_COMPSTR)
+	{
+		this->m_compStrLen = ImmGetCompositionStringA(this->m_hIMC, GCS_COMPSTR, this->m_compStr,
+			sizeof(this->m_compStr));
+		this->m_compStr[this->m_compStrLen] = 0;
+	}
+	else
+	{
+		this->m_compStrLen = 0;
+		this->m_compStr[0] = 0;
+	}
 	if (flag & GCS_COMPATTR)
 	{
-		BYTE attr[0x1ff];
-		const LONG size = ImmGetCompositionStringW(this->m_hIMC, GCS_COMPATTR, attr, sizeof(attr));
-		for (LONG i = 0; i < size && i < count; ++i)
-			for (int n = ToSjis(&wide[i], 1, NULL, 0); n > 0; --n)
-				this->m_compAttr[this->m_compAttrLen++] = attr[i];
+		this->m_compAttrLen = ImmGetCompositionStringA(this->m_hIMC, GCS_COMPATTR, this->m_compAttr,
+			sizeof(this->m_compAttr));
 	}
-
-	this->m_compClauseLen = 0;
-	this->m_compClause[0] = 0;
-	this->m_compClause[1] = 0;
+	else
+	{
+		this->m_compAttrLen = 0;
+		this->m_compAttr[0] = 0;
+	}
 	if (flag & GCS_COMPCLAUSE)
 	{
-		const LONG size = ImmGetCompositionStringW(this->m_hIMC, GCS_COMPCLAUSE, this->m_compClause, sizeof(this->m_compClause));
-		if (size > 0)
-		{
-			this->m_compClauseLen = size;
-			for (LONG i = 0; i < size / (LONG)sizeof(DWORD); ++i)
-				this->m_compClause[i] = ToSjis(wide, min((LONG)this->m_compClause[i], count), NULL, 0);
-		}
+		this->m_compClauseLen = ImmGetCompositionStringA(this->m_hIMC, GCS_COMPCLAUSE, this->m_compClause,
+			sizeof(this->m_compClause));
+	}
+	else
+	{
+		this->m_compClauseLen = 0;
+		this->m_compClause[0] = 0;
+		this->m_compClause[1] = 0;
 	}
 	ImmReleaseContext(this->m_hWnd, this->m_hIMC);
 
@@ -719,9 +704,7 @@ int WIme::WinProc(UINT msg, unsigned long wparam, unsigned long lparam)
 		}
 		return 1;
 	case WM_CHAR:
-		// 0xa1..0xae são as teclas de navegação do WM_KEYDOWN: '§', '£', '¨' do teclado não podem cair nelas
-		if (wparam < 0x80)
-			OnChar(wparam);
+		OnChar(wparam);
 		if (wparam != '\r' || (m_nState & 4))
 			m_nState &= ~4;
 		break;

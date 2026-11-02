@@ -321,8 +321,7 @@ void CHoleInOneGameHandler::OnItem(const MsgObject& msg)
 {
 	CHoleInOneGameDoc* pDoc = Doc983();
 	unsigned long typeId = MSGJP(msg).Param2<unsigned long>();
-	IFF983::sCupInCondition* pRecord = ITEMTABLE983()->Find983(typeId); // tid do servidor pode faltar no pak
-	if (pRecord && pRecord->param14 != 0)
+	if (ITEMTABLE983()->Find983(typeId)->param14 != 0)
 	{
 		pDoc->Fn577ed0_983();
 		pDoc->Fn578580_983();
@@ -345,8 +344,7 @@ void __fastcall Shuffle983(MTRand1p1& rand, unsigned int n, sTeeGroundModel983**
 
 int __fastcall ItemValuePlus983(int base, unsigned long typeId) // 0057b2b0 (só a mensagem 0x10 chama)
 {
-	IFF983::sCupInCondition* pRecord = ITEMTABLE983()->Find983(typeId); // tid do pacote pode faltar no pak
-	return pRecord ? pRecord->param14 + base : base;
+	return ITEMTABLE983()->Find983(typeId)->param14 + base;
 }
 
 void CHoleInOneGameHandler::OnSet20(const MsgObject& msg)
@@ -538,7 +536,7 @@ void CHoleInOneGameHandler::On10(const MsgObject& msg)
 	WReceivedPacket* pPacket = MSGJP(msg).Param2<WReceivedPacket*>();
 	CHoleInOneGameDoc* pDoc = Doc983();
 	std::vector<unsigned long> items;
-	int n = pPacket->DecodeCount();
+	int n = pPacket->Decode4();
 	for (int i = 0; i < n; ++i)
 	{
 		unsigned long typeId = pPacket->Decode4();
@@ -664,8 +662,6 @@ void CHoleInOneGameHandler::On0d(const MsgObject& msg)
 	CHoleInOneGameDoc* pDoc = Doc983();
 	sHioRecord983* pRecord = MSGJP(msg).Param2<sHioRecord983*>();
 	pDoc->SetRecord983(pRecord);
-	if (!::Doc()->HasRival(pRecord->m_uid))
-		return;
 	sRivalData* pRival = (sRivalData*)ROOMPLAYER983(pRecord->m_uid);
 	pRival->totalScore = pRecord->m_0c;
 	if (::Doc()->m_myInfo.info.dwGuid == pRecord->m_uid)
@@ -680,7 +676,7 @@ void CHoleInOneGameHandler::On18(const MsgObject& msg)
 	CHoleInOneGameDoc* pDoc = Doc983();
 	WReceivedPacket* pPacket = MSGJP(msg).Param2<WReceivedPacket*>();
 	::Doc()->m_hioJackpotMode983 = pPacket->Decode4();
-	int n = pPacket->DecodeCount();
+	int n = pPacket->Decode4();
 	pDoc->ResizePlayers983(n);
 	for (int i = 0; i < n; ++i)
 	{
@@ -695,7 +691,7 @@ void CHoleInOneGameHandler::On18(const MsgObject& msg)
 		__int64 v130 = pPacket->Decode8();
 		__int64 prizePang = pPacket->Decode8();
 		int trophyTid = pPacket->Decode4();
-		int pairs = pPacket->DecodeCount();
+		int pairs = pPacket->Decode4();
 		std::vector<sHioPair983>& list = pDoc->m_players.at(i);
 		for (int j = 0; j < pairs; ++j)
 		{
@@ -706,8 +702,6 @@ void CHoleInOneGameHandler::On18(const MsgObject& msg)
 		}
 		if (MyGuid(false) == uid)
 			*(unsigned long*)((char*)::Doc()->m_holeStatistics + 0x4a) = mine;
-		if (!::Doc()->HasRival(uid))
-			continue;
 		sRivalData* pRival = (sRivalData*)ROOMPLAYER983(uid);
 		pRival->rank = (unsigned char)v152;
 		pRival->totalScore = v14c;
@@ -724,7 +718,7 @@ void CHoleInOneGameHandler::On18(const MsgObject& msg)
 }
 
 CHoleInOneGameHandler::CHoleInOneGameHandler()
-	: m_bEntered(false), m_time(0.0f), m_pTransformer(NULL), m_30(0), m_bMission(false), m_35(false), m_endTime(0) // B1640: OnProcess le m_bEntered antes do OnEnter; lixo mandaria 0x12c
+	: m_time(0.0f), m_pTransformer(NULL), m_30(0), m_bMission(false), m_endTime(0)
 {
 }
 

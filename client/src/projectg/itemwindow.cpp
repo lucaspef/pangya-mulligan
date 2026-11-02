@@ -61,7 +61,6 @@ CItemWindow::CItemWindow()
 {
 	m_pOverlay = NULL;
 	m_pUI = NULL;
-	m_bFail = false; // B1640: lido no Draw e no OnLoad antes da 1a decisao de item
 	m_bActive = true;
 	m_dispPriority = DISP_PRIORITY_4;
 }
@@ -167,13 +166,11 @@ void CItemWindow::OnProcess(float delta)
 			}
 			else
 			{
-				WBone* pHead = NULL;
+				WBone* pHead;
 				SendMsg(this, "Player", M983(0x111), (int)&pHead, (int)"Bip01 Head",
 					0, 0);
 
-				WVector pos(0.0f, 0.0f, 0.0f); // modelo de outro pak sem "Bip01 Head"
-				if (pHead)
-					pos = WVector(pHead->m_matrix.pivot.x, pHead->m_matrix.pivot.y - 0.5f, pHead->m_matrix.pivot.z);
+				WVector pos(pHead->m_matrix.pivot.x, pHead->m_matrix.pivot.y - 0.5f, pHead->m_matrix.pivot.z);
 
 				WVector screen = g_view->Projection(pos);
 

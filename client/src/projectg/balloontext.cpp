@@ -73,14 +73,12 @@ const char* ntBalloonText::StripSpecialText(const char* text) const
 	int len = strlen(text);
 	int i = 0;
 	int j = 0;
-	// 983 007b7aa0 sem limite: fala do pacote 0x40 passava de s_stripBuffer e "/" no fim lia depois do NUL
-	while (i < len && j < sizeof(s_stripBuffer) - 1)
+	while (i < len)
 	{
 		char c = text[i++];
 		if (c == '/')
 		{
-			if (i < len)
-				i++;
+			i++;
 			while ((unsigned char)text[i] > ' ')
 				i++;
 			i++;
@@ -145,8 +143,7 @@ void ntBalloonText::Render(WView* view)
 	char key[32];
 	line[0] = 0;
 
-	// 983 007b8160: lines[32] sem limite; 1 linha fica para o resto apos o laco
-	while (i < len && lineCount < 31)
+	while (i < len)
 	{
 		char c = m_text.c_str()[i++];
 		if (c == '\\' && !lead)
@@ -243,7 +240,6 @@ void ntBalloonText::Render(WView* view)
 			lead = false;
 	}
 
-	line[pos] = 0; // byte lider no fim sai do laco sem terminar
 	if (line[0])
 		lines[lineCount++] = line;
 

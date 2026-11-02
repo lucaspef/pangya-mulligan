@@ -73,8 +73,6 @@ struct sFRESH_MSGMAP
 class FrCmdTarget
 {
 public:
-	// A933: ctor das telas nao grava o que o XML liga (983 idem); controle ausente de outro pak ficava lixo do heap
-	static void* operator new(size_t size);
 	FrCmdTarget();
 	virtual ~FrCmdTarget();
 	bool OnFreshMsg(const char* pName, eFrCmd cmd, int var1,

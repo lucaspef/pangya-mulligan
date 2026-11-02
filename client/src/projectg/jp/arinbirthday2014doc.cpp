@@ -41,7 +41,7 @@ static bool s_bDocRegistered = RegisterArinBirthDay2014Doc();
 void CArinBirthDay2014Doc::Decode983(WReceivedPacket* pPacket)
 {
 	m_missions.clear();
-	unsigned int count = pPacket->DecodeCount();
+	unsigned int count = pPacket->Decode4();
 	for (unsigned int i = 0; i < count; ++i)
 	{
 		unsigned long id = pPacket->Decode4();

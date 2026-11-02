@@ -61,7 +61,7 @@ bool LoginUnit::Connect()
 		// sem rugburn (client/COMPILAR.md): JP983_LOGIN=host:porta no ambiente troca o endereço fixo do 983
 		// sem JP983_LOGIN vale o servidor C# local (o robo nao passa ambiente ao jogo, C116.1)
 		char env[64];
-		if (GetEnvironmentVariable("JP983_LOGIN", env, sizeof(env)) - 1u >= sizeof(env) - 1) // ausente ou nao coube
+		if (!GetEnvironmentVariable("JP983_LOGIN", env, sizeof(env)))
 			strcpy(env, "127.0.0.1:30101");
 		if (char* colon = strchr(env, ':'))
 		{
@@ -145,9 +145,6 @@ int LoginUnit::OnConnect(WReceivedPacket& packet)
 		return FALSE;
 
 	int parseKey = packet.Decode4();
-	// E489: 983 indexa PublicKeyTable[16] sem limite; chave fora = mesma saida do cabecalho errado
-	if ((unsigned int)parseKey > 15)
-		return FALSE;
 	Doc()->m_loginServerUID = packet.Decode4();
 
 	m_socket.SetParseKey(parseKey);

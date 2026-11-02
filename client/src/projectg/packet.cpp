@@ -886,7 +886,7 @@ bool WReceivedPacketImpl::IsValid(bool rawpacket)
 	{
 		unsigned char key = PublicKeyTable[m_nParseKey][m_nPubKey];
 		unsigned char check = PrivateKeyTable[m_nParseKey][m_nPubKey];
-		if (m_pBuffer == NULL || m_nLength < 2) // E488: len 0 virava srcSize -1 no Decompress
+		if (m_pBuffer == NULL)
 			return false;
 
 		SimpleStreamDecrypt_Alpha((const char*)m_pBuffer, (char*)m_pBuffer,
@@ -924,18 +924,18 @@ bool WReceivedPacketImpl::DecodeCheckSum()
 	return true;
 }
 
-// E488: pacote curto de outro servidor le 0 alem do fim (983 005ab140 le sem limite); m_offset anda igual para o ReportOverRead
 unsigned char WReceivedPacketImpl::Decode1()
 {
-	unsigned int offset = m_offset++;
-	return offset < m_nLength ? m_pBuffer[offset] : 0;
+	return m_pBuffer[m_offset++];
 }
 
 unsigned short WReceivedPacketImpl::Decode2()
 {
-	unsigned char lo = Decode1();
-	unsigned char hi = Decode1();
-	return MAKEWORD(lo, hi);
+	unsigned short value =
+		MAKEWORD(m_pBuffer[m_offset], m_pBuffer[m_offset + 1]);
+	m_offset += 2;
+
+	return value;
 }
 
 unsigned long WReceivedPacketImpl::Decode4()
@@ -958,8 +958,7 @@ std::string WReceivedPacketImpl::DecodeStr()
 	unsigned short len = Decode2();
 
 	std::string str;
-	if (m_offset + len <= m_nLength)
-		str.append((const char*)&m_pBuffer[m_offset], len);
+	str.append((const char*)&m_pBuffer[m_offset], len);
 	m_offset += len;
 
 	return str;
@@ -986,12 +985,7 @@ std::string WReceivedPacketImpl::DecodeEncryptedStr(unsigned long key)
 
 void WReceivedPacketImpl::DecodeBuffer(void* pBuffer, int len)
 {
-	if (len <= 0)
-		return;
-	unsigned int remain = m_offset < m_nLength ? m_nLength - m_offset : 0;
-	unsigned int count = (unsigned int)len < remain ? len : remain;
-	memcpy(pBuffer, m_pBuffer + m_offset, count);
-	memset((unsigned char*)pBuffer + count, 0, len - count);
+	memcpy(pBuffer, &m_pBuffer[m_offset], len);
 	m_offset += len;
 }
 
@@ -1296,16 +1290,6 @@ unsigned char* WReceivedPacket::GetRemainBuffer()
 int WReceivedPacket::GetRemainLength()
 {
 	return m_impl->GetRemainLength();
-}
-
-// A927: 983 confia na contagem; campo deslocado de outro servidor dava length_error ou esgotava a memoria. Toda entrada ocupa ao menos 1 byte
-int WReceivedPacket::DecodeCount()
-{
-	int count = (int)Decode4();
-	int remain = GetRemainLength();
-	if (count > remain)
-		count = remain;
-	return count < 0 ? 0 : count;
 }
 
 std::string WReceivedPacket::DecodeStr()

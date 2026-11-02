@@ -23,7 +23,6 @@ END_FRESH_MSGMAP()
 
 FrGuildNoticeDlg::FrGuildNoticeDlg()
 {
-	m_pReader = NULL; // B1640: SetArticle testa NULL e o DataBind pode nao ter vindo
 	m_pClose = NULL;
 	m_pIndex = NULL;
 	m_pArticle = NULL;

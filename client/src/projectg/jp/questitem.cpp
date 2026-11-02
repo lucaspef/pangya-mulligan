@@ -156,7 +156,7 @@ void CQuestItem::Decode983(WReceivedPacket* p)
 	m_typeId = p->Decode4();
 	m_uid = p->Decode4();
 	m_state = p->Decode4();
-	unsigned long n = p->DecodeCount();
+	unsigned long n = p->Decode4();
 	for (unsigned int i = 0; i < n; i++)
 	{
 		sQuestCounter983* c = GetCounter983(i);

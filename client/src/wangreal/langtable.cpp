@@ -26,12 +26,12 @@ public:
 	{
 		if (m_korea)
 		{
-			delete[] m_korea;
+			delete m_korea;
 			m_korea = 0;
 		}
 		if (m_japan)
 		{
-			delete[] m_japan;
+			delete m_japan;
 			m_japan = 0;
 		}
 	}
@@ -59,8 +59,7 @@ size_t WLangTable::LoadFile(const char* filename, char** data)
 	if (file)
 	{
 		size = _filelength(_fileno(file));
-		*data = new char[size + 1];
-		(*data)[size] = 0; // ultima string sem zero no fim
+		*data = new char[size];
 		fread(*data, size, 1, file);
 		fclose(file);
 	}
@@ -111,58 +110,6 @@ const char* WLangTable::Find(const char* str)
 	return result;
 }
 
-// A930: proxima conversao de printf do texto ('s', 'd', 'f' ou 'n'); 0 no fim. '%' sem conversao valida nao conta
-static char NextConversion(const char*& p)
-{
-	while (*p)
-	{
-		if (*p++ != '%')
-			continue;
-		if (*p == '%')
-		{
-			++p;
-			continue;
-		}
-		const char* q = p;
-		while (*q == '-' || *q == '+' || *q == '#' || *q == '0' || *q == '*' || *q == '.' || (*q >= '0' && *q <= '9'))
-			++q;
-		if (q[0] == 'I' && q[1] == '6' && q[2] == '4')
-			q += 3;
-		else if (*q == 'h' || *q == 'l' || *q == 'w')
-			++q;
-		switch (*q)
-		{
-		case 's': case 'S':
-			p = q + 1;
-			return 's';
-		case 'd': case 'i': case 'u': case 'o': case 'x': case 'X': case 'c': case 'C':
-			p = q + 1;
-			return 'd';
-		case 'e': case 'E': case 'f': case 'F': case 'g': case 'G':
-			p = q + 1;
-			return 'f';
-		case 'n':
-			p = q + 1;
-			return 'n';
-		}
-	}
-	return 0;
-}
-
-// A930: a chave pode ser formato com argumentos no sprintf do chamador. Traducao com %s no lugar de %d, ou com
-// conversao a mais, derrubaria; nesse caso fica o texto da chave, que casa com os argumentos.
-static bool SameFormat(const char* korea, const char* japan)
-{
-	for (;;)
-	{
-		char c = NextConversion(japan);
-		if (!c)
-			return true; // conversao a menos: argumento sobra, nao derruba
-		if (c != NextConversion(korea))
-			return false;
-	}
-}
-
 // 0x1005bbd0
 void WLangTable::Load()
 {
@@ -170,10 +117,10 @@ void WLangTable::Load()
 	memset(m_cacheValue, 0, sizeof(m_cacheValue));
 	m_cachePos = 0;
 	int size = LoadFile("korea.dat", &m_korea);
-	int japanSize = LoadFile("japan.dat", &m_japan); // A930: ausente ou mais curto que korea.dat: o que falta fica sem traducao
+	LoadFile("japan.dat", &m_japan);
 	int k = 0;
 	int j = 0;
-	while (k < size && j < japanSize)
+	while (k < size)
 	{
 		const char* korea = m_korea + k;
 		while (m_korea[k++])
@@ -182,7 +129,7 @@ void WLangTable::Load()
 		while (m_japan[j++])
 			;
 		if (m_table.find(korea) == m_table.end())
-			m_table.insert(Table::value_type(korea, SameFormat(korea, japan) ? japan : korea));
+			m_table.insert(Table::value_type(korea, japan));
 		else
 			++g_langDuplicated;
 	}

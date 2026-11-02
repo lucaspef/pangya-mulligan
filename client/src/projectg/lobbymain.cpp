@@ -63,7 +63,6 @@ class FrMailBoxDlg;
 #include "birthdayeventdlg.h"
 #include "changeroominfodlg.h"
 #include "guildnoticedlg.h"
-#include "newsreader.h"
 #include "onelinereqdlg.h"
 #include "frcombobox.h"
 #include "frdesktop.h"
@@ -803,12 +802,6 @@ ON_FRESH_VI("CREATE.char_name_image", FRCMD_INIT, CLobbyMain::OnCreate_CharNameI
 
 END_FRESH_MSGMAP()
 
-// slot que entrou depois da partida nao tem rival: vai para o fim
-static int FinishOrderOf(unsigned long uid)
-{
-	return Doc()->HasRival(uid) ? Doc()->m_rivalList[Doc()->GetIndex(uid)].finishOrder : 0x100;
-}
-
 bool FinishUserCompare(const void* a, const void* b)
 {
 	if (!a)
@@ -820,7 +813,8 @@ bool FinishUserCompare(const void* a, const void* b)
 	const sSlotInfo* pA = (const sSlotInfo*)a;
 	const sSlotInfo* pB = (const sSlotInfo*)b;
 
-	return FinishOrderOf(pA->dwGuid) < FinishOrderOf(pB->dwGuid);
+	return Doc()->m_rivalList[Doc()->GetIndex(pA->dwGuid)].finishOrder <
+		Doc()->m_rivalList[Doc()->GetIndex(pB->dwGuid)].finishOrder;
 }
 
 bool ConnectionUserCompare(const void* a, const void* b)
@@ -910,12 +904,6 @@ CLobbyMain::CLobbyMain()
 	m_pCreateNickDlg = NULL;
 	m_topBtnIndex = 0;
 	m_event1Dir = 1.0f;
-	// 983 00aba400: StatBar/StatEdit/create* zerados so aqui (o ResetControl 00ab3120 nao os toca)
-	memset(m_pStatBar, 0, sizeof(m_pStatBar));
-	memset(m_pStatEdit, 0, sizeof(m_pStatEdit));
-	m_createCharType = 0;
-	m_createHairColor = 0;
-	m_createShirtColor = 0;
 	// 983 00aba679..00aba6bb: zerados no fim do construtor (B186.1: sem isto o OpenGameRoomDlg983 lia lixo em +0x77c/+0x780)
 	for (int i = 0; i < 5; i++)
 		m_pStatGauge983[i] = NULL;
@@ -1074,8 +1062,26 @@ void CLobbyMain::ProcessLobbyBgCamera(float dt)
 
 void CLobbyMain::ProcessAdministrator(float dt)
 {
-	if ((bool)((Doc()->m_myInfo.info.dwIdentity >> 2) & 1))
-	{
+	if ((bool)((Doc()->m_myInfo.info.dwIdentity >> 2) & 1))  {
+		if (strcmpi(g_pFresh->GetManager()->GetLayoutID(), "GAMEROOM") == 0
+			|| strcmpi(g_pFresh->GetManager()->GetLayoutID(), "GAMEROOM_EXT") == 0) {
+			/*if (g_input->GetDown("FUNC_10", true) && m_selectedUserId != 0xFFFFFFFF) {
+				WSendPacket packet((enumClientPacket)0x4C);
+				packet.Encode4(m_selectedUserId);
+				packet.Send(TO_GAME);
+			}*/
+		}
+
+		if (strcmpi(g_pFresh->GetManager()->GetLayoutID(), "ROOMLIST") == 0) {
+			if ((g_input->Get("LCONTROL", false) || g_input->Get("RCONTROL", false))
+				&& g_input->GetDown("INSERT", true)) {
+				/*if (m_selectedRoomData) {
+					WSendPacket packet((enumClientPacket)0x5D);
+					packet.Encode2(static_cast<sRoomInfo*>(m_selectedRoomData)->m_roomNumber);
+					packet.Send(TO_GAME);
+				}*/
+			}
+		}
 	}
 }
 
@@ -1265,18 +1271,29 @@ void CLobbyMain::ProcessAutoStart(float dt)
 
 void CLobbyMain::OnProcess(float dt)
 {
-	// 983 (00ab8f60): 5be0, 7780, 8d60, 2ee0, 7a70 (cauda TOPPAGE = aviso premium), 5e00. Sem os do 645: ProcessAdministrator
-	// (vazio), AnimateWebEventButton ("xmas_main_i" nao existe no 983; 0x4d desligado no JP) e RefreshAllUccClothes (no 983
-	// a fila UCC so e lida por sala/My Room/jogador/avatar/ghost/user_info; o lobby nao a esvazia)
 	CTaskMain::OnProcess(dt);
 
 	ProcessLobbyBgCamera(dt);
-	ReanchorRightIcons983();
 	ProcessLobbyPetSync(dt);
+	ReanchorRightIcons983();
+
+	if (IsLocalContent(S3_GM_TOOLKIT))
+		ProcessAdministrator(dt);
+
 	ProcessDialogKeyboard(dt);
 	ProcessLobbyUI(dt);
-	ProcessPremiumEndNotice983(dt);
 	ProcessAutoStart(dt);
+
+	if (IsLocalContent((localContentType_t)0x4d /*983: era 0x4c; interpolado*/) &&
+		g_pFresh->IsCurrentLayout("TOPPAGE"))
+		AnimateWebEventButton(dt);
+
+	if (IsLocalContent(S4_UCC))
+	{
+		RefreshAllUccClothes();
+	}
+
+	ProcessPremiumEndNotice983(dt);
 }
 
 // 983 (cauda TOPPAGE do 00ab7a70, OnProcess 00ab8f60): com o byte CSharedDoc+0x1160a ligado e o aviso escondido, mostra-o
@@ -2512,7 +2529,7 @@ void CLobbyMain::HandleMsg(const MsgObject& msg)
 		{
 			if (m_pCreateNickDlg)
 			{
-				strncpy(MyNick(), (const char*)msg.param2, 21); // E496: nick do pacote sem limite
+				strcpy(MyNick(), (const char*)msg.param2);
 				m_pCreateNickDlg->CloseDlg(1);
 				m_pCreateNickDlg = NULL;
 			}
@@ -2831,46 +2848,7 @@ void CLobbyMain::OpenNoteForm()
 			m_pMailBoxDlg->Open(
 				(FRESH_PFN_RESULT)&CLobbyMain::OnMailBoxDlgResult, 0);
 		}
-		return;
 	}
-	// 983 (00ab8720): sem correio a mostrar, segue a cadeia do login para o aviso da guild
-	OpenGuildNoticeForm983();
-}
-
-// 983 (00ab7f00): aviso da guild no 1o login (noticias do RSS da guild); sem ele, segue para o aviso do PC bang/notice
-void CLobbyMain::OpenGuildNoticeForm983()
-{
-	if (m_pGuildNoticeObj == NULL)
-		m_pGuildNoticeObj = new NewsReader;
-
-	unsigned int count = 0;
-	if (NetResourceManager::Instance()->IsRSSDownLoadComplete())
-		count = m_pGuildNoticeObj->Load("guildnews.xml", 5);
-
-	if (NetResourceManager::Instance()->IsNewGuildRSS983() && count > 0 && Doc()->IsOpenFirstLoginAlarm())
-	{
-		FrGuildNoticeDlg* pDlg = CreateForm<FrGuildNoticeDlg>(g_pFresh->GetManager(), this, "guild_notice", NULL);
-		m_pGuildNoticeDlg = pDlg;
-		pDlg->DataBind(m_pGuildNoticeObj, 0);
-		WPoint pt(pDlg->GetRect().x, 100.0f); // 983 00ab7fdd: [dlg+0x34], [00cfeec0] = 100.0
-		pDlg->Open((FRESH_PFN_RESULT)&CLobbyMain::OnGuildNoticeDlgResult983, pt, 1);
-		return;
-	}
-
-	delete m_pGuildNoticeObj;
-	m_pGuildNoticeObj = NULL;
-	OpenPCBangNoticeForm();
-}
-
-// 983 (00ab65d0)
-bool CLobbyMain::OnGuildNoticeDlgResult983(int result, FrForm* form)
-{
-	m_pGuildNoticeDlg = NULL;
-	delete m_pGuildNoticeObj;
-	m_pGuildNoticeObj = NULL;
-	OpenPCBangNoticeForm();
-	Doc()->m_bNeedFirstLoginAlarm = false;
-	return true;
 }
 
 void CLobbyMain::OpenEventPrizeForm(unsigned char id)
@@ -2893,9 +2871,7 @@ void CLobbyMain::OnToppage_Init(int param)
 	Doc()->ClearUserInfoTimeMap(0xffffffff);
 	memset(Doc()->m_userInfo, 0, sizeof(sUserInfo) * 4);
 
-	// 983 00595e20 (pfn do mapa 00e0d100): so desliga o video de fundo (+0x10b26); nao chama TurnOn3DBackground, que
-	// tambem zerava o clima do lobby (weather + SetLobbyWeather(false)).
-	Doc()->m_bBackgroundVideo = false;
+	TurnOn3DBackground();
 
 	if (IsLocalContent(S4_TOPPAGE_BTN_LINEUP))
 	{
@@ -2903,16 +2879,33 @@ void CLobbyMain::OnToppage_Init(int param)
 	}
 }
 
-// 983 00595ef0 (pfn do mapa 00e0d120): camera, estado do lobby 0 (0062bf80) e mostra a area de trabalho (vt+0x88).
-// O premio 5/2 e a carta do Pippin do 645 foram para o CTutorialWidget::Activate (006b2d40).
 void CLobbyMain::OnToppage_Finish()
 {
+	if (Doc()->m_bAutoRefresh)
+	{
+		if (IsLocalContent(S3_PARAN_CHANNELING))
+		{
+			Doc()->m_bAutoRefresh = false;
+			OpenEventPrizeForm(5);
+
+			if (Doc()->m_bTutorialRedirect == true)
+			{
+				this << MsgObject(NULL, M983(0x3e), 0x1a000006,
+					(int)"[\xc7\xc7\xc7\xc9 \xbc\xb1\xb9\xb0 \xb8\xde\xc0\xcf]\n\n\xbe\xc8\xb3\xe7~ \xc0\xfc \xb4\xe7\xbd\xc5\xc0\xbb \xbf\xa9\xb1\xe2 \xb5\xa5\xb8\xae\xb0\xed \xbf\xc2 \xbd\xc3\xb0\xa3\xc0\xc7 \xbf\xe4\xc1\xa4 \xc7\xc7\xc7\xc9\xc0\xcc\xb6\xf3\xb0\xed \xc7\xd5\xb4\xcf\xb4\xd9. \xb9\xe6\xb1\xdd \xbf\xb9\xbb\xdb \xc4\xb3\xb8\xaf\xc5\xcd\xb8\xa6 \xbc\xb1\xc5\xc3\xc7\xdf\xb3\xd7\xbf\xe4. \xb0\xe8\xbc\xd3 \xc0\xdf \xba\xb8\xbb\xec\xc6\xec\xc1\xd6\xbc\xbc\xbf\xe4.\n\n\xbe\xc6~ \xb1\xd7\xb8\xae\xb0\xed \xc0\xcc\xb0\xc5 \xb9\xde\xc0\xb8\xbc\xbc\xbf\xe4. \xb4\xe7\xbd\xc5\xc0\xcc \xc6\xce\xbe\xdf\xbf\xa1 \xba\xb8\xb4\xd9 \xbd\xb1\xb0\xd4 \xc0\xfb\xc0\xc0\xc7\xcf\xb1\xe2 \xc0\xa7\xc7\xd8\xbc\xad \xb5\xe5\xb8\xae\xb4\xc2 \xc7\xe0\xbf\xee\xc0\xc7 \xb8\xf1\xb0\xc9\xc0\xcc\xc0\xd4\xb4\xcf\xb4\xd9.\n\xc0\xcc \xc7\xe0\xbf\xee\xc0\xc7 \xb8\xf1\xb0\xc9\xc0\xcc\xb4\xc2 \xb4\xe7\xbd\xc5\xc0\xcc \xb8\xb8\xb5\xe7 \xc4\xb3\xb8\xaf\xc5\xcd\xc0\xc7 \\c0xffff0000\\c\xc1\xa4\xc8\xae\xb5\xb5\\c0xff000000\\c\xb8\xa6 \xb3\xf4\xc7\xf4\xc1\xd6\xb0\xed \\c0xffff0000\\c\xc6\xce\xbe\xdf\xc0\xd3\xc6\xd1\xc6\xae\xc1\xb8\\c0xff000000\\c\xc0\xbb \xb3\xd0\xc7\xf4\xc1\xd6\xb4\xc2 \xbf\xaa\xc7\xd2\xc0\xbb \xc7\xd1\xb4\xe4\xb4\xcf\xb4\xd9.\n\xc7\xcf\xb3\xaa \xc1\xd6\xc0\xc7\xc7\xd2 \xb0\xcd\xc0\xba\xbf\xe4~ \xb4\xe7\xbd\xc5\xc0\xc7 \xbd\xc7\xb7\xc2\xc0\xcc \xbe\xee\xb4\xc0 \xc1\xa4\xb5\xb5 \xbe\xc8\xc1\xa4\xb5\xc7\xb4\xc2 \xb7\xb9\xba\xa7, \xc1\xef \\c0xffff0000\\c\xc1\xd6\xb4\xcf\xbe\xee"
+						 "E\\c0xff000000\\c\xb0\xa1 \xb5\xc7\xb8\xe9 \xc8\xbf\xb0\xfa\xb0\xa1 \xbe\xf8\xbe\xee\xc1\xf6\xb4\xcf\xb1\xee\xbf\xe4~ \xbe\xcb\xbe\xc6\xb5\xce\xbd\xc3\xb0\xed\xbf\xe4.\n\n\xb1\xd7\xb8\xae\xb0\xed \xb4\xeb\xc0\xfc\xb8\xf0\xb5\xe5\xbf\xa1 \xb0\xa1\xb1\xe2 \xc0\xfc\xbf\xa1 \xc7\xd1\xb9\xf8 \xc8\xa5\xc0\xda \xbf\xac\xbd\xc0\xc7\xcf\xb0\xed \xbd\xcd\xb4\xd9\xb8\xe9 \xc6\xa9\xc5\xe4\xb8\xae\xbe\xf3 \xb8\xf0\xb5\xe5\xbf\xa1 \xb5\xe9\xbe\xee\xb0\xa1\xba\xb8\xbc\xbc\xbf\xe4.\n\xc2\xf7\xb1\xd9\xc2\xf7\xb1\xd9 \xb8\xf0\xb5\xce \xb9\xe8\xbf\xec\xbd\xc3\xb8\xe9 \xbc\xb1\xb9\xb0\xb5\xb5 \xc1\xd8\xb4\xd9\xb0\xed \xc7\xcf\xb3\xd7\xbf\xe4. ^^\n\n\xb1\xd7\xb7\xb3 \xb4\xe3\xbf\xa1 \xb6\xc7 \xba\xc1\xbf\xe4. \xbe\xc8\xb3\xe7",
+					0, 0, 0);
+				Doc()->m_bTutorialRedirect = false;
+			}
+		}
+		else
+		{
+			Doc()->m_bAutoRefresh = false;
+			OpenEventPrizeForm(2);
+		}
+	}
+
 	if (Doc()->m_bRefreshCamera)
 		this << MsgObject(NULL, M983(0xaa), 1, 0, 0, 0, 0);
-
-	Doc()->m_lobbyState983 = 0;
-	if (RFLobbyDesktop::Instance983())
-		RFLobbyDesktop::Instance983()->OnShowDesktop983(true);
 }
 
 void CLobbyMain::OnToppage_Destroy()
@@ -4636,7 +4629,6 @@ bool CLobbyMain::OnEventDlgResult(int result, FrForm* form)
 {
 	FrEventPrizeDlg* pDlg = (FrEventPrizeDlg*)form;
 	m_pEventPrizeDlg[pDlg->GetEvent()] = NULL;
-	OpenGuildNoticeForm983(); // 983 00ab8060
 
 	return true;
 }
@@ -4644,8 +4636,6 @@ bool CLobbyMain::OnEventDlgResult(int result, FrForm* form)
 bool CLobbyMain::OnMailBoxDlgResult(int result, FrForm* form)
 {
 	m_pMailBoxDlg = NULL;
-	if (Doc()->IsOpenFirstLoginAlarm()) // 983 00ab8090
-		OpenGuildNoticeForm983();
 
 	return true;
 }
@@ -4948,23 +4938,15 @@ void CLobbyMain::OpenLayout(const char* name)
 
 void CLobbyMain::ResetControl()
 {
-	// 983 00ab3120 (ordem do 983). StatBar/StatEdit/create*/StatGauge (5f4.., 5e0.., 738..) o 983 zera so no construtor
-	// (00aba400), nao aqui: a troca de pagina nao os apaga.
-	*(float*)&m_premiumEndNoticeAlpha983 = 1.0f;
 	m_pToppageGame = NULL;
 	m_pToppageFamily = NULL;
-	*(float*)&m_premiumEndNoticeFadeSpeed983 = 0.2f; // [00d097cc]
 	m_pToppagePangyaStudy = NULL;
 	m_pToppageReserved = NULL;
 	m_pOverBarOption = NULL;
 	m_pToppageNotice = NULL;
-	// D726: a lista de salas (+0x77c, fechada junto com a pagina) e os botoes/janelas de +0x234/+0x278/+0x438 ficavam
-	// apontando para janelas ja destruidas sem isto (HandleMsg 0x0b..0x91 chamava AddUser983/OpenDtRoomDlg983 na lista morta).
-	m_pToppageOneDayQuest = NULL;
 	m_pToppageServer = NULL;
 	m_pInviteDlg = NULL;
 	m_pUserListDlg = NULL;
-	m_pRemovedDtRoomDlg983 = NULL;
 	m_pPasswordDlg = NULL;
 	m_pOptionDlg = NULL;
 	m_pServerDlg = NULL;
@@ -4972,18 +4954,31 @@ void CLobbyMain::ResetControl()
 	m_pEquipDlg = NULL;
 	m_pMailBoxDlg = NULL;
 	m_pPCBangNoticeDlg = NULL;
-	m_pPremiumServiceDlg983 = NULL;
-	m_pToppagePremiumEndNotice983 = NULL;
-	memset(m_premiumEndNoticeBmp983, 0, sizeof(m_premiumEndNoticeBmp983));
 	m_pNewRecordDlg = NULL;
 	m_pParanNickDlg = NULL;
 	m_pCaddieWarningDlg = NULL;
 	m_pDlg150 = NULL;
 	m_pOnelineReqDlg = NULL;
-	m_reserved4bc = 0;
 	memset(m_pEventPrizeDlg, 0, sizeof(m_pEventPrizeDlg));
+	memset(m_pStatBar, 0, sizeof(m_pStatBar));
+	memset(m_pStatEdit, 0, sizeof(m_pStatEdit));
+	m_createCharType = 0;
+	m_createHairColor = 0;
+	m_createShirtColor = 0;
+	memset(m_pStatGauge983, 0, sizeof(m_pStatGauge983)); // 983: 00aba679
 	m_pGuildNoticeObj = NULL;
 	m_pToppageEvent1 = NULL;
+	// D726: o resto do ResetControl do 983 (00ab3120) que o nosso (645) nao fazia. Sem isto, depois de trocar de pagina, a
+	// lista de salas (+0x77c, fechada junto com a pagina) e os botoes/janelas de +0x234/+0x278/+0x438 ficavam apontando
+	// para janelas ja destruidas (HandleMsg 0x0b..0x91 chamava AddUser983/OpenDtRoomDlg983 na lista morta).
+	m_pToppageOneDayQuest = NULL;
+	*(float*)&m_premiumEndNoticeAlpha983 = 1.0f;
+	*(float*)&m_premiumEndNoticeFadeSpeed983 = 0.2f; // [00d097cc]
+	m_pToppagePremiumEndNotice983 = NULL;
+	memset(m_premiumEndNoticeBmp983, 0, sizeof(m_premiumEndNoticeBmp983));
+	m_pRemovedDtRoomDlg983 = NULL;
+	m_pPremiumServiceDlg983 = NULL;
+	m_reserved4bc = 0;
 	m_pRoomListForm983 = 0;
 }
 
@@ -5043,48 +5038,50 @@ void CLobbyMain::SortRank()
 	}
 }
 
-// 983 b2e1f0 (s5/utilities.cpp): nivel/capacidade com penalidade (-) e extra (+)
-const char* __fastcall MakeStatusString983(int level, int capacity, int penalty, int extra)
-{
-	if (penalty == 0)
-	{
-		if (extra != 0)
-			return MakeStr("%d(+%d)/%d", level, extra);
-		return MakeStr("%d/%d", level, capacity);
-	}
-	if (extra != 0)
-		return MakeStr("%d(-%d)(+%d)/%d", level, penalty, extra);
-	return MakeStr("%d(-%d)/%d", level, penalty, capacity);
-}
-
-// 983 00ab9c50: fora do CREATE as barras vao a zero (tid 0, guid do taco -1); sem checar o FindChar
 void CLobbyMain::SetLevelBar()
 {
-	unsigned long tidChar = 0;
-	unsigned long guidClub = 0xffffffff;
-	const char* pStat = NULL;
-	if (g_pFresh->IsCurrentLayout("CREATE"))
-	{
-		tidChar = m_createCharType | 0x4000000;
-		pStat = ItemManager()->FindChar(tidChar)->PCL;
-		guidClub = 0;
-	}
+	unsigned long tidChar;
+	const char* pStat;
+	const unsigned long* pParts;
+	const unsigned long* pAuxParts;
+	unsigned long tidClub;
+	const short* pClubStat = NULL;
+	unsigned long tidCaddie;
+	unsigned char level = 0;
+
+	// so o layout CREATE chega aqui: GAMEROOM/GAMEROOM_EXT do 645 nao existem no lobby.xml JP (C700/C702)
+	if (!g_pFresh->IsCurrentLayout("CREATE"))
+		return;
+
+	tidChar = m_createCharType | 0x4000000;
+	IFF_STRUCT::sChar* pChar = ItemManager()->FindChar(tidChar);
+	pStat = pChar->PCL;
+	pParts = NULL;
+	pAuxParts = NULL;
+	tidClub = 0;
+	tidCaddie = 0;
+
 	if (IsLocalContent(S4_CARD_SYSTEM))
 	{
 		CCardManager::Instance()->SetPlayerIndex(255);
 		CCardManager::Instance()->CalcCardPeriodAndStatus();
 	}
+
 	for (unsigned char i = 0; i < 5; i++)
 	{
-		sCapacityParam983 param = { i, tidChar, (unsigned long)pStat, NULL, NULL, 0, NULL, NULL, guidClub, 0, 0, 0, 0 };
-		status_t status = ItemManager()->GetLevelWithPenalty(&param);
-		int level = status.level;
-		int penalty = status.penalty;
-		unsigned char capacity = ItemManager()->GetCapacity(&param);
-		m_pStatBar[i]->SetDestPos(level, false);
-		m_pStatBar[i]->SetExpand(capacity - level);
+		status_t status =
+			ItemManager()->GetLevelWithPenalty((eLvlType)i, tidChar, pStat,
+				pParts, pAuxParts, tidClub, pClubStat, tidCaddie, level);
+		int nLevel = status.level;
+		int nPenalty = status.penalty;
+		unsigned char nCapacity = ItemManager()->GetCapacity((eLvlType)i,
+			tidChar, pStat, pParts, tidClub, pClubStat, tidCaddie, level);
+
+		m_pStatBar[i]->SetDestPos(nLevel, false);
+		m_pStatBar[i]->SetExpand(nCapacity - nLevel);
 		if (m_pStatEdit[i])
-			m_pStatEdit[i]->SetCaption11(MakeStatusString983(level, capacity, penalty, 0));
+			m_pStatEdit[i]->SetCaption11(
+				MakeStatusString3(nLevel, nCapacity, nPenalty));
 	}
 }
 
@@ -5415,13 +5412,6 @@ bool RoomCourseRevCompare(const void* a, const void* b)
 	return pRoom1->mapType > pRoom2->mapType;
 }
 
-// A927: 983 usa lstrcmpi, que le Shift-JIS pelo CP_ACP e so ordena certo em Windows japones; CompareStringA converte pela pagina do locale
-static int GameTextCompare(const char* a, const char* b)
-{
-	int result = CompareStringA(MAKELCID(MAKELANGID(LANG_JAPANESE, SUBLANG_DEFAULT), SORT_DEFAULT), NORM_IGNORECASE, a, -1, b, -1);
-	return result ? result - CSTR_EQUAL : lstrcmpi(a, b); // 0 = falhou; ordem constante quebraria o sort
-}
-
 bool RoomTitleCompare(const void* a, const void* b)
 {
 	if (a == NULL)
@@ -5433,7 +5423,7 @@ bool RoomTitleCompare(const void* a, const void* b)
 	const sRoomInfo* pRoom1 = (const sRoomInfo*)a;
 	const sRoomInfo* pRoom2 = (const sRoomInfo*)b;
 
-	return GameTextCompare(pRoom1->title, pRoom2->title) < 0;
+	return lstrcmpi(pRoom1->title, pRoom2->title) < 0;
 }
 
 bool RoomTitleRevCompare(const void* a, const void* b)
@@ -5447,7 +5437,7 @@ bool RoomTitleRevCompare(const void* a, const void* b)
 	const sRoomInfo* pRoom1 = (const sRoomInfo*)a;
 	const sRoomInfo* pRoom2 = (const sRoomInfo*)b;
 
-	return GameTextCompare(pRoom1->title, pRoom2->title) > 0;
+	return lstrcmpi(pRoom1->title, pRoom2->title) > 0;
 }
 
 bool RoomGameTypeCompare(const void* a, const void* b)
@@ -5638,7 +5628,7 @@ bool UserNicknameCompare(const void* a, const void* b)
 	const sBriefUserInfo* pUser1 = (const sBriefUserInfo*)a;
 	const sBriefUserInfo* pUser2 = (const sBriefUserInfo*)b;
 
-	return GameTextCompare(pUser1->sNick, pUser2->sNick) < 0;
+	return lstrcmpi(pUser1->sNick, pUser2->sNick) < 0;
 }
 
 bool UserNicknameRevCompare(const void* a, const void* b)
@@ -5652,7 +5642,7 @@ bool UserNicknameRevCompare(const void* a, const void* b)
 	const sBriefUserInfo* pUser1 = (const sBriefUserInfo*)a;
 	const sBriefUserInfo* pUser2 = (const sBriefUserInfo*)b;
 
-	return GameTextCompare(pUser1->sNick, pUser2->sNick) > 0;
+	return lstrcmpi(pUser1->sNick, pUser2->sNick) > 0;
 }
 
 const char* RoomListGetGameCategory(unsigned char gameType)
@@ -5819,7 +5809,7 @@ void CLobbyMain::OnCreate_Init(int param)
 	for (it = ItemManager()->m_HairStyleMap.begin();
 		 it != ItemManager()->m_HairStyleMap.end(); ++it)
 	{
-		if (!it->second.c.IsCash && it->second.c.Price < 10000 && it->second.cCharID < 15)
+		if (!it->second.c.IsCash && it->second.c.Price < 10000)
 			m_createHair983[it->second.cCharID].push_back(it->second);
 	}
 
@@ -6214,9 +6204,7 @@ void CLobbyMain::OnCreate_CharacterListDown983(int param)
 	IFF_STRUCT::sChar* pChar = (IFF_STRUCT::sChar*)pItem->pData;
 	SelectCreateChar983((unsigned char)pChar->c.TypeId);
 	m_pCreateDesc->ClearLine();
-	IFF_STRUCT::sDesc* pDesc = ItemManager()->FindDesc(pChar->c.TypeId);
-	if (pDesc)
-		m_pCreateDesc->AddText(pDesc->Desc, false, true);
+	m_pCreateDesc->AddText(ItemManager()->FindDesc(pChar->c.TypeId)->Desc, false, true);
 }
 
 // 983 (00ab70b0): rosto (0/1/3 com o rosto de 11/12/14), moldura e o cursor da escolha / do mouse

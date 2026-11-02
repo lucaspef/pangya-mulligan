@@ -76,8 +76,7 @@ sAviResult WAVIEncoder::Close()
 	m_bOpened = false;
 	FILE* file = fopen(m_filename, "rb");
 	result.fileSize = file ? filelength(fileno(file)) : 0;
-	if (file)
-		fclose(file);
+	fclose(file);
 	return result;
 }
 
@@ -130,7 +129,7 @@ void WAVIEncoder::Release()
 		for (int i = 0; i < m_hisNum; ++i)
 			if (m_history[i])
 				delete m_history[i];
-		delete[] m_history;
+		delete m_history;
 		m_history = 0;
 	}
 	m_hisNum = 0;

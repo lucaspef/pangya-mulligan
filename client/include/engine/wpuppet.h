@@ -303,11 +303,11 @@ private:
 	void RegisterCreatedBones983(std::list<WBone*>& bones);
 	// 983 00b74010: copia uma caixa (info compartilhada) com o osso deste boneco
 	void AddBoundBox983(w_bound_box* box);
-	void LoadPET_Mesh(cFile* file, WBone* bone, w_pet_texture_info* texture, int texNum,
+	void LoadPET_Mesh(cFile* file, WBone* bone, w_pet_texture_info* texture,
 		bool flag);
 	WBone* LoadPET_Bone(cFile* file, int version);
 	float LoadPET_Animation(cFile* file, WBone* bone);
-	void LoadPET_FaceAnim(cFile* file, w_pet_texture_info* texture, int texNum, WBone* bone,
+	void LoadPET_FaceAnim(cFile* file, w_pet_texture_info* texture, WBone* bone,
 		char* name);
 	void LoadPET_Frame(cFile* file);
 	WList<w_motion_data*>* LoadPET_Motion(cFile* file, float scale);

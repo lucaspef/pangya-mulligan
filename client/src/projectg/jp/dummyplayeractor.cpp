@@ -30,6 +30,7 @@
 
 extern const WVector g_vUp983_e42538; // 00e42538 = (0, 1, 0)
 extern const WVector g_vZero983_f041c4; // 00f041c4
+const char* GetStrConst(const char* src, char* dst);
 
 // WPuppet (engine, frente A): o acerto da matriz 004d18f0 (cópia fora de linha da unidade dummypet)
 class WPuppetPlayerJp : public WPuppet
@@ -195,10 +196,6 @@ IDummyPlayer::IDummyPlayer(int kind)
 	  m_pFx(NULL),
 	  m_fxId(0)
 {
-	// B1655: mesmo caso do IDummyPet; UpdateTexture983/Process testam antes do Play983/SetMotion
-	m_bShow = false;
-	m_bPlaying = false;
-	m_pTexApplied = NULL;
 }
 
 IDummyPlayer::~IDummyPlayer()
@@ -768,9 +765,8 @@ void CDummyPlayerActor::OnProcess(float delta)
 	{
 		if (CHeadIcon::Instance() && m_pFrames[i])
 		{
-			WBone* head = m_pFrames[i]->GetBonePet()->FindBone("Bip01 Head");
-			if (head)
-				CHeadIcon::Instance()->SetPlayerPos(i, head->m_matrix.pivot);
+			WVector pos = m_pFrames[i]->GetBonePet()->FindBone("Bip01 Head")->m_matrix.pivot;
+			CHeadIcon::Instance()->SetPlayerPos(i, pos);
 		}
 	}
 	for (std::vector<std::tr1::shared_ptr<IDummyPlayer> >::iterator it = m_players.begin(); it != m_players.end(); ++it)
@@ -1215,9 +1211,9 @@ void CDummyPlayerActor::HandleMsg(const MsgObject& msg)
 								continue;
 							if (uid == Doc()->m_myInfo.info.dwUID)
 								myPlace = place;
-							strncpy_s(user.info.sNick, pRival->nickname, _TRUNCATE); // E491: campo de pacote sem terminador
-							strncpy_s(user.info.sGuild, pRival->guildName, _TRUNCATE);
-							strncpy_s(EMBLEM983(user.info), sizeof(pRival->guildMark), pRival->guildMark, _TRUNCATE);
+							strcpy(user.info.sNick, pRival->nickname);
+							strcpy(user.info.sGuild, pRival->guildName);
+							strcpy(EMBLEM983(user.info), pRival->guildMark);
 							user.info.dwIdentity = pRival->capability;
 							user.info.dwGuid = i;
 							user.info.dwGuildId = pRival->guildUID;
@@ -1237,9 +1233,9 @@ void CDummyPlayerActor::HandleMsg(const MsgObject& msg)
 								sRivalData* pRival = &Doc()->m_rivalList[i];
 								if (pRival == NULL || _stricmp(pRival->nickname, pNpc->name) != 0)
 									continue;
-								strncpy_s(user.info.sNick, pRival->nickname, _TRUNCATE); // E491: campo de pacote sem terminador
-								strncpy_s(user.info.sGuild, pRival->guildName, _TRUNCATE);
-								strncpy_s(EMBLEM983(user.info), sizeof(pRival->guildMark), pRival->guildMark, _TRUNCATE);
+								strcpy(user.info.sNick, pRival->nickname);
+								strcpy(user.info.sGuild, pRival->guildName);
+								strcpy(EMBLEM983(user.info), pRival->guildMark);
 								user.info.dwIdentity = pRival->capability;
 								user.info.dwGuid = i;
 								user.info.dwGuildId = pRival->guildUID;

@@ -38,13 +38,13 @@ void CDxDiagInfo::GatherInfo()
 				TiXmlNode* pNode = pSystem->FirstChild("Processor");
 				if (pNode && pNode->FirstChild())
 				{
-					strncpy_s(m_cpuInfo, pNode->FirstChild()->Value(), _TRUNCATE);
+					strcpy(m_cpuInfo, pNode->FirstChild()->Value());
 				}
 
 				pNode = pSystem->FirstChild("OperatingSystem");
 				if (pNode && pNode->FirstChild())
 				{
-					strncpy_s(m_osName, pNode->FirstChild()->Value(), _TRUNCATE);
+					strcpy(m_osName, pNode->FirstChild()->Value());
 				}
 			}
 
@@ -57,7 +57,7 @@ void CDxDiagInfo::GatherInfo()
 					TiXmlNode* pCard = pDevice->FirstChild("CardName");
 					if (pCard && pCard->FirstChild())
 					{
-						strncpy_s(m_graphicCardInfo, pCard->FirstChild()->Value(), _TRUNCATE);
+						strcpy(m_graphicCardInfo, pCard->FirstChild()->Value());
 					}
 				}
 			}

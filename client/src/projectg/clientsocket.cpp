@@ -42,12 +42,9 @@ int WClientSocket::TryRead(bool bPoll)
 {
 	if (!bPoll || Poll(0))
 	{
-		// E489: 983 lanca e ninguem captura; servidor em rajada cai pela saida normal de conexao perdida
 		if (m_rcvCnt >= MAX_RECV_BUFFER)
-		{
-			m_bConnected = FALSE;
-			return 0;
-		}
+			throw WAppException(
+				"! socket receive buffer overflow, close connection");
 
 		int n = Read(m_rcvBuf.LockBuffer(m_rcvCnt), MAX_RECV_BUFFER - m_rcvCnt);
 
@@ -137,13 +134,8 @@ int WClientSocket::PutPacket(WSendPacket& packet, eSendTo to)
 	packet.MakePacketComplete(m_parseKey, to);
 
 	int len = (packet.GetBuffer()[2] << 8) + packet.GetBuffer()[1] + 4;
-	// E489: 983 lanca sem catch; descarta como o erro de envio do Flush
 	if (m_sndCnt + len > MAX_SEND_BUFFER)
-	{
-		g_iSendFailType = g_iSendPacketType;
-		m_sndCnt = 0;
-		return FALSE;
-	}
+		throw WAppException("! socket send buffer overflow");
 
 	memmove(m_sndBuf.LockBuffer(m_sndCnt), packet.GetBuffer(), len);
 	m_sendSeq += 3;

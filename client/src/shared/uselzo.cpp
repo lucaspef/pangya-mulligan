@@ -100,7 +100,7 @@ int CCompressBuffer::Decompress(unsigned char* pSrc, int srcSize)
 		return 2;
 	}
 
-	if (srcSize < eHeaderLen)	// E489: curto lia cabecalho fora; tamanho negativo ia ao lzo
+	if (srcSize == 0)
 	{
 		return 3;
 	}
@@ -121,21 +121,26 @@ int CCompressBuffer::Decompress(unsigned char* pSrc, int srcSize)
 		m_Buffer = NULL;
 	}
 
-	const int capacity = Max(WrittenOrgSize + 10, MAX_BUF_LEN);
-	m_Buffer = new unsigned char[capacity];
-	memset(m_Buffer, 0, capacity);
+	m_Buffer = new unsigned char[Max(WrittenOrgSize + 10, MAX_BUF_LEN)];
+	memset(m_Buffer, 0, Max(WrittenOrgSize + 10, MAX_BUF_LEN));
 
 	if (pSrc[0] == eNotCompressed)
 	{
-		// E489: confere antes de copiar; cabecalho menor que o corpo estourava o heap
-		if (WrittenOrgSize != srcSize - eHeaderLen)
+		for (int i = 0; i < srcSize - eHeaderLen; i++)
+		{
+			m_Buffer[i] = pSrc[i + eHeaderLen];
+		}
+
+		if (WrittenOrgSize == srcSize - eHeaderLen)
+		{
+			m_iSize = srcSize - eHeaderLen;
+		}
+		else
 		{
 			m_iSize = 0;
 			return 5;
 		}
 
-		memcpy(m_Buffer, pSrc + eHeaderLen, WrittenOrgSize);
-		m_iSize = WrittenOrgSize;
 		return 0;
 	}
 	else if (pSrc[0] == eCompressed)
@@ -148,7 +153,7 @@ int CCompressBuffer::Decompress(unsigned char* pSrc, int srcSize)
 
 		size_t uDestLen = 0;
 		int res = Lzo1xDecompress(pSrc + eHeaderLen, srcSize - eHeaderLen,
-			m_Buffer, capacity, &uDestLen);	// E489: limita a saida ao que o pacote pode escrever
+			m_Buffer, Max(WrittenOrgSize + 10, MAX_BUF_LEN), &uDestLen);
 		if (res != LZO1X_OK)
 		{
 			char log[128];

@@ -42,7 +42,6 @@ FrEmoticon::FrEmoticon(FrWndManager* pManager)
 	m_overlay = 0;
 	m_EnableAnim = false;
 	m_AnimStart = 0;
-	m_Fps = 0;
 	m_selWidth = 26;
 	m_selHeight = 24;
 	m_selXNum = 9;
@@ -105,8 +104,7 @@ bool FrEmoticon::Draw(int icon, const WRect& dst, unsigned long diffuse,
 	FrGraphicInterface* pGdi = m_pManager->GetGDI();
 	if (!pGdi)
 		return false;
-	// fps do emoticon.xml: ausente, 0 ou > 1000 dividia por zero em todo emoticon desenhado
-	unsigned long frame = m_Fps > 0 && m_Fps <= 1000 ? (timeGetTime() - m_AnimStart) / (1000 / m_Fps) : 0;
+	unsigned long frame = (timeGetTime() - m_AnimStart) / (1000 / m_Fps);
 	sEmoticon* emo = m_Emoticons[icon];
 	int selected;
 	if (m_EnableAnim && emo->Frames.size())
@@ -117,8 +115,6 @@ bool FrEmoticon::Draw(int icon, const WRect& dst, unsigned long diffuse,
 	int selY = (selected % m_selNum) / m_selXNum;
 	WOverlay* overlay =
 		m_EnableAnim && emo->Frames.size() ? emo->Overlay : m_overlay;
-	if (!overlay) // emoticon.tga ausente: o texto segue sem o icone
-		return false;
 	int width = overlay->GetWidth();
 	int height = overlay->GetHeight();
 	unsigned long color = (int(pGdi->GetAlpha() * 255) << 24) | 0xffffff;
@@ -441,11 +437,6 @@ bool FrEmoticon::LoadXml(const char* FileName)
 	while (DefNode)
 	{
 		TiXmlElement* Def = DefNode->ToElement();
-		if (!Def) // comentario entre os <def>
-		{
-			DefNode = DefNode->NextSibling();
-			continue;
-		}
 		sEmoticon* Emoticon = new sEmoticon;
 		Emoticon->Name = Def->Attribute("name");
 		Emoticon->Alias[0] = Def->Attribute("alias");

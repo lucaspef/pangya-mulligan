@@ -262,7 +262,7 @@ void CHelpMsg::Process(float dt)
 			{
 				if (IsLocalContent(S4_REPLAY_SYSTEM))
 					return;
-				_snprintf_s(replay, _TRUNCATE,
+				sprintf(replay,
 					K2L_Compatibility("(%d\xb9\xf8 \xbb\xe7\xbf\xeb \xb0\xa1\xb4\xc9)"),
 					m_pReplayItem->Common[0]);
 				SetHelpMsg(0x15, replay);
@@ -311,7 +311,7 @@ void CHelpMsg::Process(float dt)
 	case 1:
 	case 2:
 		id = 4;
-		_snprintf_s(m_extra, _TRUNCATE, K2L_Compatibility("(%.0fy\xbf\xeb %s)"), GolfClub().GetRange(NULL),
+		sprintf(m_extra, K2L_Compatibility("(%.0fy\xbf\xeb %s)"), GolfClub().GetRange(NULL),
 			GolfClub().GetName());
 		break;
 	case 7:
@@ -331,7 +331,7 @@ void CHelpMsg::Process(float dt)
 				t = TEAM(area - 14)->gauge / 33.0f;
 			else
 				t = PLAYER(area - 14)->gauge / 33.0f;
-			_snprintf_s(m_extra, _TRUNCATE,
+			sprintf(m_extra,
 				K2L_Compatibility("(\xc6\xc4\xbf\xf6\xbc\xa6\xc0\xbb %d\xb9\xf8 \xbb\xe7\xbf\xeb "
 				"\xb0\xa1\xb4\xc9)"),
 				float2int(t));
@@ -354,7 +354,7 @@ void CHelpMsg::Process(float dt)
 		if (ms > sec * 1000)
 			sec++;
 		// 983 006e7256: K2L_Compatibility (00b4ec60) sobre a string 00d1aa28; cru saia coreano no JP
-		_snprintf_s(m_extra, _TRUNCATE, K2L_Compatibility("(\xc7\xf6\xc0\xe7 %d\xc3\xca)"), sec);
+		sprintf(m_extra, K2L_Compatibility("(\xc7\xf6\xc0\xe7 %d\xc3\xca)"), sec);
 		break;
 	}
 	case 21:
@@ -365,15 +365,15 @@ void CHelpMsg::Process(float dt)
 		float range = d.Magnitude();
 		range *= 0.3125f;
 		if (Abs(height) < 0.1f)
-			_snprintf_s(text, _TRUNCATE, K2L_Compatibility("(\xb3\xf4\xc0\xcc:0.0m, "));
+			sprintf(text, K2L_Compatibility("(\xb3\xf4\xc0\xcc:0.0m, "));
 		else if (Abs(height) > 10.0f)
-			_snprintf_s(text, _TRUNCATE, K2L_Compatibility("(\xb3\xf4\xc0\xcc:%+.0fm, "), height);
+			sprintf(text, K2L_Compatibility("(\xb3\xf4\xc0\xcc:%+.0fm, "), height);
 		else
-			_snprintf_s(text, _TRUNCATE, K2L_Compatibility("(\xb3\xf4\xc0\xcc:%+.1fm, "), height);
+			sprintf(text, K2L_Compatibility("(\xb3\xf4\xc0\xcc:%+.1fm, "), height);
 		if (range < 1.0f)
-			_snprintf_s(dist, _TRUNCATE, K2L_Compatibility("\xb0\xc5\xb8\xae:%.1fy)"), range);
+			sprintf(dist, K2L_Compatibility("\xb0\xc5\xb8\xae:%.1fy)"), range);
 		else
-			_snprintf_s(dist, _TRUNCATE, K2L_Compatibility("\xb0\xc5\xb8\xae:%.0fy)"), range);
+			sprintf(dist, K2L_Compatibility("\xb0\xc5\xb8\xae:%.0fy)"), range);
 		strcat(text, dist);
 		id = 3;
 		break;
@@ -396,7 +396,7 @@ void CHelpMsg::Process(float dt)
 				id = 13;
 				AfxGetTask()->GetActor("Screen")
 					<< MsgObject(NULL, M983(0x1c2), (int)&spin, 0, 0, 0, 0);
-				_snprintf_s(text, _TRUNCATE, K2L_Compatibility("(\xc7\xf6\xc0\xe7 %.0f%%)"), spin * 100.0f);
+				sprintf(text, K2L_Compatibility("(\xc7\xf6\xc0\xe7 %.0f%%)"), spin * 100.0f);
 			}
 		}
 		break;
@@ -585,7 +585,7 @@ int CHelpMsg::GetLine(int* start, int* end, unsigned long* color, char* text,
 			space = j;
 			bSpace = true;
 		}
-		j += (Custom_IsLeadByte(text[j]) && text[j + 1]) + 1;
+		j += Custom_IsLeadByte(text[j]) + 1;
 		if (s_column - i + j > 25)
 			break;
 	}
@@ -731,7 +731,7 @@ void CHelpMsg::SetHelpMsg(int id, char* extra)
 		m_idleTime = 0;
 
 	if (extra)
-		strncpy_s(m_extra, extra, _TRUNCATE);
+		strcpy(m_extra, extra);
 
 	if (id == 7 && m_itemId != 0 && m_itemId != 0x18000031)
 	{
@@ -740,24 +740,24 @@ void CHelpMsg::SetHelpMsg(int id, char* extra)
 		IFF_STRUCT::sDesc* pDesc = ItemManager()->FindDesc(m_itemId);
 		if (pItem)
 		{
-			// 983 006e6aa0: strncpy 31 + strcat " /k"; nome >= 28 bytes (116 no Item.iff) passava para m_body
-			_snprintf_s(m_title, _TRUNCATE, "%.28s /k", pItem->c.Name);
+			strncpy(m_title, pItem->c.Name, 31);
+			strcat(m_title, " /k");
 		}
 		if (pDesc)
-			strncpy_s(m_body, pDesc->Desc, _TRUNCATE);
-		strncpy_s(m_sub, K2L_Compatibility("(\xbd\xba\xc6\xe4\xc0\xcc\xbd\xba\xb9\xd9)"), _TRUNCATE);
+			strncpy(m_body, pDesc->Desc, 255);
+		strncpy(m_sub, K2L_Compatibility("(\xbd\xba\xc6\xe4\xc0\xcc\xbd\xba\xb9\xd9)"), 16);
 		CalcWindowSize(m_title, m_body);
 	}
 	else if (id > -1 && m_curId != id)
 	{
 		m_curId = id;
 		if (m_table[id][0])
-			strncpy_s(m_title, m_table[id][0], _TRUNCATE);
+			strncpy(m_title, m_table[id][0], 31);
 		else
 			m_title[0] = 0;
-		strncpy_s(m_body, m_table[m_curId][1], _TRUNCATE);
+		strcpy(m_body, m_table[m_curId][1]);
 		if (m_table[m_curId][2])
-			strncpy_s(m_sub, m_table[m_curId][2], _TRUNCATE);
+			strncpy(m_sub, m_table[m_curId][2], 15);
 		else
 			m_sub[0] = 0;
 		CalcWindowSize(m_table[m_curId][0], m_table[m_curId][1]);

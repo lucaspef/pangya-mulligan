@@ -2730,8 +2730,6 @@ void CScreen::HandleMsg(const MsgObject& msg)
 	{
 		WPolySoup::sPoint* pPoint =
 			GOLFDOC()->m_pPolySoup->FindPoint((const char*)msg.param1);
-		if (!pPoint)
-			break;
 		float radius = GolfBall().GetRadius();
 		const WVector& ground =
 			GetPVS().GetGroundPoint(pPoint->pos, false, NULL, false);
@@ -4866,16 +4864,16 @@ void CScreen::DrawMatchBand983() // 983 0074d160
 			{
 				if (state == 5)
 				{
-					_snprintf_s(buf, _TRUNCATE, "%s %s", match->Name,
+					sprintf(buf, "%s %s", match->Name,
 						K2L_Compatibility("\xc6\xc0\xc0\xfc"));
 				}
 				else if (sdoc->m_roomInfo.realGameType == 0x12)
 				{
-					strncpy_s(buf, K2L_Compatibility("\xbc\xc5\xc7\xc3\xc4\xda\xbd\xba"), _TRUNCATE);
+					strcpy(buf, K2L_Compatibility("\xbc\xc5\xc7\xc3\xc4\xda\xbd\xba"));
 				}
 				else if (sdoc->m_roomInfo.realGameType == 0x13)
 				{
-					strncpy_s(buf, K2L_Compatibility("\xb3\xb2\xc0\xba \xbd\xc3\xb0\xa3"), _TRUNCATE);
+					strcpy(buf, K2L_Compatibility("\xb3\xb2\xc0\xba \xbd\xc3\xb0\xa3"));
 				}
 				else
 				{
@@ -5017,17 +5015,17 @@ void CScreen::DrawApproachInfo()
 		switch (GOLFDOC()->GetApproachWinnerType())
 		{
 		case 1:
-			_snprintf_s(prize, _TRUNCATE,
+			sprintf(prize,
 				K2L_Compatibility("\xa1\xd8 \xb9\xcc\xbc\xc7\xbc\xba\xb0\xf8\xbd\xc3 \xb8\xf0\xb5\xce\xbf\xa1\xb0\xd4 %d\xb0\xb3 \xb4\xf5."),
 				GOLFDOC()->GetApproachPrizeType());
 			break;
 		case 2:
-			_snprintf_s(prize, _TRUNCATE,
+			sprintf(prize,
 				K2L_Compatibility("\xa1\xd8 \xbc\xba\xb0\xf8\xc7\xd1 \xc0\xaf\xc0\xfa\xbf\xa1\xb0\xd4 %d\xb0\xb3 \xb4\xf5."),
 				GOLFDOC()->GetApproachPrizeType());
 			break;
 		case 3:
-			_snprintf_s(prize, _TRUNCATE,
+			sprintf(prize,
 				K2L_Compatibility("\xa1\xd8 \xb9\xcc\xbc\xc7\xbc\xba\xb0\xf8\xbd\xc3 \xb8\xf0\xb5\xce\xbf\xa1\xb0\xd4 %d\xb0\xb3 \xb4\xf5."),
 				GOLFDOC()->GetApproachPrizeType());
 			break;

@@ -2031,8 +2031,6 @@ static int SubTabOfTid983(unsigned long tid)
 		switch (tid >> 0x1a)
 		{
 		case 2:
-			if (!ItemManager()->FindPart(tid))
-				break;
 			switch (ItemManager()->FindPart(tid)->Category)
 			{
 			case 1: return 3;
@@ -2115,8 +2113,6 @@ void CRealMyRoomForm983::OnSearchPick983(unsigned long tid, unsigned long uid)
 		else if (sub == 6)
 		{
 			C_ASSERT(offsetof(IFF_STRUCT::sHairStyle, cCharID) == 0xc1);
-			if (!ItemManager()->FindHairStyle(tid))
-				break;
 			ch = ItemManager()->FindHairStyle(tid)->cCharID;
 		}
 		else
@@ -2131,7 +2127,7 @@ void CRealMyRoomForm983::OnSearchPick983(unsigned long tid, unsigned long uid)
 			IFF_STRUCT::sCard* card = ItemManager()->FindCard(tid);
 			unsigned int type = (tid >> 0x16) & 0xf;
 			if (type <= 2)
-				OnCardTabDown983(card ? card->Volume : 0);
+				OnCardTabDown983(card->Volume);
 			else if (type <= 4)
 				OnCardTabDown983(0);
 		}
@@ -3822,7 +3818,7 @@ static void DrawTrophyRow983(FrGraphicInterface* pGI, FrListItem* pItem)
 		tid &= 0xfffffff0;
 	}
 	IFF_STRUCT::sMatch* pMatch = ItemManager()->FindMatch(tid);
-	if (pMatch == NULL || idx >= 6) // Icon[6]; idx vem do tid do servidor
+	if (pMatch == NULL)
 		return;
 	if (const Bitmap* pIcon = g_pFresh->GetBitmap(pMatch->Icon[idx]))
 	{
@@ -4458,8 +4454,6 @@ void CRealMyRoomForm983::ItemEquip983(FrListBox* box, FrListItem* item, bool equ
 		if (!aux)
 			return;
 		unsigned char slot = (unsigned char)((info->typeId >> 21) & 0x1f);
-		if (slot >= 5)
-			return;
 		unsigned long old = aux[slot];
 		aux[slot] = equip ? info->typeId : 0;
 		if (!g_lobbyModal983)
@@ -5698,11 +5692,11 @@ bool CRealMyRoomForm983::OnUccListBtnDown983(FrListItem* pItem)
 			memset(&copy, 0, sizeof(copy));
 			copy.id = pInfo->id;
 			copy.typeId = pInfo->typeId;
-			strncpy_s(copy.UccIndex, pInfo->UccIndex, _TRUNCATE);
+			strcpy(copy.UccIndex, pInfo->UccIndex);
 			copy.status = 1;
 			char name[0x29];
 			memset(name, 0, sizeof(name));
-			strncpy_s(name, GetUccItemName(&copy), _TRUNCATE); // nome de 40 + sufixo de download nao cabe em 0x29
+			strcpy(name, GetUccItemName(&copy));
 			if (name[0] != 0)
 			{
 				FrSelfDesignAccept* dlg = CreateForm<FrSelfDesignAccept>(g_pFresh->GetManager(), this, "selfdesign_accept", NULL);

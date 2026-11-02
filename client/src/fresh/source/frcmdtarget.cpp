@@ -39,11 +39,6 @@ bool FreshDispatchMsg(FrCmdTarget* pTarget, int var1, sFRESH_ENTRY* pEntry,
 	return result;
 }
 
-void* FrCmdTarget::operator new(size_t size)
-{
-	return memset(::operator new(size), 0, size);
-}
-
 FrCmdTarget::FrCmdTarget()
 {
 }

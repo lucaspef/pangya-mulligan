@@ -21,6 +21,7 @@
 #include <algorithm>
 
 extern const WVector g_vUp983_e42538; // 00e42538 = (0, 1, 0)
+const char* GetStrConst(const char* src, char* dst);
 
 // WPuppet (engine, frente A): 00b86cf0 e o acerto da matriz 004d18f0 (cópia fora de linha desta unidade)
 class WPuppetJp : public WPuppet
@@ -70,10 +71,6 @@ IDummyPet::IDummyPet(int kind)
 	  m_pFx(NULL),
 	  m_fxId(0)
 {
-	// B1655: 983 004d37d0 nao grava +0xb0/+0xb1; o pet carregado na outra thread entra em m_pets/m_pPet
-	// antes do Place983/SetMotion e o OnDisplay testava m_bMoved com lixo do new
-	m_bMoved = false;
-	m_bRotated = false;
 }
 
 IDummyPet::~IDummyPet()
@@ -346,8 +343,6 @@ bool IDummyPet::LoadMascot983(IDummyPet* pPet, unsigned long id, bool bNoScene)
 			}
 		}
 	}
-	if (pPet->m_pPuppet == NULL)
-		return false;
 	pPet->m_pPuppet->CalcBound(NULL, true);
 	if (!bNoScene)
 	{
@@ -654,8 +649,6 @@ loaded:
 	{
 		pPet->m_pPuppet = g_resrcmng->GetPuppet(MakeStr("%s.pet", pCaddie + 0xc4), false, true, false);
 	}
-	if (pPet->m_pPuppet == NULL)
-		return false;
 	pPet->m_pPuppet->CalcBound(NULL, true);
 	if (!bNoScene)
 	{

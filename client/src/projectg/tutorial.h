@@ -127,7 +127,7 @@ protected:
 	void OpenMissionForm();
 	void OpenQuizForm(int);
 	void OpenMissionFailedForm();
-	char* GetLine(char*, char*, size_t);
+	char* GetLine(char*, char*);
 	void BlockInput();
 	void FreeInput();
 	void IsPractice();

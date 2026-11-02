@@ -64,8 +64,6 @@ bool __cdecl WRegistry::Read(char* field, char* buffer, int len)
 		if (RegQueryValueEx(hkey, field, NULL, &type,
 				reinterpret_cast<BYTE*>(buffer), &datalen) == ERROR_SUCCESS)
 		{
-			// REG_SZ gravado sem o zero final (Write abaixo, igual ao 983) vem sem terminador
-			buffer[datalen < (DWORD)len ? datalen : len - 1] = 0;
 			ret = true;
 		}
 		RegCloseKey(hkey);
@@ -99,7 +97,7 @@ int __cdecl WRegistry::Scan(char* field, char* fmt, ...)
 				unsigned int len = 0;
 				while (text[j + len] &&
 					static_cast<unsigned char>(text[j + len]) >= 32 &&
-					len < sizeof(temp) - 1)
+					len < 128)
 				{
 					++len;
 				}
@@ -174,7 +172,6 @@ void __cdecl WRegistry::Write(char* field, const char* format, ...)
 	setlocale(LC_CTYPE, "jpn"); // 983 00b6796b
 	va_start(marker, format);
 	_vsnprintf(buffer, sizeof(buffer), format, marker);
-	buffer[sizeof(buffer) - 1] = 0;
 
 	if (strchr(field, '\\'))
 	{
@@ -187,15 +184,12 @@ void __cdecl WRegistry::Write(char* field, const char* format, ...)
 		strcpy(subkey, m_location);
 	}
 
-	// 983 usa hkey sem valor quando as duas falham (ex.: HKLM sem permissao)
-	if (RegOpenKeyEx(m_root, subkey, 0, KEY_WRITE, &hkey) == ERROR_SUCCESS ||
-		RegCreateKey(m_root, subkey, &hkey) == ERROR_SUCCESS)
-	{
-		RegSetValueEx(hkey, field, 0, REG_SZ, reinterpret_cast<BYTE*>(buffer),
-			strlen(buffer));
-		RegCloseKey(hkey);
-	}
-	setlocale(LC_CTYPE, "Kor"); // 983 00b67a70
+	if (RegOpenKeyEx(m_root, subkey, 0, KEY_WRITE, &hkey) != ERROR_SUCCESS)
+		RegCreateKey(m_root, subkey, &hkey);
+
+	RegSetValueEx(hkey, field, 0, REG_SZ, reinterpret_cast<BYTE*>(buffer),
+		strlen(buffer));
+	RegCloseKey(hkey);
 }
 
 void WRegistry::Write(char* field, DWORD value)
@@ -214,13 +208,14 @@ void WRegistry::Write(char* field, DWORD value)
 		strcpy(subkey, m_location);
 	}
 
-	if (RegOpenKeyEx(m_root, subkey, 0, KEY_WRITE, &hkey) == ERROR_SUCCESS ||
-		RegCreateKey(m_root, subkey, &hkey) == ERROR_SUCCESS)
+	if (RegOpenKeyEx(m_root, subkey, 0, KEY_WRITE, &hkey) != ERROR_SUCCESS)
 	{
-		RegSetValueEx(hkey, field, 0, REG_DWORD, reinterpret_cast<BYTE*>(&value),
-			sizeof(value));
-		RegCloseKey(hkey);
+		RegCreateKey(m_root, subkey, &hkey);
 	}
+
+	RegSetValueEx(hkey, field, 0, REG_DWORD, reinterpret_cast<BYTE*>(&value),
+		sizeof(value));
+	RegCloseKey(hkey);
 }
 
 WRegistry::WRegistry()

@@ -1,6 +1,7 @@
 #include "minatl.h"
 #include "vc10_layout.h"
 #include "shopmain.h"
+extern "C" void __cdecl jp983_rastro(const char* fmt, ...); // D820
 #include "avatar_avatar.h"
 #include "fredit.h"
 #include "frlistbox.h"
@@ -291,6 +292,9 @@ bool CShopMain::OnInit()
 		mascotTid = 0x40000000;
 	else
 		mascotTid = CSharedDoc::Instance()->m_mascotMap[key].tid;
+	jp983_rastro("A803 loja OnInit u524=%08x guidChar=%08x tid=%08x", m_u524,
+		CSharedDoc::Instance()->m_myInfo.userEquip.guidChar,
+		CSharedDoc::Instance()->m_charMap[CSharedDoc::Instance()->m_myInfo.userEquip.guidChar].tid);
 	if (m_u524)
 		ChangeCharacter(m_u524);
 	else
@@ -1518,7 +1522,7 @@ void CShopMain::OnItemListOwnerDraw(int param)
 		// D808: +0x23c passa do fim do no do std::map (0x24c, ver checkoutdlg D/00aa2dd6) = lixo do heap; o strcpy
 		// do 983 pode estourar os 9 bytes (por quadro, no OwnerDraw). Copia limitada: mesmo resultado quando ha NUL.
 		strncpy(info.UccIndex, SPARTTAIL983(item) + 4, sizeof(info.UccIndex) - 1);
-		strncpy_s(specialName, GetUccItemName(&info), _TRUNCATE);
+		strcpy(specialName, GetUccItemName(&info));
 		icon = GetUccItemIcon(&info);
 		bSpecial = true;
 	}
@@ -3405,8 +3409,6 @@ CShopMain::subTab_t CShopMain::SubTabOfTid983(unsigned long tid)
 		case 1:
 			return (subTab_t)1;
 		case 2:
-			if (!ItemManager()->FindPart(tid))
-				break;
 			switch (ItemManager()->FindPart(tid)->Category)
 			{
 			case 1:
@@ -3641,7 +3643,7 @@ bool CShopMain::OnMsg983(const MsgObject& msg) // 00a971f0
 			else if (subTab == 5 && type == 0x1c)
 				charTid = m_u524;
 			else if (subTab == SUBTAB_HAIR)
-				charTid = ItemManager()->FindHairStyle(tid) ? ItemManager()->FindHairStyle(tid)->cCharID | 0x4000000 : m_u524;
+				charTid = ItemManager()->FindHairStyle(tid)->cCharID | 0x4000000;
 			else
 				charTid = ((tid >> 0x12) & 0xff) | 0x4000000;
 			if (m_u524 != charTid)
@@ -3898,6 +3900,8 @@ bool CShopMain::OnMsg983(const MsgObject& msg) // 00a971f0
 	{
 		const unsigned long* pInfo = (const unsigned long*)msg.param2;
 		CTask* pTask = CTaskManager::Instance()->GetPreservedTask();
+		jp983_rastro("A803 loja 0x49 tid=%08x guid=%08x u524=%08x avatarchat=%d", pInfo[0], pInfo[1], m_u524,
+			pTask && pTask->GetActor("AvatarChat") ? 1 : 0);
 		if (pTask && pTask->GetActor("AvatarChat"))
 		{
 			pTask->GetActor("AvatarChat")
@@ -4002,8 +4006,7 @@ bool CShopMain::OnMsg983(const MsgObject& msg) // 00a971f0
 			item.HourRemain = IsHourPart983(item.tid) ? msg.param3 : msg.param3 * 24; // 983 00a97d54
 			item.ItemType = msg.param4;
 		}
-		if ((item.tid >> 13 & 0x1f) < 24)
-			m_partGuid983[item.tid >> 13 & 0x1f] = item.guid;
+		m_partGuid983[item.tid >> 13 & 0x1f] = item.guid;
 		if (IsUccClothes(item.tid)) // 983 00a97d78: sem IsLocalContent (o S4_UCC e do 0xef, que nao vem para a loja)
 		{
 			strncpy(item.UccIndex, (const char*)msg.param5 + 0x1d, 9);
@@ -6340,9 +6343,9 @@ void CShopMain::OpenInformation(unsigned long tid, unsigned long uccGuid, const 
 		info.tid = tid;
 		info.guid = uccGuid;
 		info.status = 1;
-		strncpy_s(info.UccIndex, uccIndex, _TRUNCATE);
+		strcpy(info.UccIndex, uccIndex);
 		uccIcon = GetUccItemIcon(&info);
-		strncpy_s(uccName, GetUccItemName(&info), _TRUNCATE); // nome de 40 + sufixo de download nao cabe em 41
+		strcpy(uccName, GetUccItemName(&info));
 	}
 	if (!pItem)
 		return;
@@ -6630,7 +6633,6 @@ int CShopMain::GetItemNumInMyPocket(unsigned long tid, bool bNoCash)
 	{
 		CItemManager* pItemMgr = ItemManager();
 		IFF_STRUCT::sSetItem* pSet = pItemMgr->FindSetItem(tid);
-		if (pSet)
 		{
 			for (unsigned char n = 0; n < pSet->nElems; n++)
 			{
@@ -7152,6 +7154,8 @@ bool CShopMain::SelectItemList(FrListItem* pListItem)
 		unsigned long sub = (tid >> 21) & 0x1f;
 		if (sub != 6 && sub != 5 && sub != 4 && sub != 8)
 		{
+			LARGE_INTEGER d820t0; // D820: tempo total do clique no pacote (item 11 dono10)
+			QueryPerformanceCounter(&d820t0);
 			m_pPartCartList->ClearItem();
 			IFF_STRUCT::sSetItem* pSet =
 				(IFF_STRUCT::sSetItem*)pListItem->pData;
@@ -7211,6 +7215,13 @@ bool CShopMain::SelectItemList(FrListItem* pListItem)
 			m_pStatBox->SetVisible(true);
 			SetLevelBar();
 			g_audio->PlaySfx("item_select_cloth");
+			{
+				LARGE_INTEGER f, n;
+				QueryPerformanceFrequency(&f);
+				QueryPerformanceCounter(&n);
+				jp983_rastro("D820 set tid=%08x n=%d total=%.1f ms", pSet->c.TypeId, (int)pSet->nElems,
+					(double)(n.QuadPart - d820t0.QuadPart) * 1000.0 / (double)f.QuadPart);
+			}
 			break;
 		}
 		m_pPartCartList->ClearItem();
@@ -7443,7 +7454,7 @@ void CShopMain::UnselectItemList(unsigned long tid)
 		UnselectItemFromItemList(tid);
 		CItemManager* pItemMgr = ItemManager();
 		IFF_STRUCT::sSetItem* pSet = pItemMgr->FindSetItem(tid);
-		for (int i = 0; pSet && i < pSet->nElems; ++i)
+		for (int i = 0; i < pSet->nElems; ++i)
 		{
 			unsigned long elem = pSet->ElemIds[i];
 			if (pTids->IsEquipped(elem, 0))
@@ -7524,8 +7535,8 @@ void CShopMain::UnselectItemList(unsigned long tid)
 				{
 					CItemManager* pItemMgr = ItemManager();
 					IFF_STRUCT::sSkin* pSkin = pItemMgr->FindSkin(m_skinTid[skin]);
-					m_u724 = pSkin ? pSkin->HScroll : 0;
-					m_u728 = pSkin ? pSkin->VScroll : 0;
+					m_u724 = pSkin->HScroll;
+					m_u728 = pSkin->VScroll;
 				}
 				m_f71c = 0;
 				m_f720 = 0;

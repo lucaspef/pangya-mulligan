@@ -355,6 +355,9 @@ GrandPrixAwardAnimation::GrandPrixAwardAnimation()
 	for (int i = 0; i < 10; i++)
 	{
 		m_smokeFrame[i] = 0.0f;
+		// o 983 zera 10 pares a partir de +0x104 (só 3 cabem antes de m_phase)
+		((sPos983*)m_pad983_104)[i].x = 0.0f;
+		((sPos983*)m_pad983_104)[i].y = 0.0f;
 		m_pCountFont[i] = std::tr1::shared_ptr<WTitleFontEx>((WTitleFontEx*)NULL);
 		m_pPeriodBmp[i] = NULL;
 		m_color[i] = 0xffffffff;
@@ -430,8 +433,6 @@ void GrandPrixAwardAnimation::LoadItemLayout983()
 void GrandPrixAwardAnimation::SetRewards983(const std::vector<sGPAwardReward983>& rewards)
 {
 	m_rewards = rewards;
-	if (m_rewards.size() > 10) // 10 casas na janela: Display decide o fim por m_smokeFrame[size - 1]
-		m_rewards.resize(10);
 	m_itemCount = m_rewards.size() > 5 ? 10 : 5;
 	LoadItemLayout983();
 	m_pSmoke = std::tr1::shared_ptr<CSimpleUI>(new CSimpleUI("[emoti_object.png"));

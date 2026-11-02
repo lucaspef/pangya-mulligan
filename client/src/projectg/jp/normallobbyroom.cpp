@@ -579,7 +579,7 @@ void CNormalLobbyRoom::OnRoomListOwnerDraw(int param, FrRoomListDlg* pDlg)
 			if (pRoom->realGameType != GAME_TYPE_USEMAX)
 				strcpy(name, IFF983_NAME(pMatch));
 			else
-				strncpy_s(name, K2L_Compatibility("\xbc\xc5\xc7\xc3\xc4\xda\xbd\xba"), _TRUNCATE);
+				strcpy(name, K2L_Compatibility("\xbc\xc5\xc7\xc3\xc4\xda\xbd\xba"));
 
 			pGDI->Print(WPoint(s_offset[6].x + pItem->pos.x, s_offset[6].y + pItem->pos.y), 0, "%s %s", name,
 				pRoom->gameType == GAME_TYPE_30S_TEAM ? K2L_Compatibility("\xc6\xc0\xc0\xfc") : "");
@@ -1144,7 +1144,7 @@ void CGrandPrixLobbyRoom::LoadOffset983(FrListBox* pList)
 		lua_system::lua_table_helper tbl = script->GetTable("grandprixuioffset");
 		int count = lua_tinker::call<int, lua_tinker::table>(tbl.state, "get_array_size", tbl.table);
 		sGPPoint983* pOffset = m_offset;
-		for (int i = 1; i <= count && i <= (int)_countof(m_offset); i++, pOffset++)
+		for (int i = 1; i <= count; i++, pOffset++)
 		{
 			float x = AsTable983(LUAIDX983(tbl).GetTableByIndex(i).table).GetByIndex(1);
 			float y = AsTable983(LUAIDX983(tbl).GetTableByIndex(i).table).GetByIndex(2);
@@ -1163,7 +1163,7 @@ void CGrandPrixLobbyRoom::LoadOffset983(FrListBox* pList)
 	lua_system::lua_table_helper tbl = GetLobbyRoomScript983()->GetTable("gpeventlist");
 	int count = lua_tinker::call<int, lua_tinker::table>(tbl.state, "get_array_size", tbl.table);
 	sGPPoint983* pOffset = m_offset;
-	for (int i = 1; i <= count && i <= (int)_countof(m_offset); i++, pOffset++)
+	for (int i = 1; i <= count; i++, pOffset++)
 	{
 		float x = LUAIDX983(LUAIDX983(tbl).GetTableByIndex(i)).GetByIndex<float>(1);
 		float y = LUAIDX983(LUAIDX983(tbl).GetTableByIndex(i)).GetByIndex<float>(2);
@@ -1220,7 +1220,7 @@ void CGrandPrixLobbyRoom::LoadScript983()
 		lua_system::lua_table_helper names = GetLobbyRoomScript983()->GetTable("grandprixRoomListUINames");
 		int count = lua_tinker::call<int, lua_tinker::table>(names.state, "get_array_size", names.table);
 		const Bitmap** ppBmp = m_pNameBmp;
-		for (int i = 1; i <= count && i <= (int)_countof(m_pNameBmp); i++, ppBmp++)
+		for (int i = 1; i <= count; i++, ppBmp++)
 			*ppBmp = g_pFresh->GetBitmap(LUAIDX983(names).GetByIndex<const char*>(i));
 	}
 }
@@ -1325,7 +1325,7 @@ void CGrandPrixLobbyRoom::Init(FrRoomListDlg* pDlg)
 void __fastcall GPTwoDigits983(unsigned short n, char* out)
 {
 	char buf[4] = { 0 };
-	_snprintf_s(buf, _TRUNCATE, "%d", (int)n); // A929: ver GPFormat2_983
+	sprintf_s(buf, 4, "%d", (int)n);
 	if (n < 10)
 	{
 		out[0] = '0';

@@ -229,7 +229,7 @@ void CParticleEffect::HandleMsg(const MsgObject& msg)
 		CParticleRecv* pRecv = m_recvList.Find((const char*)msg.param1);
 		if (pRecv == NULL)
 		{
-			pRecv = new CParticleRecv(MakeStr("%s.eft", (const char*)msg.param1));
+			pRecv = new CParticleRecv(MakeStr("%s.eft", msg.param1));
 			m_recvList.AddItem(pRecv, (const char*)msg.param1, false);
 		}
 		m_recv = *(sRecv*)msg.param2;
@@ -565,15 +565,7 @@ CGolfDoc* CParticleRecv::m_pDoc;
 CParticleRecv::CParticleRecv(const char* file)
 	: m_pSpr(NULL)
 {
-	m_pFrag = NULL;
-	m_bActive = false;
-	m_bVisible = false;
 	cFile* pFile = g_resrcmng->GetCFile(file, -1);
-	if (pFile && pFile->Length() < 0xa1) // curto deixava os campos sem iniciar
-	{
-		CloseCFile(pFile);
-		pFile = NULL;
-	}
 	if (pFile)
 	{
 		pFile->Read(&m_alphaStart, 4);
@@ -604,18 +596,6 @@ CParticleRecv::CParticleRecv(const char* file)
 		pFile->Read(&m_bRandFrame, 1);
 		pFile->Read(m_sprName, 0x20);
 		CloseCFile(pFile);
-		m_sprName[0x1f] = 0;
-
-		// sem sprite ou valores sem sentido: fica como se nao houvesse arquivo
-		m_pSpr = g_resrcmng->Get3DAniSpr(m_sprName, 0, m_sprSize, m_sprSize);
-		if (!(m_interval > 0.0f) || !(m_lifeMax > 0.0f) || !m_pSpr ||
-			m_pSpr->GetSpriteNum() <= 0 || m_frame < 0 ||
-			m_frame >= m_pSpr->GetSpriteNum() ||
-			!(m_lifeMax / m_interval < 0x10000) || m_emitCount <= 0 ||
-			m_emitCount > 0x10000 ||
-			(int)(m_lifeMax / m_interval) * (__int64)m_emitCount <= 0 ||
-			(int)(m_lifeMax / m_interval) * (__int64)m_emitCount > 0x100000)
-			return;
 
 		m_poolSize = (int)(m_lifeMax / m_interval) * m_emitCount;
 		m_pFrag = new sFrag[m_poolSize];
@@ -624,6 +604,7 @@ CParticleRecv::CParticleRecv(const char* file)
 
 		m_matrix.Reset();
 		m_rot.Reset();
+		m_pSpr = g_resrcmng->Get3DAniSpr(m_sprName, 0, m_sprSize, m_sprSize);
 		m_accum = 0.0f;
 		m_head = 0;
 		m_liveCount = 0;
@@ -949,9 +930,6 @@ int CParticle2D::Initialize(const std::list<std::string>& files,
 	m_velMax.x = velMax.x;
 	m_velMax.y = velMax.y;
 
-	if ((int)rect.w <= 0 || (int)rect.h <= 0) // area sem largura: rand() % 0, Process tambem nao gera sem imagens
-		return 0;
-
 	m_bitmaps.reserve(files.size());
 	for (std::list<std::string>::const_iterator it = files.begin();
 		it != files.end(); ++it)
@@ -1095,7 +1073,7 @@ void CParticle2D::Process(float elapsed)
 			++it;
 	}
 
-	for (int n = m_bitmaps.empty() ? 0 : m_count - m_list.size(); n != 0; n--)
+	for (int n = m_count - m_list.size(); n != 0; n--)
 	{
 		sParticle* pParticle = new sParticle;
 		memset(pParticle, 0, sizeof(sParticle));

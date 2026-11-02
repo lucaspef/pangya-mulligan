@@ -812,7 +812,7 @@ int WDirect3D::xGetVbHandle()
 		++i)
 	{
 		this->m_xiVbCount =
-			static_cast<unsigned int>(this->m_xiVbCount) >= 0x3ff
+			static_cast<unsigned int>(this->m_xiVbCount) >= 0x400
 			? 1
 			: this->m_xiVbCount + 1;
 	}
@@ -825,7 +825,7 @@ int WDirect3D::xGetIbHandle()
 	for (int i = 1; this->m_xahIbs[this->m_xiIbCount] && i < 0x1ff; ++i)
 	{
 		this->m_xiIbCount =
-			this->m_xiIbCount >= 0x1ff ? 1 : this->m_xiIbCount + 1;
+			this->m_xiIbCount >= 0x200 ? 1 : this->m_xiIbCount + 1;
 	}
 	this->m_xahIbs[this->m_xiIbCount] = 1;
 	return this->m_xiIbCount;

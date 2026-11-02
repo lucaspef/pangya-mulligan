@@ -568,7 +568,7 @@ void CIntrusion::PlayersUpdate(int bonus)
 		sRivalData data;
 		data.Clear983();
 		strcpy(data.nickname, (*it).sNick);
-		strncpy(data.guildName, (*it).sGuild, sizeof(data.guildName)); // sGuild de 20 nao termina em 0
+		strcpy(data.guildName, (*it).sGuild);
 
 		data.order = bonus;
 		data.quitOrder = bonus;

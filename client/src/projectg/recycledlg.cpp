@@ -2077,8 +2077,6 @@ static bool IsRareRecycleTid983(unsigned long tid)
 void ShowRareGetMsg983(unsigned long tid)
 {
 	IFF_STRUCT::sPart* part = ItemManager()->FindPart(tid);
-	if (part == NULL)
-		return;
 	SendMainActorText983(MakeStr(K2L_Compatibility("\xc3\xe0! %s \xc8\xb9\xb5\xe6"),
 		part->c.Name));
 }
@@ -2087,8 +2085,6 @@ void ShowRareGetMsg983(unsigned long tid)
 void ShowJpGetMsg983(unsigned long tid)
 {
 	IFF_STRUCT::sPart* part = ItemManager()->FindPart(tid);
-	if (part == NULL)
-		return;
 	SendMainActorText983(MakeStr(K2L_Compatibility(
 		"%s \xc8\xb9\xb5\xe6 (\xc0\xcf\xba\xbb\xc0\xfc\xbf\xeb)"),
 		part->c.Name));

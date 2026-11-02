@@ -253,5 +253,4 @@ private:
 	int m_nowY;
 	int m_bytePerChar;
 	bool m_clone;
-	unsigned short m_lastCode; // nosso, no enchimento: ultimo glifo do .fnt
 };

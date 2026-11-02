@@ -41,6 +41,7 @@ extern "C" void __cdecl jp983_rastro(const char* fmt, ...);
 #define RB_STR_G_BIRD "G_Bird"
 
 
+const char* __fastcall GetStrConst(const char* src, char* dest);
 unsigned long ModifyColor(unsigned long color, float factor);
 
 static unsigned long BrightenColor983(unsigned long color, float f)
@@ -1059,8 +1060,9 @@ void ntAvatar::Render()
 		{
 			CSharedDoc* pDoc = CSharedDoc::Instance();
 			int guid = m_guid;
-			std::map<unsigned long, sBriefUserInfo>::iterator itInfo = pDoc->m_briefUserInfoMap.find(guid);
-			if (itInfo == pDoc->m_briefUserInfoMap.end() || !(sBriefUserInfo(itInfo->second).state & 1))
+			const sBriefUserInfo& info =
+				(*pDoc->m_briefUserInfoMap.find(guid)).second;
+			if (!(sBriefUserInfo(info).state & 1))
 			{
 				if (guid != CSharedDoc::Instance()->m_myInfo.info.dwGuid)
 					return;
@@ -1135,11 +1137,9 @@ void ntAvatar::RenderOverlay(bool bDetail)
 	if (!g_view->InFrustum(m_pPetFrame->GetBonePet()->m_bound))
 		return;
 
-	WBone* headBone = m_pPetFrame->GetBonePet()->FindBone("Bip01 HeadNub");
-	if (!headBone)
-		return;
 	WVector head;
-	head = headBone->GetMatrix().pivot;
+	head =
+		m_pPetFrame->GetBonePet()->FindBone("Bip01 HeadNub")->GetMatrix().pivot;
 	WVector screen = g_view->Projection(head);
 	if (screen.z <= 0.044f || screen.z >= 1.0f)
 		return;
@@ -1371,7 +1371,7 @@ void ntAvatar::ParsePuppetScript(const char* script)
 				break;
 			}
 		}
-		if (len <= 1 || len >= (int)sizeof(s_command)) // frame de outro pak: nome longo nao e comando
+		if (len <= 1)
 			return;
 
 		strncpy(s_command, script, len);

@@ -1,7 +1,6 @@
 #include "wmemblock.inl"
 #include "wdevmng.h"
 #include "wvideo.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -53,20 +52,24 @@ void WDeviceManager::LoadModule(const char* name, int flags)
 {
 	char drive[4];
 	WIN32_FIND_DATAA find;
-	// 983: fname[128], ext[8], temp[64], search[128], module[128] sem limite; exe renomeado com nome,
-	// sufixo apos '_' ou extensao longos (ex. "ProjectG.exe_old") estourava a pilha
-	char dir[MAX_PATH];
-	char path[MAX_PATH];
-	char fname[MAX_PATH];
-	char module[MAX_PATH];
-	char search[MAX_PATH];
-	char ext[MAX_PATH];
+	char dir[260];
+	char path[260];
+	char fname[128];
+	char module[128];
+	char temp[64];
+	char search[128];
+	char ext[8];
 
-	GetModuleFileNameA(0, path, MAX_PATH);
-	path[MAX_PATH - 1] = '\0';
+	GetModuleFileNameA(0, path, 260);
 	_splitpath(path, drive, dir, fname, ext);
+	strcpy(search, "wangreal");
 	char* mark = strrchr(fname, '_');
-	_snprintf_s(search, _TRUNCATE, "wangreal%s.dll", mark ? mark : "");
+	if (mark)
+	{
+		strcpy(temp, mark);
+		strcat(search, temp);
+	}
+	strcat(search, ".dll");
 
 	HANDLE handle = FindFirstFileA(search, &find);
 	if (handle != INVALID_HANDLE_VALUE)

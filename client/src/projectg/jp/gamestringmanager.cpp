@@ -72,7 +72,7 @@ int __fastcall HttpReferer(HINTERNET hRequest, char* pOut)
 }
 
 // 0053f9c0: baixa a página inteira; quem chama apaga o que volta. Sem "Content-Length" o 983 lê num bloco de 0x400 bytes
-// sem conferir o tamanho e o heap estoura (chunked, HTTP/1.0: D850); aqui o bloco cresce.
+// sem conferir o tamanho (mantido).
 char* __fastcall HttpGet(const char* url, int* pSize)
 {
 	if (pSize)
@@ -101,30 +101,37 @@ char* __fastcall HttpGet(const char* url, int* pSize)
 		return NULL;
 	}
 
-	int capacity = HttpContentLength(hUrl);
-	if (capacity <= 0 || capacity > 0x1000000)
-		capacity = 0x400;
-	char* pBuf = new char[capacity];
+	int size = HttpContentLength(hUrl);
+	BOOL bKnown = size != 0;
+	if (!bKnown)
+		size = 0x400;
+	char* pBuf = new char[size];
 
 	int total = 0;
-	DWORD avail = 0, read = 0;
-	while (InternetQueryDataAvailable(hUrl, &avail, 0, 0) && avail)
+	DWORD avail;
+	InternetQueryDataAvailable(hUrl, &avail, 0, 0);
+	while (avail)
 	{
-		if (total + (int)avail > capacity)
-		{
-			capacity = max(capacity * 2, total + (int)avail);
-			char* pNew = new char[capacity];
-			memcpy(pNew, pBuf, total);
-			delete[] pBuf;
-			pBuf = pNew;
-		}
-		if (!InternetReadFile(hUrl, pBuf + total, avail, &read) || !read)
-			break;
+		DWORD read;
+		InternetReadFile(hUrl, pBuf + total, avail, &read);
 		total += read;
+		InternetQueryDataAvailable(hUrl, &avail, 0, 0);
 	}
 	InternetCloseHandle(hUrl);
 	InternetCloseHandle(hNet);
 
+	if (!bKnown)
+	{
+		char* pNew = new char[total];
+		memcpy(pNew, pBuf, total);
+		if (pBuf)
+			delete[] pBuf;
+		pBuf = pNew;
+	}
+	else
+	{
+		total = size;
+	}
 	if (pSize)
 		*pSize = total;
 	return pBuf;
@@ -159,7 +166,7 @@ bool GameStringManager::Convert(const std::string& in, std::string* pOut, unsign
 	wchar_t* pWide = new wchar_t[len];
 	memset(pMulti, 0, len);
 	memset(pWide, 0, len * 2);
-	MultiByteToWideChar(CP_UTF8, 0, src.c_str(), -1, pWide, len);
+	MultiByteToWideChar(CP_UTF8, 0, src.c_str(), -1, pWide, len * 2);
 	WideCharToMultiByte(codePage, 0, pWide, -1, pMulti, len, NULL, NULL);
 	*pOut = pMulti;
 	if (pMulti)
@@ -258,7 +265,7 @@ bool GameStringManager::Parse(const char* text)
 			if (!bFlag)
 			{
 				bFlag = !Extract(texts[i], std::string("<SERVICE>"), std::string("</SERVICE>"), &fields);
-				if (!bFlag && fields.size() >= 2) // 983 lê fields[1] sem conferir: <TEXT> sem <SERVICE> caía
+				if (!bFlag)
 				{
 					int key = atoi(fields[0].c_str());
 					if (key != 0)
@@ -282,26 +289,12 @@ bool GameStringManager::Download()
 	if (pText)
 	{
 		unsigned char* pDecoded = new unsigned char[strlen(pText) + 1];
-		pDecoded[0] = 0; // Base64Decode não termina a saída vazia
 		S5::UTIL::Base64Decode(pText, pDecoded, strlen(pText));
 		m_bLoaded = Parse((const char*)pDecoded);
 		if (pDecoded)
 			delete[] pDecoded;
 		delete[] pText;
 	}
-#ifdef JP983_SERVER_CONFIG
-	// E488: servidor sem a tabela, com ela parcial ou com texto em branco não para o jogo em "string load failed."
-	static const struct { int key; const char* text; } s_defaults[] = {
-#include "gamestrings_default.inc"
-	};
-	for (int i = 0; i < _countof(s_defaults); i++)
-	{
-		std::string& value = m_strings[s_defaults[i].key];
-		if (value.empty())
-			Convert(std::string(s_defaults[i].text), &value, 932);
-	}
-	m_bLoaded = true;
-#endif
 	return m_bLoaded;
 }
 
@@ -315,7 +308,7 @@ bool GameStringManager::Load(const std::string& url)
 		// para em "string load failed." (a213-1/002): JP983_WEB=http://host:porta, senao o web 30091 do robo
 		// C642: "localhost" como o rugburn (gglog vs2022: 127.0.0.1:30091 = string load failed; localhost:30091 carrega)
 		char web[128];
-		m_url = GetEnvironmentVariableA("JP983_WEB", web, sizeof(web)) - 1u < sizeof(web) - 1 ? web : "http://localhost:30091";
+		m_url = GetEnvironmentVariableA("JP983_WEB", web, sizeof(web)) ? web : "http://localhost:30091";
 		m_url += "/Translation/Read.aspx";
 #else
 		m_url = "http://157.7.172.65:50007/Translation/Read.aspx";

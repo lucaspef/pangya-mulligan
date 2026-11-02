@@ -511,7 +511,6 @@ void RFCharMasteryCardSelectColumn::SetCard983(sCards* pCard)
 	{
 		m_pCard983 = pCard;
 		if (m_pCardImg983)
-			if (pIff)
 			m_pCardImg983->SetPicture(MultiByteToWide983(MakeStr("%s.png", pIff->Image)));
 		if (m_pName983)
 			m_pName983->SetLabel(MultiByteToWide983(MakeStr("x%d %s", pCard->cardCount, pIff->c.Name)));
@@ -736,8 +735,7 @@ void RFCharMasteryCardSelectDlg::SetCard983(sCards* pCard)
 	if (m_pCardImg983 && pCard)
 	{
 		IFF_STRUCT::sCard* pIff = ItemManager()->FindCard(pCard->tid);
-		if (pIff)
-			m_pCardImg983->SetPicture(MultiByteToWide983(MakeStr("%s.png", pIff->Image)));
+		m_pCardImg983->SetPicture(MultiByteToWide983(MakeStr("%s.png", pIff->Image)));
 		PlayAnimation(L"_open_card_img_");
 	}
 }

@@ -306,7 +306,7 @@ sTeamData* CGolfDoc::GetTeam(unsigned char index)
 	{
 		return NULL;
 	}
-	return &m_pTeam[index & 1]; // E492: bTeam : 2 vem do pacote; m_pTeam tem 2
+	return &m_pTeam[index];
 }
 
 void CGolfDoc::MakeTeam()
@@ -516,10 +516,8 @@ void CWaveInfo::Load(const char* filename)
 
 	m_wave.clear();
 
-	// arquivo maior que 1024 estourava o char buf[1024] da pilha
+	char buf[1024];
 	int len = file->Length();
-	std::vector<char> text(len + 1);
-	char* buf = &text[0];
 	file->Read(buf, len);
 	buf[len] = 0;
 
@@ -540,7 +538,7 @@ void CWaveInfo::Load(const char* filename)
 		{
 			int index;
 			sWave wave;
-			if (sscanf(line, "%d %31s %f %f", &index, wave.texture, &wave.width,
+			if (sscanf(line, "%d %s %f %f", &index, wave.texture, &wave.width,
 					&wave.freq) == 4)
 			{
 				std::map<int, sWave>::iterator it = m_wave.find(index);
@@ -567,10 +565,8 @@ void CRiverInfo::Load(const char* filename)
 
 	m_river.clear();
 
-	// arquivo maior que 1024 estourava o char buf[1024] da pilha
+	char buf[1024];
 	int len = file->Length();
-	std::vector<char> text(len + 1);
-	char* buf = &text[0];
 	file->Read(buf, len);
 	buf[len] = 0;
 
@@ -609,8 +605,7 @@ void CRiverInfo::Load(const char* filename)
 
 void CMapInfo::Init(const TiXmlDocument& doc, unsigned char index)
 {
-	TiXmlNode* round = doc.FirstChild("round");
-	TiXmlNode* project = round ? round->FirstChild("project") : NULL;
+	TiXmlNode* project = doc.FirstChild("round")->FirstChild("project");
 	if (project == NULL)
 	{
 		return;
@@ -619,24 +614,18 @@ void CMapInfo::Init(const TiXmlDocument& doc, unsigned char index)
 	m_item.clear();
 
 	TiXmlNode* wep = project->FirstChild("wep");
-	for (unsigned char i = 0; wep && i < index; i++)
+	for (unsigned char i = 0; i < index; i++)
 	{
 		wep = wep->NextSibling();
 	}
-	if (wep == NULL)
-	{
-		return; // xml de outro pak com menos <wep>: FindItem devolve NULL como item ausente
-	}
 
+	std::string name = wep->ToElement()->Attribute("name");
 	TiXmlNode* node = wep->FirstChild();
 	while (node)
 	{
-		// comentario ou <tag/> vazio: sem valor
-		TiXmlNode* value = node->ToElement() ? node->FirstChild() : NULL;
-		if (value)
-		{
-			m_item[node->Value()] = value->Value();
-		}
+		std::string key = node->ToElement()->Value();
+		std::string value = node->FirstChild()->Value();
+		m_item[key] = value;
 		node = node->NextSibling();
 	}
 }
@@ -915,7 +904,7 @@ void CPropertyInfo::Init(const TiXmlDocument& doc)
 
 	int count = 0;
 	declare->ToElement()->Attribute("count", &count);
-	if (count > 0 && count < 0x10000) // count do xml; so reserva
+	if (count)
 	{
 		m_property.reserve(count);
 	}
@@ -942,9 +931,9 @@ void CPropertyInfo::Init(const TiXmlDocument& doc)
 		{ "min3",        "%f", &prop.min[2]    },
 		{ "max3",        "%f", &prop.max[2]    },
 		{ "pass",        "%d", &prop.pass      },
-		{ "pet",         "%127s", type            },
-		{ "bound_sound", "%63s", prop.boundSound },
-		{ "roll_sound",  "%63s", prop.rollSound  },
+		{ "pet",         "%s", type            },
+		{ "bound_sound", "%s", prop.boundSound },
+		{ "roll_sound",  "%s", prop.rollSound  },
 	};
 
 	TiXmlNode* defaultNode = declare->FirstChild("class");
@@ -960,10 +949,6 @@ void CPropertyInfo::Init(const TiXmlDocument& doc)
 	}
 
 	TiXmlNode* node = declare->FirstChild("class");
-	if (node == NULL)
-	{
-		return;
-	}
 	do
 	{
 		TiXmlElement* elem = node->ToElement();
@@ -982,16 +967,12 @@ void CPropertyInfo::Init(const TiXmlDocument& doc)
 		for (int i = 0; i < 12; i++)
 		{
 			TiXmlNode* child = node->FirstChild(item[i].name);
-			if (child == NULL && defaultNode)
+			if (child == NULL)
 			{
 				child = defaultNode->FirstChild(item[i].name);
 			}
-			// sem <class name="default"> ou <tag/> vazio: fica o valor da classe anterior
-			TiXmlNode* text = child ? child->FirstChild() : NULL;
-			if (text)
-			{
-				sscanf(text->Value(), item[i].format, item[i].value);
-			}
+			std::string text = child->ToElement()->FirstChild()->Value();
+			sscanf(text.c_str(), item[i].format, item[i].value);
 		}
 
 		if (strstr(type, "green"))
@@ -1099,12 +1080,9 @@ void CPropertyInfo::Init(const TiXmlDocument& doc)
 			TiXmlNode* texture = textures->FirstChild("item");
 			while (texture)
 			{
-				TiXmlNode* text = texture->FirstChild();
+				std::string text = texture->ToElement()->FirstChild()->Value();
 				texture = texture->NextSibling();
-				if (text)
-				{
-					m_textureIndex[text->Value()] = index;
-				}
+				m_textureIndex[text] = index;
 			}
 		}
 

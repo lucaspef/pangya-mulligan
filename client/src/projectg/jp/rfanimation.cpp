@@ -44,10 +44,10 @@ void RFAnimation::Load983(const rf::TiXmlNode* scene)
 
 	for (const rf::TiXmlElement* node = element->FirstChildElement("object"); node; node = node->NextSiblingElement("object"))
 	{
-		std::wstring name = RFUtf8ToWide983(RFGetAttribute983(node, "name"));
+		std::wstring name = RFUtf8ToWide983(node->Attribute("name"));
 		RFAnimationObject object(this);
 		object._name = name;
-		object._ani983 = RFUtf8ToWide983(RFGetAttribute983(node, "ani"));
+		object._ani983 = RFUtf8ToWide983(node->Attribute("ani"));
 		for (const rf::TiXmlElement* asset = node->FirstChildElement("asset"); asset; asset = asset->NextSiblingElement("asset"))
 		{
 			const char* link = asset->Attribute("link");
@@ -70,18 +70,18 @@ void RFAnimation::LoadParams983(const rf::TiXmlElement* scene)
 {
 	for (const rf::TiXmlElement* param = scene->FirstChildElement("param"); param; param = param->NextSiblingElement("param"))
 	{
-		const char* type = RFGetAttribute983(param, "type");
+		const char* type = param->Attribute("type");
 		if (!strcmp(type, "RES"))
 		{
-			float x = (float)atof(RFGetAttribute983(param, "x"));
-			float y = (float)atof(RFGetAttribute983(param, "y"));
+			float x = (float)atof(param->Attribute("x"));
+			float y = (float)atof(param->Attribute("y"));
 			_size.width = x;
 			_size.height = y;
 		}
 		else if (!strcmp(type, "LOOP"))
 		{
-			_repeat983 = atoi(RFGetAttribute983(param, "cnt")) == -1;
-			_pingpong983 = atoi(RFGetAttribute983(param, "pendulum")) != 0;
+			_repeat983 = atoi(param->Attribute("cnt")) == -1;
+			_pingpong983 = atoi(param->Attribute("pendulum")) != 0;
 		}
 	}
 }

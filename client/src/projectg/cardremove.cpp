@@ -249,7 +249,7 @@ void FrCardRemove::OnDrawAreaOwnerDraw(int param)
 		for (; it != end; ++it)
 		{
 			IFF_STRUCT::sCard* card = ItemManager()->FindCard(*it);
-			const Bitmap* bitmap = card ? g_pFresh->GetBitmap(card->c.Icon) : NULL;
+			const Bitmap* bitmap = g_pFresh->GetBitmap(card->c.Icon);
 			if (bitmap)
 			{
 				float bw = bitmap->Width();
@@ -772,7 +772,7 @@ void FrCardRemoveResult::OnDrawAreaOwnerDraw(int param)
 				if (*it)
 				{
 					IFF_STRUCT::sCard* card = ItemManager()->FindCard(*it);
-					const Bitmap* bitmap = card ? g_pFresh->GetBitmap(card->c.Icon) : NULL;
+					const Bitmap* bitmap = g_pFresh->GetBitmap(card->c.Icon);
 					if (bitmap)
 					{
 						unsigned long bh = bitmap->Height();

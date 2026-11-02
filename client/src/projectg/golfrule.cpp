@@ -1877,8 +1877,7 @@ bool CGolfRule::OnChatInputEnterKey(int param)
 	}
 	else
 	{
-		// B1653: UTIL_SendChatMessage devolve false com m_pChatTarget NULL (MAIN.chattarget ausente do pak)
-		if (!Doc()->UTIL_SendChatMessage(m_pChatTarget, msg, false) && m_pChatTarget)
+		if (!Doc()->UTIL_SendChatMessage(m_pChatTarget, msg, false))
 		{
 			m_pChatTarget->SetLine(1, K2L_Compatibility("\xb8\xf0\xb5\xce\xbf\xa1\xb0\xd4"), 0,
 				false, 0);
@@ -1890,7 +1889,7 @@ bool CGolfRule::OnChatInputEnterKey(int param)
 			CHeadIcon::Instance()->SendIcon(0xffff);
 		else
 		{
-			std::string target(m_pChatTarget ? m_pChatTarget->GetLine(1, false) : "");
+			std::string target(m_pChatTarget->GetLine(1, false));
 			if (target == K2L_Compatibility("\xb8\xf0\xb5\xce\xbf\xa1\xb0\xd4"))
 			{
 				std::string text(
@@ -1966,7 +1965,7 @@ void CGolfRule::OnMyInfoBtnUp()
 void CGolfRule::OnOptionInit(int param)
 {
 	m_pOptionBtn = DYNAMIC_CAST(FrButton, (FrWnd*)param);
-	if (m_pOptionBtn && m_pMyInfoBtn) // B1653: myinfo pode faltar no pak; a posicao vem dele
+	if (m_pOptionBtn)
 	{
 		m_pOptionBtn->SetVisible(false);
 		m_pOptionBtn->EnableHover(true, 0.0f);
@@ -2408,9 +2407,6 @@ CGolfRule::CGolfRule()
 	// 983 (0068aea0): mesma lista do 645 em outra ordem, mais os campos novos
 	m_forgetDlgTime = 0.0f;
 	m_dispPriority = DISP_PRIORITY_0;
-	m_bUnplayable983 = false; // B1639: 983 nao grava no ctor; lido antes da 1a msg 0x77
-	m_savedGameMode983 = 0;
-	m_pReplayBox = NULL; // B1653: 983 nao grava no ctor; so o FRCMD_INIT de MAIN.replay_status, que pode faltar no pak
 	m_pChatView = NULL;
 	m_pEmoticonBtn = NULL;
 	m_pLanguage = NULL;
@@ -2626,7 +2622,7 @@ void CGolfRule::OnPreLoadInit()
 	m_pPremiumBmp[3] = 0;
 	char path[512];
 	strcpy(path, g_executeDirectory);
-	strcat(path, "/data/Sound/bgm");
+	sprintf(path, "%s/data/Sound/bgm", path);
 	CheckUserBGM(path);
 	for (int i = 0; i < 8; i++)
 		g_audio->LoadSfx(g_plSound[i], 0, 0, 0, 0, 0.5f, 200.0f);
@@ -3445,7 +3441,7 @@ void CGolfRule::OnProcess(float time)
 	if (m_pGoStopDlg != NULL)
 	{
 		m_goStopTime983 = time + m_goStopTime983;
-		_snprintf_s(buf, _TRUNCATE,
+		sprintf(buf,
 			K2L_Compatibility("%d\xc3\xca \xc8\xc4\xbf\xa1 \xc0\xda\xb5\xbf\xc0\xb8\xb7\xce \xb0\xd4\xc0\xd3\xbf\xa1\xbc\xad \xb3\xaa\xb0\xa9\xb4\xcf\xb4\xd9. %d\xc3\xca"),
 			10, (int)m_goStopTime983);
 		m_pGoStopDlg->SetDesc(buf);
@@ -4908,11 +4904,9 @@ void CGolfRule::HandleMsg(const MsgObject& msg)
 			static const char* const keys[] = { "\xc1\xc2", "\xbf\xec", "\xbb\xf3", "\xc7\xcf", "W", "A", "S", "D", "ENTER" };
 			for (int i = 0; i < 9; ++i)
 				g_input->BlockKey(keys[i]);
-			// B1653: 983 006999e0 nao testa o ponteiro; pak sem MAIN.replay_status (ou de outro tipo) derrubava a abertura
-			if (m_pReplayBox)
-				*(unsigned long*)((char*)m_pReplayBox + VC10_FRWND_STYLE) |= FWS_FIXED; // m_dwStyle (protegido; B1471: 0x40 no cl 14.44, +0x44 = m_wndText)
+			*(unsigned long*)((char*)m_pReplayBox + VC10_FRWND_STYLE) |= FWS_FIXED; // m_dwStyle (protegido; B1471: 0x40 no cl 14.44, +0x44 = m_wndText)
 		}
-		else if (m_pReplayBox)
+		else
 		{
 			m_pReplayBox->SetVisible(false);
 			m_pReplayBox->Enable(false);
@@ -5680,8 +5674,6 @@ refresh:
 			WPolySoupEx2* soup = *(WPolySoupEx2**)((char*)GOLFDOC() + 8);
 			WPolySoupEx2::sPoint* point = soup->FindPoint((char*)msg.param1);
 			float radius = *(float*)((char*)&GolfBall() + 200);
-			if (!point)
-				return;
 			WVector at = point->pos;
 			WVector ground = GetPVS().GetGroundPoint(at, false, NULL, false);
 			WVector pos(ground.x, radius + ground.y, ground.z);
@@ -5694,8 +5686,8 @@ refresh:
 			if ((char*)msg.param2 == NULL)
 				m_targetPos =
 					(*(CAutoTarget**)GDOCPTR983(GOLFDOC(), 0x10))->GetPoint(NULL);
-			else if (WPolySoupEx2::sPoint* target = soup->FindPoint((char*)msg.param2))
-				m_targetPos = target->pos;
+			else
+				m_targetPos = soup->FindPoint((char*)msg.param2)->pos;
 			ChangeTurn();
 			SendMsg(this, "Screen", M983(0x1a3), 0, 0, 0, 0);
 			SendMsg(this, "Effect", M983(0x177), 0, 0, 0, 0);
@@ -6616,7 +6608,7 @@ void CGolfRule::ChangeGameMode(unsigned long mode)
 	{
 		char path[512];
 		strcpy(path, g_executeDirectory);
-		strcat(path, "/data/Sound/bgm");
+		sprintf(path, "%s/data/Sound/bgm", path);
 		CheckUserBGM(path);
 		m_bgmIndex = (unsigned char)(rand() % m_bgmList.size());
 		g_audio->StopSfx(NULL);
@@ -6969,7 +6961,6 @@ void CGolfRule::ChangeGameMode(unsigned long mode)
 	case 0x400:
 	{
 		m_savedCamera983 = g_camera;
-		m_savedGameMode983 = GOLFDOC()->m_gameMode; // B1639: 983 so le +0x268 (00674357), restauraria lixo
 		m_dbgEye983 = g_camera.pivot;
 		WVector at(g_camera.xz + m_dbgEye983.x, g_camera.yz + m_dbgEye983.y,
 			g_camera.zz + m_dbgEye983.z);
@@ -8895,7 +8886,7 @@ void CGolfRule::DoFlyBall(float time)
 	{
 		char camName[64];
 		WSliceStr slice(area->name);
-		slice.Get("*cam", "%63s", camName);
+		slice.Get("*cam", "%s", camName);
 		WPolySoup::sCamera* cam = soup->GetCameraByName(camName);
 		if (cam != NULL)
 			work->SetInstalledCamera((const WVector*)((char*)cam + 0x44));
@@ -9779,7 +9770,7 @@ void CGolfRule::CaptureProcess()
 			}
 		}
 		else
-			GameMessageBox(NULL, // 983 0067a3af: textos pelo K2L
+			MessageBoxA(NULL, // 983 0067a3af: textos pelo K2L
 				MakeStr(K2L_Compatibility("%s \xbd\xba\xc5\xa9\xb8\xb0 \xc4\xb8\xc3\xc4\xbf\xa1 \xbd\xc7\xc6\xd0\xc7\xdf\xbd\xc0\xb4\xcf\xb4\xd9."),
 					strrchr(path, '/')),
 				K2L_Compatibility("\xb0\xe6\xb0\xed"), 0);
@@ -9794,7 +9785,7 @@ void CGolfRule::CaptureProcess()
 		g_view->xScaleProjMat(0, 1);
 		m_captureMode = 0;
 		if (m_captureTiles * m_captureTiles <= m_captureIndex)
-			IntergrateFile(MakeStr("capture/high quality/shot%03d", s_captureIndex)); // 983 0067a746
+			IntergrateFile(MakeStr("capture/high quality/shot%03d"));
 		for (int i = 1; i <= m_captureTiles * m_captureTiles; i++)
 			DeleteFileA(MakeStr("capture/high quality/shot%03d_%03d.bmp",
 				s_captureIndex, i));
@@ -9822,7 +9813,7 @@ void CGolfRule::CaptureProcess()
 			}
 		}
 		else
-			GameMessageBox(NULL, // 983 0067a3af: textos pelo K2L
+			MessageBoxA(NULL, // 983 0067a3af: textos pelo K2L
 				MakeStr(K2L_Compatibility("%s \xbd\xba\xc5\xa9\xb8\xb0 \xc4\xb8\xc3\xc4\xbf\xa1 \xbd\xc7\xc6\xd0\xc7\xdf\xbd\xc0\xb4\xcf\xb4\xd9."),
 					strrchr(path, '/')),
 				K2L_Compatibility("\xb0\xe6\xb0\xed"), 0);
@@ -10995,8 +10986,7 @@ void CGolfRule::DriveGauge(float dt, bool hit)
 	{
 		if (COption::Instance()->dGetClickSystem() != 0)
 		{
-			// 983 0069ad0d: fdiv por 395.0 (double), nao multiplica pelo inverso
-			float t = (float)((GOLFDOC()->m_bar.gauge - BAR_MIN) / 395.0);
+			float t = (GOLFDOC()->m_bar.gauge - BAR_MIN) * (1.0f / 395.0f);
 			if (t > 0.5f)
 				t = 0.5f;
 			rate = (t * t + t * t + 0.5f) * rate;
@@ -11865,7 +11855,6 @@ void CGolfRule::SetEnvironmentVariableA()
 		m_targetPos = target;
 		GolfClub().SetPowerShot(m_shotData.clubPower);
 		GolfClub().SelectBestClub();
-		m_shotData.club[3] = 0; // vem da fita
 		((CClubEx*)&GolfClub())->SetClub(m_shotData.club);
 	}
 	else
@@ -12305,8 +12294,7 @@ unsigned char CGolfRule::GetFirstTurn()
 	if (Doc()->m_golfGame.gameType == 1)
 		return TEAM(m_curTeam)->teeShooter + m_curTeam * 2;
 	unsigned char i;
-	// teeOrder cru da fita: sem o 0, PLAYER(i) alem de m_playerNum e NULL
-	for (i = 0; i < 4 && i < GOLFDOC()->m_playerNum; i++)
+	for (i = 0; i < 4; i++)
 	{
 		if (PLAYER(i)->teeOrder == 0)
 			return i;
@@ -12625,22 +12613,12 @@ void CGolfRule::LoadShot(const char* filename)
 	fread(&parts, 200, 1, fp);
 	fread(PLAYER(0), 0xdb0, 1, fp); // 983: sPlayerData 0xdb0, par do SaveShot
 	fread(&m_shotData, 0x88, 1, fp);
-	unsigned char courseHole = 0;
-	fread(&courseHole, 1, 1, fp);
+	fread(&Doc()->m_courseMap[GetHoleIndex(m_shotData.hole) - 1], 1, 1, fp);
 	fread(DOCPTR983(0x10a99), 4, 1, fp);
 	fclose(fp);
-	// fita de outra versao: ver CSubGolfRuleBase::ShotDataLoad
-	if (m_shotData.hole - 1u >= 18 || !SetCurMap(map))
-	{
-		g_bQuit = true;
-		return;
-	}
-	const unsigned char holeIndex = GetHoleIndex(m_shotData.hole);
-	if (holeIndex <= 18) // 19 = fora da ordem da sala
-		Doc()->m_courseMap[holeIndex - 1] = courseHole;
+	SetCurMap(map);
 	*((unsigned char*)GDOCPTR983(GOLFDOC(), 0x17c)) = m_shotData.hole;
 	*((unsigned char*)DOCPTR983(0x1051e)) = m_shotData.hole;
-	m_shotData.club[3] = 0;
 	((CClubEx*)&GolfClub())->SetClub(m_shotData.club);
 	GOLFDOC()->SetPartTidList(0, parts.m_charTid, parts.m_hairColor,
 		parts.m_shirtsColor, parts.m_tid, parts.m_uid);
@@ -12965,18 +12943,9 @@ void CGolfRule::LoadGame(int type)
 		fread(&map, 1, 1, fp);
 		SetCurMap(map);
 		unsigned char playerNum = GOLFDOC()->m_playerNum;
-		unsigned char hole = 0;
-		fread(&hole, 1, 1, fp);
+		fread(&GOLFDOC()->m_currentHole, 1, 1, fp);
 		fread(&playerNum, 1, 1, fp);
 		sPlayerData* players = PLAYER(0);
-		// arquivo de outra sala: o vetor tem m_playerNum, recusa igual arquivo que nao abre
-		if (players == NULL || playerNum > GOLFDOC()->m_playerNum || hole < 1 || hole > 18)
-		{
-			fclose(fp);
-			g_bQuit = true;
-			return;
-		}
-		GOLFDOC()->m_currentHole = hole;
 		fread(players, sizeof(sPlayerData), playerNum, fp);
 		break;
 	}
@@ -13000,8 +12969,6 @@ void CGolfRule::LoadGame(int type)
 void CGolfRule::QuickSave(const char* name)
 {
 	FILE* fp = fopen(MakeStr("%s.sav", name), "wb");
-	if (!fp)
-		return;
 	unsigned char map = GetCurMap();
 	fwrite(&map, 1, 1, fp);
 	fwrite(&GOLFDOC()->m_currentHole, 1, 1, fp);
@@ -13024,18 +12991,8 @@ void CGolfRule::QuickLoad(char* fileName)
 	head[3] = GOLFDOC()->m_playerNum;
 	fread(&head[3], 1, 1, file);
 	sPlayerData* players = PLAYER(0);
-	// arquivo de outra sala: o vetor tem m_playerNum, o turno indexa nele e o buraco em [18]
-	if (players == NULL || head[3] > GOLFDOC()->m_playerNum || head[2] < 1 || head[2] > 18)
-	{
-		fclose(file);
-		delete[] fileName;
-		return;
-	}
 	fread(players, 0xdb0, head[3], file); // 983 00693fea: sPlayerData 0xdb0, par do QuickSave (645: 0xb98)
-	unsigned char current = 0;
-	fread(&current, 1, 1, file);
-	if (current < GOLFDOC()->m_playerNum)
-		GOLFDOC()->m_currentPlayer = current;
+	fread(&GOLFDOC()->m_currentPlayer, 1, 1, file);
 	fclose(file);
 	if (head[1] != GetCurMap())
 	{
@@ -13183,7 +13140,8 @@ static sMassGameShot* MakeMassGameShot983(CGolfRule* rule, sMassGameShot* shot)
 {
 	memset(shot, 0, sizeof(sMassGameShot));
 	CGolfBall saved;
-	saved.Reset(WVector(0.0f, 0.0f, 0.0f));
+	WVector pos;
+	saved.Reset(pos);
 	saved = GolfBall();
 	float t = (GOLFDOC983_SHOTF0 - BAR_START) / g_fBarRange;
 	shot->ratio = t;
@@ -13640,8 +13598,7 @@ void CGolfRule::AddPrize(int score)
 		if (IsMyTurn(true) && m_replayFlags == 0)
 		{
 			IFF_ITEM_COMMON* evtItem = Doc()->m_itemManager.FindCommonItem(evt);
-			if (evtItem)
-				CChatMsg::Instance()->AddChatMsg(
+			CChatMsg::Instance()->AddChatMsg(
 				std::string(MakeStr(K2L_Compatibility(evtItem->Name))), 0xffff7878,
 				false, false);
 		}
@@ -13767,7 +13724,7 @@ void CGolfRule::AddExtPrize()
 next:
 			i++;
 			off += 0x10; // 983 0068473x: registro de 0x10 (sPrizeInfo)
-		} while (i < PLAYER(GOLFDOC()->m_currentPlayer)->extPrizeNum && i < 128); // contagem vem da fita e soma do pacote; extPrize[128]
+		} while (i < PLAYER(GOLFDOC()->m_currentPlayer)->extPrizeNum);
 	}
 	PLAYER(GOLFDOC()->m_currentPlayer)->extPrizeNum = 0;
 }
@@ -14526,8 +14483,6 @@ void CGolfRule::SendReportError(unsigned char type)
 
 void CGolfRule::ResetUiPos_Board()
 {
-	if (!m_pOnelineBtn || !m_pOnelineView) // B1653: controles podem faltar no pak (983 nao testa)
-		return;
 	WRect rect = m_pOnelineBtn->GetRect();
 	rect.x = g_view->GetWidth() - BAR_START;
 	m_pOnelineBtn->SetRect(rect);
@@ -14694,13 +14649,9 @@ void CGolfRule::OnMainFinish()
 {
 	if (Doc()->m_golfGame.gameType == 0xb)
 	{
-		// B1653: 983 00673530 nao testa; pak sem um dos botoes caia no FINISH do MAIN
-		if (m_pCaddieBookBtn)
-			m_pCaddieBookBtn->Enable(false);
-		if (m_pUnplayableBtn)
-			m_pUnplayableBtn->Enable(false);
-		if (m_pPauseBtn)
-			m_pPauseBtn->Enable(false);
+		m_pCaddieBookBtn->Enable(false);
+		m_pUnplayableBtn->Enable(false);
+		m_pPauseBtn->Enable(false);
 	}
 	if (SHAREDDOC_UCHAR(0x10d80) != 0)
 		HandleMsg(MsgObject(NULL, M983(0xaa), 1, 0, 0, 0, 0));
@@ -15101,7 +15052,7 @@ void CGolfRule::OnRecordAviBtnUp()
 		char msg[255] = "";
 		m_pRecordAviDlg = CreateForm<FrForm>(g_pFresh->GetManager(), this,
 			"notify_yesno", NULL);
-		_snprintf_s(msg, _TRUNCATE, // A929: pasta longa estourava msg
+		sprintf(msg,
 			"\xb8\xae\xc7\xc3\xb7\xb9\xc0\xcc \xc5\xd7\xc0\xd9\xc0\xc7 \xb3\xbb\xbf\xeb\xc0\xbb\n"
 			"\xb5\xbf\xbf\xb5\xbb\xf3 \xc6\xc4\xc0\xcf\xb7\xce \xc0\xfa\xc0\xe5\xc7\xcf\xbd\xc3\xb0\xda\xbd\xc0\xb4\xcf\xb1\xee?\n\n"
 			"\t\t\t\t\t\t   \xc0\xfa\xc0\xe5 \xb0\xe6\xb7\xce\n"
@@ -15129,8 +15080,7 @@ char* CGolfRule::GetPangyaInstallDic()
 	WTL::CString directory = "";
 	directory = registry.ReadString("Install_Dir", "");
 	static char path[255];
-	// sem instalador nao ha Install_Dir: a caixa mostraria so "/replay"
-	_snprintf_s(path, _TRUNCATE, "%s", directory.GetLength() ? (const char*)directory : g_executeDirectory);
+	sprintf(path, "%s", directory);
 	return path;
 }
 
@@ -15166,7 +15116,7 @@ void CGolfRule::AddSomeInfo(WSendPacket& packet)
 		}
 		if (count != cards.size())
 			packet.EncodeData(offset, (char*)&count, 4);
-		// 983 (006809e0): sem IsGlobalWind_Compare (m_netWind nao existe); item 5 casos -> (1,1); intensidade = (int)GetPower983 (fistp com corte);
+		// 983 (006809e0): sem IsGlobalWind_Compare (m_netWind nao existe); item 5 casos -> (1,1); intensidade = GetPower983 (fistp);
 		// flag do vento em Wind+0x170; sem o ramo HACKINGTOOL o 983 grava so a intensidade.
 		if (IsLocalContent(S4_HACKINGTOOL))
 		{
@@ -15179,7 +15129,7 @@ void CGolfRule::AddSomeInfo(WSendPacket& packet)
 			}
 			else
 			{
-				int intensity = (int)Wind().GetPower983(); // 983 680b3a: fldcw 0xc00 + fistp = trunca (B1666)
+				int intensity = (int)floorf(Wind().GetPower983() + 0.5f);
 				if (Wind().IsSpecial983() != 0) // 983 +0x170 = m_bSpecial (cl 14.44: +0x16c)
 				{
 					packet.Encode1(2);
@@ -15194,7 +15144,7 @@ void CGolfRule::AddSomeInfo(WSendPacket& packet)
 		}
 		else
 		{
-			packet.Encode4((int)Wind().GetPower983()); // 983 680bb8: trunca
+			packet.Encode4((int)floorf(Wind().GetPower983() + 0.5f));
 		}
 	}
 	else
@@ -15382,8 +15332,6 @@ void CGolfRule::ProcessObserver()
 		break;
 	}
 	shared = Doc();
-	if (!shared->HasRival(guid)) // inclui guid 0xffffffff: copiava fora do vector
-		return;
 	unsigned char index = shared->GetIndex(guid);
 	sObserverUser user =
 		*(sObserverUser*)((char*)*(unsigned long*)((char*)shared + DOCOFS983(0x1042c)) +

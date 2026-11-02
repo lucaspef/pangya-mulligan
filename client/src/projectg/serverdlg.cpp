@@ -155,7 +155,7 @@ class FrAutoConnect : public FrForm
 	DECLARE_OBJECT(FrAutoConnect)
 
 	FrAutoConnect()
-		: m_pProgressBar(NULL), m_pStaticMsg(NULL) // B1640: OnProc testa antes de sair do Init do controle
+		: m_pProgressBar(NULL)
 	{
 		m_pProgressBar = new cProgressBar;
 		m_retryTime = 0;
@@ -837,9 +837,7 @@ void FrServerDlg::BuildServerList()
 				if (!bGM)
 					continue;
 
-				// 983 00af4c23 usa strcat; Doc guarda o nome e cada BuildServerList soma o sufixo em name[40]
-				strncat((*it).name, K2L_Compatibility(" [\xb8\xc1\xc5\xe4]"),
-					sizeof((*it).name) - strlen((*it).name) - 1);
+				strcat((*it).name, K2L_Compatibility(" [\xb8\xc1\xc5\xe4]")); // 983 00af4c23
 			}
 		}
 
@@ -1350,7 +1348,7 @@ void FrServerDlg::OnChannelListBtnDown()
 		sUserPosition position;
 		position.iServerGUID = Doc()->m_gameServerUID;
 		position.iChannelUid = pSelected->Uid;
-		strncpy_s(position.csChannelName, pSelected->Name, _TRUNCATE); // A929: 983 usa como formato; canal com '%' derrubava
+		wsprintf(position.csChannelName, pSelected->Name);
 		position.iRoomIdx = 0xffff;
 		position.iRoomType = -1;
 

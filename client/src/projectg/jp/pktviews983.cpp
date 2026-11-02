@@ -362,7 +362,7 @@ unsigned long* CGolfDocJp::EnablePlayerEvent(unsigned long flag, unsigned char i
 		*pEvent |= flag;
 		return pEvent;
 	}
-	return NULL; // 983 devolve o eax que sobrar; nenhum chamador usa o retorno
+	// sem return fora da faixa (aviso C4715): o 983 devolve o que estiver em eax
 }
 
 void CGolfDocJp::DisablePlayerEvent(unsigned long flag, unsigned char index)
@@ -830,6 +830,7 @@ CGDSkinItem* CGDSkinItemPetJp::Instance983()
 #include "wpuppet.h"
 #include "wbone.h"
 
+const char* GetStrConst(const char* str, char* out); // 0098c310 (npc.cpp)
 
 // 00e11820: palavras na ordem do switch do ParseScript ("*fxstop(" cai no mesmo caso do "*fx(")
 static const char* s_petScriptCmds983[16] = {
@@ -867,7 +868,7 @@ void IPetScriptObject::ParseScript(char* script, bool bSkip)
 				break;
 			}
 		}
-		if (len <= 1 || len >= (int)sizeof(s_petScriptWord983)) // frame de outro pak: nome longo nao e comando
+		if (len <= 1)
 			break;
 		strncpy(s_petScriptWord983, cur, len);
 		cur += len;
@@ -963,7 +964,9 @@ const char* IPetScriptObject::ScriptPlayIf(CPetFrame* pFrame, const char*& p)
 				return NULL;
 		}
 		char name[0x28];
-		_snprintf_s(name, _TRUNCATE, "%.*s.mpet", len, item); // nome longo corta e nao acha o .mpet
+		strncpy(name, item, len);
+		name[len] = '\0';
+		strcat(name, ".mpet");
 		if (pFrame->HasMPet(name))
 			return s_petScriptMotion983;
 		if (!semi)
@@ -1135,6 +1138,8 @@ bool IPetScriptObjectJp::ParsePTex983(w_motion_data* motion, std::string* pTextu
 }
 
 // ---- C74 (lote 67): FrBongdariShopDlg (frente A) — métodos só do 983 chamados pelos casos 0x21b/0x26c do CTask::OnPacketCommon.
+// A janela ainda está no layout do 645 (0x3f0; o 983 tem 0xb30): o que depende de campo que o 645 não tem fica de fora
+// (pedido C74.1): botão "back_select_gacha_stage" (+0x130), auto-jogo (botão +0x424, flag +0x428, 008b4670) e a lista +0x3e4.
 class FrBongdariShopDlgPkt983 : public FrBongdariShopDlg
 {
 public:
@@ -1148,24 +1153,24 @@ public:
 // antes do mesmo corpo do 008b4830.
 void FrBongdariShopDlgPkt983::StopAutoPlay983()
 {
-	m_bAutoPlay983 = false;
-	SetAutoPlayImg983(1);
-	EnableAfterResult983();
+	// falta (C74.1): m_bAutoPlay983 (+0x428) = false; SetAutoPlayButton983(1) (008b4670)
+	EnableExitButton(true);
+	// falta (C74.1): m_pBackSelectGachaStageBn983 (+0x130)->Enable(true)
+	m_bUsingBonusBall = false; // 983 +0x2aa
 }
 
 // 008b4830: erro na compra do my room (0x26c): botão de sair e "back_select_gacha_stage" ligados, bola em uso desligada
 void FrBongdariShopDlgPkt983::EnableAfterResult983()
 {
 	EnableExitButton(true);
+	// falta (C74.1): m_pBackSelectGachaStageBn983 (+0x130)->Enable(true)
 	m_bUsingBonusBall = false; // 983 +0x2aa
-	m_pBackSelectBn983->Enable(true);
 }
 
-// 008bee10: resultado do combo (0x26c). 008bea70 troca a lista +0x3e8 pelo vetor (o EndPlay983 mostra ela no fim do combo);
-// depois soma as `count` bolas na lista total (AddListTotalItem 008beb40).
+// 008bee10: resultado do my room (0x26c). No 983 o 008bea70 antes copia o vetor inteiro para a lista +0x3e4 (falta, C74.1);
+// depois soma as `count` bolas na lista total (AddListTotalItem 008beb40, +0x3d8 no 983).
 void FrBongdariShopDlgPkt983::SetResultList983(int count, std::vector<sBonusBall>& balls)
 {
-	m_listSecond983.assign(balls.begin(), balls.end());
 	for (int i = 0; i < count; i++)
 		AddListTotalItem(&balls[0] + i);
 }
@@ -1228,7 +1233,7 @@ bool CAIPlayerInfoContainer983::ReadAiBin983(cFile* pFile, std::vector<CNodeCont
 {
 	sAiBinHeader983 header;
 	pFile->Read(&header, sizeof(header));
-	if (header.version < 0x72 || (header.nodeNum > 0 && !pFile->CountFits(header.nodeNum, sizeof(sAiBinLine983))))
+	if (header.version < 0x72)
 		return false;
 	if (header.nodeNum > 0)
 	{
@@ -1237,11 +1242,8 @@ bool CAIPlayerInfoContainer983::ReadAiBin983(cFile* pFile, std::vector<CNodeCont
 		{
 			sAiBinLine983 line;
 			pFile->Read(&line, sizeof(line));
-			if (line.count > 0 && !pFile->CountFits(line.count, sizeof(float[3])))
-				return false;
-			const std::string name(line.name, strnlen(line.name, sizeof(line.name)));
-			CNodeContainer node(name);
-			if (strstr(name.c_str(), "ai"))
+			CNodeContainer node(line.name);
+			if (strstr(line.name, "ai"))
 				node.SetType((CNodeContainer::eType)0xf);
 			for (int j = 0; j < line.count; j++)
 			{

@@ -107,7 +107,7 @@ void FrFriendDlg::OnFriendListOwnerDraw(int param)
 	if (pGDI == NULL)
 		return;
 
-	const Bitmap* pIcon = m_pSexIcon[pFriend->Gender & 1];
+	const Bitmap* pIcon = m_pSexIcon[pFriend->Gender];
 	WRect rect(pItem->pos.x - 8.0f, pItem->pos.y, (float)m_pSexIcon[0]->Width(),
 		(float)pIcon->Height());
 

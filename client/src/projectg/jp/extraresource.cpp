@@ -47,12 +47,6 @@ const std::string& CExtraWallpaper::Pick(int mode)
 		break;
 	case 2:
 		{
-			// prob negativo no xml do tema (servidor web) pode somar 0: rand() % 0 derruba; sem sorteio vai ao 1o
-			if (m_total == 0)
-			{
-				it = m_files.end();
-				break;
-			}
 			unsigned int value = rand() % m_total;
 			it = m_files.lower_bound(value);
 		}
@@ -258,7 +252,7 @@ void CExtraResource::LoadLoading(TiXmlElement* pElem)
 
 	for (TiXmlElement* pPaper = pElem->FirstChildElement("wallpaper"); pPaper; pPaper = pPaper->NextSiblingElement("wallpaper"))
 	{
-		int prob = 0; // o 983 não zera: sem o atributo fica o que estava na pilha
+		int prob; // o 983 não zera: sem o atributo fica o que estava na pilha
 		pPaper->Attribute("prob", &prob);
 		TiXmlElement* pFile = pPaper->FirstChildElement("file");
 		if (pFile)
@@ -278,7 +272,7 @@ void CExtraResource::LoadLobby(TiXmlElement* pElem)
 
 	for (TiXmlElement* pPaper = pElem->FirstChildElement("wallpaper"); pPaper; pPaper = pPaper->NextSiblingElement("wallpaper"))
 	{
-		int prob = 0;
+		int prob;
 		pPaper->Attribute("prob", &prob);
 		TiXmlElement* pFile = pPaper->FirstChildElement("file");
 		if (pFile)

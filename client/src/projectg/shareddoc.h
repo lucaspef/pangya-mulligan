@@ -369,8 +369,6 @@ public:
 	void HaveAngelWing(bool bHave) { m_bHaveAngelWing = bHave; }
 	void SetIndex(unsigned long uid);
 	unsigned char GetIndex(unsigned long guid);
-	bool HasUserInfo(unsigned long uid) { return GetIndex(uid) < 4; } // uid de pacote: GetIndex da 0xff se nao conhece
-	bool HasRival(unsigned long uid) { return GetIndex(uid) < m_rivalList.size(); }
 	float GetWtPepPangyaComboGauge(unsigned char player);
 	float GetComboGaugeLimit(unsigned char team);
 	SYSTEMTIME& GetServerTime();

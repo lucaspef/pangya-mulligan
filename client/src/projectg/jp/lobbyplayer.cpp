@@ -725,8 +725,6 @@ bool LobbyPlayer::RandomMotion983()
 	{
 		unsigned long tid = m_tid & 0x3ffffff;
 		int count = LOBBYMOTION983()->Count983(&tid);
-		if (count == 0) // personagem fora das 15 linhas da tabela (pak mais novo): rand() % 0
-			return true;
 		int index = rand() % count;
 		unsigned long tid2 = m_tid & 0x3ffffff;
 		const char* motion = LOBBYMOTION983()->Get983(&tid2, &index);

@@ -24,7 +24,19 @@ extern bool g_bQuit;
 // cenario do lobby vem do arquivo fixo abaixo e do nome do mapa no ator (msg 0x17a; "west" pelo CLobbyMain::OnPreLoadInit).
 int LOBBYBG_MAP = 0;
 char* LOBBYBG_MAPNAME = "blue";
-static std::string s_lobbyGbin983 = "lobby_west.gbin";                         // 00e36b00
+
+//
+//lobby_newyear.gbin	ProjectG839.pak		
+//lobby_va.gbin	projectg822gb.pak (US)	pink_far.jpg	ProjectG_Jp_Pink.pak
+//lobby_pink.gbin	ProjectG839.pak
+//lobby_summer.gbin	ProjectG911.pak	blue_far.jpg	ProjectG_Jp_ZSky.pak
+//lobby_summer_night.gbin	ProjectG911.pak	[moon_near.jpg
+//lobby_autumn.gbin	ProjectG924.pak	wind_far.jpg
+//lobby_west.gbin	ProjectG839.pak	west_far.jpg
+//lobby_white.gbin	ProjectG841.pak	xmas_far.jpg	ProjectG_Jp_Xmas.pak
+//lobby_winter.gbin	ProjectG841.pak
+
+static std::string s_lobbyGbin983 = "lobby_pink.gbin";//aqui para editar o tema do lobby                        // 00e36b00
 static std::string s_posterTex983[2] = {"+2#_poster01.jpg", "+2#_poster02.jpg"}; // 00e36b1c, 00e36b38
 
 C_ASSERT_VC10(sizeof(ntLobbyBg) == 0x70);

@@ -14,7 +14,7 @@ class WTitleFont;
 class FrUserInfoForm : public FrForm, public CHandOwner
 {
 	DECLARE_OBJECT(FrUserInfoForm)
-
+	//nao seria 5?
 	enum eSeasonType
 	{
 		SEASON_CURRENT,
@@ -27,7 +27,7 @@ class FrUserInfoForm : public FrForm, public CHandOwner
 		TAB_SPECIAL,
 		TAB_RECORD,
 		TAB_TROPHY,
-		TAB_GUILD,
+		TAB_GUILD,//para incluir uma nova, precisa adicionar o enum e o array m_pTabWnds, e o OnTitleTabBtnUp
 		TAB_NONE,
 	};
 

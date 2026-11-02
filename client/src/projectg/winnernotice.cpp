@@ -545,20 +545,6 @@ void CWinnerNotice::SetWinnerData(int type, std::string xml)
 	}
 }
 
-// texto do elemento; o XML vem do pacote 0x1d3 e <TAG/> nao tem filho (o 983 desreferencia)
-static const char* XmlText983(TiXmlElement* pElem)
-{
-	TiXmlNode* pChild = pElem ? pElem->FirstChild() : NULL;
-	return pChild ? pChild->Value() : "";
-}
-
-// 0x1d3 de outro servidor sem <PARAMS> ou que nem e XML (o 983 desreferencia)
-static TiXmlElement* XmlParam983(TiXmlDocument& doc, const char* name)
-{
-	TiXmlElement* pParams = doc.FirstChildElement("PARAMS");
-	return pParams ? pParams->FirstChildElement(name) : NULL;
-}
-
 void CWinnerNotice::ParseXmlData(TiXmlDocument& doc, const char* xml)
 {
 	doc.Clear();
@@ -572,15 +558,15 @@ void CWinnerNotice::GetEventNumfromXml(TiXmlDocument& doc, std::string& out,
 
 	TiXmlElement* pElem;
 	if (bNext)
-		pElem = XmlParam983(doc, "NEXTTIMES");
+		pElem = doc.FirstChildElement("PARAMS")->FirstChildElement("NEXTTIMES");
 	else
-		pElem = XmlParam983(doc, "TIMES");
+		pElem = doc.FirstChildElement("PARAMS")->FirstChildElement("TIMES");
 
 	const char* text = NULL;
 	if (pElem)
-		text = XmlText983(pElem);
+		text = pElem->FirstChild()->Value();
 
-	_snprintf(buf, sizeof(buf) - 1, "%s \xc2\xf7\xbc\xf6 \xc0\xcc\xba\xa5\xc6\xae",
+	sprintf(buf, "%s \xc2\xf7\xbc\xf6 \xc0\xcc\xba\xa5\xc6\xae",
 		text ? text : "0");
 	out = buf;
 }
@@ -593,26 +579,27 @@ void CWinnerNotice::GetDaynTimefromXml(TiXmlDocument& doc, std::string& out,
 	TiXmlElement* pElem;
 	if (bNext)
 		pElem =
-			XmlParam983(doc, "EVENTNEXTTIME");
+			doc.FirstChildElement("PARAMS")->FirstChildElement("EVENTNEXTTIME");
 	else
-		pElem = XmlParam983(doc, "EVENTSTARTTIME");
+		pElem = doc.FirstChildElement("PARAMS")->FirstChildElement(
+			"EVENTSTARTTIME");
 	if (!pElem)
 	{
 		out = "0";
 		return;
 	}
 
-	int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
-	sscanf(XmlText983(pElem), "%d-%d-%d %d:%d:%d.%d", &year, &month,
+	int year, month, day, hour, minute, second;
+	sscanf(pElem->FirstChild()->Value(), "%d-%d-%d %d:%d:%d.%d", &year, &month,
 		&day, &hour, &minute, &second, &second);
 
 	switch (flag)
 	{
 	case EVENT_DATE:
-		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("%d \xbf\xf9 %d \xc0\xcf"), month, day);
+		sprintf(buf, K2L_Compatibility("%d \xbf\xf9 %d \xc0\xcf"), month, day);
 		break;
 	case EVENT_TIME:
-		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("%02d\xbd\xc3%02d\xba\xd0"), hour, minute);
+		sprintf(buf, K2L_Compatibility("%02d\xbd\xc3%02d\xba\xd0"), hour, minute);
 		break;
 	}
 
@@ -630,11 +617,11 @@ const char* CWinnerNotice::GetItemNamefromXml(TiXmlDocument& doc, int kind)
 		return "";
 
 	TiXmlElement* pElem =
-		XmlParam983(doc, name);
+		doc.FirstChildElement("PARAMS")->FirstChildElement(name);
 	if (!pElem)
 		return "";
 
-	unsigned long typeId = atoi(XmlText983(pElem));
+	unsigned long typeId = atoi(pElem->FirstChild()->Value());
 	return ItemManager()->GetItemName(typeId);
 }
 
@@ -642,9 +629,9 @@ void CWinnerNotice::GetItemCountfromXml(TiXmlDocument& doc, std::string& out,
 	bool bParen)
 {
 	TiXmlElement* pQty =
-		XmlParam983(doc, "QTY");
+		doc.FirstChildElement("PARAMS")->FirstChildElement("QTY");
 	TiXmlElement* pType =
-		XmlParam983(doc, "TYPEID");
+		doc.FirstChildElement("PARAMS")->FirstChildElement("TYPEID");
 
 	if (pType == NULL)
 	{
@@ -657,16 +644,16 @@ void CWinnerNotice::GetItemCountfromXml(TiXmlDocument& doc, std::string& out,
 	else
 	{
 		char buf[100] = "";
-		if (atoi(XmlText983(pType)) == 0x1a000010)
+		if (atoi(pType->FirstChild()->Value()) == 0x1a000010)
 		{
 			// 983 008ab4b0
-			_snprintf_s(buf, _TRUNCATE, K2L_Compatibility(bParen ? "(%d \xc6\xce)" : "%d \xc6\xce"),
-				atoi(XmlText983(pQty)));
+			sprintf(buf, K2L_Compatibility(bParen ? "(%d \xc6\xce)" : "%d \xc6\xce"),
+				atoi(pQty->FirstChild()->Value()));
 			out = buf;
 		}
-		else if (atoi(XmlText983(pQty)) > 1)
+		else if (atoi(pQty->FirstChild()->Value()) > 1)
 		{
-			sprintf(buf, bParen ? "(%d)" : "%d", atoi(XmlText983(pQty)));
+			sprintf(buf, bParen ? "(%d)" : "%d", atoi(pQty->FirstChild()->Value()));
 			out = buf;
 		}
 		else
@@ -680,14 +667,14 @@ void CWinnerNotice::GetRunningTimefromXml(TiXmlDocument& doc, std::string& out)
 {
 	// 983 008aba40: minutos
 	TiXmlElement* pElem =
-		XmlParam983(doc, "RunningTime");
+		doc.FirstChildElement("PARAMS")->FirstChildElement("RunningTime");
 	if (!pElem)
 	{
 		out = "";
 		return;
 	}
 
-	int total = atoi(XmlText983(pElem));
+	int total = atoi(pElem->FirstChild()->Value());
 	int hour = 0;
 	int minute = 0;
 	if (total > 0)
@@ -702,11 +689,11 @@ void CWinnerNotice::GetRunningTimefromXml(TiXmlDocument& doc, std::string& out)
 
 	char buf[100] = "";
 	if (minute == 0)
-		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("%d\xbd\xc3\xb0\xa3"), hour);
+		sprintf(buf, K2L_Compatibility("%d\xbd\xc3\xb0\xa3"), hour);
 	else if (hour < 1)
-		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("%d\xba\xd0"), minute);
+		sprintf(buf, K2L_Compatibility("%d\xba\xd0"), minute);
 	else
-		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("%d\xbd\xc3\xb0\xa3 %d\xba\xd0"), hour, minute);
+		sprintf(buf, K2L_Compatibility("%d\xbd\xc3\xb0\xa3 %d\xba\xd0"), hour, minute);
 	out = buf;
 }
 
@@ -714,8 +701,8 @@ void CWinnerNotice::GetMessagefromXml(TiXmlDocument& doc, std::string& out)
 {
 	// 983 008ab680
 	TiXmlElement* pElem =
-		XmlParam983(doc, "MESSAGE");
-	out = XmlText983(pElem);
+		doc.FirstChildElement("PARAMS")->FirstChildElement("MESSAGE");
+	out = pElem ? pElem->FirstChild()->Value() : "";
 }
 
 void CWinnerNotice::GetUserNamefromXml(TiXmlDocument& doc, std::string& out)
@@ -723,7 +710,7 @@ void CWinnerNotice::GetUserNamefromXml(TiXmlDocument& doc, std::string& out)
 	std::string nick;
 
 	TiXmlElement* pElem =
-		XmlParam983(doc, "NICKNAME");
+		doc.FirstChildElement("PARAMS")->FirstChildElement("NICKNAME");
 	if (!pElem)
 	{
 		out = "";
@@ -732,7 +719,7 @@ void CWinnerNotice::GetUserNamefromXml(TiXmlDocument& doc, std::string& out)
 
 	for (; pElem; pElem = pElem->NextSiblingElement())
 	{
-		NickNameEdit((char*)XmlText983(pElem), true, nick);
+		NickNameEdit((char*)pElem->FirstChild()->Value(), true, nick);
 		out += "(" + nick + ")";
 	}
 }
@@ -746,15 +733,14 @@ void CWinnerNotice::NickNameEdit(char* nick, bool bCut, std::string& out)
 	name = "";
 	if (bCut)
 	{
-		unsigned int len = strlen(nick);
-		mbscut(buf, nick, len <= 2 ? 0 : (len - 2 < sizeof(buf) ? len - 2 : sizeof(buf) - 1));
+		mbscut(buf, nick, strlen(nick) - 2);
 		name = buf;
 		name += stars;
 		out = name;
 	}
 	else
 	{
-		name = strlen(nick) < 2 ? "" : nick + 2;
+		name = nick + 2;
 		out = stars + name;
 	}
 }

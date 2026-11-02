@@ -116,11 +116,7 @@ int RankUnit::OnConnect(WReceivedPacket& packet)
 		return FALSE;
 	}
 
-	unsigned long parseKey = packet.Decode4();
-	// E489: 983 indexa PublicKeyTable[16] sem limite; chave fora = mesma saida do cabecalho errado
-	if (parseKey > 15)
-		return FALSE;
-	m_socket.SetParseKey(parseKey);
+	m_socket.SetParseKey(packet.Decode4());
 
 	unsigned char result = packet.Decode1();
 	if (result != 5)

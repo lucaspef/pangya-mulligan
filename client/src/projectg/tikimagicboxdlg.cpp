@@ -72,7 +72,7 @@ void FrTikiMagicBoxDlg::OnBackImageOwnerDraw(int param)
 	DrawBitmapOnDlg(257.0f, 137.0f, "tiki_tab_box_right");
 
 	char buf[128] = "\0";
-	_snprintf_s(buf, _TRUNCATE,
+	sprintf(buf,
 		K2L_Compatibility("%d\xb9\xf8\xc2\xb0 \xc0\xe7\xb7\xe1 \xbe\xc6\xc0\xcc\xc5\xdb\xc0\xbb \xb3\xd6\xbe\xee \xc1\xd6\xbc\xbc\xbf\xe4."),
 		m_mtrIndex + 1);
 	pGDI->SetTextStyle(1);

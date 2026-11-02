@@ -363,8 +363,6 @@ short GetCapacitySlot983(const sCapacityParam983* p, bool bCard)
 short GetMyClubRankBonus983(int type, unsigned long guid)
 {
 	sItemInfo* pItem = FindMyClubSet983(guid);
-	if (!pItem)
-		return 0;
 	IFF_STRUCT::sClubSet* pClub = FindClubSetIff983(pItem->tid);
 	return GetClubRankBonus983(type, pClub, pItem);
 }

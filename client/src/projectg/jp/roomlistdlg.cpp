@@ -819,7 +819,7 @@ void FrRoomListDlg::OnUserListInit(int param)
 	}
 }
 
-// 0051e380 (645: CLobbyMain::OnRoomList_UserListLBtnUp)
+// 0051e380 (645: CLobbyMain::)
 void FrRoomListDlg::OnUserListLBtnUp()
 {
 	FrListItem* pItem = m_pUserList->GetItemUnderCursor();

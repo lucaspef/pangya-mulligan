@@ -103,7 +103,7 @@ static int RFParseAnchor983(const std::string& string)
 // 0041a170
 static int RFParseHAlign983(const std::string& string)
 {
-	if (isdigit((unsigned char)string.c_str()[0])) // atributo vazio: at(0) lancaria
+	if (isdigit(string.at(0)))
 		return atoi(string.c_str());
 
 	if (!_stricmp(string.c_str(), "Left"))
@@ -121,7 +121,7 @@ static int RFParseHAlign983(const std::string& string)
 // 0041a240
 static int RFParseVAlign983(const std::string& string)
 {
-	if (isdigit((unsigned char)string.c_str()[0])) // atributo vazio: at(0) lancaria
+	if (isdigit(string.at(0)))
 		return atoi(string.c_str());
 
 	if (!_stricmp(string.c_str(), "Top"))
@@ -1347,11 +1347,8 @@ void RFManager::UpdateInputMethod()
 	for (int i = count; i > 0; i--)
 	{
 		int index = _inputMethod->_ime ? _inputMethod->_ime->GetResultString983(0, 0, &composing) : -1;
-		if (index >= 0x100)
-			index = 0xff; // o 983 estoura a pilha com texto maior
 		if (_inputMethod->_ime)
 			_inputMethod->_ime->GetResultString983(buffer, index, &composing);
-		buffer[index] = 0; // buffer reaproveitado: resultado menor herdava o fim do anterior
 		InjectChar(buffer, composing, pos);
 	}
 }

@@ -18,10 +18,10 @@ void CPangFBI::ProcessReport(const char* type, const char* data)
 	if (strcmpi("crime_log", type) == 0)
 	{
 		int crimeType = 0;
-		char szFile[1024] = { 0 };
+		char szFile[1024];
 
 		char szID[128] = { 0 };
-		sscanf(data, "%127s %d %1023s", szID, &crimeType, szFile);
+		sscanf(data, "%s %d %s", szID, &crimeType, szFile);
 
 		FILE* fp = fopen(szFile, "rb");
 
@@ -51,11 +51,10 @@ void CPangFBI::ProcessReport(const char* type, const char* data)
 	{
 		int code = 0;
 		char szUserID[128] = { 0 };
-		char szPacketVer[64] = { 0 };
-		char szClientVer[64] = { 0 }, szComment[128] = { 0 };
+		char szPacketVer[64];
+		char szClientVer[64], szComment[128];
 
-		// E494: comentario leva texto do servidor (ReportError 7, ID_Server:%s); sem limite estourava a pilha
-		sscanf(data, "%d %127s %63s %63s %127s", &code, szUserID, szPacketVer,
+		sscanf(data, "%d %s %s %s %s", &code, szUserID, szPacketVer,
 			szClientVer, szComment);
 
 		GenericHTTPClient* pClient = new GenericHTTPClient;

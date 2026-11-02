@@ -123,15 +123,14 @@ const char* TiXmlBase::GetEntity( const char* p, char* value )
 	// Ignore the &#x entities.
 	if (    strncmp( "&#x", p, 3 ) == 0
 	     && *(p+3)
-		 && *(p+4)
-		 && *(p+5) ) // p+6 abaixo nao pode passar do 0 do texto
+		 && *(p+4) )
 	{
 		*value = 0;
 
-		if ( isalpha( (unsigned char) *(p+3) ) ) *value += ( tolower( (unsigned char) *(p+3) ) - 'a' + 10 ) * 16;
+		if ( isalpha( *(p+3) ) ) *value += ( tolower( *(p+3) ) - 'a' + 10 ) * 16;
 		else				     *value += ( *(p+3) - '0' ) * 16;
 
-		if ( isalpha( (unsigned char) *(p+4) ) ) *value += ( tolower( (unsigned char) *(p+4) ) - 'a' + 10 );
+		if ( isalpha( *(p+4) ) ) *value += ( tolower( *(p+4) ) - 'a' + 10 );
 		else				     *value += ( *(p+4) - '0' );
 
 		return p+6;
@@ -165,7 +164,7 @@ bool TiXmlBase::StringEqual( const char* p,
 		return false;
 	}
 
-    if ( tolower( (unsigned char) *p ) == tolower( (unsigned char) *tag ) )
+    if ( tolower( *p ) == tolower( *tag ) )
 	{
 		const char* q = p;
 
@@ -184,7 +183,7 @@ bool TiXmlBase::StringEqual( const char* p,
 		}
 		else
 		{
-			while ( *q && *tag && tolower( (unsigned char) *q ) == tolower( (unsigned char) *tag ) )
+			while ( *q && *tag && tolower( *q ) == tolower( *tag ) )
 			{
 				++q;
 				++tag;
@@ -253,9 +252,7 @@ const char* TiXmlBase::ReadText(	const char* p,
 			}
 		}
 	}
-	if ( p && *p ) // sem a marca de fim, somar passa do 0 do texto (ou de p NULL)
-		p += strlen( endTag );
-	return p;
+	return p + strlen( endTag );
 }
 
 #ifdef TIXML_USE_STL
@@ -395,7 +392,7 @@ TiXmlNode* TiXmlNode::Identify( const char* p )
 		#endif
 		returnNode = new TiXmlDeclaration();
 	}
-	else if (    isalpha( (unsigned char) *(p+1) )
+	else if (    isalpha( *(p+1) )
 			  || *(p+1) == '_' )
 	{
 		#ifdef DEBUG_PARSER
@@ -625,10 +622,6 @@ const char* TiXmlElement::Parse( const char* p )
 }
 
 
-// Parse <-> ReadValue e recursivo: texto com milhares de <a> estourava a pilha (paks: 43 no maximo)
-static const int MAX_ELEMENT_DEPTH = 256;
-static __declspec(thread) int s_elementDepth = 0;
-
 const char* TiXmlElement::ReadValue( const char* p )
 {
 	TiXmlDocument* document = GetDocument();
@@ -666,17 +659,13 @@ const char* TiXmlElement::ReadValue( const char* p )
 			else
 			{
 				TiXmlNode* node = Identify( p );
-				if ( node && s_elementDepth < MAX_ELEMENT_DEPTH )
+				if ( node )
 				{
-					++s_elementDepth;
 					p = node->Parse( p );
-					--s_elementDepth;
 					LinkEndChild( node );
 				}
 				else
 				{
-					delete node;
-					if ( document ) document->SetError( TIXML_ERROR_READING_ELEMENT_VALUE );
 					return 0;
 				}
 			}
@@ -884,7 +873,7 @@ const char* TiXmlText::Parse( const char* p )
 	const char* end = "<";
 	p = ReadText( p, &value, ignoreWhite, end, false );
 	if ( p )
-		return p[-1] == '<' ? p-1 : p;	// don't truncate the '<' (sem '<' = fim do texto)
+		return p-1;	// don't truncate the '<'
 	return 0;
 }
 

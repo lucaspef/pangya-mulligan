@@ -92,7 +92,7 @@ void CGolfRule30Battle::SetPlayer()
 			rival.finishOrder = slotList.size();
 			rival.level = (*it).level;
 			strcpy(rival.nickname, (*it).sNick);
-			strncpy(rival.guildName, (*it).sGuild, sizeof(rival.guildName)); // sGuild de 20 nao termina em 0
+			strcpy(rival.guildName, (*it).sGuild);
 			rival.guildUID = (*it).GuildId;
 
 			rival.guildEmblemVer983 = (*it).dwEmblemVer983; // 983
@@ -116,8 +116,7 @@ void CGolfRule30Battle::SetPlayer()
 				const WVector& pin = GOLFDOC()->GetHoleData().pin;
 				WVector diff(pin.x - rival.ballPos.x, 0.0f, pin.z - rival.ballPos.z);
 				float dist = diff.Magnitude();
-				dist = (float)(dist * 10.0 * 0.3125); // 983 006a5c66: fstp em float antes do floor (B1664)
-				dist = (float)floor(dist);
+				dist = (float)floor(dist * 10.0 * 0.3125);
 				rival.approachDistance = (int)dist;
 				rival.approachResultDistance = -1;
 				rival.approachTime = -1;

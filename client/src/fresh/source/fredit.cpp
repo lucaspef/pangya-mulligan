@@ -321,7 +321,7 @@ void FrEdit::DeleteEndLine()
 
 int GetStep(const char* text, int len)
 {
-	if (Custom_IsLeadByte(*text) && len > 1)
+	if (Custom_IsLeadByte(*text))
 		return 2;
 	if (len > 1 && text[0] == '\\' && text[1] == 'c')
 	{
@@ -487,11 +487,11 @@ void FrEdit::RemoveColornLastSpace(const char* text, std::string& out)
 		out.resize(out.length() - 1);
 }
 
-// 983 (0098b5a0): copia so os digitos (isdigit de cada byte; sem sinal: byte negativo cai no assert do CRT em Debug)
+// 983 (0098b5a0): copia so os digitos (isdigit de cada byte, com sinal como no 983)
 static __declspec(noinline) void CopyDigits983(const char* src, char* out)
 {
 	for (unsigned int i = 0; i < strlen(src); ++i)
-		if (isdigit((unsigned char)src[i]))
+		if (isdigit(src[i]))
 			*out++ = src[i];
 }
 
@@ -514,7 +514,7 @@ void FrEdit::MakePassword(const char* text, std::string& out)
 	out = "";
 	for (int i = 0; text[i]; ++i)
 	{
-		if (Custom_IsLeadByte(text[i]) && text[i + 1]) // 983 00bf9490: Shift-JIS (o 645: bit 7)
+		if (Custom_IsLeadByte(text[i])) // 983 00bf9490: Shift-JIS (o 645: bit 7)
 			++i;
 		out += '*';
 	}
@@ -732,13 +732,8 @@ void FrEdit::OnDraw()
 							exist_ctrl = token_ctrl.GetToken(&text, ",", 1);
 							if (text && *text)
 							{
-								// A949: 983 00bfa1eb escreve diffuse[colorNo++] sem limite; "\\c1,2,3\\c" num chat
-								// estourava a pilha. Cores alem da 2a ficam de fora (ate 2, igual ao 983)
 								if (strlen(text) > 1)
-								{
-									if (colorNo < 2)
-										sscanf(text, "%x", &diffuse[colorNo++]);
-								}
+									sscanf(text, "%x", &diffuse[colorNo++]);
 								else
 								{
 									switch (*text)
@@ -938,7 +933,7 @@ const char* FrEdit::OnSelectText(const FrInputState* istate)
 	else if ((float)xPos < GDI()->GetTextExtendOld983(GetLine(m_selectedLine, false)))
 	{
 		char editText[1024] = { 0 };
-		strncpy_s(editText, GetLine(m_selectedLine, false), _TRUNCATE);
+		strcpy(editText, GetLine(m_selectedLine, false));
 		char* pos = editText;
 		do
 		{
@@ -946,7 +941,7 @@ const char* FrEdit::OnSelectText(const FrInputState* istate)
 			*pos = 0;
 			width = (int)GDI()->GetTextExtendOld983(editText);
 			*pos = temp;
-			if (Custom_IsLeadByte(*pos) && pos[1]) // 983 00bfb600: Shift-JIS (o 645: bit 7)
+			if (Custom_IsLeadByte(*pos)) // 983 00bfb600: Shift-JIS (o 645: bit 7)
 				pos += 2;
 			else
 				++pos;
@@ -1143,13 +1138,13 @@ void FrEdit::AutoCutNextLineProcess()
 				// 983 (00bfbbc0): texto do IME cortado no limite de bytes do edit
 				im->GetChatText_JP(m_editText[ETT_FRONT], m_editText[ETT_COMP],
 					m_editText[ETT_END], m_charLimit);
-				strncpy_s(editText,
+				strcpy(editText,
 					(m_editText[ETT_FRONT] + m_editText[ETT_COMP] +
 						m_editText[ETT_END])
-						.c_str(), _TRUNCATE);
+						.c_str());
 			}
 			else
-				strncpy_s(editText, (*it)->text.c_str(), _TRUNCATE);
+				strcpy(editText, (*it)->text.c_str());
 			float tw = GDI()->GetTextExtendOld983(editText);
 			if (tw < m_rect.w - 20.0f)
 				continue;
@@ -1159,7 +1154,7 @@ void FrEdit::AutoCutNextLineProcess()
 				while (editText[length])
 				{
 					// 983 00bfba90: Shift-JIS (o 645: bit 7; katakana de meia largura 0xa1..0xdf contava 2 bytes)
-					if (Custom_IsLeadByte(editText[length]) && editText[length + 1])
+					if (Custom_IsLeadByte(editText[length]))
 					{
 						lastWordByte.push(2);
 						length += 2;
@@ -1217,8 +1212,8 @@ void FrEdit::AutoCutNextLineProcess()
 				--it;
 				if (bCurSelectLine)
 				{
-					strncpy_s(editText,
-						(m_editText[ETT_FRONT] + m_editText[ETT_END]).c_str(), _TRUNCATE);
+					strcpy(editText,
+						(m_editText[ETT_FRONT] + m_editText[ETT_END]).c_str());
 					if (IsStringCompress())
 						cutIndex -= m_editText[ETT_COMP].size();
 				}
@@ -1306,10 +1301,10 @@ void FrEdit::OnKeyFocus(CChatMsg* im)
 		im->Process(0.01f);
 		im->GetChatText_JP(m_editText[ETT_FRONT], m_editText[ETT_COMP],
 			m_editText[ETT_END], m_charLimit);
-		strncpy_s(editText, m_editText[ETT_FRONT].c_str(), _TRUNCATE);
+		strcpy(editText, m_editText[ETT_FRONT].c_str());
 		strcat(editText, m_editText[ETT_END].c_str());
 		im->SetChatText(editText, true);
-		strncpy_s(editText, m_editText[ETT_FRONT].c_str(), _TRUNCATE);
+		strcpy(editText, m_editText[ETT_FRONT].c_str());
 		strcat(editText, m_editText[ETT_COMP].c_str());
 		strcat(editText, m_editText[ETT_END].c_str());
 		if (m_password)

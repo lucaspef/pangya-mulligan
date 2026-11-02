@@ -134,8 +134,8 @@ void CBubble::HandleMsg(const MsgObject& msg)
 		// 983: o texto vem em partes separadas por ':' (a 1a vira SetText, as outras AddText);
 		// com 1 parte so, o nome do caddie e prefixado (sem AddChatMsg, que e do 645)
 		std::string src((const char*)msg.param1);
-		std::vector<char> text(src.length() + 1); // GetToken nao limita
-		char* buf = &text[0];
+		char buf[0x104];
+		memset(buf, 0, sizeof(buf));
 		cTokenV token;
 		token.Init(src.c_str(), src.length());
 		int count = token.GetTokenNum(0, (char)0x3a);

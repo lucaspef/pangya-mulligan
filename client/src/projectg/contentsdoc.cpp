@@ -1121,7 +1121,7 @@ void CMissionEvent::DecodeMissionInfo(WReceivedPacket& packet)
 	if (!m_missionInfo.empty())
 		ClearMissionInfo();
 
-	long count = packet.DecodeCount();
+	long count = packet.Decode4();
 	while (count > 0)
 	{
 		GlobalEnum::sMissionInfo info;

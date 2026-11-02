@@ -83,8 +83,6 @@ bool CSubGolfRuleBase::ShotDataLoad(const char* filename)
 	fread(&gameId, 4, 1, fp);
 	Doc()->m_replayPlayType = gameId;
 	fread(&Doc()->m_userInfo[0], 0x31c6, 1, fp);
-	sPangYaUserInfo& fileInfo = Doc()->m_userInfo[0].info; // strcpy adiante: fita corrompida nao garante o 0
-	fileInfo.sID[21] = fileInfo.sNick[21] = fileInfo.sGuild[19] = fileInfo.szEmblemName[11] = fileInfo.sDisplayID[127] = 0;
 	fread(&parts, 200, 1, fp);
 	fread(&hole, 1, 1, fp);
 	fread(GOLFDOC()->GetPlayer(0), 0xdb0, 1, fp);
@@ -99,8 +97,7 @@ bool CSubGolfRuleBase::ShotDataLoad(const char* filename)
 		fread(&shotCount, 4, 1, fp);
 		for (int i = 0; i < shotCount; i++)
 		{
-			if (fread(&data, 0x88, 1, fp) != 1)
-				break; // replay truncado: shotCount do arquivo nao vale
+			fread(&data, 0x88, 1, fp);
 			Doc()->m_shotDataList.push_back(data);
 			memset(&data, 0, sizeof(data));
 		}
@@ -112,11 +109,9 @@ bool CSubGolfRuleBase::ShotDataLoad(const char* filename)
 		{ 8, 0x13, -1, -1 }, { 8, 0x15, 0x16, -1 }, { 8, 0x14, 0x15, -1 }, { -1, -1, -1, -1 },
 		{ -1, -1, -1, -1 }, { -1, -1, -1, -1 }, { -1, -1, -1, -1 },
 	};
-	// replay de outra versao: personagem fora da tabela do 983 nao tem posicoes a conferir
-	const unsigned int charIndex = parts.m_charTid & 0x3ffffff;
-	for (int j = 0; j < 4 && charIndex < 15; j++)
+	for (int j = 0; j < 4; j++)
 	{
-		int slot = slots[charIndex][j];
+		int slot = slots[parts.m_charTid & 0x3ffffff][j];
 		if (slot == -1)
 			break;
 		if (parts.m_tid[slot] != 0 && ((CItemManagerJp2*)&Doc()->m_itemManager)->Find983(parts.m_tid[slot]) == NULL)
@@ -136,8 +131,7 @@ bool CSubGolfRuleBase::ShotDataLoad(const char* filename)
 			for (int i = 0; i < count; i++)
 			{
 				sCardPeriod983 info;
-				if (fread(&info, 0x41, 1, fp) != 1)
-					break; // replay truncado: count do arquivo nao vale
+				fread(&info, 0x41, 1, fp);
 				((CSharedDocJp2*)Doc())->AddCardPeriod983(&info);
 			}
 		}
@@ -149,16 +143,8 @@ bool CSubGolfRuleBase::ShotDataLoad(const char* filename)
 		<< MsgObject(NULL, 0x753b, 0xd, 0, 0, 0, 0) << MsgObject(NULL, 0x753b, 0xb, (int)fp, 0, 0, 0);
 	ReplayReadExtension983(fp, &time);
 	fclose(fp);
-	// 983 00650418 copia o front() sem testar: com gameId 1 a lista fica vazia e lia o no sentinela
-	if (!Doc()->m_shotDataList.empty())
-		*pShot = Doc()->m_shotDataList.front();
-	// fita sem tacada, de outra versao ou de outro pak: buraco fora de 1..18 sai de m_pHoleData e stroke[], mapa fora do
-	// IFF deixaria pCourse NULL ou o da sala anterior; mesmo fim do arquivo que nao abre
-	if (pShot->hole - 1u >= 18 || !SetCurMap(map))
-	{
-		g_bQuit = true;
-		return false;
-	}
+	*pShot = Doc()->m_shotDataList.front();
+	SetCurMap(map);
 	Doc()->m_holeOrder[0] = pShot->hole;
 	((CSharedDocJp2*)Doc())->SetHoles983(Doc()->m_holeOrder, false);
 	unsigned char n = 0;

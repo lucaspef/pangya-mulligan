@@ -120,10 +120,8 @@ void sTutorMark::Load(int index)
 	m_hMark = g_resrcmng->LoadTexture(MakeStr("%s_%02d.png", "player_mark", index + 1), 0, 0, NULL);
 	m_pIndicator = g_resrcmng->GetOverlay(MakeStr("%s_%02d.png", "tutor_Indicator", index + 1), 0);
 	m_pMark = g_resrcmng->GetOverlay(MakeStr("%s_%02d.png", "player_mark", index + 1), 0);
-	if (m_pIndicator)
-		m_rcIndicator = WRect(0.0f, 0.0f, m_pIndicator->GetWidth(), m_pIndicator->GetHeight());
-	if (m_pMark)
-		m_rcMark = WRect(0.0f, 0.0f, m_pMark->GetWidth(), m_pMark->GetHeight());
+	m_rcIndicator = WRect(0.0f, 0.0f, m_pIndicator->GetWidth(), m_pIndicator->GetHeight());
+	m_rcMark = WRect(0.0f, 0.0f, m_pMark->GetWidth(), m_pMark->GetHeight());
 }
 
 void sTutorMark::Reset()
@@ -251,7 +249,7 @@ void sTutorMark::Update(float delta)
 
 void sTutorMark::DrawIndicator()
 {
-	if (!m_pIndicator || (!m_bShowIndicator && (GOLFDOC983_GAMEMODE() & 0x200)))
+	if (!m_bShowIndicator && (GOLFDOC983_GAMEMODE() & 0x200))
 		return;
 	if (GOLFDOC983_GAMEMODE() & 0x200)
 		m_pIndicator->Render(g_view, g_rectUnit983_e4296c, m_rcIndicator, 0, 0xffffffff, 0.0f, 0);
@@ -261,7 +259,7 @@ void sTutorMark::DrawIndicator()
 
 void sTutorMark::DrawMark()
 {
-	if (!m_pMark || (!m_bShowMark && (GOLFDOC983_GAMEMODE() & 0x200)))
+	if (!m_bShowMark && (GOLFDOC983_GAMEMODE() & 0x200))
 		return;
 	if (GOLFDOC983_GAMEMODE() & 0x200)
 		m_pMark->Render(g_view, g_rectUnit983_e4296c, m_rcMark, 0, 0xffffffff, g_DEGTORAD * 0.0, 0);

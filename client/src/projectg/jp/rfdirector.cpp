@@ -115,7 +115,7 @@ R_ERRORTYPE RFDirector::LoadAnimation_(const std::wstring& path)
 		const char* version = root->Attribute("version");
 		if (version)
 		{
-			int major = 0, minor = 0;
+			int major, minor;
 			sscanf_s(version, "%d.%d", &major, &minor);
 			_version = (unsigned short)major << 16 | (unsigned short)minor;
 		}

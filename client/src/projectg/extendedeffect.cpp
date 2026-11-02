@@ -219,13 +219,12 @@ void CExtendedEffect::Update(CPetFrame* pFrame)
 			{
 				effect.pSequence->SetActive(bActive, false);
 				WPuppet* pPet = (*it).pFrame->GetBonePet();
-				WBone* pBone = NULL;
+				WBone* pBone;
 				if (effect.altBone.empty())
 					pBone = pPet->FindBone(effect.bone.c_str());
-				else if (w_bound_box* box = pPet->FindBoundBox(effect.altBone.c_str()))
-					pBone = box->bone;
-				if (pBone)
-					effect.pSequence->Pos() = pBone->m_matrix.pivot;
+				else
+					pBone = pPet->FindBoundBox(effect.altBone.c_str())->bone;
+				effect.pSequence->Pos() = pBone->m_matrix.pivot;
 			}
 		}
 	}

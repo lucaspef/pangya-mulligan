@@ -12,11 +12,11 @@
 
 std::wstring RFUtf8ToWide983(const char* text); // 0042aaa0 (rfmanager.cpp)
 
-// <asset></asset> vazio: sem filho de texto
-static const char* RFChildText983(const rf::TiXmlNode* node)
+// valor do atributo ou o padrão (elemento nulo ou atributo ausente)
+static inline const char* RFGetAttribute983(const rf::TiXmlElement* element, const char* name, const char* defaultValue = "")
 {
-	const rf::TiXmlNode* child = node->FirstChild();
-	return child ? child->Value() : "";
+	const char* value = element ? element->Attribute(name) : 0;
+	return value ? value : defaultValue;
 }
 
 // leitores de valor do XML (B148). No 983 ficaram cópias fora de linha sem chamador (00447d00–00447e70); os leitores os
@@ -211,8 +211,8 @@ int RFXmlLoader::ReadTextures(const rf::TiXmlElement* root)
 		for (const rf::TiXmlElement* texture = textures->FirstChildElement("Texture"); texture;
 			texture = texture->NextSiblingElement("Texture"))
 		{
-			std::string name = RFGetAttribute983(texture, "Name");
-			std::string type = RFGetAttribute983(texture, "Type");
+			std::string name = texture->Attribute("Name");
+			std::string type = texture->Attribute("Type");
 			if (type == "Frame")
 				ReadFrameImageSet(name, texture);
 			else if (type == "Single")
@@ -351,7 +351,7 @@ int RFXmlLoader::ReadVersion1(const rf::TiXmlElement* root)
 	if (!base)
 		return 4;
 
-	std::string type = RFGetAttribute983(base, "type");
+	std::string type = base->Attribute("type");
 	if (type == "WND")
 	{
 		WndBaseStruct* wnd = new WndExBase;
@@ -379,7 +379,7 @@ int RFXmlLoader::ReadChildrenV1(WndBaseStruct* parent, const rf::TiXmlElement* e
 
 	do
 	{
-		std::string type = RFGetAttribute983(child, "type");
+		std::string type = child->Attribute("type");
 		WndBaseStruct* base;
 		if (type == "LABEL")
 		{
@@ -713,9 +713,9 @@ void RFXmlLoader::ApplyStyle(WndBaseStruct* base, const rf::TiXmlElement* elemen
 	{
 		for (const rf::TiXmlElement* setter = style->FirstChildElement(); setter; setter = setter->NextSiblingElement())
 		{
-			std::wstring target = RFUtf8ToWide983(RFGetAttribute983(setter, "Target"));
-			std::wstring property = RFUtf8ToWide983(RFGetAttribute983(setter, "Property")); // lido e não usado no 983
-			std::wstring value = RFUtf8ToWide983(RFGetAttribute983(setter, "Value"));
+			std::wstring target = RFUtf8ToWide983(setter->Attribute("Target"));
+			std::wstring property = RFUtf8ToWide983(setter->Attribute("Property")); // lido e não usado no 983
+			std::wstring value = RFUtf8ToWide983(setter->Attribute("Value"));
 			ApplyStyleText(target, value, base);
 		}
 	}
@@ -753,7 +753,7 @@ int RFXmlLoader::ReadElements(WndBaseStruct* parent, const rf::TiXmlElement* ele
 		std::string value = child->Value();
 		if (value == "child" || value == "base")
 		{
-			std::string type = RFGetAttribute983(child, "type");
+			std::string type = child->Attribute("type");
 			if (!ReadStyle(parent, child))
 			{
 				WndBaseStruct* base = 0;
@@ -896,7 +896,7 @@ int RFXmlLoader::ReadElements(WndBaseStruct* parent, const rf::TiXmlElement* ele
 // propriedade registrada (<Dragable val="…"/>)
 int RFXmlLoader::ReadWnd(const rf::TiXmlElement* element, WndBaseStruct* base)
 {
-	base->_name = RFUtf8ToWide983(RFGetAttribute983(element, "name"));
+	base->_name = RFUtf8ToWide983(element->Attribute("name"));
 	RFReadPoint983(element, "pos", &base->_x);
 	RFReadRect983(element, "rect", &base->_rect);
 
@@ -905,7 +905,7 @@ int RFXmlLoader::ReadWnd(const rf::TiXmlElement* element, WndBaseStruct* base)
 		const rf::TiXmlNode* text = sound->FirstChild();
 		if (text)
 		{
-			std::string type = RFGetAttribute983(sound, "type");
+			std::string type = sound->Attribute("type");
 			if (type == "SHOW")
 				base->_showSound = RFUtf8ToWide983(text->Value());
 			else if (type == "HIDE")
@@ -919,7 +919,7 @@ int RFXmlLoader::ReadWnd(const rf::TiXmlElement* element, WndBaseStruct* base)
 	{
 		RFProperty* property = base->GetProperty(child->Value());
 		if (property)
-			property->SetValue(RFGetAttribute983(child, "val"));
+			property->SetValue(child->Attribute("val"));
 	}
 	return 1;
 }
@@ -936,10 +936,10 @@ int RFXmlLoader::ReadWndEx(const rf::TiXmlElement* element, WndExBase* base)
 		for (const rf::TiXmlElement* asset = assets->FirstChildElement("Asset"); asset;
 			asset = asset->NextSiblingElement("Asset"))
 		{
-			std::string name = RFGetAttribute983(asset, "Name");
+			std::string name = asset->Attribute("Name");
 			if (name == "Default")
 			{
-				std::string textureName = RFGetAttribute983(asset, "TextureName");
+				std::string textureName = asset->Attribute("TextureName");
 				base->_background = GetImageSet(textureName);
 			}
 		}
@@ -953,52 +953,52 @@ int RFXmlLoader::ReadWndEx(const rf::TiXmlElement* element, WndExBase* base)
 		imageSet = new FrameImageSet;
 		do
 		{
-			std::string type = RFGetAttribute983(asset, "type");
+			std::string type = asset->Attribute("type");
 			std::string tileModeName = RFGetAttribute983(asset, "tileMode", "Stretch");
 			const int tileMode = RFParseTileMode983(tileModeName);
 			if (type == "BG")
 			{
-				imageSet->_background._file = RFUtf8ToWide983(RFGetAttribute983(asset, "path"));
+				imageSet->_background._file = RFUtf8ToWide983(asset->Attribute("path"));
 				imageSet->_background._tileMode = tileMode;
 			}
 			else if (type == "EDGE_LT")
 			{
-				imageSet->_edgeLT._file = RFUtf8ToWide983(RFGetAttribute983(asset, "path"));
+				imageSet->_edgeLT._file = RFUtf8ToWide983(asset->Attribute("path"));
 				imageSet->_edgeLT._tileMode = tileMode;
 			}
 			else if (type == "EDGE_RT")
 			{
-				imageSet->_edgeRT._file = RFUtf8ToWide983(RFGetAttribute983(asset, "path"));
+				imageSet->_edgeRT._file = RFUtf8ToWide983(asset->Attribute("path"));
 				imageSet->_edgeRT._tileMode = tileMode;
 			}
 			else if (type == "EDGE_LB")
 			{
-				imageSet->_edgeLB._file = RFUtf8ToWide983(RFGetAttribute983(asset, "path"));
+				imageSet->_edgeLB._file = RFUtf8ToWide983(asset->Attribute("path"));
 				imageSet->_edgeLB._tileMode = tileMode;
 			}
 			else if (type == "EDGE_RB")
 			{
-				imageSet->_edgeRB._file = RFUtf8ToWide983(RFGetAttribute983(asset, "path"));
+				imageSet->_edgeRB._file = RFUtf8ToWide983(asset->Attribute("path"));
 				imageSet->_edgeRB._tileMode = tileMode;
 			}
 			else if (type == "FRAME_T")
 			{
-				imageSet->_frameT._file = RFUtf8ToWide983(RFGetAttribute983(asset, "path"));
+				imageSet->_frameT._file = RFUtf8ToWide983(asset->Attribute("path"));
 				imageSet->_frameT._tileMode = tileMode;
 			}
 			else if (type == "FRAME_B")
 			{
-				imageSet->_frameB._file = RFUtf8ToWide983(RFGetAttribute983(asset, "path"));
+				imageSet->_frameB._file = RFUtf8ToWide983(asset->Attribute("path"));
 				imageSet->_frameB._tileMode = tileMode;
 			}
 			else if (type == "FRAME_L")
 			{
-				imageSet->_frameL._file = RFUtf8ToWide983(RFGetAttribute983(asset, "path"));
+				imageSet->_frameL._file = RFUtf8ToWide983(asset->Attribute("path"));
 				imageSet->_frameL._tileMode = tileMode;
 			}
 			else if (type == "FRAME_R")
 			{
-				imageSet->_frameR._file = RFUtf8ToWide983(RFGetAttribute983(asset, "path"));
+				imageSet->_frameR._file = RFUtf8ToWide983(asset->Attribute("path"));
 				imageSet->_frameR._tileMode = tileMode;
 			}
 			asset = asset->NextSiblingElement("asset");
@@ -1013,7 +1013,7 @@ int RFXmlLoader::ReadWndEx(const rf::TiXmlElement* element, WndExBase* base)
 int RFXmlLoader::ReadLabel(const rf::TiXmlElement* element, LabelBase* base)
 {
 	ReadWnd(element, base);
-	base->_text = RFUtf8ToWide983(RFGetAttribute983(element->FirstChildElement("label"), "val"));
+	base->_text = RFUtf8ToWide983(element->FirstChildElement("label")->Attribute("val"));
 	RFQueryChildInt983(element, "style", "val", &base->_style, 0);
 	return 1;
 }
@@ -1023,7 +1023,7 @@ void RFXmlLoader::ReadLabelStyle(const rf::TiXmlElement* element, LabelBase* bas
 {
 	const rf::TiXmlElement* label = element->FirstChildElement("label");
 	if (label)
-		base->_text = RFUtf8ToWide983(RFGetAttribute983(label, "val"));
+		base->_text = RFUtf8ToWide983(label->Attribute("val"));
 	RFQueryChildInt983(element, "style", "val", &base->_style, base->_style);
 }
 
@@ -1039,8 +1039,8 @@ int RFXmlLoader::ReadButton(const rf::TiXmlElement* element, ButtonBase* base)
 		for (const rf::TiXmlElement* asset = assets->FirstChildElement("Asset"); asset;
 			asset = asset->NextSiblingElement("Asset"))
 		{
-			std::string name = RFGetAttribute983(asset, "Name");
-			std::string textureName = RFGetAttribute983(asset, "TextureName");
+			std::string name = asset->Attribute("Name");
+			std::string textureName = asset->Attribute("TextureName");
 			if (name == "Normal")
 				base->_normalImage = GetImageSet(textureName);
 			else if (name == "Push")
@@ -1069,7 +1069,7 @@ int RFXmlLoader::ReadButton(const rf::TiXmlElement* element, ButtonBase* base)
 				const rf::TiXmlNode* text = asset->FirstChild();
 				if (text)
 				{
-					std::string type = RFGetAttribute983(asset, "type");
+					std::string type = asset->Attribute("type");
 					if (type == "NORMAL")
 						normal->_path = RFUtf8ToWide983(text->Value());
 					else if (type == "DOWN")
@@ -1101,7 +1101,7 @@ void RFXmlLoader::ReadButtonSounds(const rf::TiXmlElement* element, ButtonBase* 
 		const rf::TiXmlNode* text = sound->FirstChild();
 		if (text)
 		{
-			std::string type = RFGetAttribute983(sound, "type");
+			std::string type = sound->Attribute("type");
 			if (type == "OVER")
 				base->_hoverSound = RFUtf8ToWide983(text->Value());
 			else if (type == "DOWN")
@@ -1122,7 +1122,7 @@ int RFXmlLoader::ReadLabelButton(const rf::TiXmlElement* element, LabelButtonBas
 	for (const rf::TiXmlElement* control = element->FirstChildElement("control"); control;
 		control = control->NextSiblingElement("control"))
 	{
-		std::string type = RFGetAttribute983(control, "type");
+		std::string type = control->Attribute("type");
 		if (type == "LABEL")
 		{
 			LabelBase* label = new LabelBase;
@@ -1146,8 +1146,8 @@ int RFXmlLoader::ReadAnimButton(const rf::TiXmlElement* element, AnimButtonBase*
 		for (const rf::TiXmlElement* asset = assets->FirstChildElement("Asset"); asset;
 			asset = asset->NextSiblingElement("Asset"))
 		{
-			std::string name = RFGetAttribute983(asset, "Name");
-			std::string textureName = RFGetAttribute983(asset, "TextureName");
+			std::string name = asset->Attribute("Name");
+			std::string textureName = asset->Attribute("TextureName");
 			if (name == "Group")
 			{
 				base->_normalImage = GetImageSet(textureName);
@@ -1166,7 +1166,7 @@ int RFXmlLoader::ReadAnimButton(const rf::TiXmlElement* element, AnimButtonBase*
 		leave = new SingleImageSet;
 		do
 		{
-			std::string type = RFGetAttribute983(asset, "type");
+			std::string type = asset->Attribute("type");
 			if (type == "GROUP")
 			{
 				if (enter)
@@ -1212,8 +1212,8 @@ int RFXmlLoader::ReadCheck(const rf::TiXmlElement* element, CheckBase* base)
 		for (const rf::TiXmlElement* asset = assets->FirstChildElement("Asset"); asset;
 			asset = asset->NextSiblingElement("Asset"))
 		{
-			std::string name = RFGetAttribute983(asset, "Name");
-			std::string textureName = RFGetAttribute983(asset, "TextureName");
+			std::string name = asset->Attribute("Name");
+			std::string textureName = asset->Attribute("TextureName");
 			if (name == "Normal")
 				base->_uncheckedImage = GetImageSet(textureName);
 			else if (name == "Check")
@@ -1231,11 +1231,11 @@ int RFXmlLoader::ReadCheck(const rf::TiXmlElement* element, CheckBase* base)
 		checked = new SingleImageSet;
 		do
 		{
-			const char* type = RFGetAttribute983(asset, "type");
+			const char* type = asset->Attribute("type");
 			if (!strcmp(type, "NORMAL"))
-				unchecked->_path = RFUtf8ToWide983(RFChildText983(asset));
+				unchecked->_path = RFUtf8ToWide983(asset->FirstChild()->Value());
 			else if (!strcmp(type, "CHECK"))
-				checked->_path = RFUtf8ToWide983(RFChildText983(asset));
+				checked->_path = RFUtf8ToWide983(asset->FirstChild()->Value());
 			asset = asset->NextSiblingElement("asset");
 		}
 		while (asset);
@@ -1280,7 +1280,7 @@ int RFXmlLoader::ReadList(const rf::TiXmlElement* element, ListSCBase* base)
 	for (const rf::TiXmlElement* control = element->FirstChildElement("control"); control;
 		control = control->NextSiblingElement("control"))
 	{
-		std::string type = RFGetAttribute983(control, "type");
+		std::string type = control->Attribute("type");
 		if (type == "HSCROLLBAR")
 		{
 			ScrollbarBase* scrollbar = new ScrollbarBase;
@@ -1313,8 +1313,8 @@ int RFXmlLoader::ReadTextAreaBase(const rf::TiXmlElement* element, TextAreaBase*
 		for (const rf::TiXmlElement* asset = assets->FirstChildElement("Asset"); asset;
 			asset = asset->NextSiblingElement("Asset"))
 		{
-			std::string name = RFGetAttribute983(asset, "Name");
-			std::string textureName = RFGetAttribute983(asset, "TextureName");
+			std::string name = asset->Attribute("Name");
+			std::string textureName = asset->Attribute("TextureName");
 			if (name == "Caret")
 				base->_caret = GetImageSet(textureName);
 		}
@@ -1328,9 +1328,9 @@ int RFXmlLoader::ReadTextAreaBase(const rf::TiXmlElement* element, TextAreaBase*
 			caret = new SingleImageSet;
 			do
 			{
-				std::string type = RFGetAttribute983(asset, "type");
+				std::string type = asset->Attribute("type");
 				if (type == "CARET")
-					caret->_path = RFUtf8ToWide983(RFGetAttribute983(asset, "path"));
+					caret->_path = RFUtf8ToWide983(asset->Attribute("path"));
 				asset = asset->NextSiblingElement("asset");
 			}
 			while (asset);
@@ -1359,7 +1359,7 @@ int RFXmlLoader::ReadTextArea(const rf::TiXmlElement* element, TextAreaSCBase* b
 	for (const rf::TiXmlElement* control = element->FirstChildElement("control"); control;
 		control = control->NextSiblingElement("control"))
 	{
-		std::string type = RFGetAttribute983(control, "type");
+		std::string type = control->Attribute("type");
 		if (type == "HSCROLLBAR")
 		{
 			ScrollbarBase* scrollbar = new ScrollbarBase;
@@ -1401,7 +1401,7 @@ static __forceinline void RFReadPasswordChar983(const rf::TiXmlElement* element,
 	const rf::TiXmlElement* passwordChar = element->FirstChildElement("passwordchar");
 	if (passwordChar)
 	{
-		std::wstring text = RFUtf8ToWide983(RFGetAttribute983(passwordChar, "val"));
+		std::wstring text = RFUtf8ToWide983(passwordChar->Attribute("val"));
 		if (text.size())
 			base->_passwordChar = text[0];
 	}
@@ -1420,8 +1420,8 @@ int RFXmlLoader::ReadEdit(const rf::TiXmlElement* element, EditBase* base)
 		for (const rf::TiXmlElement* asset = assets->FirstChildElement("Asset"); asset;
 			asset = asset->NextSiblingElement("Asset"))
 		{
-			std::string name = RFGetAttribute983(asset, "Name");
-			std::string textureName = RFGetAttribute983(asset, "TextureName");
+			std::string name = asset->Attribute("Name");
+			std::string textureName = asset->Attribute("TextureName");
 			if (name == "Caret")
 				base->_caret = GetImageSet(textureName);
 		}
@@ -1435,9 +1435,9 @@ int RFXmlLoader::ReadEdit(const rf::TiXmlElement* element, EditBase* base)
 			caret = new SingleImageSet;
 			do
 			{
-				std::string type = RFGetAttribute983(asset, "type");
+				std::string type = asset->Attribute("type");
 				if (type == "CARET")
-					caret->_path = RFUtf8ToWide983(RFGetAttribute983(asset, "path"));
+					caret->_path = RFUtf8ToWide983(asset->Attribute("path"));
 				asset = asset->NextSiblingElement("asset");
 			}
 			while (asset);
@@ -1470,7 +1470,7 @@ int RFXmlLoader::ReadCombo(const rf::TiXmlElement* element, ComboBase* base)
 	for (const rf::TiXmlElement* control = element->FirstChildElement("control"); control;
 		control = control->NextSiblingElement("control"))
 	{
-		std::string type = RFGetAttribute983(control, "type");
+		std::string type = control->Attribute("type");
 		if (type == "BUTTON")
 		{
 			ButtonBase* button = new ButtonBase;
@@ -1501,10 +1501,10 @@ int RFXmlLoader::ReadScrollbar(const rf::TiXmlElement* element, ScrollbarBase* b
 	if (!control)
 		return 0;
 
-	base->_horizontal = atoi(RFGetAttribute983(element, "horizontal")) != 0;
+	base->_horizontal = atoi(element->Attribute("horizontal")) != 0;
 	do
 	{
-		std::string type = RFGetAttribute983(control, "type");
+		std::string type = control->Attribute("type");
 		if (type == "BUTTON_LT")
 		{
 			ButtonBase* button = new ButtonBase;
@@ -1538,10 +1538,10 @@ int RFXmlLoader::ReadSlider(const rf::TiXmlElement* element, SliderBase* base)
 	if (!control)
 		return 0;
 
-	base->_horizontal = atoi(RFGetAttribute983(element, "horizontal")) != 0;
+	base->_horizontal = atoi(element->Attribute("horizontal")) != 0;
 	do
 	{
-		std::string type = RFGetAttribute983(control, "type");
+		std::string type = control->Attribute("type");
 		if (type == "BUTTON_LT")
 		{
 			ButtonBase* button = new ButtonBase;
@@ -1586,8 +1586,8 @@ int RFXmlLoader::ReadPicture(const rf::TiXmlElement* element, PictureBase* base)
 		for (const rf::TiXmlElement* asset = assets->FirstChildElement("Asset"); asset;
 			asset = asset->NextSiblingElement("Asset"))
 		{
-			std::string name = RFGetAttribute983(asset, "Name");
-			std::string textureName = RFGetAttribute983(asset, "TextureName");
+			std::string name = asset->Attribute("Name");
+			std::string textureName = asset->Attribute("TextureName");
 			base->_image = GetImageSet(textureName);
 			if (name == "Static")
 				base->_static = true;
@@ -1604,7 +1604,7 @@ int RFXmlLoader::ReadPicture(const rf::TiXmlElement* element, PictureBase* base)
 		image = new SingleImageSet;
 		do
 		{
-			std::string type = RFGetAttribute983(asset, "type");
+			std::string type = asset->Attribute("type");
 			if (type == "STATIC")
 			{
 				const rf::TiXmlNode* text = asset->FirstChild();
@@ -1616,7 +1616,7 @@ int RFXmlLoader::ReadPicture(const rf::TiXmlElement* element, PictureBase* base)
 			}
 			else if (type == "ANIMATION")
 			{
-				image->_path = RFUtf8ToWide983(RFChildText983(asset));
+				image->_path = RFUtf8ToWide983(asset->FirstChild()->Value());
 				base->_static = false;
 			}
 			asset = asset->NextSiblingElement("asset");
@@ -1638,8 +1638,8 @@ int RFXmlLoader::ReadProgress(const rf::TiXmlElement* element, ProgressBase* bas
 		for (const rf::TiXmlElement* asset = assets->FirstChildElement("Asset"); asset;
 			asset = asset->NextSiblingElement("Asset"))
 		{
-			std::string name = RFGetAttribute983(asset, "Name");
-			std::string textureName = RFGetAttribute983(asset, "TextureName");
+			std::string name = asset->Attribute("Name");
+			std::string textureName = asset->Attribute("TextureName");
 			if (name == "Bar")
 				base->_image = GetImageSet(textureName);
 		}
@@ -1653,7 +1653,7 @@ int RFXmlLoader::ReadProgress(const rf::TiXmlElement* element, ProgressBase* bas
 		image = new SingleImageSet;
 		do
 		{
-			std::string type = RFGetAttribute983(asset, "type");
+			std::string type = asset->Attribute("type");
 			std::string tileModeName = RFGetAttribute983(asset, "tileMode", "Stretch");
 			const int tileMode = RFParseTileMode983(tileModeName);
 			if (type == "BAR")
@@ -1677,6 +1677,6 @@ int RFXmlLoader::ReadProgress(const rf::TiXmlElement* element, ProgressBase* bas
 int RFXmlLoader::ReadCustom(const rf::TiXmlElement* element, CustomBase* base)
 {
 	ReadWnd(element, base);
-	base->_className = RFUtf8ToWide983(RFGetAttribute983(element->FirstChildElement("custom"), "type"));
+	base->_className = RFUtf8ToWide983(element->FirstChildElement("custom")->Attribute("type"));
 	return 1;
 }

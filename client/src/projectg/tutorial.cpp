@@ -285,7 +285,6 @@ IMPLEMENT_ACTOR(CTutorial, CTaskMain)
 
 CTutorial::CTutorial()
 {
-	m_bQuizCorrect = false; // B1639
 	m_pForm248 = NULL;
 	m_pNotifyForm = NULL;
 	m_pReviewForm = NULL;
@@ -369,15 +368,11 @@ void CTutorial::OnLoad()
 				{
 					break;
 				}
-				int key = 0;
+				int key;
 				char line[1024];
 				sscanf(p, "%d", &key);
-				p = GetLine(p, line, sizeof(line));
-				// 983 007ce020 guarda tambem a linha sem aspa de fecho (sem terminador); aqui so a completa
-				if (p)
-				{
-					m_lines[key] = line;
-				}
+				p = GetLine(p, line);
+				m_lines[key] = line;
 			}
 			CloseCFile(file);
 			delete[] buffer;
@@ -809,11 +804,8 @@ void CTutorial::FreeInput()
 	m_bInputBlocked = false;
 }
 
-// 983 007bfed0 sem limite no destino (char[0x400] de quem chama): texto do pak maior que destSize e cortado
-char* CTutorial::GetLine(char* src, char* dest, size_t destSize)
+char* CTutorial::GetLine(char* src, char* dest)
 {
-	char* destEnd = dest + destSize - 1;
-	*dest = '\0';
 	char c = *src;
 	while (c != '"')
 	{
@@ -834,20 +826,14 @@ char* CTutorial::GetLine(char* src, char* dest, size_t destSize)
 			{
 				if (c == '\\' && src[1] == 'n')
 				{
-					if (dest < destEnd)
-					{
-						*dest = '\n';
-						dest++;
-					}
+					*dest = '\n';
+					dest++;
 					src += 2;
 				}
 				else
 				{
-					if (dest < destEnd)
-					{
-						*dest = c;
-						dest++;
-					}
+					*dest = c;
+					dest++;
 					src++;
 				}
 				c = *src;
@@ -3128,7 +3114,7 @@ void CTutorial::PushMacroBallSlope()
 	PushMacro(MACRO_0E, "1 ok", 0, 1);
 	PushMacro(MACRO_09, "1206", -1, 1);
 	PushMacro(MACRO_00, NULL, 500, 1);
-	PushMacro(MACRO_16, MakeStr("Player %d %d %d %d %d", 450, 5, -1, -1, 0), 0, 1);
+	PushMacro(MACRO_16, MakeStr("Player %d %d %d %d %d", 450, 5, -1, -1), 0, 1);
 	PushMacro(MACRO_16, MakeStr("GolfRule %d %d", 164, "Slope_Right", 0), 300, 1);
 	PushMacro(MACRO_0F, NULL, -1, 1);
 	PushMacro(MACRO_16, MakeStr("Screen %d %d", 645, 1), 0, 1);
@@ -3628,7 +3614,7 @@ void CTutorial::PushMacroPowerSpin()
 	PushMacro(MACRO_00, NULL, 500, 1);
 	PushMacro(MACRO_16,
 		MakeStr(RB_LIT(rb_str_GNCGCIEM, "Player %d %d %d %d %d"), M983(0x157), -1, 28,
-			-1, 0),
+			-1),
 		0, 1);
 	PushMacro(MACRO_16, MakeStr("Screen %d %d", 645, 1), 0, 1);
 	PushMacro(MACRO_08, NULL, 0x4e20, 1);
@@ -3655,7 +3641,7 @@ void CTutorial::PushMacroPowerCurve()
 	PushMacro(MACRO_18, "0", 0, 1);
 	PushMacro(MACRO_16,
 		MakeStr(RB_LIT(rb_str_GNCGCIEM, "Player %d %d %d %d %d"), M983(0x157), -1, -1,
-			7, 0),
+			7),
 		0, 1);
 	PushMacro(MACRO_16, MakeStr("Screen %d", 537), 0, 1);
 	PushMacro(MACRO_16, MakeStr("Spin %d %d", M983(0x169), 3), 0, 1);
@@ -3995,7 +3981,7 @@ void CTutorial::PushMacroPowerCurve()
 	PushMacro(MACRO_00, NULL, 500, 1);
 	PushMacro(MACRO_16,
 		MakeStr(RB_LIT(rb_str_GNCGCIEM, "Player %d %d %d %d %d"), M983(0x157), -1, 28,
-			7, 0),
+			7),
 		0, 1);
 	PushMacro(MACRO_16,
 		MakeStr(RB_LIT(rb_str_DCFJPHFM, "Screen %d %d"), 645, 1), 0, 1);
@@ -4206,10 +4192,7 @@ bool CTutorial::CheckClubTarget()
 
 WVector* CTutorial::GetPoint(const char* name)
 {
-	// mapa sem o ponto: o script segue com a origem, o resultado vai por MakeStr ao Caddie/Screen
-	static WVector s_noPoint(0.0f, 0.0f, 0.0f);
-	WPolySoup::sPoint* pPoint = GOLFDOC()->m_pPolySoup->FindPoint(name);
-	return pPoint ? &pPoint->pos : &s_noPoint;
+	return &GOLFDOC()->m_pPolySoup->FindPoint(name)->pos;
 }
 
 void CTutorial::PushMacro(eMacroType type, const char* str, int value,
@@ -4287,21 +4270,21 @@ void CTutorial::PopMacro()
 		break;
 	case MACRO_04:
 	{
-		int button = 0;
+		int button;
 		sscanf(m_macros.front().str, "%d", &button);
 		g_input->SetFakeInput((eButton)button);
 	}
 	break;
 	case MACRO_05:
 	{
-		float x = 0.0f, y = 0.0f;
+		float x, y;
 		sscanf(m_macros.front().str, "%f %f", &x, &y);
 		MOUSECURSOR()->ForceMove(x, y, (float)m_macroWait * 0.001f);
 	}
 	break;
 	case MACRO_06:
 	{
-		float x = 0.0f, y = 0.0f;
+		float x, y;
 		sscanf(m_macros.front().str, "%f %f", &x, &y);
 		MOUSECURSOR()->ForceMove(x, y, -1.0f);
 	}
@@ -4311,7 +4294,7 @@ void CTutorial::PopMacro()
 		char name[32];
 		float* pos;
 		memset(name, 0, sizeof(name));
-		sscanf(m_macros.front().str, "%31s", name);
+		sscanf(m_macros.front().str, "%s", name);
 		pos = NULL;
 		SendMsg(this, "GolfRule", M983(0x24a), (int)name, (int)&pos, 0, 0);
 		if (pos != NULL)
@@ -4334,7 +4317,7 @@ void CTutorial::PopMacro()
 		break;
 	case MACRO_09:
 	{
-		int index = 0;
+		int index;
 		m_state = 0;
 		MOUSECURSOR()->SetActive(true);
 		sscanf(m_macros.front().str, "%d", &index);
@@ -4372,8 +4355,8 @@ void CTutorial::PopMacro()
 	case MACRO_0A:
 	{
 		std::string text;
-		int index = 0;
-		float x = 0.0f, y = 0.0f, w = 0.0f, h = 0.0f;
+		int index;
+		float x, y, w, h;
 		m_state = 0;
 		MOUSECURSOR()->SetActive(true);
 		sscanf(m_macros.front().str, "%d %f %f %f %f", &index, &x, &y, &w, &h);
@@ -4384,8 +4367,8 @@ void CTutorial::PopMacro()
 	break;
 	case MACRO_0B:
 	{
-		int index = 0;
-		float x = 0.0f, y = 0.0f, w = 0.0f, h = 0.0f;
+		int index;
+		float x, y, w, h;
 		m_state = 0;
 		MOUSECURSOR()->SetActive(true);
 		sscanf(m_macros.front().str, "%d %f %f %f %f", &index, &x, &y, &w, &h);
@@ -4415,9 +4398,9 @@ void CTutorial::PopMacro()
 		break;
 	case MACRO_0D:
 	{
-		int index = 0;
-		float width = 0.0f, height = 0.0f;
-		int type = 0;
+		int index;
+		float width, height;
+		int type;
 		m_state = 0;
 		MOUSECURSOR()->SetActive(true);
 		sscanf(m_macros.front().str, "%d %f %f %d", &index, &width, &height, &type);
@@ -4469,8 +4452,8 @@ void CTutorial::PopMacro()
 	case MACRO_0E:
 	{
 		// 983 007ce350 caso 0xe: o numero do script e a face do caddie (m_25c); o local do 645 a perdia
-		char answer[32] = "";
-		sscanf(m_macros.front().str, "%d %31s", &m_25c, answer);
+		char answer[32];
+		sscanf(m_macros.front().str, "%d %s", &m_25c, answer);
 		if ((unsigned int)m_25c > 8)
 		{
 			m_25c = 1;
@@ -4501,7 +4484,7 @@ void CTutorial::PopMacro()
 	case MACRO_10:
 	{
 		int index = 0;
-		float w = 0.0f, h = 0.0f, frameTime = 0.0f;
+		float w, h, frameTime;
 		sscanf(m_macros.front().str, "%d %f %f %f", &index, &w, &h, &frameTime);
 		m_overlays[index].m_dest.w = w;
 		m_overlays[index].m_dest.h = h;
@@ -4518,7 +4501,7 @@ void CTutorial::PopMacro()
 	case MACRO_11:
 	{
 		int index = 0;
-		float w = 0.0f, h = 0.0f, frameTime = 0.0f;
+		float w, h, frameTime;
 		sscanf(m_macros.front().str, "%d %f %f %f", &index, &w, &h, &frameTime);
 		m_overlays[index].m_dest.w = w;
 		m_overlays[index].m_dest.h = h;
@@ -4546,7 +4529,7 @@ void CTutorial::PopMacro()
 	case MACRO_13:
 	{
 		int index = 0;
-		float x = 0.0f, y = 0.0f;
+		float x, y;
 		sscanf(m_macros.front().str, "%d %f %f", &index, &x, &y);
 		m_overlays[index].m_dest.x = x;
 		m_overlays[index].m_dest.y = y;
@@ -4562,13 +4545,10 @@ void CTutorial::PopMacro()
 	case MACRO_15:
 	{
 		m_state = 1;
+		GOLFDOC()->m_bTutorialPin983 = 1;
 		WPolySoup::sPoint* pPoint =
 			GOLFDOC()->m_pPolySoup->FindPoint(m_macros.front().str);
-		if (pPoint)
-		{
-			GOLFDOC()->m_bTutorialPin983 = 1;
-			GOLFDOC()->m_tutorialPin983 = GetPVS().GetGroundPoint(pPoint->pos, false, NULL, true);
-		}
+		GOLFDOC()->m_tutorialPin983 = GetPVS().GetGroundPoint(pPoint->pos, false, NULL, true);
 	}
 	break;
 	case MACRO_16:
@@ -4579,20 +4559,20 @@ void CTutorial::PopMacro()
 		int b = 0;
 		int c = 0;
 		memset(name, 0, sizeof(name));
-		sscanf(m_macros.front().str, "%31s %d %d %d %d", name, &msg, &a, &b, &c);
+		sscanf(m_macros.front().str, "%s %d %d %d %d", name, &msg, &a, &b, &c);
 		SendMsg(this, name, msg, a, b, c, 0);
 	}
 	break;
 	case MACRO_17:
 	{
-		int value = 0;
+		int value;
 		sscanf(m_macros.front().str, "%d", &value);
 		MOUSECURSOR()->SetActive(value != 0);
 	}
 	break;
 	case MACRO_18:
 	{
-		int value = 0;
+		int value;
 		sscanf(m_macros.front().str, "%d", &value);
 		if (value != 0)
 		{
@@ -4617,7 +4597,7 @@ void CTutorial::PopMacro()
 		break;
 	case MACRO_1E:
 	{
-		int value = 0;
+		int value;
 		sscanf(m_macros.front().str, "%d", &value);
 		if (value == 0)
 		{

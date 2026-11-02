@@ -157,7 +157,7 @@ bool XmlCaddieTalk::LoadSituation(const char* name, const parameters& params,
 	TiXmlNode* node = doc.FirstChild("situation");
 	for (; node; node = node->NextSibling())
 	{
-		if (node->ToElement() && node->ToElement()->Attribute("name") == name) // comentario no xml
+		if (node->ToElement()->Attribute("name") == name)
 			break;
 	}
 
@@ -170,7 +170,7 @@ bool XmlCaddieTalk::LoadSituation(const char* name, const parameters& params,
 		TiXmlElement* element = param->ToElement();
 		std::vector<std::string>::const_iterator it = params.m_list.begin();
 		attributes attr;
-		while (element && it != params.m_list.end())
+		while (it != params.m_list.end())
 		{
 			std::string value = element->Attribute((*it).c_str());
 			attr.m_map[*it] = value;
@@ -669,7 +669,7 @@ bool CGolfCaddie::ReadAttribute(sCaddie* c)
 
 			char ringTexture[16];
 			ringTexture[0] = '\0';
-			c->m_bRing = slice.Get("*ring", "%15s", ringTexture);
+			c->m_bRing = slice.Get("*ring", "%s", ringTexture);
 			if (c->m_bRing)
 			{
 				if (!m_pRing)
@@ -707,7 +707,7 @@ char* CGolfCaddie::GetBehaviorToken(char* dst, char* src)
 			continue;
 		}
 		unsigned char c = (unsigned char)*src;
-		if ((c > 0x7f && c < 0xa0) || (unsigned char)(c + 0x20) < 0x1d && src[1]) // lead byte SJIS (983)
+		if ((c > 0x7f && c < 0xa0) || (unsigned char)(c + 0x20) < 0x1d) // lead byte SJIS (983)
 			*dst++ = *src++;
 		*dst++ = *src++;
 		if (*src == ':')
@@ -1329,7 +1329,7 @@ static void StripTalkMarkup983(const std::string& in, std::string& out)
 		{
 			bool dbcs = (c > 0x7f && c < 0xa0) || (unsigned char)(c + 0x20) < 0x1d;
 			int at = n;
-			if (dbcs && p[1])
+			if (dbcs)
 			{
 				dst[n++] = (char)c;
 				p++;
@@ -1586,8 +1586,6 @@ void CGolfCaddie::HandleMsg(const MsgObject& msg)
 				WPolySoupPoint* point =
 					((WPolySoupFind*)GOLFDOC()->m_pPolySoup)
 						->FindPoint((const char*)msg.param1);
-				if (!point)
-					break;
 				m_target =
 					GetPVS().GetGroundPoint(point->pos, false, 0, false) -
 					GolfBall().m_pos;

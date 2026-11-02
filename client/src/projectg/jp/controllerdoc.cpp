@@ -60,7 +60,7 @@ void CControllerDoc::AddItem(ObjectList& list, int player, unsigned long typeId,
 	for (unsigned int i = 0; i < 3; ++i)
 	{
 		unsigned long ability = pSource->m_abilities[i];
-		if (ability == 0 || ability >= eSpecialAbility_Max) // vem do IFF; at() lanca
+		if (ability == 0 || ability == eSpecialAbility_Max)
 			continue;
 		CControlledObject* pObject = list.at(ability);
 		if (pObject == NULL)
@@ -148,8 +148,6 @@ void CControllerDoc::AddAbility(int player, unsigned long ability, int arg3, uns
 	}
 	ObjectMap::iterator it = m_objects.find((unsigned char)player);
 	if (it == m_objects.end())
-		return;
-	if (ability >= eSpecialAbility_Max)
 		return;
 	CControlledObject* pObject = it->second.at(ability);
 	if (pObject == NULL)
