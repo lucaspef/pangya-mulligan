@@ -1,5 +1,6 @@
 #include "minatl.h"
 #include "voiceitem.h"
+#include "formatcheck.h"
 #include "gamedatadb.h"
 #include "gdvoiceitem.h"
 #include "bonusticket.h"
@@ -100,6 +101,22 @@ void CVoiceItem::Destroy()
 	m_effectMap.clear();
 }
 
+// A930: nome do som vem do pak e e formato; nome que nao casa com os argumentos fica vazio, nome longo e cortado
+template <size_t N> static void FormatVoiceName(char (&buf)[N], const char* name)
+{
+	_snprintf_s(buf, N, _TRUNCATE, CheckFormat(name));
+}
+
+template <size_t N> static void FormatVoiceName(char (&buf)[N], const char* name, int a)
+{
+	_snprintf_s(buf, N, _TRUNCATE, CheckFormat(name, a), a);
+}
+
+template <size_t N> static void FormatVoiceName(char (&buf)[N], const char* name, int a, int b)
+{
+	_snprintf_s(buf, N, _TRUNCATE, CheckFormat(name, a, b), a, b);
+}
+
 void CVoiceItem::SetSound(unsigned long tid, std::string name,
 	unsigned long state, unsigned char num)
 {
@@ -165,7 +182,7 @@ void CVoiceItem::PlayClubSfx983(unsigned long tid, unsigned long state)
 		{
 			int r = rand();
 			if (strstr(name.c_str(), "%d"))
-				sprintf(buf, name.c_str(), r % pVoice->num);
+				FormatVoiceName(buf, name.c_str(), r % pVoice->num);
 			name = buf;
 		}
 	}
@@ -179,7 +196,7 @@ void CVoiceItem::SetClubVoice(unsigned long tid, std::string name,
 	cVoice* pVoice = new cVoice;
 	pVoice->state = state;
 	pVoice->name = name;
-	pVoice->num = num;
+	pVoice->num = num ? num : -1; // numofsounds 0 ou ausente no xml: rand() % 0 ao tocar; -1 = sem sorteio
 	pVoice->kind = kind;
 
 	m_voiceMap.insert(
@@ -234,9 +251,9 @@ bool CVoiceItem::PlayVoiceNoChar(std::string name, int charType,
 	memset(buf, 0, sizeof(buf));
 
 	if (pVoice->num == -1)
-		sprintf(buf, name.c_str());
+		FormatVoiceName(buf, name.c_str());
 	else
-		sprintf(buf, name.c_str(), rand() % pVoice->num);
+		FormatVoiceName(buf, name.c_str(), rand() % pVoice->num);
 
 	if (!IsExistVoiceFile(buf))
 		return false;
@@ -251,9 +268,9 @@ bool CVoiceItem::PlayVoiceChar(std::string name, int charType, cVoice* pVoice)
 	memset(buf, 0, sizeof(buf));
 
 	if (pVoice->num == -1)
-		sprintf(buf, name.c_str(), charType);
+		FormatVoiceName(buf, name.c_str(), charType);
 	else
-		sprintf(buf, name.c_str(), charType, rand() % pVoice->num);
+		FormatVoiceName(buf, name.c_str(), charType, rand() % pVoice->num);
 
 	if (!IsExistVoiceFile(buf))
 		return false;
@@ -271,7 +288,7 @@ bool CVoiceItem::PlayVoiceKind(std::string name, int charType, cVoice* pVoice)
 	{
 		if (pVoice->num == -1)
 		{
-			sprintf(buf, name.c_str());
+			FormatVoiceName(buf, name.c_str());
 		}
 		else
 		{
@@ -287,11 +304,11 @@ bool CVoiceItem::PlayVoiceKind(std::string name, int charType, cVoice* pVoice)
 			}
 
 			if (count == 1)
-				sprintf(buf, name.c_str(), rand() % pVoice->num);
+				FormatVoiceName(buf, name.c_str(), rand() % pVoice->num);
 			else if (count == 2)
-				sprintf(buf, name.c_str(), pVoice->kind, rand() % pVoice->num);
+				FormatVoiceName(buf, name.c_str(), pVoice->kind, rand() % pVoice->num);
 			else
-				sprintf(buf, name.c_str());
+				FormatVoiceName(buf, name.c_str());
 		}
 
 		if (!IsExistVoiceFile(buf))
@@ -324,7 +341,7 @@ bool CVoiceItem::PlayVoiceByType(std::string name, int charType,
 		else
 			r = CBonusTicket::Instance().GetRandomTicket("VOICE_CLUB");
 		int idx = r % 2;
-		sprintf(buf, name.c_str(), 5, idx);
+		FormatVoiceName(buf, name.c_str(), 5, idx);
 		break;
 	}
 
@@ -337,18 +354,18 @@ bool CVoiceItem::PlayVoiceByType(std::string name, int charType,
 			else
 				r = CBonusTicket::Instance().GetRandomTicket("VOICE_CLUB");
 			int idx = r % 2;
-			sprintf(buf, name.c_str(), charType, idx);
+			FormatVoiceName(buf, name.c_str(), charType, idx);
 		}
 		else
 		{
-			sprintf(buf, name.c_str(), charType);
+			FormatVoiceName(buf, name.c_str(), charType);
 		}
 		break;
 
 	case 0x1f:
 	{
 		int idx = rand() % 2;
-		sprintf(buf, name.c_str(), charType, idx);
+		FormatVoiceName(buf, name.c_str(), charType, idx);
 		break;
 	}
 
@@ -357,9 +374,9 @@ bool CVoiceItem::PlayVoiceByType(std::string name, int charType,
 			return false;
 
 		if (state != 0x40 && state != 0x200)
-			sprintf(buf, name.c_str(), charType, rand() % 2);
+			FormatVoiceName(buf, name.c_str(), charType, rand() % 2);
 		else
-			sprintf(buf, name.c_str(), charType, 0);
+			FormatVoiceName(buf, name.c_str(), charType, 0);
 		break;
 
 	case 0x44:
@@ -376,7 +393,7 @@ bool CVoiceItem::PlayVoiceByType(std::string name, int charType,
 		int idx = 0;
 		if (pVoice->num > 1)
 			idx = rand() % pVoice->num;
-		sprintf(buf, fmt.c_str(), charType, idx);
+		FormatVoiceName(buf, fmt.c_str(), charType, idx);
 		break;
 	}
 
@@ -395,7 +412,7 @@ bool CVoiceItem::PlayVoiceByType(std::string name, int charType,
 		int idx = 0;
 		if (pVoice->num > 1)
 			idx = rand() % pVoice->num;
-		sprintf(buf, fmt.c_str(), charType, idx);
+		FormatVoiceName(buf, fmt.c_str(), charType, idx);
 		break;
 	}
 	}
@@ -616,33 +633,34 @@ CItemSoundTable::CItemSoundTable()
 {
 	LoadGameData();
 
-	AddFixed(0x14000023, 1, 0, 30);
-	AddFixed(0x14000024, 1, 0, 30);
-	AddFixed(0x14000026, 1, 0, 30);
-	AddFixed(0x14000027, 1, 0, 30);
-	AddFixed(0x14000028, 1, 0, 30);
-	AddFixed(0x14000029, 1, 0, 30);
-	AddFixed(0x1400002a, 1, 0, 30);
-	AddFixed(0x1400002b, 1, 0, 30);
-	AddFixed(0x1400002d, 1, 0, 30);
-	AddFixed(0x14000005, 1, 0, 30);
-	AddFixed(0x14000016, 1, 0, 30);
-	AddFixed(0x14000041, 0, 0, 30);
-	AddFixed(0x14000080, 1, 0, 30);
+	// 983 00b3a140: argumentos = a (kind 1, bonus de Aztec), b, c (kind 3, bonus por quique)
+	AddFixed(0x14000023, 30, 0, 1);
+	AddFixed(0x14000024, 30, 0, 1);
+	AddFixed(0x14000026, 30, 0, 1);
+	AddFixed(0x14000027, 30, 0, 1);
+	AddFixed(0x14000028, 30, 0, 1);
+	AddFixed(0x14000029, 30, 0, 1);
+	AddFixed(0x1400002a, 30, 0, 1);
+	AddFixed(0x1400002b, 30, 0, 1);
+	AddFixed(0x1400002d, 30, 0, 1);
+	AddFixed(0x14000005, 30, 0, 1);
+	AddFixed(0x14000016, 30, 0, 1);
+	AddFixed(0x14000041, 30, 0, 0);
+	AddFixed(0x14000080, 30, 0, 1);
 	AddFixed(0x14000087, 0, 0, 0);
 	AddFixed(0x1400002e, 0, 0, 0);
-	AddFixed(0x1400002f, 1, 0, 30);
-	AddFixed(0x14000030, 1, 0, 30);
-	AddFixed(0x14000035, 1, 0, 30);
-	AddFixed(0x1400003c, 1, 0, 30);
-	AddFixed(0x1400003d, 1, 0, 30);
-	AddFixed(0x14000092, 1, 0, 30);
-	AddFixed(0x14000093, 1, 0, 30);
-	AddFixed(0x14000094, 1, 0, 30);
-	AddFixed(0x14000095, 1, 0, 30);
-	AddFixed(0x140000d6, 1, 0, 30);
-	AddFixed(0x14000040, 0, 0, 30);
-	AddFixed(0x14000055, 1, 0, 30);
+	AddFixed(0x1400002f, 30, 0, 1);
+	AddFixed(0x14000030, 30, 0, 1);
+	AddFixed(0x14000035, 30, 0, 1);
+	AddFixed(0x1400003c, 30, 0, 1);
+	AddFixed(0x1400003d, 30, 0, 1);
+	AddFixed(0x14000092, 30, 0, 1);
+	AddFixed(0x14000093, 30, 0, 1);
+	AddFixed(0x14000094, 30, 0, 1);
+	AddFixed(0x14000095, 30, 0, 1);
+	AddFixed(0x140000d6, 30, 0, 1);
+	AddFixed(0x14000040, 30, 0, 0);
+	AddFixed(0x14000055, 30, 0, 1);
 }
 
 void CItemSoundTable::LoadGameData()
@@ -711,7 +729,7 @@ void CItemSoundTable::Add(unsigned long tid, const std::string& name,
 		{
 			char buf[0x80];
 			memset(buf, 0, sizeof(buf));
-			sprintf(buf, name.c_str(), i + 1);
+			FormatVoiceName(buf, name.c_str(), i + 1);
 			sSound s;
 			s.state = state;
 			s.name = buf;

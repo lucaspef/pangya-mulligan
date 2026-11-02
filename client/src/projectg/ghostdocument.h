@@ -186,7 +186,8 @@ public:
 	~memory_buffer();
 	unsigned int reserve(unsigned int size);
 	void encode(const void* data, unsigned int size);
-	void decode(void* data, unsigned int size);
+	bool decode_part(void* data, unsigned int max, unsigned int size);
+	bool fits(unsigned int count, unsigned int unitSize) const;
 	const void* get_buffer() const;
 	unsigned int length() const;
 

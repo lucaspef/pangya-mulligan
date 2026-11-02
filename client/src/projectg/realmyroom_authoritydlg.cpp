@@ -217,7 +217,8 @@ void CRealMyRoom_AuthorityDlg::OnOK()
 {
 	std::string password(m_pPassword->GetLine(true, 0));
 	char buffer[100];
-	sprintf(buffer, "%s", m_pPassword->GetLine(true, 0));
+	// 983 (007f28a0) faz sprintf "%s" sem limite; o FrEdit aceita 255 (sem charlimit no layout)
+	_snprintf_s(buffer, sizeof(buffer), _TRUNCATE, "%s", m_pPassword->GetLine(true, 0));
 	FrForm::OnOK();
 }
 
@@ -232,7 +233,9 @@ void CRealMyRoom_AuthorityDlg::GetPassWord()
 	if (m_pPassword)
 	{
 		password = m_pPassword->GetLine(true, 0);
-		strcpy(Doc()->m_rmrAuthority.password, password.c_str());
+		// 983 (007f2970) copia sem limite para password[100] (doc+0x10713); senha >= 100 passava
+		// para os membros seguintes do CSharedDoc
+		strncpy_s(Doc()->m_rmrAuthority.password, password.c_str(), _TRUNCATE);
 	}
 }
 

@@ -149,8 +149,8 @@ CMouseCursor::CMouseCursor()
 		name += names[i];
 		name += ".png";
 		m_overlay[i].overlay = g_resrcmng->GetOverlay(name.c_str(), 0);
-		m_overlay[i].w = (float)m_overlay[i].overlay->GetWidth();
-		m_overlay[i].h = (float)m_overlay[i].overlay->GetHeight();
+		m_overlay[i].w = m_overlay[i].overlay ? (float)m_overlay[i].overlay->GetWidth() : 0.0f;
+		m_overlay[i].h = m_overlay[i].overlay ? (float)m_overlay[i].overlay->GetHeight() : 0.0f;
 		m_overlay[i].len = 32.0f;
 		m_overlay[i].num = (int)(m_overlay[i].w / 32.0f);
 	}
@@ -598,7 +598,8 @@ void CMouseCursor::Display()
 		if ((!score || !score->IsScoreShown983()) && draw)
 			m_pGroundPt->DrawGroundTip();
 	}
-	m_overlay[m_cursor].overlay->Render(g_view,
+	if (m_overlay[m_cursor].overlay)
+		m_overlay[m_cursor].overlay->Render(g_view,
 		WRect(dest.w * m_frame / m_overlay[m_cursor].w, 0.0f,
 			dest.w / m_overlay[m_cursor].w, dest.h / m_overlay[m_cursor].h),
 		dest, 0x6080000, 0xffffffff, 0, 0);

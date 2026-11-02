@@ -944,6 +944,7 @@ void CChatMsg::RemoveColor(const std::string& src, std::string& dst)
 {
 	char buf[1024];
 	strncpy(buf, src.c_str(), 1023);
+	buf[1023] = 0;
 	cTokenV tok;
 	tok.Init(buf, strlen(buf));
 	char str[64] = "";
@@ -1122,16 +1123,14 @@ void CChatMsg::SetChatText(const char* text, bool bKeepCaret)
 	// serves to reproduce the original function emission order
 	if (0)
 		IsActive();
-	if ((int)strlen(text) > m_nMaxBytes)
-	{
-		strcpy(m_szChat, text);
-		m_nMaxBytes = m_iNumBytes = strlen(text);
-	}
-	else
-	{
-		strcpy(m_szChat, text);
-		m_iNumBytes = strlen(m_szChat);
-	}
+	m_iNumBytes = strlen(text);
+	if (m_iNumBytes > MAX_TEXT_BYTES)
+		for (int i = m_iNumBytes = 0; (i += Custom_IsLeadByte(text[i]) ? 2 : 1) <= MAX_TEXT_BYTES;) // sem partir Shift-JIS
+			m_iNumBytes = i;
+	memcpy(m_szChat, text, m_iNumBytes);
+	m_szChat[m_iNumBytes] = 0;
+	if (m_iNumBytes > m_nMaxBytes)
+		m_nMaxBytes = m_iNumBytes;
 	int byte = m_iCurByte;
 	int chr = m_iCurChar;
 	int nChars = 0;

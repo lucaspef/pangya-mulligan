@@ -257,7 +257,7 @@ void CGolfItemHandler::OnCheckSomeMoreGetSpecialBox()
 
 	const char* str = MakeStr(_systemmsg::CMessageManager::Instance()->GetMsg(
 								  (_systemmsg::eMsgIdentifier)300),
-		pItem->Name, 100);
+		pItem ? pItem->Name : "", 100);
 	CChatMsg::Instance()->AddChatMsg(str, 0xffff3030, true, false);
 
 	if (remain < 1)

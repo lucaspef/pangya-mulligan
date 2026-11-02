@@ -104,6 +104,8 @@ void CreateCharacterOption::InitBarIcons983()
 // 004ceb40
 const char* CreateCharacterOption::GetBarIcon983(int charIndex)
 {
+	if ((unsigned int)charIndex >= CHAR_COUNT983)
+		return "";
 	return m_barIcons[charIndex];
 }
 
@@ -171,6 +173,8 @@ void CreateCharacterOption::InitChatFacials983()
 // 004ced70
 const char* CreateCharacterOption::GetChatFacial983(int charIndex, int kind)
 {
+	if ((unsigned int)charIndex >= CHAR_COUNT983)
+		return "";
 	return m_chatFacials[charIndex][kind];
 }
 
@@ -230,6 +234,8 @@ void CreateCharacterOption::InitSubBones983()
 // 004cef20
 const char* CreateCharacterOption::GetSubBone983(int charIndex)
 {
+	if ((unsigned int)charIndex >= CHAR_COUNT983)
+		return "";
 	return m_subBones[charIndex];
 }
 
@@ -617,6 +623,8 @@ bool CreateCharacterOption::FindSetMotionExact983(const char* motion, unsigned i
 // 004d0bd0
 unsigned long CreateCharacterOption::FindEquipped983(unsigned long charTid, const unsigned long* parts, int kind)
 {
+	if ((charTid & 0x3ffffff) >= CHAR_COUNT983)
+		return 0; // personagem de pak novo nao tem set
 	for (unsigned int i = 0; i < SET_PART_COUNT983; i++)
 	{
 		if (m_setParts[charTid & 0x3ffffff][i].kind == kind)
@@ -717,6 +725,8 @@ void CreateCharacterOption::GetCharFileNames983(std::string* names)
 void CreateCharacterOption::GetSetMotion983(int charIndex, const unsigned long* parts, int kind, std::string& motion,
 	std::string& command)
 {
+	if ((unsigned int)charIndex >= CHAR_COUNT983)
+		return;
 	for (int i = 0; i < SET_PART_COUNT983; i++)
 	{
 		for (int j = 0; j < 24; j++)

@@ -229,7 +229,7 @@ void CGolfRuleHoleInOne::SetPlayer()
 			rival.finishOrder = slotList.size();
 			rival.level = (*it).level;
 			strcpy(rival.nickname, (*it).sNick);
-			strcpy(rival.guildName, (*it).sGuild);
+			strncpy(rival.guildName, (*it).sGuild, sizeof(rival.guildName)); // sGuild de 20 nao termina em 0
 			rival.guildEmblemVer983 = (*it).dwEmblemVer983;
 			rival.guildUID = (*it).GuildId;
 			strcpy(rival.guildMark, (*it).szEmblemName);

@@ -2,9 +2,12 @@
 #include "wresrcmng.h"
 #include "wminmax.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // 983 (cliente japonês): 1º byte de caractere duplo em Shift-JIS (0x80-0x9f, 0xe0-0xfc); no 645 era `c & 0x80`. Nome provisório.
+// byte final de um caractere cortado no fim da string: 0, sem passar do terminador (o 983 passa)
+#define W_SJISTRAIL983(p) (*(p) ? (unsigned char)*(p)++ : 0)
 #define W_SJISLEAD983(c) (((unsigned char)(c) >= 0x80 && (unsigned char)(c) < 0xa0) || (unsigned char)((c) - 0xe0) <= 0x1c)
 
 struct w_fnthead
@@ -93,21 +96,25 @@ float WFont::PrintOut(WView* view, float x, float y, const char* text, int type,
 			}
 			else if (ptr[1] == '<')
 			{
-				char filename[32];
+				char filename[32] = { 0 };
 				float xs = 256.0f, ys = 256.0f;
 				float scale = 1.0f;
 				float ox = 0, oy = 0;
 				WRect rect;
 				WOverlay* overlay;
 
-				int n = strchr(ptr, '>') - ptr - 2;
+				// 983 00b611f0 sem limite: chat, nick e nome vêm de outro cliente ou servidor
+				char* tagEnd = strchr(ptr, '>');
+				if (!tagEnd)
+					break;
+				int n = min((int)(tagEnd - ptr) - 2, (int)sizeof(temp) - 1);
 				memcpy(temp, ptr + 2, n);
 				temp[n] = 0;
-				ptr += n + 2;
+				ptr = tagEnd;
 
 				char* p = strstr(temp, "src=");
 				if (p)
-					sscanf(p + 4, "%s", filename);
+					sscanf(p + 4, "%31s", filename);
 
 				p = strstr(temp, "size=");
 				if (p)
@@ -177,8 +184,9 @@ float WFont::PrintOut(WView* view, float x, float y, const char* text, int type,
 
 			if (next)
 			{
-				memcpy(temp, ptr, next - ptr);
-				temp[next - ptr] = 0;
+				int n = min((int)(next - ptr), (int)sizeof(temp) - 1);
+				memcpy(temp, ptr, n);
+				temp[n] = 0;
 				len += draw
 					? PrintInside(view, x + len, y, temp, type, color, bmp)
 					: GetTextWidthInside(view, temp);
@@ -366,16 +374,26 @@ bool WTitleFont::Create(tagWTITLEFONT* info)
 				m_iTexIndex[i] = GetResrcManager()->LoadTexture(
 					info->filename[i], 0x80000, 0, 0);
 
+			// 983 00b5fee0 varre texh x texw do codigo sem olhar o bitmap: imagem
+			// menor de outro pak lia fora do vram e textura maior na pagina 2+ (texw
+			// trocado abaixo) passava de m_numCharSet; fora do bitmap = largura 0
+			int bpp = bitmap->bi->bmiHeader.biBitCount;
+			int bytesPx = bpp == 8 ? 1 : (bpp == 32 ? 4 : 3);
+			int bmpW = bitmap->bi->bmiHeader.biWidth;
+			int bmpH = abs(bitmap->bi->bmiHeader.biHeight);
+			if (bmpW > bitmap->pitch / bytesPx)
+				bmpW = bitmap->pitch / bytesPx;
 			for (y = 0; y <= m_info.texh - m_info.fonth; y += m_info.fonth)
 			{
-				for (x = 0; x <= m_info.texw - m_info.fontw; x += m_info.fontw)
+				for (x = 0; x <= m_info.texw - m_info.fontw && n < m_numCharSet;
+					 x += m_info.fontw)
 				{
 					maxw = 0;
 					int maxa = bitmap->bi->bmiHeader.biBitCount == 32 ? 0 : m_info.fontw;
-					for (int j = y; j < y + m_info.fonth; j++)
+					for (int j = y; j < y + m_info.fonth && j < bmpH; j++)
 					{
 						unsigned char* line = bitmap->vram + bitmap->pitch * j;
-						for (int k = x + maxw; k < x + m_info.fontw; k++)
+						for (int k = x + maxw; k < x + m_info.fontw && k < bmpW; k++)
 						{
 							int v;
 							if (bitmap->bi->bmiHeader.biBitCount == 8)
@@ -605,7 +623,8 @@ int WFntFont::Load(const char* fntName)
 			delete[] m_font;
 			m_font = 0;
 		}
-		m_font = new unsigned char[len];
+		// GetFont vai ate o glifo de 0xc8ff sem saber o tamanho: .fnt curto fica zerado no resto
+		m_font = new unsigned char[len > 0x1c800 ? len : 0x1c800]();
 		file->Read(m_font, len);
 		CloseCFile(file);
 
@@ -760,7 +779,7 @@ float WFntFont::PrintInside(WView* view, float x, float y, const char* text,
 		{
 			GetFontIdx(
 				((unsigned char)text[i] << 8) | (unsigned char)text[i + 1]);
-			i += 2;
+			i += text[i + 1] ? 2 : 1;
 		}
 		else
 		{
@@ -778,7 +797,7 @@ float WFntFont::PrintInside(WView* view, float x, float y, const char* text,
 		unsigned short code;
 		if (W_SJISLEAD983(c))
 		{
-			code = ((unsigned char)c << 8) | (unsigned char)*text++;
+			code = ((unsigned char)c << 8) | W_SJISTRAIL983(text);
 			fixedw = 12.0f;
 		}
 		else
@@ -807,7 +826,7 @@ float WFntFont::GetTextWidthInside(WView* view, const char* text)
 		unsigned short code;
 		if (W_SJISLEAD983(c))
 		{
-			code = ((unsigned char)c << 8) | (unsigned char)*text++;
+			code = ((unsigned char)c << 8) | W_SJISTRAIL983(text);
 			fixedw = GetFontScale(view) * 12.0f;
 		}
 		else
@@ -881,8 +900,10 @@ WFixedFont::~WFixedFont(void)
 
 WFont* WFixedFont::MakeClone(void)
 {
-	return new WFixedFont(m_iFontWidth, m_iFontHeight, m_bAntialiased, m_font,
+	WFixedFont* clone = new WFixedFont(m_iFontWidth, m_iFontHeight, m_bAntialiased, m_font,
 		m_nMaxTexture);
+	clone->m_lastCode = m_lastCode;
+	return clone;
 }
 
 void WFixedFont::Init(int maxTexture)
@@ -919,6 +940,11 @@ int WFixedFont::Load(const char* fntName)
 	cFile* file = GetResrcManager()->GetCFile(fntName, 0xffff);
 	if (!file)
 		return 1;
+	if (file->m_nLen < (int)sizeof(w_fnthead)) // .fnt sem cabecalho
+	{
+		CloseCFile(file);
+		return 1;
+	}
 
 	int len = file->m_nLen - sizeof(w_fnthead);
 	if (m_font)
@@ -926,18 +952,25 @@ int WFixedFont::Load(const char* fntName)
 		delete[] m_font;
 		m_font = 0;
 	}
-	m_font = new unsigned char[len];
 	file->Read(&hd, sizeof(w_fnthead));
+
+	int bpp = hd.bAntialiased ? 4 : 1;
+
+	m_bytePerChar = (bpp * hd.fontsize + 7) / 8 * hd.fontsize + 2;
+
+	if (hd.fontsize <= 0 || hd.fontsize > 256 || len < m_bytePerChar * ('$' - 0x1f)) // sem o glifo substituto
+	{
+		CloseCFile(file);
+		return 1;
+	}
+	m_lastCode = (unsigned short)Min(len / m_bytePerChar + 0x1f, 0xffff);
+	m_font = new unsigned char[len];
 	file->Read(m_font, len);
 
 	CloseCFile(file);
 
 	m_iFontWidth = hd.fontsize;
 	m_iFontHeight = hd.fontsize;
-
-	int bpp = hd.bAntialiased ? 4 : 1;
-
-	m_bytePerChar = (bpp * hd.fontsize + 7) / 8 * hd.fontsize + 2;
 
 	m_bAntialiased = hd.bAntialiased;
 
@@ -946,7 +979,7 @@ int WFixedFont::Load(const char* fntName)
 
 unsigned char* WFixedFont::GetFontAddr(unsigned short code, int* width)
 {
-	if (code < 0x20)
+	if (code < 0x20 || code > m_lastCode)
 		code = '$';
 
 	unsigned char* p = m_font + (code - 0x20) * m_bytePerChar;
@@ -1050,7 +1083,7 @@ int WFixedFont::GetTexture(const char* text)
 	{
 		unsigned short code;
 		if (W_SJISLEAD983(c))
-			code = ((unsigned char)c << 8) | (unsigned char)*p++;
+			code = ((unsigned char)c << 8) | W_SJISTRAIL983(p);
 		else
 			code = (unsigned char)c;
 
@@ -1443,7 +1476,7 @@ float WFixedFont::GetTextWidthInside(WView* view, const char* text)
 	{
 		unsigned short code;
 		if (W_SJISLEAD983(c))
-			code = ((unsigned char)c << 8) | (unsigned char)*ptr++;
+			code = ((unsigned char)c << 8) | W_SJISTRAIL983(ptr);
 		else
 			code = (unsigned char)c;
 
@@ -1478,7 +1511,7 @@ float WFixedFont::GetTextWidthInsideNew983(WView* view, const wchar_t* text)
 	{
 		unsigned short code;
 		if (W_SJISLEAD983(c))
-			code = ((unsigned char)c << 8) | (unsigned char)*ptr++;
+			code = ((unsigned char)c << 8) | W_SJISTRAIL983(ptr);
 		else
 			code = (unsigned char)c;
 

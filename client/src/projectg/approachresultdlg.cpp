@@ -252,7 +252,7 @@ void FrApproachResultDlg::OnLeftAreaOwnerDraw(int)
 					data = NULL;
 				}
 			}
-			if (data)
+			if (data && Doc()->HasRival(data->dwGUID))
 			{
 				if (!Doc()->m_userInfoMod &&
 					(!Doc()->IsCurrentMissionBlind() ||
@@ -353,7 +353,7 @@ void FrApproachResultDlg::OnLeftListOwnerDraw(int param)
 		return;
 	FrListItem* item = (FrListItem*)param;
 	sApproachResultData* data = (sApproachResultData*)item->pData;
-	if (!data)
+	if (!data || !Doc()->HasRival(data->dwGUID))
 		return;
 	sRivalData* rival = &Doc()->m_rivalList[Doc()->GetIndex(data->dwGUID)];
 	WPoint base = item->pos;
@@ -484,7 +484,7 @@ void FrApproachResultDlg::OnRightListOwnerDraw(int param)
 		return;
 	FrListItem* item = (FrListItem*)param;
 	sApproachResultData* data = (sApproachResultData*)item->pData;
-	if (!data)
+	if (!data || !Doc()->HasRival(data->dwGUID))
 		return;
 	sRivalData* rival = &Doc()->m_rivalList[Doc()->GetIndex(data->dwGUID)];
 	WPoint base = item->pos;
@@ -639,7 +639,7 @@ void FrApproachResultDlg::ShowPet()
 				data = NULL;
 			}
 		}
-		if (data)
+		if (data && Doc()->HasRival(data->dwGUID))
 		{
 			sRivalData* rival =
 				&Doc()->m_rivalList[Doc()->GetIndex(data->dwGUID)];
@@ -777,7 +777,7 @@ void FrApproachEndDlg::OnListOwnerDraw(int param)
 				WRect area = m_rect;
 				WPoint base = item->pos;
 				float offset = 4.0f;
-				for (int i = 0; i < 2; ++i)
+				for (int i = 0; i < 2 && Doc()->HasRival(data->dwGUID); ++i)
 				{
 					sRivalData* rival =
 						&Doc()->m_rivalList[Doc()->GetIndex(data->dwGUID)];

@@ -117,7 +117,7 @@ unsigned long FrSpCardUseDlg::GetOverlappedCard()
 
 		IFF_STRUCT::sCard* pCard = ItemManager()->FindCard(m_spCardTid);
 
-		if ((*it).Avility == pCard->Avility)
+		if (pCard && (*it).Avility == pCard->Avility)
 		{
 			return (*it).tid;
 		}
@@ -346,7 +346,7 @@ void FrCardUseDlg::SetCardDesc983()
 				if (desc[i] == '\n' || desc[i] == '\0')
 				{
 					memset(line, 0, sizeof(line));
-					strncpy(line, desc + start, i - start);
+					strncpy(line, desc + start, min(i - start, (int)sizeof(line) - 1));
 					m_pCardDesc->AddText(line, false, true, 0, 0);
 				}
 				if (desc[i] == '\0')
@@ -771,7 +771,8 @@ bool FrCardAttachDlg::OnInit()
 	if ((m_partTid & 0xfc000000) == 0x10000000)
 	{
 		IFF_STRUCT::sItem* pItem = ItemManager()->FindItem(0x1a00018f);
-		m_unused140 = (unsigned long)g_pFresh->GetBitmap(pItem->c.Icon);
+		if (pItem)
+			m_unused140 = (unsigned long)g_pFresh->GetBitmap(pItem->c.Icon);
 		const std::list<sItemInfo>& items = Doc()->GetConstMyItemList();
 		std::list<sItemInfo>::const_iterator it;
 		for (it = items.begin(); it != items.end(); ++it)
@@ -862,8 +863,8 @@ void CTFrameMove::AddFrame(FrArea* pFrame)
 
 bool CTFrameMove::SetFrameWidth(float width)
 {
-	unsigned char start;
-	unsigned char end;
+	unsigned char start = 0;
+	unsigned char end = 0; // 983 00801c30: outra contagem nao mexe em nenhum quadro
 
 	if (0.0f != width)
 	{
@@ -1761,7 +1762,7 @@ void FrItemAttachCardDlg::SetListCardUsableClub983()
 	for (it = clubs.begin(); it != clubs.end(); ++it)
 	{
 		IFF_STRUCT::sClubSet* pClub = ItemManager()->FindClubSet(it->second.tid);
-		if (pClub->CharacterSlot983 > 0 || pClub->CaddieSlot983 > 0)
+		if (pClub && (pClub->CharacterSlot983 > 0 || pClub->CaddieSlot983 > 0))
 		{
 			item.typeId = it->second.tid;
 			item.id = it->second.guid;
@@ -1885,7 +1886,7 @@ void FrItemAttachCardDlg::SetCharacterAttatchBtnTxt(unsigned long typeId,
 			{
 				if (count == 1)
 				{
-					strcat(result, ",");
+					strncat_s(result, ",", _TRUNCATE);
 				}
 
 				memset(stat, 0, sizeof(stat));
@@ -1893,7 +1894,7 @@ void FrItemAttachCardDlg::SetCharacterAttatchBtnTxt(unsigned long typeId,
 				{
 					sprintf(stat, STAT_PLUS_FMT,
 						K2L_Compatibility("\xC6\xC4\xBF\xF6\xBD\xBD\xB7\xD4"), pCard->COM[0]);
-					strcat(result, stat);
+					strncat_s(result, stat, _TRUNCATE);
 					count++;
 				}
 				else if (i == 1)
@@ -1901,7 +1902,7 @@ void FrItemAttachCardDlg::SetCharacterAttatchBtnTxt(unsigned long typeId,
 					sprintf(stat, STAT_PLUS_FMT,
 						K2L_Compatibility("\xC4\xC1\xC6\xAE\xB7\xD1\xBD\xBD\xB7\xD4"),
 						pCard->COM[1]);
-					strcat(result, stat);
+					strncat_s(result, stat, _TRUNCATE);
 					count++;
 				}
 				else if (i == 2)
@@ -1909,21 +1910,21 @@ void FrItemAttachCardDlg::SetCharacterAttatchBtnTxt(unsigned long typeId,
 					sprintf(stat, STAT_PLUS_FMT,
 						K2L_Compatibility("\xC1\xA4\xC8\xAE\xB5\xB5\xBD\xBD\xB7\xD4"),
 						pCard->COM[2]);
-					strcat(result, stat);
+					strncat_s(result, stat, _TRUNCATE);
 					count++;
 				}
 				else if (i == 3)
 				{
 					sprintf(stat, STAT_PLUS_FMT,
 						K2L_Compatibility("\xBD\xBA\xC7\xC9\xBD\xBD\xB7\xD4"), pCard->COM[3]);
-					strcat(result, stat);
+					strncat_s(result, stat, _TRUNCATE);
 					count++;
 				}
 				else if (i == 4)
 				{
 					sprintf(stat, STAT_PLUS_FMT,
 						K2L_Compatibility("\xC4\xBF\xBA\xEA\xBD\xBD\xB7\xD4"), pCard->COM[4]);
-					strcat(result, stat);
+					strncat_s(result, stat, _TRUNCATE);
 					count++;
 				}
 			}
@@ -3280,12 +3281,12 @@ void FrSPCardBuffDlg::OnSPCardListOwnerDraw(int nIndex)
 
 		if (days == 0 && hrs == 0)
 		{
-			sprintf(text,
+			_snprintf_s(text, _TRUNCATE,
 				K2L_Compatibility("\xB3\xB2\xC0\xBA\xBD\xC3\xB0\xA3: 1\xBD\xC3\xB0\xA3\xB9\xCC\xB8\xB8"));
 		}
 		else
 		{
-			sprintf(text,
+			_snprintf_s(text, _TRUNCATE,
 				MakeStr(K2L_Compatibility("%d\xC0\xCF %d\xBD\xC3\xB0\xA3"), days, hrs));
 		}
 
@@ -3389,10 +3390,17 @@ __declspec(noinline) int FrSPCardBuffDlg::GetRemainedSec(const sSCardAvilityPeri
 	else
 	{
 		// 983: diferenca entre o fim e a hora do servidor, em CTime (62fc60), nao a conta manual do 645
-		ATL::CTime serverTime(CSharedDoc::Instance()->GetServerTime(), -1);
-		ATL::CTime endTime(pInfo->useEndTime, -1);
-
-		remain = (int)(endTime.GetTime() - serverTime.GetTime());
+		// ATL lanca com ano 1900..1969 ou > 3000 e mes/dia 0 (fim 0 a oeste de Greenwich = 1969); o jogo nao tem catch
+		try
+		{
+			ATL::CTime serverTime(CSharedDoc::Instance()->GetServerTime(), -1);
+			ATL::CTime endTime(pInfo->useEndTime, -1);
+			remain = (int)(endTime.GetTime() - serverTime.GetTime());
+		}
+		catch (const ATL::CAtlException&)
+		{
+			return 0;
+		}
 		elapsed = g_CurrentTime - m_SpecialBuffStartTick;
 	}
 

@@ -967,7 +967,7 @@ void FrTradeDlg::OpenTradeShop(unsigned long uid)
 	if (m_pUserId)
 	{
 		char buf[64] = "";
-		sprintf(buf, K2L_Compatibility("\xb3\xaa\xc0\xc7 \xbb\xf3\xc1\xa1"));
+		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("\xb3\xaa\xc0\xc7 \xbb\xf3\xc1\xa1"));
 		if (!m_bOwner)
 		{
 			std::list<sSlotInfo>::iterator it;
@@ -976,9 +976,9 @@ void FrTradeDlg::OpenTradeShop(unsigned long uid)
 			{
 				if ((*it).dwUserUID == Doc()->m_tradeUID)
 				{
-					sprintf(buf,
+					strncpy_s(buf, // A929: nick com '%' derrubava como formato
 						MakeStr(K2L_Compatibility("%s \xb4\xd4\xc0\xc7 \xbb\xf3\xc1\xa1"),
-							(*it).sNick));
+							(*it).sNick), _TRUNCATE);
 					break;
 				}
 			}
@@ -2398,7 +2398,7 @@ void FrTradeEditDlg::OnTradeItemListOwnerDraw(int param)
 			"%s", GetUccItemName(item->dwGuid));
 	else
 		gdi->Print(WPoint(listItem->pos.x + 10.0f, listItem->pos.y + 13.0f), 0,
-			"%s", common->Name);
+			"%s", common ? common->Name : "");
 
 	SetTextColorByPrice(item->i64Price);
 	gdi->Print(WPoint(listItem->pos.x + 12.0f, listItem->pos.y + 32.0f), 0,
@@ -3513,7 +3513,7 @@ int FrTradeEditDlg::CheckTradeEdit()
 	trimmed.TrimRight();
 	if (trimmed.GetLength() == 0)
 		return 0x13;
-	strcpy(m_title, title);
+	strncpy_s(m_title, title, _TRUNCATE); // limite do campo vem do XML
 	return 1;
 }
 
@@ -3553,7 +3553,7 @@ eResultTrade FrTradeEditDlg::SendTradeTitle()
 			const char* line = m_pTitleEdit->GetLine(1, false);
 			int len = strlen(line);
 			char buf[0x100] = "";
-			strcpy(buf, line);
+			strncpy_s(buf, line, _TRUNCATE);
 			if (Doc()->m_chatManager.Filtering(buf))
 			{
 				result = (eResultTrade)7;

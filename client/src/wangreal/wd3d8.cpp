@@ -5135,14 +5135,19 @@ int WDirect3D8::UploadCompressedTextureSurface(void* pSrcData,
 	unsigned int srcDataSize, int type)
 {
 	int m_hTex;
-	if (*(static_cast<unsigned long*>(pSrcData) + 4) >
-			this->m_d3dcaps.MaxTextureWidth ||
-		*(static_cast<unsigned long*>(pSrcData) + 3) >
-			this->m_d3dcaps.MaxTextureHeight)
+	// 983 le altura/largura do cabecalho sem olhar o tamanho e, com textura maior que a placa,
+	// manda ao UpdateTextureSurface o que o WDXTC devolver (NULL se recusou). .dds curto ou
+	// estranho de outro pak: sem cabecalho = 0x0; WDXTC recusou = caminho do D3DX, que recusa sozinho (C788)
+	const bool hasHeader = pSrcData && srcDataSize >= 128; // "DDS " + DDSURFACEDESC2
+	WDXTC dxtc;
+	if (hasHeader &&
+		(*(static_cast<unsigned long*>(pSrcData) + 4) >
+				this->m_d3dcaps.MaxTextureWidth ||
+			*(static_cast<unsigned long*>(pSrcData) + 3) >
+				this->m_d3dcaps.MaxTextureHeight) &&
+		dxtc.Load(static_cast<unsigned char*>(pSrcData), srcDataSize))
 	{
 		BITMAPINFO bmpInfo;
-		WDXTC dxtc;
-		dxtc.Load(static_cast<unsigned char*>(pSrcData), srcDataSize);
 		unsigned char* pDecompData = dxtc.GetDecompData();
 		unsigned long texWidth = *(static_cast<unsigned long*>(pSrcData) + 4);
 		bmpInfo.bmiHeader.biWidth = this->m_d3dcaps.MaxTextureWidth;
@@ -5167,10 +5172,10 @@ int WDirect3D8::UploadCompressedTextureSurface(void* pSrcData,
 	else
 	{
 		m_hTex = this->GetTextureNum(static_cast<unsigned>(type) >> 29 & 1);
-		this->m_texList[m_hTex].width =
-			*(static_cast<unsigned long*>(pSrcData) + 4) >> this->m_iDDSRes;
-		this->m_texList[m_hTex].height =
-			*(static_cast<unsigned long*>(pSrcData) + 3) >> this->m_iDDSRes;
+		this->m_texList[m_hTex].width = hasHeader ?
+			*(static_cast<unsigned long*>(pSrcData) + 4) >> this->m_iDDSRes : 0;
+		this->m_texList[m_hTex].height = hasHeader ?
+			*(static_cast<unsigned long*>(pSrcData) + 3) >> this->m_iDDSRes : 0;
 		this->m_texList[m_hTex].pixFmtInfo = 0;
 		this->m_texList[m_hTex].dxtcDataSize = srcDataSize;
 		this->m_texList[m_hTex].dxtcData = new char[srcDataSize];

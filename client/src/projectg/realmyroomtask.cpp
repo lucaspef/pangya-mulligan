@@ -525,9 +525,7 @@ int CMyRoomWidget::OnPacket(WReceivedPacket& packet)
 			return 1;
 		}
 
-		int pages = total / perPage;
-		if (perPage * pages < total)
-			++pages;
+		int pages = perPage ? (total + perPage - 1) / perPage : 0; // outro servidor pode mandar 0
 
 		if (pages)
 		{
@@ -805,6 +803,8 @@ int CMyRoomWidget::OnPacket(WReceivedPacket& packet)
 			unsigned char index = packet.Decode1();
 			unsigned long guid = packet.Decode4();
 			CSharedDoc* doc = Doc();
+			if (index >= 5)
+				break; // Common e PCL tem 5 posicoes
 			if (flags & 1)
 			{
 				std::map<unsigned int, sItemInfo>::iterator it =
@@ -827,6 +827,8 @@ int CMyRoomWidget::OnPacket(WReceivedPacket& packet)
 			unsigned char index = packet.Decode1();
 			unsigned long guid = packet.Decode4();
 			CSharedDoc* doc = Doc();
+			if (index >= 5)
+				break; // Common e PCL tem 5 posicoes
 			if (flags & 1)
 			{
 				std::map<unsigned int, sItemInfo>::iterator it =
@@ -1024,7 +1026,7 @@ int CMyRoomWidget::OnPacket(WReceivedPacket& packet)
 		}
 
 		unsigned char notified = 0;
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
 		sMailIncludeItem item;
 		for (int n = count; n > 0; --n)
 		{
@@ -1196,7 +1198,7 @@ int CMyRoomWidget::OnPacket(WReceivedPacket& packet)
 
 		mailPage.iCurPage = packet.Decode4();
 		mailPage.iTotalPage = packet.Decode4();
-		mailPage.iTotalCount = packet.Decode4();
+		mailPage.iTotalCount = packet.DecodeCount();
 		mailPage.m_lMailList.clear();
 		for (int i = 0; i < mailPage.iTotalCount; ++i)
 		{
@@ -1228,9 +1230,9 @@ int CMyRoomWidget::OnPacket(WReceivedPacket& packet)
 		static sMailIncludeItem mailItem;
 
 		mailInfo.dwIndex = packet.Decode4();
-		strncpy(mailInfo.szFromNick, packet.DecodeStr().c_str(), 0x16);
-		strncpy(mailInfo.szDate, packet.DecodeStr().c_str(), 0x20);
-		strncpy(mailInfo.szContent, packet.DecodeStr().c_str(), 800);
+		strncpy_s(mailInfo.szFromNick, packet.DecodeStr().c_str(), _TRUNCATE);
+		strncpy_s(mailInfo.szDate, packet.DecodeStr().c_str(), _TRUNCATE);
+		strncpy_s(mailInfo.szContent, packet.DecodeStr().c_str(), _TRUNCATE);
 		mailInfo.bHaveItem = packet.Decode1() == 1;
 		mailInfo.m_lMailItemList.clear();
 		if (mailInfo.bHaveItem)
@@ -1283,7 +1285,7 @@ int CMyRoomWidget::OnPacket(WReceivedPacket& packet)
 		SEND_REALMYROOM(M983(0x2), 0, 0, 0, 0, 0);
 		SEND_REALMYROOM(M983(0x244), 1, 0, 0, 0, 0);
 
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
 		sMailIncludeItem mail;
 		sCaddieInfo caddie;
 		sCards card;
@@ -1739,7 +1741,7 @@ int CMyRoomWidget::OnPacket(WReceivedPacket& packet)
 					Doc()->m_myItemList.erase(it);
 			}
 
-			int count = packet.Decode4();
+			int count = packet.DecodeCount();
 			RbPouchPrizeList983::Instance983()->Clear983();
 			RbPouchPrizeList983::Instance983()->SetTypeId983(tid);
 			sPouchPrize prize;
@@ -1777,8 +1779,8 @@ int CMyRoomWidget::OnPacket(WReceivedPacket& packet)
 			if (common == 0)
 			{
 				char err[64] = "";
-				strcat(err, K2L_Compatibility(
-					"\xc0\xdf\xb8\xf8\xb5\xc8 \xbe\xc6\xc0\xcc\xc5\xdb \xc5\xb8\xc0\xd4ID \xc0\xd4\xb4\xcf\xb4\xd9."));
+				strncat_s(err, K2L_Compatibility(
+					"\xc0\xdf\xb8\xf8\xb5\xc8 \xbe\xc6\xc0\xcc\xc5\xdb \xc5\xb8\xc0\xd4ID \xc0\xd4\xb4\xcf\xb4\xd9."), _TRUNCATE);
 				AfxGetTask()->SendMsgToMainActor(
 					MsgObject(0, M983(0x23), (int)err, 0, 0, 0, 0));
 				SEND_REALMYROOM(M983(0xdd), count, 1, 0, 0, 0);
@@ -2457,7 +2459,7 @@ int CMyRoomWidget::OnPacket(WReceivedPacket& packet)
 		char buf[0x80];
 		buf[0] = 0;
 		memset(buf + 1, 0, sizeof(buf) - 1);
-		sprintf(buf, K2L_Compatibility(
+		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility(
 			"\xc7\xc3\xb7\xb9\xc0\xcc\xc7\xd1 \xc8\xa6\xbc\xf6\xb0\xa1 \xba\xce\xc1\xb7\xc7\xd5\xb4\xcf\xb4\xd9 \xc7\xf6\xc0\xe7:%d\xc8\xa6"),
 			packet.Decode4());
 		if (form)

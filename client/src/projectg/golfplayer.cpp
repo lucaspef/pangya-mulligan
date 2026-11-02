@@ -80,8 +80,6 @@ static float rb_UnusedConstants()
 unsigned long __fastcall ModifyColor(unsigned long color, float factor);
 
 int Ceil(float value, float tolerance);
-const char* GetStrConst(const char* str, char* out);
-const char* GetCharsTillSpace(const char* str, char* out);
 bool IsMyTurn(bool bCheck);
 inline unsigned char MyIndex();
 
@@ -211,14 +209,6 @@ __declspec(dllimport) __forceinline int RbSymPad(int a, int b)
 	return h;
 }
 
-// PROVISORIO (ver golfplayer.h): membros do 645 que o CGolfPlayer do 983 nao tem
-std::vector<CGolfPlayer::sCondBBSpray> CGolfPlayer::m_condSpray[4];
-std::vector<CGolfPlayer::sCondBBSequence> CGolfPlayer::m_condSeq[4];
-std::vector<unsigned long> CGolfPlayer::m_condIds[4];
-std::vector<CFxSpray*> CGolfPlayer::m_sprays;
-std::vector<CFxSequence*> CGolfPlayer::m_sequences;
-std::vector<std::pair<unsigned long, unsigned long> > CGolfPlayer::m_abilityParts;
-
 CGolfPlayer::sPetInfo::sPetInfo()
 	: m_motionTime(0),
 	  m_pMotion(0),
@@ -237,11 +227,6 @@ CGolfPlayer::sPetInfo::sPetInfo()
 
 CGolfPlayer::sPetInfo::~sPetInfo()
 {
-}
-
-int CGolfPlayer::GetAbilityPartsSize()
-{
-	return m_abilityParts.size();
 }
 
 // HACK: emission order. Implicit constructors in the original (no line in the PDB), created right here and
@@ -480,55 +465,6 @@ void CGolfPlayer::OnLoad()
 void CGolfPlayer::OnReload()
 {
 	OnLoad();
-}
-
-bool CGolfPlayer::ShowAbilityParts(CPartTidList* pTids)
-{
-	if (m_abilityParts.empty())
-	{
-		AddAbilityParts(0x80a2800, 0x80a4000);
-		AddAbilityParts(0x80a2801, 0x80a4001);
-		AddAbilityParts(0x80a2802, 0x80a4002);
-		AddAbilityParts(0x8122800, 0x8124000);
-		AddAbilityParts(0x8122801, 0x8124001);
-		AddAbilityParts(0x8122802, 0x8124002);
-		AddAbilityParts(0x8026800, 0x8024800);
-		AddAbilityParts(0x8026801, 0x8024801);
-		AddAbilityParts(0x8026802, 0x8024802);
-		AddAbilityParts(0x8064800, 0x8066800);
-		AddAbilityParts(0x8064801, 0x8066801);
-		AddAbilityParts(0x8064802, 0x8066802);
-		AddAbilityParts(0x8064803, 0x8066803);
-		AddAbilityParts(0x81ea800, 0x81ec800);
-		AddAbilityParts(0x80e4800, 0x80e6800);
-		AddAbilityParts(0x80e4801, 0x80e6801);
-		AddAbilityParts(0x80e4802, 0x80e6802);
-		AddAbilityParts(0x81a4800, 0x81a6800);
-		AddAbilityParts(0x81a4800, 0x81a8800);
-		AddAbilityParts(0x81a4801, 0x81a6801);
-		AddAbilityParts(0x81a4801, 0x81a8801);
-		AddAbilityParts(0x816e801, 0x8152801);
-		AddAbilityParts(0x816e802, 0x8152802);
-		AddAbilityParts(0x816e803, 0x8152803);
-		AddAbilityParts(0x8228800, 0x8226800);
-		AddAbilityParts(0x8228801, 0x8226801);
-		AddAbilityParts(0x8228802, 0x8226802);
-		AddAbilityParts(0x8228803, 0x8226803);
-	}
-	bool bChanged = false;
-	int size = GetAbilityPartsSize();
-	for (int i = 0; i < size; i++)
-	{
-		unsigned long to = m_abilityParts[i].second;
-		unsigned long from = m_abilityParts[i].first;
-		if ((pTids->m_charTid & 0x3ffffff) == ((from >> 18) & 0xff) &&
-			pTids->IsEquipped(from, 0) == true)
-		{
-			pTids->SetTid(to, 0, NULL, 0);
-			bChanged = true;
-		}
-	}
-	return bChanged;
 }
 
 void CGolfPlayer::CheckShotScript()
@@ -916,8 +852,10 @@ void CGolfPlayer::OnDisplay()
 	WPuppet* pBonePet = m_pPetFrame[GOLFDOC()->m_currentPlayer].GetBonePet();
 	sClubSet* pClubSet = GolfClub().FindClubSet(
 		Doc()->m_userInfo[GOLFDOC()->m_currentPlayer].clubInfo.tid);
+	if (pClubSet == NULL)
+		return;
 	WPuppet* pClub = pClubSet->pHead[GolfClub().GetType()];
-	if (g_view->InFrustum(pBonePet->GetBoundSphere()))
+	if (pClub && g_view->InFrustum(pBonePet->GetBoundSphere())) // pak sem o modelo do taco: pHead NULL
 	{
 		if ((unsigned char)(m_pPetInfo[GOLFDOC()->m_currentPlayer].m_flags >>
 				4) &
@@ -1149,6 +1087,8 @@ void CGolfPlayer::ScoreEvent()
 			{
 				WPuppet* pPet = m_pPetFrame[i].GetBonePet();
 				w_bound_box* pBox = pPet->m_bbList.Find("club");
+				if (!pBox)
+					continue;
 				WMatrix mat;
 				mat = pBox->bone->GetMatrix();
 				mat.pivot = pBox->info->spherePivot * pBox->bone->GetMatrix();
@@ -1495,7 +1435,7 @@ void CGolfPlayer::HandleMsg(const MsgObject& msg)
 		m_val2f4 = dist.Magnitude();
 		sClubSet* pClubSet = GolfClub().FindClubSet(
 			Doc()->m_userInfo[GOLFDOC()->m_currentPlayer].clubInfo.tid);
-		m_pClubPuppet = pClubSet->pHead[GolfClub().GetType()];
+		m_pClubPuppet = pClubSet ? pClubSet->pHead[GolfClub().GetType()] : NULL;
 		CSceneManager::Instance()->SetVisible("\xc5\xac\xb7\xb4", true);
 		ParseBoundingBoxScript(GOLFDOC()->m_currentPlayer, true, false, true);
 		m_bPowerShot = false;
@@ -1685,6 +1625,8 @@ void CGolfPlayer::HandleMsg(const MsgObject& msg)
 		unsigned long tid = msg.param1;
 		if ((tid & 0xfc000000) == 0x70000000)
 		{
+			if (((tid >> 21) & 0x1f) >= 5)
+				break;
 			unsigned long* pAux =
 				&Doc()
 					 ->m_userInfo[GOLFDOC()->m_currentPlayer]
@@ -1811,7 +1753,7 @@ void CGolfPlayer::HandleMsg(const MsgObject& msg)
 				true);
 			m_pPetInfo[i].m_matrix.Reset();
 			m_pPetInfo[i].m_matrix.pivot =
-				GetPVS().GetGroundPoint(pPoint->pos, false, NULL, false);
+				GetPVS().GetGroundPoint(pPoint ? pPoint->pos : WVector(0.0f, 0.0f, 0.0f), false, NULL, false);
 			m_pPetInfo[i].m_val1 = 0;
 			m_pPetInfo[i].m_nextMotion[0] = 0;
 			if (Doc()->m_golfGame.gameType != 1)
@@ -1849,7 +1791,7 @@ void CGolfPlayer::HandleMsg(const MsgObject& msg)
 			}
 			m_pPetInfo[i].m_pMotion =
 				m_pPetFrame[i].FindMotionData(motion.c_str(), true, NULL);
-			m_pPetInfo[i].m_motionTime = m_pPetInfo[i].m_pMotion->s;
+			m_pPetInfo[i].m_motionTime = m_pPetInfo[i].m_pMotion ? m_pPetInfo[i].m_pMotion->s : 0.0f;
 			m_pPetInfo[i].m_bFlag0 = true;
 			m_pPetFrame[i].GetBonePet()->SetMatrix(m_pPetInfo[i].m_matrix);
 			m_pPetFrame[i].Animate983(NULL, NULL, m_pPetInfo[i].m_motionTime);
@@ -1859,8 +1801,9 @@ void CGolfPlayer::HandleMsg(const MsgObject& msg)
 			char charName[16];
 			sprintf(charName, "char%d", i);
 			m_pPetFrame[i].SetInvisible(false);
-			ScriptProcess(m_pPetInfo[i].m_pMotion, m_pPetInfo[i].m_pMotion->s,
-				m_pPetInfo[i].m_pMotion->s, i, true, false);
+			if (m_pPetInfo[i].m_pMotion)
+				ScriptProcess(m_pPetInfo[i].m_pMotion, m_pPetInfo[i].m_pMotion->s,
+					m_pPetInfo[i].m_pMotion->s, i, true, false);
 			// 983 00744b80 case 0x147: depois do ScriptProcess (0073dee0) chama 0073e590(i, 1, 0, primeiro) para cada jogador;
 			// primeiro = 1o jogador desenhado ([ebp-0x65]), nao i == 0: com o jogador 0 fora o placar final nao tinha primeiro
 			ParseBoundingBoxScript(i, true, false, first);
@@ -1941,7 +1884,7 @@ void CGolfPlayer::HandleMsg(const MsgObject& msg)
 			true);
 		sClubSet* pClubSet =
 			GolfClub().FindClubSet(Doc()->m_userInfo[MyIndex()].clubInfo.tid);
-		WPuppet* pClub = pClubSet->pHead[GolfClub().GetType()];
+		WPuppet* pClub = pClubSet ? pClubSet->pHead[GolfClub().GetType()] : NULL; // tid fora do IFF nao entra na lista
 		CSceneManager::Instance()->SetVisible("\xc5\xac\xb7\xb4", true);
 		((CSceneManagerEx*)CSceneManager::Instance())
 			->SetPuppet("\xc5\xac\xb7\xb4", pClub);
@@ -2532,12 +2475,11 @@ void CGolfPlayer::SetMotion(const char* name, float time, int index)
 			}
 		}
 	}
-	// 983 00742b3a: fecha com FxInterpreter::SetCond(pose, jogador) (008900e0), no lugar do m_condIds.clear() do 645
+	// 983 00742b3a: fecha com FxInterpreter::SetCond(pose, jogador) (008900e0), sem o m_condIds.clear() do 645
 	if (m_pFxInterpreter983)
 	{
 		m_pFxInterpreter983->SetCond(name, index);
 	}
-	m_condIds[index].clear();
 }
 
 void CGolfPlayer::SetSwingType()
@@ -2632,41 +2574,6 @@ void CGolfPlayer::ScriptProcess(w_motion_data* pMotion, float from, float to,
 	}
 }
 
-void CGolfPlayer::CloseBoundingBoxFx(int index, unsigned long id)
-{
-	if (id == 0 || index > 4)
-	{
-		return;
-	}
-	std::vector<sCondBBSpray>::iterator spray;
-	for (spray = m_condSpray[index].begin(); spray != m_condSpray[index].end();)
-	{
-		if ((*spray).id == id)
-		{
-			CFx::Instance()->CloseSpray((*spray).pSpray);
-			m_condSpray[index].erase(spray);
-		}
-		else
-		{
-			spray++;
-		}
-	}
-	std::vector<sCondBBSequence>::iterator sequence;
-	for (sequence = m_condSeq[index].begin();
-		sequence != m_condSeq[index].end();)
-	{
-		if ((*sequence).id == id)
-		{
-			CFx::Instance()->CloseSequence((*sequence).pSequence, true);
-			m_condSeq[index].erase(sequence);
-		}
-		else
-		{
-			sequence++;
-		}
-	}
-}
-
 // 983 (0073da60): o analisador saiu para IPetScriptObject::ParseScript, que chama um virtual OnScript* por palavra.
 void CGolfPlayer::ParsePuppetScript(char* script, int index, bool bSkip)
 {
@@ -2753,6 +2660,8 @@ void CGolfPlayer::OnScriptLockClub(const char*& p)
 		{
 			WPuppet* pPet = m_pPetFrame[index].GetBonePet();
 			w_bound_box* pBox = pPet->m_bbList.Find("club");
+			if (!pBox)
+				break;
 			m_clubMatrix = pBox->bone->GetMatrix();
 			m_clubMatrix.pivot =
 				pBox->info->spherePivot * pBox->bone->GetMatrix();
@@ -3014,8 +2923,8 @@ void CGolfPlayer::OnScriptOpa(const char*& p)
 		}
 		if (strlen(args) != 0 && strlen(args) < 64)
 		{
-			float from;
-			float to;
+			float from = m_pPetInfo[index].m_scale; // texto curto do pak: escala atual
+			float to = from;
 			float time = 0.0f;
 			sscanf(args, "%f %f %f", &from, &to, &time);
 			m_pPetInfo[index].m_scale = from;
@@ -3409,6 +3318,8 @@ void CGolfPlayer::SetLight()
 	WBone* pBone =
 		m_pPetFrame[GOLFDOC()->m_currentPlayer].GetBonePet()->FindBoneByTail(
 			"Head");
+	if (!pBone)
+		return;
 	m_lightSet.diffuse = ModifyColor(g_lightset.diffuse,
 		GetPVS().GetShadowIntensity(pBone->GetMatrix().pivot));
 }
@@ -3688,23 +3599,6 @@ void CGolfPlayer::PowerShotInput()
 	}
 }
 
-bool CGolfPlayer::IsAnimFxRunning(int index, unsigned long id)
-{
-	if (id == 0 || index > 4)
-	{
-		return false;
-	}
-	std::vector<unsigned long>::iterator it;
-	for (it = m_condIds[index].begin(); it != m_condIds[index].end(); it++)
-	{
-		if (*it == id)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
 void CGolfPlayer::RefreshAllUccClothes()
 {
 	// HACK: emission order: waits one wave, as in the original
@@ -3735,11 +3629,6 @@ void CGolfPlayer::RefreshAllUccClothes()
 			}
 		}
 	}
-}
-
-void CGolfPlayer::AddAbilityParts(unsigned long tid, unsigned long id)
-{
-	m_abilityParts.push_back(std::make_pair(tid, id));
 }
 
 // The inline helpers below sit in headers of the PCH in the original, with a late IL offset: every function that

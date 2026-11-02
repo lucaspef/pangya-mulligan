@@ -373,6 +373,8 @@ void WPuppet::Animate983(WBoneSet* set, const char* name, float time, int mode,
 	if (name != 0)
 	{
 		w_motion_data* data = FindMotionData(name);
+		if (data == 0) // .pet de outro pak sem esse movimento
+			return;
 		if (bone == 0 && *data->applybone != 0)
 			bone = data->applybone;
 		time = time + data->s;
@@ -424,6 +426,8 @@ void WPuppet::Animate983(WBoneSet* set, const char* name, float time, int mode,
 	if (bone != 0)
 	{
 		WBone* found = FindBone(bone);
+		if (found == 0)
+			return;
 		if ((mode & 4) == 0)
 		{
 			found->InsertBoneSetList(set, time, 1, filter);
@@ -467,6 +471,8 @@ WVector WPuppet::GetDeltaVec(float time)
 WVector WPuppet::GetDeltaVec(char* name, float time)
 {
 	w_motion_data* data = FindMotionData(name);
+	if (data == 0)
+		return WVector::ZERO;
 	return GetDeltaVec(time + data->s);
 }
 
@@ -478,6 +484,8 @@ WVector WPuppet::GetDeltaVec(char* name, float from, float to)
 	if (name != 0)
 	{
 		data = FindMotionData(name);
+		if (data == 0)
+			return WVector::ZERO;
 		float length = data->e - data->s;
 		float span = length > to ? to : length;
 		if (to > span)
@@ -561,7 +569,8 @@ char* WPuppet::FindTexAniList(char* name)
 void WPuppet::AddCollisionObject(const char* name, WBlockModel* model)
 {
 	WBone* bone = m_rootbone->FindBone(name, 0);
-	bone->GetConvexArea(model);
+	if (bone != 0)
+		bone->GetConvexArea(model);
 }
 
 void WPuppet::SetSelfIllum(char* name, bool enabled)
@@ -614,7 +623,7 @@ void WPuppet::HideBone(char* name)
 
 unsigned char WPuppet::GetAlpha(char* name)
 {
-	if (name != 0)
+	if (name != 0 && FindBone(name) != 0)
 		return FindBone(name)->m_alpha;
 	return m_rootbone->m_alpha;
 }
@@ -643,7 +652,7 @@ void WPuppet::SetAlpha(char* name, unsigned char alpha)
 
 void WPuppet::ToggleSelfIllum(char* name)
 {
-	if (name != 0)
+	if (name != 0 && FindBone(name) != 0)
 	{
 		FindBone(name)->ToggleSelfIllum();
 	}
@@ -657,9 +666,12 @@ void WPuppet::SetMirrored(bool mirrored)
 
 void WPuppet::SetBoundBox(char* name, Waabb* aabb, char* bonename)
 {
+	WBone* bone = m_rootbone->FindBone(bonename, 0);
+	if (bone == 0) // osso que este .pet nao tem: box->bone e usado sem conferir
+		return;
 	w_bound_box* box = new w_bound_box;
 	box->info = (w_bound_box_info*)new char[strlen(name) + 48];
-	box->bone = m_rootbone->FindBone(bonename, 0);
+	box->bone = bone;
 	box->info->aabb = *aabb;
 	if (box->info->aabb.max.x - box->info->aabb.min.x < 0.001f)
 		box->info->aabb.max.x += 0.001f;
@@ -837,8 +849,11 @@ void WPuppet::MakeTemporaryCenterBox(void)
 		if (m_BBox.bone != 0)
 		{
 			w_bound_box* found = m_bbList.Find("center");
-			m_BBox.bone = found->bone;
-			m_BBox.info = found->info;
+			if (found != 0)
+			{
+				m_BBox.bone = found->bone;
+				m_BBox.info = found->info;
+			}
 		}
 	}
 	else
@@ -1119,6 +1134,8 @@ void WPuppet::UpdatePhysics(float delta, const WVector& accel)
 void WPuppet::SetPhysicsModel(const char* name, int model)
 {
 	WBone* bone = FindBone(name);
+	if (bone == 0)
+		return;
 	bone->SetPhysicsModel(model);
 	m_phybone += bone;
 }
@@ -1368,6 +1385,10 @@ int WPuppet::SeekChunkFromPET(cFile* file, char* tag)
 		file->Seek(pos, 0);
 		char head[8];
 		file->Read(head, 8);
+		// arquivo curto: chunk que nao cabe nao e lido, e tamanho negativo nao anda para tras
+		if (pos + 8 > file->m_nLen || *(int*)(head + 4) < 0 ||
+			*(int*)(head + 4) > file->m_nLen - pos - 8)
+			return 0;
 		if (memcmp(tag, head, 4) == 0)
 		{
 			file->Seek(pos + 8, 0);
@@ -1396,17 +1417,22 @@ WBone* WPuppet::LoadPET_Bone(cFile* file, int version)
 	count = file->GetByte();
 	if (count == 0)
 		file->Read(&count, 2);
+	// nome vazio + id do pai; maior .pet real tem 354 ossos, e FindBone e Transform descem por recursao em cada um
+	if (count <= 0 || count > 0x1000 || !file->CountFits(count, 2))
+		return 0;
 	bones = new WBone*[count];
 	mats = new WMatrix[count];
 	for (int i = 0; i < count; ++i)
 	{
-		name[0] = (char)file->GetByte();
-		if (name[0])
+		// m_name tem 64; no fim do arquivo GetByte da -1, que nao termina o nome
+		int length = 0;
+		int c;
+		while ((c = file->GetByte()) != 0 && c != -1)
 		{
-			for (char* p = name; *p; *++p = (char)file->GetByte())
-			{
-			}
+			if (length < 63)
+				name[length++] = (char)c;
 		}
+		name[length] = 0;
 		bones[i] = new WBone;
 		bones[i]->SetName(name);
 		bones[i]->SetIDNumber(i);
@@ -1485,12 +1511,19 @@ bool WPuppet::ChangeMesh(char* name)
 	if (file != 0)
 	{
 		GetDirectory(name, directory);
+		int texNum = 0;
 		w_pet_texture_info* texture =
-			LoadPET_Texture(file, false, directory[0] != 0 ? directory : 0, 0);
+			LoadPET_Texture(file, false, directory[0] != 0 ? directory : 0, &texNum);
 		WBone* bone = LoadPET_Bone(file, 0x1ff); // 983 00b7f1c2 (o 645 passava 0xff)
+		if (bone == 0) // arquivo curto ou sem BONE
+		{
+			delete[] texture;
+			CloseCFile(file);
+			return false;
+		}
 		bone->Transform(m_mat, 0, 1.0f, 0);
-		LoadPET_Mesh(file, bone, texture, false);
-		LoadPET_FaceAnim(file, texture, bone, directory);
+		LoadPET_Mesh(file, bone, texture, texNum, false);
+		LoadPET_FaceAnim(file, texture, texNum, bone, directory);
 		if (texture != 0)
 			delete[] texture;
 		m_rootbone->CombineVtxColor(true);
@@ -1548,7 +1581,7 @@ WPuppet::w_tex_piece* WPuppet::GetTexPiece(char* name)
 void WPuppet::ClearTexPiece(void)
 {
 	w_tex_piece* piece = m_use_tex_piece.Start();
-	w_tex_piece* found;
+	w_tex_piece* found = 0;
 	for (; piece != 0; piece = m_use_tex_piece.Next())
 	{
 		if (--piece->count != 0)
@@ -1583,6 +1616,11 @@ void WPuppet::LoadPET(cFile* file, bool flag, char* directory, int type)
 	WMatrix mat;
 	mat.Reset();
 	m_rootbone = LoadPET_Bone(file, type);
+	if (m_rootbone == 0) // arquivo curto ou sem BONE: LoadPET(char*) devolve erro
+	{
+		delete[] texture;
+		return;
+	}
 	m_rootbone->Transform(mat, 0, 1.0f, 0);
 	// 983: bits novos (2 = materiais; o resto subiu um bit) e as matrizes originais sao guardadas aqui
 	if (type == 0x1ff || type == 0x20104)
@@ -1591,9 +1629,9 @@ void WPuppet::LoadPET(cFile* file, bool flag, char* directory, int type)
 	if ((type & 8) != 0)
 		m_aniLen = LoadPET_Animation(file, m_rootbone);
 	if ((type & 0x10) != 0)
-		LoadPET_Mesh(file, m_rootbone, texture, type == 0x10037);
+		LoadPET_Mesh(file, m_rootbone, texture, count, type == 0x10037);
 	if ((type & 0x20) != 0)
-		LoadPET_FaceAnim(file, texture, m_rootbone, directory);
+		LoadPET_FaceAnim(file, texture, count, m_rootbone, directory);
 	if ((type & 0x40) != 0)
 		LoadPET_Frame(file);
 	if ((type & 0x80) != 0)
@@ -1626,15 +1664,29 @@ float WPuppet::LoadPET_Animation(cFile* file, WBone* root)
 		int id = ReadID(file);
 		if (id < 0)
 			break;
-		length = root->FindBone(id)->LoadAnimationKey(file, m_petVersion983); // 983 00b6a050
+		WBone* bone = root->FindBone(id);
+		if (bone == 0)
+			break;
+		length = bone->LoadAnimationKey(file, m_petVersion983); // 983 00b6a050
 	}
 	return length;
+}
+
+// Texto do MOTI em buffer fixo; comprimento que nao cabe nele ou no arquivo acaba a lista
+static bool ReadMotionText(cFile* file, char* text, int size)
+{
+	int length = 0;
+	file->Read(&length, 4);
+	if (length >= size || !file->CountFits(length, 1))
+		return false;
+	file->Read(text, length);
+	text[length] = 0;
+	return true;
 }
 
 WList<w_motion_data*>* WPuppet::LoadPET_Motion(cFile* file, float scale)
 {
 	char text[4][512];
-	int length;
 	float option2;
 	WList<w_motion_data*>* list;
 	int i;
@@ -1647,27 +1699,22 @@ WList<w_motion_data*>* WPuppet::LoadPET_Motion(cFile* file, float scale)
 	if (SeekChunkFromPET(file, "MOTI") == 0)
 		return 0;
 	list = new WList<w_motion_data*>(8, 8);
+	count = 0;
 	file->Read(&count, 4);
 	for (i = 0; i < count; ++i)
 	{
-		file->Read(&length, 4);
-		file->Read(text[0], length);
-		text[0][length] = 0;
+		if (!ReadMotionText(file, text[0], 512))
+			break;
 		file->Read(&startFrame, 4);
 		file->Read(&endFrame, 4);
 		s = (float)startFrame / 30.0f;
 		e = (float)endFrame / 30.0f;
-		file->Read(&length, 4);
-		file->Read(text[1], length);
-		text[1][length] = 0;
-		file->Read(&length, 4);
-		file->Read(text[2], length);
-		text[2][length] = 0;
+		if (!ReadMotionText(file, text[1], 512) || !ReadMotionText(file, text[2], 512))
+			break;
 		int option1 = strcmpi(text[2], "blending") != 0;
 		file->Read(&option2, 4);
-		file->Read(&length, 4);
-		file->Read(text[3], length);
-		text[3][length] = 0;
+		if (!ReadMotionText(file, text[3], 512))
+			break;
 		w_motion_data* data = (w_motion_data*)new char[(int)strlen(text[0]) +
 			(int)strlen(text[1]) + (int)strlen(text[3]) + 0x27];
 		data->s = s;
@@ -1732,6 +1779,24 @@ static void ExpandInclude983(std::string& text, WResourceManager* resMng)
 		text.append(src.c_str() + done);
 }
 
+// Textos do COLL e do FRAM (tamanho + bytes); crescem com o comprimento lido, que tem de caber no arquivo
+static bool ReadPetTexts(cFile* file, std::string* text, int count)
+{
+	for (int n = 0; n < count; ++n)
+	{
+		unsigned int length = 0;
+		file->Read(&length, 4);
+		if (!file->CountFits((int)length, 1))
+			return false;
+		if (text[n].size() < length)
+			text[n].resize(length);
+		file->Read(&text[n][0], length);
+		if (length < text[n].size())
+			text[n][length] = 0;
+	}
+	return true;
+}
+
 // 983 00b81390: nomes em std::string (256 de partida, crescem com o comprimento lido; o 645 lia em char[512] sem limite)
 void WPuppet::LoadPET_Collision(cFile* file)
 {
@@ -1747,24 +1812,18 @@ void WPuppet::LoadPET_Collision(cFile* file)
 	std::string name[4];
 	for (int n = 0; n < 4; ++n)
 		name[n].resize(256);
-	int count;
+	int count = 0;
 	file->Read(&count, 4);
+	if (!file->CountFits(count, 48))
+		count = 0;
 	for (int i = 0; i < count; ++i)
 	{
-		unsigned int length;
 		float value[6];
 		int head[2];
 		file->Read(&head[0], 4);
 		file->Read(&head[1], 4);
-		for (int n = 0; n <= 3; ++n)
-		{
-			file->Read(&length, 4);
-			if (name[n].size() < length)
-				name[n].resize(length);
-			file->Read(&name[n][0], length);
-			if (length < name[n].size())
-				name[n][length] = 0;
-		}
+		if (!ReadPetTexts(file, name, 4))
+			break;
 		for (int k = 0; k < 6; ++k)
 			file->Read(&value[k], 4);
 		aabb.min.x = value[0];
@@ -1779,10 +1838,13 @@ void WPuppet::LoadPET_Collision(cFile* file)
 			w_bound_box* box = m_bbList.Find(name[0].c_str());
 			ExpandInclude983(name[2], GetResrcManager());
 			ExpandInclude983(name[3], GetResrcManager());
-			box->info->option = new char[strlen(name[2].c_str()) + strlen(name[3].c_str()) + 2];
-			sprintf(box->info->option, "%s %s", name[2].c_str(), name[3].c_str());
+			if (box != 0)
+			{
+				box->info->option = new char[strlen(name[2].c_str()) + strlen(name[3].c_str()) + 2];
+				sprintf(box->info->option, "%s %s", name[2].c_str(), name[3].c_str());
+			}
 		}
-		if (m_rootbone->FindBone(name[0].c_str(), 0))
+		if (m_rootbone->FindBone(name[0].c_str(), 0) && m_rootbone->FindBone(name[1].c_str(), 0))
 			m_rootbone->FindBone(name[1].c_str(), 0)->SetBoundBox(aabb, false);
 	}
 	w_bound_box* box = m_bbList.Find("bound");
@@ -1808,30 +1870,24 @@ void WPuppet::LoadPET_Frame(cFile* file)
 	std::string text[3];
 	for (int n = 0; n < 3; ++n)
 		text[n].resize(256);
-	unsigned int count;
+	unsigned int count = 0;
 	file->Read(&count, 4);
 	if (count - 1 >= 20000)
 		return;
 	m_framenum = count;
-	m_frame = new w_share_pet_data::w_frame[m_framenum];
+	m_frame = new w_share_pet_data::w_frame[m_framenum]();
 	for (int i = 0; i < (int)count; ++i)
 	{
-		unsigned int length;
 		int check;
 		int head[2];
 		file->Read(&head[0], 4);
 		int num = head[0];
-		for (int k = 0; k < 3; ++k)
+		// so os quadros lidos contam: os demais nao tem data
+		if (!ReadPetTexts(file, text, 3) || ((int)count < 2 && strcmp(text[0].c_str(), "") == 0))
 		{
-			file->Read(&length, 4);
-			if (text[k].size() < length)
-				text[k].resize(length);
-			file->Read(&text[k][0], length);
-			if (length < text[k].size())
-				text[k][length] = 0;
-		}
-		if ((int)count < 2 && strcmp(text[0].c_str(), "") == 0)
+			m_framenum = i;
 			break;
+		}
 		file->Read(&check, 4);
 		if (check == 0)
 			check = -1;
@@ -1862,8 +1918,10 @@ w_pet_texture_info* WPuppet::LoadPET_Texture(cFile* file, bool alphaTest,
 	int count = 0;
 	if (!SeekChunkFromPET(file, "TEXT"))
 		return 0;
-	int texNum;
+	int texNum = 0;
 	file->Read(&texNum, sizeof(texNum));
+	if (!file->CountFits(texNum, sizeof(w_pet_texture)))
+		return 0;
 	if (textureCount)
 		*textureCount = texNum;
 	w_pet_texture* texture = new w_pet_texture[texNum];
@@ -1875,6 +1933,7 @@ w_pet_texture_info* WPuppet::LoadPET_Texture(cFile* file, bool alphaTest,
 	char filename[260];
 	for (i = 0; i < texNum; ++i)
 	{
+		texture[i].filename[sizeof(texture[i].filename) - 1] = 0;
 		strcpy(info[i].filename, texture[i].filename);
 		info[i].group = texture[i].group;
 		info[i].bBind = false;
@@ -2084,7 +2143,7 @@ w_pet_texture_info* WPuppet::LoadPET_Texture(cFile* file, bool alphaTest,
 	return info;
 }
 
-void WPuppet::LoadPET_FaceAnim(cFile* file, w_pet_texture_info* texture,
+void WPuppet::LoadPET_FaceAnim(cFile* file, w_pet_texture_info* texture, int texNum,
 	WBone* bone, char* name)
 {
 	w_pet_face_animation record;
@@ -2100,13 +2159,20 @@ void WPuppet::LoadPET_FaceAnim(cFile* file, w_pet_texture_info* texture,
 		delete anim;
 	}
 	m_fanimList.Reset();
+	count = 0;
 	file->Read(&count, 4);
+	if (!file->CountFits(count, 65))
+		return;
 	for (i = 0; i < count; ++i)
 	{
 		file->Read(&record, 65);
+		record.animName[sizeof(record.animName) - 1] = 0;
+		record.fName[sizeof(record.fName) - 1] = 0;
 		int n = 0;
-		while (strcmpi(texture[n].filename, record.fName) != 0)
+		while (n < texNum && strcmpi(texture[n].filename, record.fName) != 0)
 			++n;
+		if (n == texNum) // textura que o .pet nao declara: sem esta animacao
+			continue;
 		anim = new w_face_animation;
 		strcpy(anim->name, record.animName);
 		strcpy(anim->filename, record.fName);
@@ -2154,8 +2220,14 @@ void WPuppet::LoadPET_Extra983(cFile* file)
 		return;
 	unsigned int count = 0;
 	file->Read(&count, 4);
+	if (!file->CountFits((int)count, 1))
+		return;
 	for (unsigned int i = 0; i < count; ++i)
-		m_rootbone->FindBone(ReadID(file))->m_flag.Enable(0x100000);
+	{
+		WBone* bone = m_rootbone->FindBone(ReadID(file));
+		if (bone != 0)
+			bone->m_flag.Enable(0x100000);
+	}
 }
 
 // 983 00b69610: matriz de um parametro de material (16 floats)
@@ -2170,15 +2242,21 @@ static inline int ReadFloat4_983(cFile* file, float* v)
 
 int cFile::ReadD3DXMatrix983(D3DXMATRIX& mat)
 {
-	return ReadFloat4_983(this, mat.m[0]) + ReadFloat4_983(this, mat.m[1]) + ReadFloat4_983(this, mat.m[2]) +
-		   ReadFloat4_983(this, mat.m[3]);
+	// A ordem importa: a+b nao define qual Read vem primeiro
+	int n = ReadFloat4_983(this, mat.m[0]);
+	n += ReadFloat4_983(this, mat.m[1]);
+	n += ReadFloat4_983(this, mat.m[2]);
+	n += ReadFloat4_983(this, mat.m[3]);
+	return n;
 }
 
 // 983 00b7ef90: texto do .pet (tamanho de 4 bytes + caracteres); devolve os bytes lidos. Nome meu.
 int ReadPetString983(std::string& str, cFile* file)
 {
-	unsigned int len;
+	unsigned int len = 0;
 	int n = file->Read(&len, 4);
+	if (!file->CountFits((int)len, 1))
+		len = 0;
 	str.resize(len);
 	if (len)
 		return n + file->Read(&str[0], len);
@@ -2220,8 +2298,10 @@ void LoadShaderMtl983(WxShaderMtl* mtl, cFile* file, WResourceManager* resMng)
 {
 	ReadPetString983(mtl->m_name, file);
 	WxShaderMtlParamDesc desc;
-	unsigned int count;
+	unsigned int count = 0;
 	file->Read(&count, 4);
+	if (!file->CountFits((int)count, 8)) // nome vazio + tipo
+		return;
 	for (unsigned int i = 0; i < count; ++i)
 	{
 		desc.Clear();
@@ -2303,8 +2383,10 @@ void WPuppet::LoadPET_ShaderMtl983(cFile* file)
 	WVideoDev* video = GetResrcManager()->VideoReference();
 	if (!video->IsSupportVs() || !video->IsSupportPs())
 		return;
-	unsigned int count;
+	unsigned int count = 0;
 	file->Read(&count, 4);
+	if (!file->CountFits((int)count, 8)) // nome vazio + 0 parametros
+		return;
 	m_shaderMtls983.resize(count);
 	for (unsigned int i = 0; i < count; ++i)
 	{
@@ -2391,6 +2473,8 @@ WBone* WPuppet::CreateMissingBone983(WBone* bone, WPuppet* owner)
 	WBone* first = 0;
 	WBone* prev = 0;
 	WBone* source = m_pOrigin983->FindBone(bone->m_name);
+	if (source == 0)
+		return 0;
 	w_common_bone_data data;
 	for (;;)
 	{
@@ -2451,27 +2535,57 @@ void w_pet_tri_point::Read983(cFile* file, unsigned long version)
 		uvNum983 = 1;
 	else
 		file->Read(&uvNum983, 1);
-	for (unsigned int i = 0; i < uvNum983; ++i)
+	for (unsigned int i = 0; i < uvNum983 && i < MAX_UV983; ++i) // acima do limite: IsPetMeshValid recusa
 		file->Read(uv983[i], 8);
 }
 
+// Indices e intervalos do chunk MESH que os laços de LoadPET_Mesh e o SetMesh usam sem conferir
+static bool IsPetMeshValid(const w_pet_tri_point* triangles, int triangleCount, int vertexCount,
+	const w_skin_info* skins, int skinCount, bool meshPet)
+{
+	for (int i = 0; i < triangleCount * 3; ++i)
+	{
+		if (triangles[i].uvNum983 > w_pet_tri_point::MAX_UV983)
+			return false;
+		if (!meshPet && (triangles[i].pos < 0 || triangles[i].pos >= vertexCount))
+			return false;
+	}
+	for (int i = 0; i < skinCount; ++i)
+	{
+		const w_skin_info& skin = skins[i];
+		if (skin.iSVtxIdx < 0 || skin.nVtxs < 0 || skin.iSVtxIdx > vertexCount - skin.nVtxs ||
+			skin.iSTriIdx < 0 || skin.nTris < 0 || skin.iSTriIdx > triangleCount - skin.nTris)
+			return false;
+		for (int j = skin.iSTriIdx * 3; j < (skin.iSTriIdx + skin.nTris) * 3; ++j)
+		{
+			if (triangles[j].pos < 0 || triangles[j].pos >= vertexCount - skin.iSVtxIdx)
+				return false;
+		}
+	}
+	return true;
+}
+
 void WPuppet::LoadPET_Mesh(cFile* file, WBone* root,
-	w_pet_texture_info* texture, bool meshPet)
+	w_pet_texture_info* texture, int texNum, bool meshPet)
 {
 	WVector position, normal, va, vb, vc;
 	int i;
 	if (!SeekChunkFromPET(file, "MESH"))
 		return;
 	w_skin_info* skins = 0;
-	int skinCount;
+	int skinCount = 0;
 	if (meshPet)
 	{
 		skinCount = file->GetByte();
+		if (!file->CountFits(skinCount, sizeof(w_skin_info)))
+			skinCount = 0;
 		skins = new w_skin_info[skinCount];
 		file->Read(skins, skinCount * sizeof(w_skin_info));
 	}
-	int vertexCount;
+	int vertexCount = 0;
 	file->Read(&vertexCount, sizeof(vertexCount));
+	if (!file->CountFits(vertexCount, 16)) // posicao + peso e osso + 2 bytes
+		vertexCount = 0;
 	w_pet_vertex* vertices = new w_pet_vertex[vertexCount];
 	for (i = 0; i < vertexCount; ++i)
 	{
@@ -2490,7 +2604,11 @@ void WPuppet::LoadPET_Mesh(cFile* file, WBone* root,
 			blend[count][1] = id;
 			total += blend[count][0];
 			++count;
-		} while (total < 255);
+		} while (total < 255 && count < 16);
+		// osso que o .pet nao declara: raiz, para o laco seguir lendo do arquivo
+		for (int k = 0; k < count; ++k)
+			if (root->FindBone(blend[k][1]) == 0)
+				blend[k][1] = (short)root->GetID();
 		normal = root->FindBone(blend[0][1])->Transform(position);
 		vertices[i].x = normal.x;
 		vertices[i].y = normal.y;
@@ -2516,8 +2634,10 @@ void WPuppet::LoadPET_Mesh(cFile* file, WBone* root,
 			file->GetByte();
 		}
 	}
-	int triangleCount;
+	int triangleCount = 0;
 	file->Read(&triangleCount, sizeof(triangleCount));
+	if (!file->CountFits(triangleCount, 49)) // 3 pontos sem UV + 1 byte de textura
+		triangleCount = 0;
 	w_pet_tri_point* triangles = new w_pet_tri_point[triangleCount * 3];
 	w_pet_face983* textures = new w_pet_face983[triangleCount];
 	for (i = 0; i < triangleCount; ++i)
@@ -2528,8 +2648,15 @@ void WPuppet::LoadPET_Mesh(cFile* file, WBone* root,
 	}
 	for (i = 0; i < triangleCount * 3; ++i)
 		triangles[i].Read983(file, m_petVersion983);
+	bool valid = true;
 	for (i = 0; i < triangleCount; ++i)
-		textures[i].tex = &texture[file->GetByte()];
+	{
+		int index = file->GetByte();
+		if (index >= 0 && index < texNum)
+			textures[i].tex = &texture[index];
+		else
+			valid = false;
+	}
 	if (ComparePetVersion983(m_petVersion983, PET_VERSION_FACELAYER983) >= 0)
 	{
 		// 983: camada de material por face (0xff = nenhuma)
@@ -2541,13 +2668,19 @@ void WPuppet::LoadPET_Mesh(cFile* file, WBone* root,
 		}
 		if (video->IsSupportVs() && video->IsSupportPs())
 		{
-			// 983: material de shader da camada (sem conferir o tamanho, como no 983)
+			// 983: material de shader da camada; camada que o .pet nao declara fica sem material
 			for (i = 0; i < triangleCount; ++i)
 			{
-				if (textures[i].layer >= 0)
+				if (textures[i].layer >= 0 && textures[i].layer < (int)m_shaderMtls983.size())
 					textures[i].layerMtl = m_shaderMtls983[textures[i].layer];
 			}
 		}
+	}
+	// indice fora do lido: boneco so com os ossos, sem malha
+	if (!valid || !IsPetMeshValid(triangles, triangleCount, vertexCount, skins, skinCount, meshPet))
+	{
+		triangleCount = 0;
+		skinCount = 0;
 	}
 	m_faceNum = triangleCount;
 	WBone** bones;
@@ -2658,6 +2791,8 @@ void WPuppet::LoadPET_Mesh(cFile* file, WBone* root,
 		for (i = 0; i < skinCount; ++i)
 		{
 			WBone* bone = m_rootbone->FindBone(skins[i].ucBoneID);
+			if (bone == 0)
+				continue;
 			bone->SetBoneMesh(vertices + skins[i].iSVtxIdx, skins[i].nVtxs,
 				triangles + skins[i].iSTriIdx * 3, textures + skins[i].iSTriIdx,
 				bones + skins[i].iSTriIdx * 3, skins[i].nTris, this);
@@ -2678,29 +2813,23 @@ void WPuppet::LoadPET_Mesh(cFile* file, WBone* root,
 		BindPalettes983(0);
 }
 
+// directory e name: char[256] nos dois chamadores. O 983 copia o caminho inteiro sem teto; caminho de disco
+// (GetCFile aceita ate 259) ou de pak com 256+ letras escrevia alem da pilha. Caminho curto igual.
 void WPuppet::GetDirectory(char* path, char* directory)
 {
-	char* src = path;
-	char* dst = directory;
-	char value;
-	do
-	{
-		value = *src;
-		*dst = value;
-		++src;
-		++dst;
-	} while (value != 0);
-	char* slash = strrchr(directory, '/');
-	if (slash)
-		*slash = 0;
-	else
-		*directory = 0;
+	const char* slash = strrchr(path, '/');
+	size_t len = slash ? (size_t)(slash - path) : 0;
+	if (len > 255)
+		len = 0; // diretorio que nao cabe = sem diretorio (textura procurada pelo nome, como sem '/')
+	memcpy(directory, path, len);
+	directory[len] = 0;
 }
 
 void WPuppet::GetName(char* path, char* name)
 {
 	char* slash = strrchr(path, '/');
-	strcpy(name, slash != 0 ? slash + 1 : path); // 983 00b6a180
+	strncpy(name, slash != 0 ? slash + 1 : path, 255); // 983 00b6a180 (strcpy)
+	name[255] = 0;
 }
 
 void WPuppet::MergeRootMotion(WList<w_motion_data*>* list, WBone* bone)
@@ -2729,10 +2858,15 @@ int WPuppet::LoadPET(char* name, bool flag, int type)
 
 	GetDirectory(name, directory);
 	GetName(name, petname);
-	strcpy(m_petName, petname);
+	// 983 00b92900 copia sem teto para m_petName[0x40]; nome de .pet de outro pak com 64+ letras (o pak aceita 255)
+	// escrevia sobre os membros seguintes. Nome curto igual.
+	strncpy(m_petName, petname, sizeof(m_petName) - 1);
+	m_petName[sizeof(m_petName) - 1] = 0;
 
 	LoadPET(file, flag, directory[0] != 0 ? directory : 0, type);
 	CloseCFile(file);
+	if (m_rootbone == 0)
+		return 1;
 
 	if (m_mdList != 0)
 		MergeRootMotion(m_mdList, m_rootbone);
@@ -2745,7 +2879,7 @@ int WPuppet::LoadPET(char* name, bool flag, int type)
 	SetMatrix(WMatrix::IDENTITY);
 	Transform(0, 1.0f, 0);
 
-	sprintf(hint, "WPuppet:%s", name);
+	_snprintf_s(hint, _TRUNCATE, "WPuppet:%s", name); // 983 sprintf: nome de 252+ letras passava de hint[260]
 	SetLeakHint(hint);
 	return 0;
 }

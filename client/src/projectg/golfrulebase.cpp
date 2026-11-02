@@ -211,7 +211,7 @@ void CGolfRuleBase::OnHoleIn()
 			++Doc()->m_holeStatistics[GOLFDOC()->m_currentPlayer].dwFairway;
 	}
 	Doc()->m_holeStatistics[GOLFDOC()->m_currentPlayer].dwDistance +=
-		(int)floor((float)sqrt(dx * dx + 0.0f * 0.0f + dz * dz) * 0.3125 + 0.5); // 983 6a6ee5: fistp (arredonda), nao trunca
+		(int)((float)sqrt(dx * dx + 0.0f * 0.0f + dz * dz) * 0.3125); // 983 6a6ed4: or 0xc00 + fldcw antes do fistp = trunca (B1666; B776 leu arredonda)
 	GOLFDOC()->m_bApproach794 = true;
 }
 

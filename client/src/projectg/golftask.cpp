@@ -875,10 +875,11 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 
 		unsigned long uid = packet.Decode4();
 		unsigned char state = packet.Decode1();
-		sRivalData* pRival = &Doc()->m_rivalList[Doc()->GetIndex(uid)];
 
 		if (!Doc()->AreWePlayingTogether(uid))
 			break;
+
+		sRivalData* pRival = &Doc()->m_rivalList[Doc()->GetIndex(uid)];
 
 		switch (state)
 		{
@@ -954,7 +955,7 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 		if (it == end)
 			break;
 
-		if (bHoleOut == 1)
+		if (bHoleOut == 1 && hole >= 1 && hole <= 18)
 		{
 			(*it).holeStroke[hole - 1] = stroke - (*it).totalStroke;
 			(*it).holeScore[hole - 1] = score - (*it).totalScore;
@@ -1155,7 +1156,7 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 			}
 		}
 
-		if (!IsMassGame())
+		if (!IsMassGame() && Doc()->HasUserInfo(uid))
 			GetActor("GolfRule") << MsgObject(NULL, M983(0x82), uid, 0, 0, 0, 0);
 		break;
 	}
@@ -1197,6 +1198,9 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 	{
 		unsigned long uid = packet.Decode4();
 		int bPause = packet.Decode1();
+
+		if (!Doc()->HasUserInfo(uid))
+			break;
 
 		if (bPause)
 		{
@@ -1241,7 +1245,7 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 		for (std::vector<sRivalData>::iterator it = Doc()->m_rivalList.begin();
 			it != Doc()->m_rivalList.end(); ++it)
 		{
-			if ((*it).state != 0)
+			if ((*it).state != 0 || (*it).hole < 1 || (*it).hole > 18) // E490: m_holeOrder vem do pacote
 				continue;
 
 			(*it).finishOrder = order;
@@ -1253,10 +1257,12 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 			(*it).totalScore += 5;
 			order--;
 
-			while (
-				(*it).hole != Doc()->m_holeOrder[Doc()->m_golfGame.holes - 1])
+			for (int step = 0; step < 18 &&
+				(*it).hole != Doc()->m_holeOrder[Doc()->m_golfGame.holes - 1]; step++) // E490: ordem sem o ultimo buraco
 			{
 				(*it).hole = Doc()->m_holeOrder[GetHoleIndex((*it).hole)];
+				if ((*it).hole < 1 || (*it).hole > 18)
+					break;
 				(*it).holePang[(*it).hole - 1] = 0;
 				(*it).holeStroke[(*it).hole - 1] =
 					Doc()->m_holePar[(*it).hole - 1] + 5;
@@ -1496,6 +1502,8 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 		{
 			unsigned char index = packet.Decode1();
 			unsigned long value = packet.Decode4();
+			if (index >= 3)
+				break;
 			C_ASSERT_VC10(offsetof(CSharedDoc, m_holePrizeItem983) == 0x1145c && offsetof(CSharedDoc, m_holePrizeXmas983) == 0x11468);
 			Doc()->m_holePrizeXmas983[index] = packet.Decode1() ? 1 : 0;
 			Doc()->m_holePrizeItem983[index] = value;
@@ -1706,7 +1714,7 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 				SetShotTimeLimit(packet.Decode4());
 				SetGameTimeLimit(packet.Decode4());
 
-				for (unsigned char hole = 0; hole < GetHoles(); hole++)
+				for (unsigned char hole = 0; hole < GetHoles() && hole < 18; hole++)
 				{
 					// PKT (frente C, sessao C15): 983 (caso 0xbc, 006a2130) - o mapa do buraco vem no pacote, nao e mais % 3
 					Doc()->m_holeRandom[hole] = packet.Decode4();
@@ -1764,6 +1772,8 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 			{
 				sGalleryPlayerData data;
 				packet.DecodeBuffer(&data, sizeof(data));
+				if (PLAYER(index) == NULL)
+					continue; // servidor mandou mais jogadores que a partida tem
 
 				PLAYER(index)->bunker = data.bunker;
 				PLAYER(index)->gauge = data.gauge;
@@ -1830,11 +1840,11 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 
 			IFF_STRUCT::sCaddie* pCaddie =
 				ItemManager()->FindCaddie(Doc()->m_userInfo[0].caddieInfo.tid);
-			if ((pCaddie &&
-					Doc()->m_userInfo[0].stat.Level < pCaddie->c.Level) ||
+			if (pCaddie &&
+				(Doc()->m_userInfo[0].stat.Level < pCaddie->c.Level ||
 				(Doc()->m_userInfo[0].caddieInfo.Rent_flag &&
 					Doc()->m_userInfo[0].caddieInfo.Remain_Date == 0 &&
-					pCaddie->MonthlyFee > 0))
+					pCaddie->MonthlyFee > 0)))
 			{
 				Doc()->m_userInfo[0].caddieInfo.tid = 0;
 			}
@@ -1952,15 +1962,15 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 
 			pPlayer->oid = Doc()->m_myInfo.info.dwGalleryGuid;
 			pPlayer->teeOrder = 0;
-			pPlayer->score =
-				Doc()->m_rivalList[Doc()->GetIndex(pPlayer->oid)].totalScore;
-			pPlayer->totalStroke =
-				Doc()->m_rivalList[Doc()->GetIndex(pPlayer->oid)].totalStroke;
-			pPlayer->totalPang = (int)data.pang[hole - 1] +
-				Doc()->m_rivalList[Doc()->GetIndex(pPlayer->oid)].totalPang;
+			if (Doc()->HasRival(pPlayer->oid))
+			{
+				const sRivalData& rival = Doc()->m_rivalList[Doc()->GetIndex(pPlayer->oid)];
+				pPlayer->score = rival.totalScore;
+				pPlayer->totalStroke = rival.totalStroke;
+				pPlayer->totalPang = (int)data.pang[hole - 1] + rival.totalPang;
+				pPlayer->index = rival.order;
+			}
 			pPlayer->bonusPang = (int)data.bonusPang;
-			pPlayer->index =
-				Doc()->m_rivalList[Doc()->GetIndex(pPlayer->oid)].order;
 			pPlayer->holeNum = GetHoleIndex(hole) - 1;
 			pPlayer->state = 0;
 
@@ -1980,8 +1990,9 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 			break;
 
 		unsigned long uid = packet.Decode4();
-		Doc()->m_rivalList[Doc()->GetIndex(uid)].observerState =
-			packet.Decode4();
+		unsigned long observerState = packet.Decode4();
+		if (Doc()->HasRival(uid))
+			Doc()->m_rivalList[Doc()->GetIndex(uid)].observerState = observerState;
 		break;
 	}
 
@@ -2088,14 +2099,14 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 			Doc()->m_channelList.begin(), Doc()->m_channelList.end(), channel);
 		if (it == Doc()->m_channelList.end())
 		{
-			sprintf(buf,
+			_snprintf_s(buf, _TRUNCATE,
 				K2L_Compatibility("%s\xb4\xd4\xc0\xba [%s]\xbf\xa1\xbc\xad \xc3\xa3\xc0\xbb "
 				"\xbc\xf6 \xbe\xf8\xbd\xc0\xb4\xcf\xb4\xd9."),
 				name.c_str(), Doc()->m_curGameServer.name);
 		}
 		else
 		{
-			sprintf(buf,
+			_snprintf_s(buf, _TRUNCATE,
 				K2L_Compatibility("%s\xb4\xd4\xc0\xba [%s]\xbf\xa1 \xc1\xa2\xbc\xd3\xc7\xd8 "
 				"\xc0\xd6\xbd\xc0\xb4\xcf\xb4\xd9."),
 				name.c_str(), it->Name);
@@ -2112,6 +2123,9 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 		Doc()->m_guildScore[1] = packet.Decode2();
 		unsigned char point = packet.Decode1();
 		unsigned char rivalPoint = packet.Decode1();
+
+		if (!Doc()->HasRival(uid))
+			break;
 
 		sRivalData* pData = &Doc()->m_rivalList[Doc()->GetIndex(uid)];
 		sRivalData* pRival = Doc()->GetRival(uid);
@@ -2162,7 +2176,7 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 			CApproachDesc approach(missionType, param1, param2, param.c_str());
 			const char* pDesc = approach.GetDesc();
 			if (pDesc)
-				strcpy(desc, pDesc);
+				strncpy_s(desc, pDesc, _TRUNCATE); // texto traduzido + string do pacote
 		}
 
 		GOLFDOC()->SetApproachMissionType((eApproachMissionType)missionType);
@@ -2272,7 +2286,7 @@ int CGolfTask::OnPacket(WReceivedPacket& packet)
 					GetActor("Cutin") << MsgObject(NULL, 0x30c, 0xc, 0, 0, 0, 0);
 
 					strcmpi(texName.c_str(), info.szCharTex);
-					sprintf(name, "%s", texName.c_str());
+					_snprintf_s(name, _TRUNCATE, "%s", texName.c_str());
 
 					GetActor("Cutin") << MsgObject(NULL, M983(0x24c), (int)name,
 						(int)&info, pCutin->Condition, skinId, 0);

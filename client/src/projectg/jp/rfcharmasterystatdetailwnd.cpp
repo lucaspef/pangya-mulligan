@@ -580,7 +580,7 @@ void RFMasteryStatUpDnDlg::OnOk983(EventArgs& e)
 	CStatusHelper helper;
 	IFF_STRUCT::sEnchant* pEnchant = ItemManager()->FindEnchant(
 		helper.GetMyPCL983(m_type983, true, NULL) | ((m_type983 | 0x340) << 20));
-	unsigned long cost = m_mode983 == MODE_DOWN983 ? 0 : pEnchant->ReqdPang;
+	unsigned long cost = m_mode983 == MODE_DOWN983 || !pEnchant ? 0 : pEnchant->ReqdPang;
 	if (m_mode983 == MODE_UP983 && Doc()->m_myInfo.stat.i64Pang < cost)
 	{
 		RFNoticeDlg* dlg = RFNoticeDlg::Create983(this);

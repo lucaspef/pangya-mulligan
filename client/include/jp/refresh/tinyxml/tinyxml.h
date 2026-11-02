@@ -1806,5 +1806,12 @@ private:
 #pragma warning( pop )
 #endif
 
+// valor do atributo ou o padrao (elemento nulo ou atributo ausente; Attribute devolve NULL)
+inline const char* RFGetAttribute983(const rf::TiXmlElement* element, const char* name, const char* defaultValue = "")
+{
+	const char* value = element ? element->Attribute(name) : 0;
+	return value ? value : defaultValue;
+}
+
 #endif
 

@@ -38,7 +38,7 @@ HackingManager::~HackingManager()
 	Close();
 	if (m_hackTool)
 	{
-		delete m_hackTool;
+		delete[] m_hackTool;
 		m_hackTool = NULL;
 	}
 	if (m_hHookDll)

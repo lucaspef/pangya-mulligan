@@ -117,7 +117,6 @@ protected:
 	void RefreshAllUccClothes();
 	void SetPendingTexPart(int index, char* name);
 	void ParseBoundingBoxScript(int index, bool b0, bool b1, bool b2);
-	void CloseBoundingBoxFx(int index, unsigned long id);
 	void ParsePuppetScript(char* script, int index, bool bSkip);
 	void ScriptProcess(w_motion_data* pMotion, float from, float to, int index,
 		bool bAll, bool bSkip);
@@ -128,11 +127,9 @@ protected:
 	void Cancel_PowerShot();
 	void SetPowerShotReady983(const char* motion, int level, bool bCombo); // 983 00743390
 	void PowerShotInput();
-	bool ShowAbilityParts(CPartTidList* pTids);
 	void InputProcess(float delta);
 	bool SearchGround(const WVector& pos, float angle);
 	unsigned char HasStandGround(const WVector& pos);
-	bool IsAnimFxRunning(int index, unsigned long id);
 	void ResetComboState();
 	void StartComboState();
 	void EndComboState();
@@ -155,8 +152,6 @@ public:
 	virtual void OnScriptShowVis(const char*& p, int cmd);        // 0073da40
 
 private:
-	int GetAbilityPartsSize();
-	void AddAbilityParts(unsigned long tid, unsigned long id);
 	void UpdatePetMatrix983(); // 983 007410c0
 
 protected:
@@ -211,17 +206,6 @@ protected:
 	bool m_bFlag330;                            // 0x330
 	CExtendedEffect m_extEffect; // 983: 0x278 (o vetor m_abilityParts que vinha antes saiu daqui)
 	char m_pad983_298[4]; // 983: 0x298..0x29c sem leitura/escrita (CExtendedEffect = 0x20 no 983: map +4..0x14, list +0x14..0x20, ctor 006e0270; os [reg+0x298] do exe sao de outras classes, out/B1553)
-	// ---- 645: membros que o 983 NAO tem (la o trabalho de fx e do FxInterpreter em 0x20, e o m_abilityParts saiu). PROVISORIO: ficam
-	// `static` (um conjunto para todos os jogadores, comportamento ERRADO com mais de um CGolfPlayer) so para a versao C das funcoes do
-	// 645 ainda nao reescritas compilar (HandleMsg, ParseBoundingBoxScript, OnScriptFx, ...) sem aumentar o objeto: com isso o sizeof e
-	// 0x29c como no 983. Somem quando essas funcoes forem reescritas pelo 983.
-	static std::vector<sCondBBSpray> m_condSpray[4];   // 645: 0x18
-	static std::vector<sCondBBSequence> m_condSeq[4];  // 645: 0x58
-	static std::vector<unsigned long> m_condIds[4];    // 645: 0x98
-	static std::vector<CFxSpray*> m_sprays;            // 645: 0xd8
-	static std::vector<CFxSequence*> m_sequences;      // 645: 0xe8
-	static std::vector<std::pair<unsigned long, unsigned long> >
-		m_abilityParts; // 645: 0x334
 #ifndef REBANG_SEMANTIC_ONLY
 public:
 	static void __cdecl

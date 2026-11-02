@@ -906,6 +906,8 @@ CFxClubImpact::CFxClubImpact(CPvsFxBox& fxBox, CGolfBall& ball,
 	char name[256];
 
 	IFF_STRUCT::sClubSet* club = ItemManager()->FindClubSet(clubSet);
+	if (club == NULL)
+		return;
 
 	sprintf(name, "%s_%s_impact.seq", club->c.Icon,
 		typeName[GolfClub().GetType()]);

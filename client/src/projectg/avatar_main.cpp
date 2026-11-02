@@ -339,7 +339,7 @@ void ntAvatarChatMain::OnLoad()
 				((RbPolySoup*)CSharedDoc::Instance()->m_pGolfDoc->m_pPolySoup)
 					->FindPoint(MakeStr(POINT_START_NAME2));
 
-		WVector pos = GetPVS().GetGroundPoint(point->pos, false, 0, false);
+		WVector pos = GetPVS().GetGroundPoint(point ? point->pos : WVector(0.0f, 0.0f, 0.0f), false, 0, false);
 
 		memset(&slotInfo, 0, sizeof(slotInfo));
 		slotInfo.location[2] = Random(0.0f, 6.2831855f);
@@ -376,9 +376,10 @@ void ntAvatarChatMain::OnLoad()
 							 ->m_pGolfDoc->m_pPolySoup)
 							->FindPoint(MakeStr(POINT_START_NAME2));
 
-			float x = point->pos.x;
-			float y = point->pos.y;
-			float z = point->pos.z;
+			WVector start = point ? point->pos : WVector(0.0f, 0.0f, 0.0f);
+			float x = start.x;
+			float y = start.y;
+			float z = start.z;
 			x += Random(-16.0f, 16.0f);
 			z += Random(-16.0f, 16.0f);
 			WVector p(x, y, z);
@@ -1435,8 +1436,15 @@ void ntAvatarChatMain::OnDisplay()
 	}
 }
 
-#define BRIEF_INFO(guid) \
-	(CSharedDoc::Instance()->m_briefUserInfoMap.find(guid)->second)
+// guid fora do mapa (avatar antes do pacote de usuarios) = registro zerado
+static sBriefUserInfo& BriefInfoOf983(unsigned long guid)
+{
+	static sBriefUserInfo s_empty;
+	std::map<unsigned long, sBriefUserInfo>& users = CSharedDoc::Instance()->m_briefUserInfoMap;
+	std::map<unsigned long, sBriefUserInfo>::iterator it = users.find(guid);
+	return it != users.end() ? it->second : s_empty;
+}
+#define BRIEF_INFO(guid) BriefInfoOf983(guid)
 #define TALK_ROOM_FX(pos) \
 	do \
 	{ \
@@ -1966,7 +1974,7 @@ void ntAvatarChatMain::HandleMsg(const MsgObject& msg)
 				if (!point)
 					point = ((RbPolySoup*)doc->m_pGolfDoc->m_pPolySoup)
 								->FindPoint(MakeStr(POINT_START_NAME2));
-				WVector pos = point->pos;
+				WVector pos = point ? point->pos : WVector(0.0f, 0.0f, 0.0f);
 				pos.x += Random(-16.0f, 16.0f);
 				pos.z += Random(-16.0f, 16.0f);
 				pos = GetPVS().GetGroundPoint(pos, false, 0, false);
@@ -2049,8 +2057,8 @@ void ntAvatarChatMain::HandleMsg(const MsgObject& msg)
 	case M983(0xe7):
 		if (!ntAvatarManager::Instance()->m_pMyAvatar)
 			return;
-		strcpy(ntAvatarManager::Instance()->m_pMyAvatar->m_nickName,
-			(const char*)msg.param1);
+		strncpy(ntAvatarManager::Instance()->m_pMyAvatar->m_nickName, // E496: nick do pacote 0x108 sem limite
+			(const char*)msg.param1, 0x15);
 		return;
 	case M983(0xe8):
 		avatar = ntAvatarManager::Instance()->FindAvatarByNickName(

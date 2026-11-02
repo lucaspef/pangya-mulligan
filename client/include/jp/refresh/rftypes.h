@@ -25,8 +25,8 @@ struct RFVector2
 // retângulo da RF: esquerda, direita, cima, baixo (o RefreshRenderer::PushClip983 tira largura = [1] − [0], altura = [3] − [2])
 struct RFRect
 {
-	RFRect() { } // (com construtor: sem cookie /GS nos temporários, como no 983)
-	RFRect(float l, float r, float t, float b) : left(l), right(r), top(t), bottom(b) { }
+	RFRect() : left(0.0f), right(0.0f), top(0.0f), bottom(0.0f) { } // B1637: mesmo corpo da lib, o linker fica com um so
+	RFRect(float l, float t, float r, float b) : left(l), right(r), top(t), bottom(b) { } // B1637: ordem da lib (004013e0)
 	RFRect(const RFRect& o) : left(o.left), right(o.right), top(o.top), bottom(o.bottom) { } // cópia com fld/fstp
 	bool PtInRect(float x, float y); // 0041dd10
 	float GetWidth() const { return right - left; } // (embutida)

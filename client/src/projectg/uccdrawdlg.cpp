@@ -638,7 +638,7 @@ void FrUccDrawDlg::SetUccDrawInfo(eDrawMode mode, sItemInfo* pItemInfo,
 	m_drawMode = mode;
 
 	unsigned long typeId = pItemInfo->tid;
-	char uccIndex[9] = { 0 };
+	char uccIndex[10] = { 0 }; // UccIndex de 9 bytes nao termina em 0
 	strncpy(uccIndex, pItemInfo->UccIndex, 9);
 
 	Bitmap temp[2];
@@ -697,6 +697,14 @@ void FrUccDrawDlg::SetUccDrawInfo(eDrawMode mode, sItemInfo* pItemInfo,
 				continue;
 
 			Bitmap* texture = g_resrcmng->LoadBitmap(part->Tex[i], 0, false);
+			if (!texture)
+			{
+				Notify(
+					K2L_Compatibility("\xc1\xb8\xc0\xe7\xc7\xcf\xc1\xf6 \xbe\xca\xb4\xc2 \xc0\xc7\xbb\xf3\xc0\xd4\xb4\xcf\xb4\xd9."));
+				m_bInit = false;
+				OnCancel();
+				return;
+			}
 			Bitmap* org = g_resrcmng->LoadBitmap(part->Tex[i], 0, false);
 			Bitmap mask;
 
@@ -718,11 +726,13 @@ void FrUccDrawDlg::SetUccDrawInfo(eDrawMode mode, sItemInfo* pItemInfo,
 				GetMaskFilename(part->Tex[i]).c_str(), 0, false);
 			if (maskFile)
 			{
+				// 983 007e6250: r,g,b fora do laco; mascara do pak menor que a
+				// textura = GetPixel nao escreve e repete o ultimo pixel lido
+				unsigned char r = 255, g = 255, b = 255;
 				for (unsigned int y = 0; y < mask.Height(); ++y)
 				{
 					for (unsigned int x = 0; x < mask.Width(); ++x)
 					{
-						unsigned char r, g, b;
 						maskFile->GetPixel(x, y, r, g, b);
 						if (r < 5 && g < 5 && b < 5)
 							mask.SetPixel(x, y, 0, 0, 0, 255);

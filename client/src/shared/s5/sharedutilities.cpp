@@ -202,7 +202,7 @@ namespace _util
 		int len = str.length();
 		for (int i = 0; i < len; i++)
 		{
-			if (!isdigit(str.at(i)))
+			if (!isdigit((unsigned char)str.at(i)))
 			{
 				return PWD_NOT_NUMBER;
 			}

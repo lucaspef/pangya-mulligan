@@ -296,8 +296,8 @@ bool LobbyCaddie::Load983(unsigned long caddieId, unsigned long typeId)
 		{
 			sItem983* pSkin = ITEMMGRLOBBYJP()->FindCadItem983(typeId);
 			sItem983* pBase = ITEMMGRLOBBYJP()->Find2a0_983((((typeId >> 0x15) & 0x1f) + ((typeId >> 0x10) & 0x1f)) | 0x1c000000);
-			typeId = pBase->typeId;
-			skinId = pSkin->typeId;
+			typeId = pBase ? pBase->typeId : 0;
+			skinId = pSkin ? pSkin->typeId : 0;
 		}
 		if (IDummyPet::Load(pPet, typeId, skinId, true))
 		{

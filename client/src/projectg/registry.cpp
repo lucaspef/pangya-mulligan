@@ -276,7 +276,7 @@ COLORREF CRegistry::ReadColor(CString name, COLORREF defaultValue)
 CString CRegistry::ReadString(CString name, CString defaultValue)
 {
 	HKEY handle;
-	char value[256];
+	char value[256] = "";
 	DWORD type = REG_SZ;
 	DWORD size = 255;
 	BOOL success = TRUE;

@@ -129,7 +129,7 @@ void CWindDirectionObject::On07(int arg)
 		// 00d300c0: "%s의 힘으로 바람의 방향이 바뀝니다." em CP949 (texto coreano do 983); o 983 não confere o item nulo
 		IFF_ITEM_COMMON* pItem = ItemManager()->FindCommonItem(m_typeId);
 		const char* str = MakeStr(K2L_Compatibility("%s\xc0\xc7 \xc8\xfb\xc0\xb8\xb7\xce \xb9\xd9\xb6\xf7\xc0\xc7 \xb9\xe6\xc7\xe2\xc0\xcc "
-			"\xb9\xd9\xb2\xf2\xb4\xcf\xb4\xd9."), pItem->Name);
+			"\xb9\xd9\xb2\xf2\xb4\xcf\xb4\xd9."), pItem ? pItem->Name : "");
 		std::string text = str;
 		CChatMsg::Instance()->AddChatMsg(text, 0xffffff00, false, false);
 	}

@@ -98,7 +98,7 @@ protected:
 	void OnEtcOwnerDraw(int param);
 
 	unsigned long m_typeID;
-	char m_uccIndex[9];
+	char m_uccIndex[10]; // 9 do pacote + zero; offset alinhado a 4: cabe no pad, layout igual
 	FrButton* m_pOkBtn;
 
 private:

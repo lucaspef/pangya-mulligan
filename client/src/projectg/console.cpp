@@ -539,7 +539,7 @@ done:
 		if (word != m_input)
 		{
 			char* end = strchr(word, 0);
-			if (!isalnum(end[-1]))
+			if (!isalnum((unsigned char)end[-1]))
 			{
 				char c;
 				do
@@ -547,7 +547,7 @@ done:
 					c = PopFromBsStack();
 					if (!c)
 						goto restored;
-				} while (!isalnum(c));
+				} while (!isalnum((unsigned char)c));
 				*end = c;
 				do
 				{
@@ -580,6 +580,8 @@ restored:
 		strcpy(cmd, m_input);
 		m_cmdList += cmd;
 		AddText(MakeStr(">%s", cmd));
+		// B1659: comando sem argumento le cmd + len + 1 depois do 0; zera o resto do buffer (sobra do comando anterior)
+		memset(m_input + strlen(m_input), 0, sizeof(m_input) - strlen(m_input));
 		if (!TweakerCommandProc(m_input))
 			Command(_strlwr(m_input));
 		m_input[0] = 0;
@@ -1051,6 +1053,8 @@ static unsigned long FindWorkshopClub983()
 		if (it->second.guid == doc->m_myInfo.userEquip.guidClubSet)
 			continue;
 		IFF_STRUCT::sClubSet* pClub = doc->m_itemManager.FindClubSet(it->second.tid);
+		if (!pClub)
+			continue;
 		short* up = it->second.slotUp983;
 		int sum = pClub->Slot[0] + pClub->Slot[1] + pClub->Slot[2] + pClub->Slot[3] + pClub->Slot[4] +
 			up[0] + up[1] + up[2] + up[3] + up[4];
@@ -1081,7 +1085,7 @@ void CConsole::Command(const char* cmd)
 			{
 			case 0x49:
 			{
-				float speed;
+				float speed = 0;
 				sscanf((cmd + len + 1), "%f", &speed);
 				if (speed < 1.0f)
 				{
@@ -1118,6 +1122,8 @@ void CConsole::Command(const char* cmd)
 				std::map<unsigned int, IFF_STRUCT::sPart>& parts =
 					CSharedDoc::Instance()->m_itemManager.m_PartMap;
 				FILE* fp = fopen("PartList.txt", "wt");
+				if (!fp)
+					break;
 				int n = 1;
 				std::map<unsigned int, IFF_STRUCT::sPart>::iterator it;
 				for (it = parts.begin(); it != parts.end(); ++it)
@@ -1201,8 +1207,8 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x41:
 			{
-				float fb;
-				float fc;
+				float fb = 0;
+				float fc = 0;
 				sscanf((cmd + len + 1), "%f %f", &fb, &fc);
 				if (fb > 0.0f)
 				{
@@ -1220,7 +1226,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x3e:
 			{
-				float fb;
+				float fb = 0;
 				sscanf((cmd + len + 1), "%f", &fb);
 				if (fb < -50.0f || fb > 50.0f)
 				{
@@ -1234,7 +1240,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x3c:
 			{
-				float fb;
+				float fb = 0;
 				sscanf((cmd + len + 1), "%f", &fb);
 				if (fb < 0.0f)
 				{
@@ -1246,7 +1252,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x3d:
 			{
-				float fb;
+				float fb = 0;
 				sscanf((cmd + len + 1), "%f", &fb);
 				if (fb < 0.0f)
 				{
@@ -1273,7 +1279,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x3a:
 			{
-				float fb;
+				float fb = 0;
 				sscanf((cmd + len + 1), "%f", &fb);
 				if (fb < 0.0f || fb > 1.0f)
 					BadArgument(0x3a);
@@ -1283,7 +1289,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x34:
 			{
-				int b;
+				int b = 0;
 				sscanf((cmd + len + 1), "%d", &b);
 				if (b >= 0 && b <= 100)
 				{
@@ -1301,7 +1307,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x35:
 			{
-				int b;
+				int b = 0;
 				sscanf((cmd + len + 1), "%d", &b);
 				if (b >= 0 && b <= 30)
 				{
@@ -1316,7 +1322,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x36:
 			{
-				int b;
+				int b = 0;
 				sscanf((cmd + len + 1), "%d", &b);
 				if (b >= 0 && b <= 30)
 				{
@@ -1330,7 +1336,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x37:
 			{
-				int b;
+				int b = 0;
 				sscanf((cmd + len + 1), "%d", &b);
 				if (b >= 0 && b <= 30)
 				{
@@ -1348,7 +1354,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x38:
 			{
-				int b;
+				int b = 0;
 				sscanf((cmd + len + 1), "%d", &b);
 				if (b >= 0 && b <= 30)
 				{
@@ -1384,7 +1390,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x31:
 			{
-				int a;
+				int a = 0;
 				sscanf((cmd + len + 1), "%d", &a);
 				if (!CSceneManager::Instance())
 					return;
@@ -1431,7 +1437,7 @@ void CConsole::Command(const char* cmd)
 				return;
 			case 0x28:
 			{
-				int a;
+				int a = 0;
 				sscanf((cmd + len + 1), "%d", &a);
 				CTaskManager::Instance()->PostMsg(NULL, "Grid", M983(0x1d3), a, 0, 0,
 					0);
@@ -1439,7 +1445,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x29:
 			{
-				int b;
+				int b = 0;
 				sscanf((cmd + len + 1), "%d", &b);
 				if (b == 1)
 				{
@@ -1453,7 +1459,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x27:
 			{
-				int b;
+				int b = 0;
 				sscanf((cmd + len + 1), "%d", &b);
 				if (b < 0 || b > GolfBall().m_renderNum)
 					BadArgument(0x27);
@@ -1487,7 +1493,7 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x16:
 			{
-				float fc;
+				float fc = 0;
 				if (FIELD(int, &COption::Instance()->Opt983(), 0x318) != 0) // B1486: COption+0x3e4 (VC10) = m_opt+0x318, POD; o COption anda -4 no cl 14.44
 				{
 					AddText("SoftRender is required");
@@ -1531,8 +1537,8 @@ void CConsole::Command(const char* cmd)
 			}
 			case 0x12:
 			{
-				char str[0x20];
-				sscanf((cmd + len + 1), "%s", str);
+				static char str[0x20]; // PostMsg: QuickSave lê depois desta pilha
+				sscanf((cmd + len + 1), "%31s", str);
 				CTaskManager::Instance()->PostMsg(NULL, "GolfRule", M983(0x85),
 					(int)str, 0, 0, 0);
 				return;
@@ -1540,7 +1546,7 @@ void CConsole::Command(const char* cmd)
 			case 0x13:
 			{
 				char* file = new char[0x20];
-				sscanf((cmd + len + 1), "%s", file);
+				sscanf((cmd + len + 1), "%31s", file);
 				if (fopen(MakeStr("%s.sav", file), "rb"))
 				{
 					CTaskManager::Instance()->PostMsg(NULL, "GolfRule", M983(0x86),
@@ -1674,7 +1680,7 @@ bad_caddie:
 			}
 			case 0x7:
 			{
-				int a;
+				int a = 0;
 				sscanf((cmd + len + 1), "%d", &a);
 				if (a == CSharedDoc::Instance()->m_pGolfDoc->m_currentHole)
 					return;
@@ -1692,7 +1698,7 @@ bad_caddie:
 			}
 			case 0x9:
 			{
-				int a;
+				int a = 0;
 				sscanf((cmd + len + 1), "%d", &a);
 				if (a > 3)
 				{
@@ -1717,7 +1723,7 @@ bad_caddie:
 			}
 			case 0xa:
 			{
-				int a;
+				int a = 0;
 				sscanf((cmd + len + 1), "%d", &a);
 				return;
 			}
@@ -1732,7 +1738,7 @@ bad_caddie:
 			}
 			case 0xc:
 			{
-				float fb;
+				float fb = 0;
 				sscanf((cmd + len + 1), "%f", &fb);
 				if (((char)CSharedDoc::Instance()->m_golfGame.gameType) == 1)
 				{
@@ -1755,7 +1761,7 @@ bad_caddie:
 				return;
 			case 0xe:
 			{
-				int b;
+				int b = 0;
 				if (FIELD(int, &COption::Instance()->Opt983(), 0x318) != 0)
 				{
 					sscanf((cmd + len + 1), "%d", &b);
@@ -1791,7 +1797,7 @@ bad_caddie:
 			}
 			case 0x10:
 			{
-				int a;
+				int a = 0;
 				sscanf((cmd + len + 1), "%d", &a);
 				if (a < 10 || a > 0x78)
 					BadArgument(0x10);
@@ -1817,7 +1823,7 @@ bad_caddie:
 				return;
 			case 0x1b:
 			{
-				int b;
+				int b = 0;
 				sscanf((cmd + len + 1), "%d", &b);
 				if (b < 0 || b > 2)
 				{
@@ -2070,7 +2076,7 @@ bad_caddie:
 			}
 			case 0x4d:
 			{
-				float fb;
+				float fb = 0;
 				sscanf((cmd + len + 1), "%f", &fb);
 				GetPVS().GravityModifier(1.0f / fb);
 				return;
@@ -2196,7 +2202,7 @@ bad_caddie:
 				return;
 			case 0x56:
 			{
-				int b;
+				int b = 0;
 				sscanf((cmd + len + 1), "%d", &b);
 				// cases in the order of the original's code (it decides the order of the literals)
 				switch (b)
@@ -2228,7 +2234,7 @@ bad_caddie:
 			}
 			case 0x58:
 			{
-				int b;
+				int b = 0;
 				CVectorSlideTestContainer* container = NULL;
 				CContentsDoc::Instance()->GetContainer((localContentType_t)0x9a,
 					container);
@@ -2240,7 +2246,7 @@ bad_caddie:
 			}
 			case 0x59:
 			{
-				int b;
+				int b = 0;
 				CVectorSlideTestContainer* container = NULL;
 				CContentsDoc::Instance()->GetContainer((localContentType_t)0x9a,
 					container);
@@ -2252,7 +2258,7 @@ bad_caddie:
 			}
 			case 0x5a:
 			{
-				int b;
+				int b = 0;
 				CVectorSlideTestContainer* container = NULL;
 				CContentsDoc::Instance()->GetContainer((localContentType_t)0x9a,
 					container);
@@ -2264,7 +2270,7 @@ bad_caddie:
 			}
 			case 0x5b:
 			{
-				int b;
+				int b = 0;
 				CVectorSlideTestContainer* container = NULL;
 				CContentsDoc::Instance()->GetContainer((localContentType_t)0x9a,
 					container);

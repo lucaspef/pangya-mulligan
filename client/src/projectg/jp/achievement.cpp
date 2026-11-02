@@ -148,7 +148,7 @@ void CAchievement::Decode983(WReceivedPacket* p)
 {
 	m_typeId = p->Decode4();
 	m_uid = p->Decode4();
-	unsigned long n = p->Decode4();
+	unsigned long n = p->DecodeCount();
 	for (unsigned i = 0; i < n; ++i)
 	{
 		sAchievementCounter983* c = GetCounter983(i);

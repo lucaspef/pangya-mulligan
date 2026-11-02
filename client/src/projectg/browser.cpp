@@ -345,7 +345,7 @@ void CBrowser::Process(float elapsed)
 					m_hWndBrowser = m_view.Create(m_hWndParent, rc, "about:blank",
 						m_dwStyle | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN |
 							WS_CAPTION | WS_SYSMENU);
-					m_view.SetWindowText(K2L_Compatibility(m_caption983.c_str()));
+					GameSetWindowText(m_view.m_hWnd, K2L_Compatibility(m_caption983.c_str()));
 
 					RECT rcView;
 					m_view.GetWindowRect(&rcView);

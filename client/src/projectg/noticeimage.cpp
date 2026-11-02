@@ -48,6 +48,9 @@ void LoadNoticeImageFile(const char* filename,
 				sNoticeImage::sBn bn;
 				bSpace = true;
 
+				// linha com menos de 5 numeros (ini de outro pak): o que faltar fica 0, nao lixo da pilha (typeId vai a loja)
+				bn.typeId = 0;
+				bn.rect = WRect(0.0f, 0.0f, 0.0f, 0.0f);
 				sscanf(token.c_str(), "%d %f %f %f %f", &bn.typeId, &bn.rect.x,
 					&bn.rect.y, &bn.rect.w, &bn.rect.h);
 				info.bnList.push_back(bn);

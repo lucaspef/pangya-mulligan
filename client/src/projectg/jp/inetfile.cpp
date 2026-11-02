@@ -167,11 +167,18 @@ bool CINetBuffer::Run(const std::string& url)
 		return false;
 
 	char buffer[0x2000];
+	int failures = 0;
 	for (;;)
 	{
 		DWORD size = 0;
 		if (!InternetReadFile(m_hUrl, buffer, sizeof(buffer), &size))
+		{
+			// o 983 repete sem limite: com a conexao caida trava aqui
+			if (++failures >= 5)
+				return false;
 			continue;
+		}
+		failures = 0;
 		if (size == 0)
 			return true;
 		m_buffer.append(buffer, size);

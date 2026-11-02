@@ -189,7 +189,7 @@ inline sTS_Macro::~sTS_Macro()
 {
 	if (pszArg != NULL)
 	{
-		delete pszArg;
+		delete[] pszArg;
 		pszArg = NULL;
 	}
 }
@@ -199,7 +199,7 @@ inline sTS_Macro& sTS_Macro::operator=(sTS_Macro& rhs)
 	type = rhs.type;
 	if (pszArg != NULL)
 	{
-		delete pszArg;
+		delete[] pszArg;
 		pszArg = NULL;
 	}
 	if (rhs.pszArg != NULL)

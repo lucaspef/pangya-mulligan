@@ -89,6 +89,7 @@ CSpot::CSpot()
 	  m_pSimpleUI(NULL),
 	  m_texScore(0),
 	  m_pRivals(NULL),
+	  m_nRivals983(0),
 	  m_pFont(NULL),
 	  m_pRuler(NULL)
 {
@@ -466,6 +467,7 @@ void CSpot::OnLoad()
 	{
 		int n = Doc()->m_rivalList.size();
 		m_pRivals = new sRivalPos[n];
+		m_nRivals983 = n;
 		for (unsigned char i = 0; i < Doc()->m_rivalList.size(); i++)
 		{
 			if (Doc()->m_myInfo.info.dwGuildId ==
@@ -487,6 +489,7 @@ void CSpot::OnLoad()
 	{
 		int n = Doc()->m_rivalList.size();
 		m_pRivals = new sRivalPos[n];
+		m_nRivals983 = n;
 		for (unsigned char i = 0; i < Doc()->m_rivalList.size(); i++)
 		{
 			m_pRivals[i].rate = 0.0f;
@@ -502,6 +505,7 @@ void CSpot::OnLoad()
 		// 983 OnLoad 00729f80 caso 0xb + 00729680: Hole-in-One aloca os rivais zerados (t = -1); 0x128/0x129 os preenchem
 		int n = Doc()->m_rivalList.size();
 		m_pRivals = (sRivalPos*)new char[n * sizeof(sRivalPos)];
+		m_nRivals983 = n;
 		ResetRivals();
 		break;
 	}
@@ -1121,11 +1125,13 @@ bool CSpot::UpdateRivals()
 	{
 		delete[] m_pRivals;
 		m_pRivals = NULL;
+		m_nRivals983 = 0;
 	}
 	int n = Doc()->m_rivalList.size();
 	if (n > 0)
 	{
 		m_pRivals = (sRivalPos*)new char[n * sizeof(sRivalPos)];
+		m_nRivals983 = n;
 		for (unsigned char i = 0; i < n; i++)
 		{
 			m_pRivals[i].rate = 0.0f;
@@ -1168,6 +1174,8 @@ void CSpot::HandleMsg(const MsgObject& msg)
 		m_rate = *(float*)msg.param1;
 		break;
 	case M983(0xf8):
+		if (!IsRivalSlot983(msg.param1)) // pacote de tacada em modo sem m_pRivals, ou rival fora do vetor
+			break;
 		if (Doc()->m_golfGame.gameType == 10)
 			m_pRivals[msg.param1].hole = (unsigned char)msg.param2;
 		if (m_pRivals[msg.param1].hole == (unsigned long)msg.param2)
@@ -1197,6 +1205,8 @@ void CSpot::HandleMsg(const MsgObject& msg)
 		SetRivalStartPos(msg.param1, (const float*)msg.param2);
 		break;
 	case 0x129: // Hole-in-One: animacao da tacada do rival (golftask, modo 0xb)
+		if (!IsRivalSlot983(msg.param1))
+			break;
 		m_pRivals[msg.param1].rate = 50.0f / (float)msg.param2;
 		m_pRivals[msg.param1].t = 0.0f;
 		break;
@@ -1243,8 +1253,11 @@ void CSpot::ProcessRival(unsigned char r, float delta)
 			{
 				d = GetHoleCupPos() - GolfBallExt().m_pos;
 				d.y = 0.0f;
-				Doc()->m_rivalList[r].approachDistance =
-					(int)floorf((WVectorLenExt(d) * 10.0f) * 0.3125f);
+				{
+					// 983 0072ce4d: len * 10.0 * 0.3125 em double, fstp em float e so depois floor (B1665)
+					float dist = (float)(WVectorLenExt(d) * 10.0 * 0.3125);
+					Doc()->m_rivalList[r].approachDistance = (int)(float)floor(dist);
+				}
 			}
 		}
 		else if (m_pRivals[r].t > 1.0f)
@@ -1261,8 +1274,8 @@ void CSpot::ProcessRival(unsigned char r, float delta)
 				((1.0f - rate) * m_pRivals[r].pos +
 					rate * Doc()->m_rivalList[r].ballPos);
 			d.y = 0.0f;
-			Doc()->m_rivalList[r].approachDistance =
-				(int)floorf((WVectorLenExt(d) * 10.0f) * 0.3125f);
+			float dist = (float)(WVectorLenExt(d) * 10.0 * 0.3125); // 983 0072cfdb (B1665)
+			Doc()->m_rivalList[r].approachDistance = (int)(float)floor(dist);
 		}
 		break;
 	}
@@ -1367,6 +1380,9 @@ void CSpot::ResetRivals()
 // 983 0072d030: so na primeira vez (pos ainda zero) grava a posicao xz do rival uid no buraco atual
 bool CSpot::SetRivalStartPos(unsigned long uid, const float* xz)
 {
+	if (!Doc()->HasRival(uid) || !IsRivalSlot983(Doc()->GetIndex(uid)))
+		return false;
+
 	sRivalPos& rival = m_pRivals[Doc()->GetIndex(uid)];
 	if (rival.pos.Magnitude() != 0.0f)
 		return false;
@@ -1381,6 +1397,8 @@ bool CSpot::SetRivalStartPos(unsigned long uid, const float* xz)
 // 983 007294d0: o rival r passa a jogar o buraco hole (mensagem 0x123); so aceita buraco da ordem da partida
 void CSpot::SetRivalHole(int r, unsigned char hole)
 {
+	if (!IsRivalSlot983(r))
+		return;
 	unsigned char i = 0;
 	if (Doc()->m_golfGame.holes != 0)
 	{

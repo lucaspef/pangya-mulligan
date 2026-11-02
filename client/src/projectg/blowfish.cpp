@@ -14,7 +14,7 @@ CBlowFish::CBlowFish()
 
 CBlowFish::~CBlowFish()
 {
-	delete PArray;
+	delete[] PArray;
 	delete[] SBoxes;
 }
 

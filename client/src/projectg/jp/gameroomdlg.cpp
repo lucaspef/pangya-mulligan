@@ -163,6 +163,16 @@ END_FRESH_MSGMAP()
 // 00e0903c
 static char* s_windFont[] = { "[font_wind.jpg" };
 
+// connectionRank (sSlotInfo+0x2e) vem cru do servidor (0x48); so 1..4 tem lugar de boneco na sala Stroke (m_pPet[4]).
+// O 983 (0050d4c0/0050d700/00509440) indexa sem teste: rank 0 dava m_pUser, 5+ os membros seguintes ou lixo (servidor alheio).
+// Fora da faixa = sem lugar (NULL); ShowPet ja nao desenha sem pArea.
+static FrArea* PetByRank(FrArea* const pets[4], unsigned char rank)
+{
+	if (rank < 1 || rank > 4)
+		return NULL;
+	return pets[rank - 1];
+}
+
 FrGameRoomDlg::FrGameRoomDlg()
 {
 	m_newBlinkTime = 0.0f;
@@ -1097,8 +1107,8 @@ void FrGameRoomDlg::OnAztecOwnerDraw(int param)
 						Doc()->m_myInfo.userEquip.tidBall);
 				}
 
-				const Bitmap* pBitmap =
-					g_pFresh->GetBitmap(MakeStr("w_%s", pItem->Icon));
+				const Bitmap* pBitmap = pItem
+					? g_pFresh->GetBitmap(MakeStr("w_%s", pItem->Icon)) : NULL;
 				if (pBitmap)
 					pDevice->DrawTexture(pBitmap,
 						WRect(m_pAztec->GetRect().x, m_pAztec->GetRect().y,
@@ -1107,8 +1117,8 @@ void FrGameRoomDlg::OnAztecOwnerDraw(int param)
 			}
 			else
 			{
-				const Bitmap* pBitmap =
-					g_pFresh->GetBitmap(MakeStr("w_%s", pItem->Icon));
+				const Bitmap* pBitmap = pItem
+					? g_pFresh->GetBitmap(MakeStr("w_%s", pItem->Icon)) : NULL;
 				if (pBitmap)
 					pDevice->DrawTexture(pBitmap,
 						WRect(m_pAztec->GetRect().x, m_pAztec->GetRect().y,
@@ -1235,8 +1245,8 @@ void FrGameRoomDlg::OnClubOwnerDraw(int param)
 				ItemManager()->FindCommonItem((*it).second.tid);
 			if (pItem)
 			{
-				const Bitmap* pBitmap =
-					g_pFresh->GetBitmap(MakeStr("w_%s", pItem->Icon));
+				const Bitmap* pBitmap = pItem
+					? g_pFresh->GetBitmap(MakeStr("w_%s", pItem->Icon)) : NULL;
 				if (pBitmap)
 					pDevice->DrawTexture(pBitmap,
 						WRect(m_pClub->GetRect().x, m_pClub->GetRect().y,
@@ -1636,7 +1646,7 @@ void FrGameRoomDlg::OnUserLButtonDown()
 
 	WRect kickRect;
 	if (DOCJP()->GetState983() == 3)
-		kickRect = WRect((float)m_pTeamBmp[pSlot->bTeam]->Width() - 8.0f -
+		kickRect = WRect((float)m_pTeamBmp[pSlot->bTeam & 1]->Width() - 8.0f -
 				(float)m_pKickBmp->Width(),
 			8.0f, (float)m_pKickBmp->Width(), (float)m_pKickBmp->Height());
 	else
@@ -1744,7 +1754,7 @@ void FrGameRoomDlg::OnUserDraw(int param)
 	if (!Doc()->m_roomSlotMap[pSlot->dwGuid].pExhibition)
 	{
 		Doc()->m_roomSlotMap[pSlot->dwGuid].pArea =
-			m_pPet[pSlot->connectionRank - 1];
+			PetByRank(m_pPet, pSlot->connectionRank);
 		Doc()->m_roomSlotMap[pSlot->dwGuid].pExhibition = NULL;
 		Doc()->m_roomSlotMap[pSlot->dwGuid].bAngelWing = pSlot->angelicWings;
 		Doc()->m_roomSlotMap[pSlot->dwGuid].bGachaWing =
@@ -1780,7 +1790,7 @@ void FrGameRoomDlg::OnUserDraw(int param)
 			}
 
 			if (DOC983_U8(0x1094c) == 1)
-				pGDI->DrawTexture(m_pTeamBmp[pSlot->bTeam], rect, 0xffffffff,
+				pGDI->DrawTexture(m_pTeamBmp[pSlot->bTeam & 1], rect, 0xffffffff,
 					0);
 			else
 				pGDI->DrawTexture(m_pTeamBaseBmp, rect, 0xffffffff, 0);
@@ -1815,7 +1825,7 @@ void FrGameRoomDlg::OnUserDraw(int param)
 
 		int px = (int)pItem->pos.x;
 		int x =
-			(m_pTeamBmp[pSlot->bTeam]->Width() - m_pReadySignBmp->Width()) / 2 + px;
+			(m_pTeamBmp[pSlot->bTeam & 1]->Width() - m_pReadySignBmp->Width()) / 2 + px;
 
 		if (pSlot->bMaster)
 		{
@@ -1957,7 +1967,7 @@ void FrGameRoomDlg::OnUserDraw(int param)
 			(float)m_pTeamBaseBmp->Height());
 
 		if (DOC983_U8(0x1094c) == 1)
-			pGDI->DrawTexture(m_pTeamBmp[pSlot->bTeam], rect, 0xffffffff, 0);
+			pGDI->DrawTexture(m_pTeamBmp[pSlot->bTeam & 1], rect, 0xffffffff, 0);
 		else
 			pGDI->DrawTexture(m_pTeamBaseBmp, rect, 0xffffffff, 0);
 
@@ -1986,7 +1996,7 @@ void FrGameRoomDlg::OnUserDraw(int param)
 
 		int px = (int)pItem->pos.x;
 		int x =
-			(m_pTeamBmp[pSlot->bTeam]->Width() - m_pReadySignBmp->Width()) / 2 + px;
+			(m_pTeamBmp[pSlot->bTeam & 1]->Width() - m_pReadySignBmp->Width()) / 2 + px;
 
 		if (pSlot->bMaster)
 		{
@@ -2257,7 +2267,7 @@ void FrGameRoomDlg::ShowPet(unsigned long uid)
 		if (itSlot == Doc()->m_slotList.end())
 			return;
 
-		pSlot->pArea = m_pPet[(*itSlot).connectionRank - 1];
+		pSlot->pArea = PetByRank(m_pPet, (*itSlot).connectionRank);
 	}
 	else if (m_state == 2 || m_state == 4)
 	{
@@ -3070,7 +3080,7 @@ void FrGameRoomDlg::SetRoomTitle983(const char* time)
 
 		if (DOC983_U8(0x1094c) == 10)
 		{
-			sprintf(szTime, K2L_Compatibility("%d\xc3\xca"), DOC983_AT(unsigned long, 0x10955) / 1000);
+			_snprintf_s(szTime, _TRUNCATE, K2L_Compatibility("%d\xc3\xca"), DOC983_AT(unsigned long, 0x10955) / 1000);
 		}
 		else if (DOC983_U8(0x1094c) == 6)
 		{
@@ -3078,15 +3088,15 @@ void FrGameRoomDlg::SetRoomTitle983(const char* time)
 		}
 		else
 		{
-			sprintf(szTime, K2L_Compatibility("%d\xba\xd0"), DOC983_AT(unsigned long, 0x10955) / 60000);
+			_snprintf_s(szTime, _TRUNCATE, K2L_Compatibility("%d\xba\xd0"), DOC983_AT(unsigned long, 0x10955) / 60000);
 		}
 	}
 	else
 	{
 		if (DOC983_AT(unsigned long, 0x10951) == 0)
-			sprintf(szTime, K2L_Compatibility("\xbd\xc3\xb0\xa3\xc1\xa6\xc7\xd1\xbe\xf8\xc0\xbd"));
+			_snprintf_s(szTime, _TRUNCATE, K2L_Compatibility("\xbd\xc3\xb0\xa3\xc1\xa6\xc7\xd1\xbe\xf8\xc0\xbd"));
 		else
-			sprintf(szTime, K2L_Compatibility("%d\xc3\xca"), DOC983_AT(unsigned long, 0x10951) / 1000);
+			_snprintf_s(szTime, _TRUNCATE, K2L_Compatibility("%d\xc3\xca"), DOC983_AT(unsigned long, 0x10951) / 1000);
 	}
 
 	const char* name;
@@ -3658,7 +3668,7 @@ void FrGameRoomDlg::OnEnterUser983(sSlotInfo* pSlot, sCharacterInfo* pCharInfo)
 	else
 	{
 		sRoomSlot slot;
-		slot.pArea = m_pPet[pSlot->connectionRank - 1];
+		slot.pArea = PetByRank(m_pPet, pSlot->connectionRank);
 		slot.pExhibition = NULL;
 		slot.charInfo = *pCharInfo;
 
@@ -3702,7 +3712,7 @@ void FrGameRoomDlg::OnEnterUser983(sSlotInfo* pSlot, sCharacterInfo* pCharInfo)
 void FrGameRoomDlg::AddRoomSlot983(sSlotInfo* pSlot, sCharacterInfo* pCharInfo)
 {
 	sRoomSlot slot;
-	slot.pArea = m_pPet[pSlot->connectionRank - 1];
+	slot.pArea = PetByRank(m_pPet, pSlot->connectionRank);
 	slot.pExhibition = NULL;
 	slot.charInfo = *pCharInfo;
 	slot.dwUserUID = pSlot->dwUserUID;
@@ -3788,6 +3798,9 @@ void FrGameRoomDlg::MakeRoomUserList()
 
 					unsigned char index = Doc()->GetIndex(pSlot->dwGuid);
 
+					if (index >= Doc()->m_rivalList.size())
+						continue;
+
 					if (Doc()->m_rivalList[index].state == 2)
 						m_pUser->AddItem(pSlot);
 					else if (Doc()->m_rivalList[index].state == 0)
@@ -3829,6 +3842,9 @@ void FrGameRoomDlg::MakeRoomUserList()
 			{
 				unsigned char index = Doc()->GetIndex((*it).dwGuid);
 
+				if (index >= Doc()->m_rivalList.size())
+					continue;
+
 				if (Doc()->m_rivalList[index].state == 2)
 				{
 					sSlotInfo* pSlot = &(*it);
@@ -3863,6 +3879,9 @@ void FrGameRoomDlg::MakeRoomUserList()
 				it != Doc()->m_slotList.end(); ++it)
 			{
 				unsigned char index = Doc()->GetIndex((*it).dwGuid);
+
+				if (index >= Doc()->m_rivalList.size())
+					continue;
 
 				if (Doc()->m_rivalList[index].state == 2)
 				{
@@ -4281,9 +4300,9 @@ void FrGameRoomDlg::OnLeaveUser983(void* pItem, unsigned long guid, int team)
 
 			if (itSlot != Doc()->m_slotList.end())
 			{
-				it->second.pArea = m_pPet[itSlot->connectionRank - 1];
+				it->second.pArea = PetByRank(m_pPet, itSlot->connectionRank);
 
-				if (it->second.pExhibition)
+				if (it->second.pExhibition && it->second.pArea)
 				{
 					SLOT_EXH983(&it->second)->SetCenter(
 						it->second.pArea->GetRect().x +
@@ -4933,7 +4952,7 @@ void __fastcall RefreshUccClothes983(sSlotInfo* pSlot, unsigned long tid, const 
 		return;
 
 	unsigned char idx = (unsigned char)(tid >> 13) & 0x1f;
-	if (pRoomSlot->partTidList.m_tid[idx] != tid)
+	if (idx >= 24 || pRoomSlot->partTidList.m_tid[idx] != tid) // tid de 0x20 grupos, lista de 24
 		return;
 
 	sUccClothes* pClothes = UccManager()->FindClothes(pRoomSlot->partTidList.m_uid[idx]);

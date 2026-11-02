@@ -80,8 +80,7 @@ public:
 #pragma comment(linker, \
 	"/alternatename:?GetVisGroup@CSharedDocVis@@QAEPAV?$list@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@std@@PBD@Z=?GetVisGroup@CSharedDoc@@QAEPAV?$list@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@std@@PBD@Z")
 
-const char* GetStrConst(const char* str, char* out);
-const char* GetCharsTillSpace(const char* str, char* out);
+#include "commonutil.h"
 int Ceil(float value, float epsilon);
 
 // HACK: forces the float constants that the original unit emitted as objects.
@@ -874,7 +873,7 @@ void CExhibition::ParsePuppetScript(const char* script)
 				break;
 			}
 		} while (c != '\0');
-		if ((int)n <= 1)
+		if ((int)n <= 1 || (int)n >= (int)sizeof(s_scriptCmd)) // frame de outro pak: nome longo nao e comando
 			return;
 		strncpy(s_scriptCmd, p, n);
 		p += n;
@@ -1143,9 +1142,7 @@ void CExhibition::ParsePuppetScript(const char* script)
 				}
 				else
 					segLen = semi - cond - off;
-				strncpy(seg, segStart, segLen);
-				seg[segLen] = '\0';
-				strcat(seg, ".mpet");
+				_snprintf_s(seg, _TRUNCATE, "%.*s.mpet", segLen, segStart); // nome longo corta e nao acha o .mpet
 				// 983: na pagina inicial ("TOPPAGE") o boneco 0x4000005 nao troca de movimento
 				if (m_pPetFrame && m_pPetFrame->HasMPet(seg) &&
 					(!g_pFresh->IsCurrentLayout("TOPPAGE") || m_pPetFrame->m_tid != 0x4000005))
@@ -1804,6 +1801,8 @@ bool CExhibition::SetModel(const char* name, eExhibitType type)
 		SetMotion("\xb1\xe2\xba\xbb", false, 0.0f);
 		break;
 	}
+	if (!m_pPuppet)
+		return false;
 	// 983 00876f90: WMatrix::IDENTITY direto para o boneco; a duracao soma 0.0 em double (como o SetModel(tid))
 	m_pPuppet->SetMatrix(WMatrix::IDENTITY);
 	m_pPuppet->Transform(NULL, 1.0f, 0);

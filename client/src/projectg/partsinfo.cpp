@@ -91,6 +91,8 @@ bool CPartList::SetPart(unsigned long tid, unsigned long uid)
 {
 	bool bKeep = false;
 	unsigned char idx = (unsigned char)((tid >> 13) & 0x1f);
+	if (idx >= 24) // grupo de 0x20 no tid, lista de 24 (como CPartTidList::SetPart)
+		return false;
 
 	if (m_part[idx].tid == tid)
 	{
@@ -534,7 +536,7 @@ bool CPetFrame::Build(const CPartTidList* pTids, unsigned long* pAux, bool bAni,
 	if (!pOwner || (pOwner->m_kind != 1 && pOwner->m_e0))
 	{
 		pSkinItem->Replace("face", pChar->FaceTex, &face, (const sSkinParts983*)pTids);
-		strcpy(szFace, face.c_str());
+		strncpy_s(szFace, face.c_str(), _TRUNCATE);
 		sprintf(strrchr(szFace, '.'), RB_STR_D_S, nFace,
 			strrchr(face.c_str(), '.'));
 		m_faceTex = g_resrcmng->LoadTexture(face.c_str(), 0, 0, szFace);
@@ -827,7 +829,7 @@ void CPetFrame::SetPartPets(unsigned long mask)
 	}
 
 	IFF_STRUCT::sChar* pChar = ItemManager()->FindChar(m_tidChar);
-	if (pChar->ShirtsTex[0])
+	if (pChar && pChar->ShirtsTex[0])
 		hShirts = g_resrcmng->LoadTexture(pChar->ShirtsTex, 0, 0, 0);
 
 	for (int i = 0; i < m_partNum; i++)
@@ -842,7 +844,8 @@ void CPetFrame::SetPartPets(unsigned long mask)
 		memset(tex, 0, sizeof(tex));
 		memset(org, 0, sizeof(org));
 		const char* pszPet = NULL;
-		char szPet[32];
+		// 983 008b1ce0 usa char[32]: Data[40] com 27+ letras estourava (maior do Part.iff JP = 26, limite exato)
+		char szPet[sizeof(((IFF_STRUCT::sPart*)0)->Data) + 5];
 		IFF_STRUCT::sPart* pPart = m_partList.GetPart(i)->pPart;
 		if (pPart)
 		{
@@ -906,7 +909,7 @@ void CPetFrame::SetPartPets(unsigned long mask)
 	else if (idxB >= 0 && m_partList.GetPart(idxB) &&
 		(pPart = m_partList.GetPart(idxB)->pPart))
 	{
-		char szPet[32] = "";
+		char szPet[sizeof(pPart->Data) + 5] = "";
 		int tex[3];
 		int org[3];
 		sprintf(szPet, "%s.mpet", pPart->Data);
@@ -1187,7 +1190,7 @@ void __stdcall sPartTex983::Load(IFF_STRUCT::sPart* pPart, unsigned long uid, sP
 	pOut->Clear();
 	if (IsLocalContent(S4_UCC) && IsUccClothes(pPart->c.TypeId))
 	{
-		char uccIdx[9];
+		char uccIdx[10]; // UccIndex de 9 bytes nao termina em 0
 		memset(uccIdx, 0, sizeof(uccIdx));
 		sUccClothes* pUcc = UccManager()->FindClothes(uid);
 		if (pUcc)
@@ -1247,6 +1250,8 @@ void CPetFrame::SetPart983(const sUccItem* pUcc)
 {
 	sPartTex983 parts;
 	IFF_STRUCT::sPart* pPart = ItemManager()->FindPart(pUcc->typeId);
+	if (!pPart)
+		return;
 	sPartTex983::Load(pPart, pUcc->id, &parts);
 	parts.Apply(m_pBonePet);
 	parts.Release();
@@ -1273,6 +1278,13 @@ bool CPetFrame::FindAuxPart(unsigned long id)
 // 983 00e26ed0: 16 entradas (personagens 0..14 + 0); a do 645 tinha 10 e os tipos 10..14 liam o FIXHAIR::exTable
 // (SetHairClr/SetHairClr983 008af755 indexam por m_charTid & 0x3ffffff)
 int g_iIndexWigColor[16] = { 16, 16, 16, 16, 16, 20, 14, 16, 16, 16, 16, 14, 14, 16, 16 };
+
+// personagem de pak novo fica fora da tabela do 983: nenhuma peca casa
+static unsigned long WigColorPart(unsigned long charTid)
+{
+	const unsigned long charIndex = charTid & 0x3ffffff;
+	return charIndex < 16 ? (unsigned long)g_iIndexWigColor[charIndex] : 0xffffffff;
+}
 
 FIXHAIR::sFixItem FIXHAIR::exTable[3] = {
 	{ 0, 0x8006031, "m_hair_02-01.jpg"   },
@@ -1304,10 +1316,10 @@ bool CPetFrame::SetHairClr(CPartTidList* pTids, unsigned char clr)
 			if (idx != -1)
 			{
 				bFixed = true;
-				strcpy(szWig, FIXHAIR::exTable[idx].texture.c_str());
+				strncpy_s(szWig, FIXHAIR::exTable[idx].texture.c_str(), _TRUNCATE);
 			}
 			if (((pTids->m_tid[i] >> 13) & 0x1f) ==
-				(unsigned long)g_iIndexWigColor[pTids->m_charTid & 0x3ffffff])
+				WigColorPart(pTids->m_charTid))
 			{
 				IFF_STRUCT::sPart* pPart =
 					ItemManager()->FindPart(pTids->m_tid[i]);
@@ -1339,6 +1351,8 @@ bool CPetFrame::SetHairClr(CPartTidList* pTids, unsigned char clr)
 	}
 
 	IFF_STRUCT::sChar* pChar = ItemManager()->FindChar(m_tidChar);
+	if (!pChar)
+		return false;
 	int hOrg;
 	if (bFixed == true && szWig[0])
 		hOrg = g_resrcmng->LoadTexture(szWig, 0, 0, 0);
@@ -1366,8 +1380,8 @@ bool CPetFrame::SetHairClr(CPartTidList* pTids, unsigned char clr)
 
 	if ((pChar->c.TypeId & 0x3ffffff) > 2)
 	{
-		char szTmp[40];
-		char szHr[40];
+		char szTmp[sizeof(pChar->FaceTex)];
+		char szHr[sizeof(pChar->FaceTex) + 9]; // "_hrNN.tga" no lugar da extensao
 		strcpy(szTmp, pChar->FaceTex);
 		*strrchr(szTmp, '.') = 0;
 		sprintf(szHr, "%s_hr%02d.tga", szTmp, clr + 1);
@@ -1424,10 +1438,10 @@ bool CPetFrame::SetHairClr983(CPartTidList* pTids, unsigned char clr, unsigned l
 			if (idx != -1)
 			{
 				bFixed = true;
-				strcpy(szWig, FIXHAIR::exTable[idx].texture.c_str());
+				strncpy_s(szWig, FIXHAIR::exTable[idx].texture.c_str(), _TRUNCATE);
 			}
 			if (((pTids->m_tid[i] >> 13) & 0x1f) ==
-				(unsigned long)g_iIndexWigColor[pTids->m_charTid & 0x3ffffff])
+				WigColorPart(pTids->m_charTid))
 			{
 				IFF_STRUCT::sPart* pPart =
 					ItemManager()->FindPart(pTids->m_tid[i]);
@@ -1461,6 +1475,8 @@ bool CPetFrame::SetHairClr983(CPartTidList* pTids, unsigned char clr, unsigned l
 	}
 
 	IFF_STRUCT::sChar* pChar = ItemManager()->FindChar(m_tidChar);
+	if (!pChar)
+		return false;
 	int hOrg;
 	if (bFixed == true && szWig[0])
 		hOrg = g_resrcmng->LoadTexture(szWig, 0, 0, 0);
@@ -1488,8 +1504,8 @@ bool CPetFrame::SetHairClr983(CPartTidList* pTids, unsigned char clr, unsigned l
 
 	if ((pChar->c.TypeId & 0x3ffffff) > 2)
 	{
-		char szTmp[40];
-		char szHr[40];
+		char szTmp[sizeof(pChar->FaceTex)];
+		char szHr[sizeof(pChar->FaceTex) + 9]; // "_hrNN.tga" no lugar da extensao
 		if (!bSkin)
 		{
 			strcpy(szTmp, pChar->FaceTex);
@@ -1558,7 +1574,7 @@ bool CPetFrame::SetShirtsClr(CPartTidList* pTids, unsigned char clr)
 	}
 
 	IFF_STRUCT::sChar* pChar = ItemManager()->FindChar(m_tidChar);
-	if (!pChar->ShirtsTex[0])
+	if (!pChar || !pChar->ShirtsTex[0])
 		return false;
 
 	int hOrg = g_resrcmng->LoadTexture(pChar->ShirtsTex, 0, 0, 0);

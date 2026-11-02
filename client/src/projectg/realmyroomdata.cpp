@@ -460,6 +460,8 @@ cModel* CRealMyRoomData::CreateModel(const char* name)
 		return NULL;
 
 	WPuppet* pCenterPuppet = g_resrcmng->GetPuppet(name, false, true, false);
+	if (pCenterPuppet == NULL)
+		return NULL;
 
 	pCenterPuppet->SetLightMode(0x4000000);
 	w_bound_box* pBox = pCenterPuppet->m_bbList.Find("center");
@@ -635,7 +637,7 @@ cModel* CRealMyRoomData::CreateModel(const char* name, WVector pos, float angle,
 		char sceneName[0x20];
 		for (;;)
 		{
-			sprintf(sceneName, "%02d%s", index, pModel->m_pModelData->name);
+			_snprintf_s(sceneName, _TRUNCATE, "%02d%s", index, pModel->m_pModelData->name);
 
 			bool bUsed = false;
 			for (cModel* pOther = m_ArrangeList.Start(); pOther;

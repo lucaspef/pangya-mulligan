@@ -129,6 +129,8 @@ CCameraWork::CCameraWork()
 	m_sumDriveWeight = 0;
 	m_sumPuttWeight = 0;
 	m_b1df = false;
+	m_b1de = false; // B1639: 983 006d7c40 nao grava; 1a escrita e da visao em golfrule.cpp
+	m_i2a4 = 0;
 	m_numDriveCam = 29;
 	m_numPuttCam = 13;
 	int i;
@@ -762,8 +764,10 @@ void CCameraWork::SetCamera(int type, bool bForce)
 	{
 		WPuppet* puppet = SCENEMGR()->GetPuppet(
 			MakeStr("PLAYER_%d", GOLFDOC()->m_currentPlayer));
-		WBone* nub = puppet->FindBone("Bip01 HeadNub");
-		WBone* head = puppet->FindBone("Bip01 Head");
+		WBone* nub = puppet ? puppet->FindBone("Bip01 HeadNub") : NULL;
+		WBone* head = puppet ? puppet->FindBone("Bip01 Head") : NULL;
+		if (!nub || !head)
+			break;
 		m_destCamera =
 			0.7f * head->GetMatrix().pivot + 0.3f * nub->GetMatrix().pivot;
 		const WVector& back =
@@ -2466,7 +2470,7 @@ void CCameraWork::ParsePuppetScript(char* script)
 				break;
 			}
 		} while (c != '\0');
-		if (len <= 1)
+		if (len <= 1 || len >= (int)sizeof(s_scriptCmd)) // frame de outro pak: nome longo nao e comando
 			return;
 
 		strncpy(s_scriptCmd, cmd, len);
@@ -3485,11 +3489,11 @@ void CCameraWork::IntroCCamera(float dt, float t)
 	m_f25c = dt + dt + m_f25c;
 	WPuppet* puppet =
 		SCENEMGR()->GetPuppet(MakeStr("PLAYER_%d", GOLFDOC()->m_currentPlayer));
-	WBone* head = puppet->FindBone("Bip01 Head");
+	WBone* head = puppet ? puppet->FindBone("Bip01 Head") : NULL;
 	// 983 006d64e0: k = m_f190 / 5.0; fim no 0xcd do 983 = ToDefaultCamera, que no nosso switch e o 204
 	float k = m_f190 / 5.0;
 	WVector ball = (GolfBall().m_pos + WVector(0.0f, 5.0f, 0.0f)) * k;
-	m_destCamera = head->GetMatrix().pivot * (1.0f - k) + ball;
+	m_destCamera = (head ? head->GetMatrix().pivot : GolfBall().m_pos) * (1.0f - k) + ball;
 	WMatrix rot = RotMat(GOLFDOC()->m_cameraData.angle + m_f1a8, 1);
 	m_srcCamera = m_destCamera - rot.za * m_f25c;
 	if (!(k <= 1.0f))

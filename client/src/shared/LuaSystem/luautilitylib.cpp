@@ -180,6 +180,8 @@ namespace lua_system
 	int lua_dofile_for_projectG(lua_State* state)
 	{
 		const char* file = lua_tostring(state, -1);
+		if (file == NULL)
+			return 0;
 		lua_script* script =
 			lua_script_manger::GetInstance()->CreateScript(true);
 		script->RunFile(file);

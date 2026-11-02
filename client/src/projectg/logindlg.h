@@ -96,7 +96,7 @@ namespace
 		}
 		void operator()(char c)
 		{
-			if (!isalnum(c))
+			if (!isalnum((unsigned char)c))
 				bInvalid = true;
 		}
 	};

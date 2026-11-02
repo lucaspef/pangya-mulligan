@@ -329,7 +329,7 @@ int CItemUpdater::SetCharacterCard983(__time64_t now, const sItemUpdate983& rec)
 	sCharacterInfo* p = FindCharacter983(rec);
 	if (!p)
 		return 0x1e8569;
-	if (!rec.cardSlot)
+	if (!rec.cardSlot || rec.cardSlot > 12) // E492: card[3][4]; slot vem do pacote
 		return 0x1e856a;
 	p->card[0][rec.cardSlot - 1] = rec.cardTypeId;
 	sSCardAvilityPeriodInfo info;
@@ -361,7 +361,7 @@ int CItemUpdater::SetPartCard983(__time64_t now, const sItemUpdate983& rec)
 	sItemInfo* p = FindPart983(rec);
 	if (!p)
 		return 0x1e8551;
-	if (!rec.cardSlot)
+	if (!rec.cardSlot || rec.cardSlot > 12) // E492: attachCard[12]; slot vem do pacote
 		return 0x1e8552;
 	p->attachCard[rec.cardSlot - 1] = rec.cardTypeId;
 	sSCardAvilityPeriodInfo info;
@@ -438,7 +438,7 @@ int CItemUpdater::SetClubSetCard983(__time64_t now, const sItemUpdate983& rec)
 	std::map<unsigned int, sItemInfo>::iterator itClub = pDoc->m_clubSetMap.find(rec.uid);
 	if (itClub == pDoc->m_clubSetMap.end())
 		return 0x1e8554;
-	if (!rec.cardSlot)
+	if (!rec.cardSlot || rec.cardSlot > 12) // E492: attachCard[12]; slot vem do pacote
 		return 0x1e8555;
 	itClub->second.attachCard[rec.cardSlot - 1] = rec.cardTypeId;
 	sSCardAvilityPeriodInfo info;

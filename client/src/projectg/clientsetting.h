@@ -300,7 +300,7 @@ protected:
 	void WriteReg(int index, const char* value);
 	bool ScanReg_I(int index, int* value);
 	bool ScanReg_F(int index, float* value);
-	bool ScanReg_S(int index, char* value);
+	bool ScanReg_S(int index, char* value, int size);
 	bool WriteReg_I(int index, int value);
 	bool WriteReg_F(int index, float value);
 	bool WriteReg_S(int index, const char* value);

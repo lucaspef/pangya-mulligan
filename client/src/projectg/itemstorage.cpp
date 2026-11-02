@@ -1280,8 +1280,8 @@ void FrItemStoragePangBank::OnOwnerDrawDrawArea(int param)
 				if (GetMyPang() - pang < 0)
 				{
 					// "not enough pang" / "cannot calculate"
-					strcat(myPang, K2L_Compatibility("\306\316 \272\316\301\267"));
-					strcat(storedPang, K2L_Compatibility("\260\350\273\352 \272\322\260\241"));
+					strncat_s(myPang, K2L_Compatibility("\306\316 \272\316\301\267"), _TRUNCATE);
+					strncat_s(storedPang, K2L_Compatibility("\260\350\273\352 \272\322\260\241"), _TRUNCATE);
 				}
 				else
 				{
@@ -1293,8 +1293,8 @@ void FrItemStoragePangBank::OnOwnerDrawDrawArea(int param)
 			{
 				if (GetStoredPang() - pang < 0)
 				{
-					strcat(myPang, K2L_Compatibility("\260\350\273\352 \272\322\260\241"));
-					strcat(storedPang, K2L_Compatibility("\306\316 \272\316\301\267"));
+					strncat_s(myPang, K2L_Compatibility("\260\350\273\352 \272\322\260\241"), _TRUNCATE);
+					strncat_s(storedPang, K2L_Compatibility("\306\316 \272\316\301\267"), _TRUNCATE);
 				}
 				else
 				{
@@ -1890,7 +1890,7 @@ bool CItemStorage::CheckStoredItemInfo(sStoredItemInfo& stored,
 	stored.SetGuid(info.guid);
 	strcpy(stored.itemInfo.CopierNick,
 		info.CopierNick); // sItemInfo 0x5E holds the UCC copier's nick
-	strcpy(stored.itemInfo.UccIndex, info.UccIndex);
+	strncpy_s(stored.itemInfo.UccIndex, info.UccIndex, _TRUNCATE);
 
 	switch (stored.itemInfo.dwTid >> 26)
 	{

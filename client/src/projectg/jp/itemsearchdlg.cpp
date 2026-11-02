@@ -181,7 +181,8 @@ void FrItemSearchDlg::DrawItemIcon983(unsigned long typeId, const WPoint& pos)
 		charIndex = (typeId >> 13) & 0xff;
 		break;
 	case 0xf:
-		charIndex = ItemManager()->FindHairStyle(typeId)->cCharID;
+		if (ItemManager()->FindHairStyle(typeId))
+			charIndex = ItemManager()->FindHairStyle(typeId)->cCharID;
 		break;
 	}
 	face = CreateCharacterOption::Instance()->GetBarIcon983(charIndex);

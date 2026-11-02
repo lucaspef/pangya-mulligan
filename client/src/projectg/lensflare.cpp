@@ -60,7 +60,8 @@ void CLensFlare::Init(const WVector& sunDir)
 		i < sizeof(s_overlayFile) / sizeof(s_overlayFile[0]); i++)
 	{
 		m_overlay[i] = g_resrcmng->GetOverlay(s_overlayFile[i], 0);
-		m_overlay[i]->SetCoordMode(0x2200);
+		if (m_overlay[i])
+			m_overlay[i]->SetCoordMode(0x2200);
 	}
 
 	for (unsigned int j = 0; j < sizeof(s_sprFile) / sizeof(s_sprFile[0]); j++)
@@ -72,7 +73,8 @@ void CLensFlare::Init(const WVector& sunDir)
 
 		m_size[j].w = width;
 		m_size[j].h = height;
-		m_spr[j]->SetRect(width, height, width * 0.5f, height * 0.5f); // 983 006f9339: so no Init
+		if (m_spr[j])
+			m_spr[j]->SetRect(width, height, width * 0.5f, height * 0.5f); // 983 006f9339: so no Init
 
 		if (g_resrcmng && tex)
 		{
@@ -90,6 +92,8 @@ void CLensFlare::SetSunDirection(const WVector& sunDir)
 	m_sunDir = sunDir;
 	m_sunDir.Normalize();
 	m_alpha = Wabs(m_sunDir.y) * 0.8f + 0.2f;
+	if (!m_spr[2] || !m_spr[3])
+		return;
 	m_spr[2]->SetColor(((int)(255.0f * m_alpha) << 24) | 0xffffff);
 	m_spr[3]->SetColor(((int)(m_alpha * 255.0f) << 24) | 0xffffff);
 }
@@ -132,6 +136,9 @@ bool CLensFlare::IsSunInSize983(WView* view)
 // entao o clip far do ceu (CalcClipFarByView) cortava os sprites pequenos
 void CLensFlare::Render(WView* view)
 {
+	// pak sem um dos sprites: sem flare
+	if (!m_spr[0] || !m_spr[1] || !m_spr[2] || !m_spr[3])
+		return;
 	const WVector& za = view->camera.za;
 	if (za.z * m_sunDir.z + za.x * m_sunDir.x + za.y * m_sunDir.y <= 0.0f)
 		return;
@@ -220,6 +227,8 @@ void CLensFlare::RenderOverlay983(WView* view)
 	for (int j = 0; j < 7; j++)
 	{
 		WOverlay* overlay = m_overlay[ms_lenzTable[j].overlay];
+		if (!overlay)
+			continue;
 		float size = ((rand() % 500) / 10000.0f + 1.0f) * ms_lenzTable[j].scale;
 		dst.w = height * size;
 		dst.h = dst.w;

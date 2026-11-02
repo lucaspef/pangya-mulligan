@@ -79,7 +79,7 @@ bool CSpecialBoxHandler::OnReqOpenBoxConfirm983(int result, FrForm* pForm)
 
 	IFF_ITEM_COMMON* pItem = ItemManager()->FindCommonItem(0x1A00015C);
 
-	m_pSpecialBoxDlg->SetMessage(MakeStr(msg, pItem->Name));
+	m_pSpecialBoxDlg->SetMessage(MakeStr(msg, pItem ? pItem->Name : ""));
 	m_pSpecialBoxDlg->Open(
 		(FRESH_PFN_RESULT)&CSpecialBoxHandler::OnSpecialBoxCloseCallback, 1);
 	return true;

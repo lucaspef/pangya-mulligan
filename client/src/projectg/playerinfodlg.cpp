@@ -53,7 +53,7 @@ void FrPlayerInfoDlg::WritePlayerInfoDlg()
 	m_pUserInfo->AddLine(buffer, 0, false);
 	unsigned char* level = &Doc()->m_userInfo[MyIndex()].stat.Level;
 	_snprintf(buffer, sizeof(buffer), K2L_Compatibility("\xb7\xb9  \xba\xa7: %s"),
-		g_LevelTable[*level].name);
+		g_LevelTable[*level < 71 ? *level : 70].name);
 	m_pUserInfo->AddLine(buffer, 0, false);
 	_snprintf(buffer, sizeof(buffer), K2L_Compatibility("\xb0\xe6\xc7\xe8\xc4\xa1: %d"),
 		Doc()->m_userInfo[MyIndex()].stat.dwExp);

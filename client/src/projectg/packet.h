@@ -232,6 +232,7 @@ public:
 
 	unsigned char* GetRemainBuffer();
 	int GetRemainLength();
+	int DecodeCount();
 
 	std::string DecodeStr();
 	std::string DecodeEncryptedStr(unsigned long key);

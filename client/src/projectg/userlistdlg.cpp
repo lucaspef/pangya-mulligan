@@ -251,7 +251,7 @@ void FrUserListDlg::OnUserListOwnerDraw(int param)
 	else if (user->manner)
 		icon = m_pMannerIcon[user->gender % 2];
 	else
-		icon = m_pSexIcon[user->gender];
+		icon = m_pSexIcon[user->gender % 6]; // E492: gender : 3, tabela de 6
 	WRect dest(item->pos.x, item->pos.y, (float)icon->Width(),
 		(float)icon->Height());
 	if (user->dwGuid == m_selOid)

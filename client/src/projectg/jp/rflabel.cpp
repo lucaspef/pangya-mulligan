@@ -178,7 +178,7 @@ void RFLabel::OnDraw()
 	int areaWidth = (int)rect.Width();
 	int areaHeight = (int)rect.Height();
 	RFSize size = g_pRFInterface983->GetTextExtent983(_fontInfo, std::wstring(text));
-	int x, y;
+	int x = (int)rect.left, y = (int)rect.top; // alinhamento desconhecido no XML
 	switch (_hAlign)
 	{
 	case HorzAlignTypes::Left:

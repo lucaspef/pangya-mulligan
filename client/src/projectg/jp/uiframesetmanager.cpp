@@ -845,7 +845,9 @@ bool CUiFrameSetManager::Frame::LoadPieces(TiXmlElement* pElem)
 			Seq seq;
 			seq.m_name = p->Attribute("name");
 			seq.m_num = atoi(p->Attribute("num").c_str());
-			if (seq.m_name.size() == 0 || seq.m_num <= 1)
+			// 983 006c4630 só recusa num <= 1: num negativo/enorme de pak alheio = reserve gigante e exceção sem captura;
+			// grade dos paks reais <= 7 x 5, teto de 0x10000 pedaços
+			if (seq.m_name.size() == 0 || seq.m_num <= 1 || seq.m_num > 0x10000 / total)
 				return false;
 			total *= seq.m_num;
 			grid.m_seqs.push_back(seq);

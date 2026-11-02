@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
 #include "bitmap.h"
 #include "frarea.h"
 #include "frwndmanager.h"
@@ -244,9 +245,11 @@ FrAreaEntrance983::FrAreaEntrance983(FrArea* pArea)
 // 983: 00beb400
 void FrAreaEntrance983::Parse(const char* text)
 {
-	char item[260] = { 0 };
-	char key[260] = { 0 };
-	char value[260] = { 0 };
+	// GetToken nao limita: do tamanho do texto
+	std::vector<char> buffer((strlen(text) + 1) * 3);
+	char* item = &buffer[0];
+	char* key = item + strlen(text) + 1;
+	char* value = key + strlen(text) + 1;
 	cTokenV items;
 	cTokenV pair;
 	items.Init(text, strlen(text));

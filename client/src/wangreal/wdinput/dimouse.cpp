@@ -45,6 +45,12 @@ bool DirectInputMouse::InitDevice(HWND hWnd, bool exclusive)
 		this->ClearBuffer();
 	}
 
+	// DirectInput8Create pode falhar: sem dispositivo o jogo segue sem mouse
+	if (!this->diBackup)
+	{
+		return false;
+	}
+
 	if ((this->diBackup->CreateDevice(GUID_SysMouse, &this->diMouse, NULL)) !=
 		S_OK)
 	{
@@ -117,7 +123,8 @@ void DirectInputMouse::GetDeviceData()
 			break;
 		for (DWORD i = 0; i < dwItems;)
 		{
-			DWORD n = dwItems;
+			// 983 repete dwItems aqui: ao dar a volta no anel lia dims fora do fim
+			DWORD n = dwItems - i;
 			if (n >= 256 - (bufCur & 255))
 				n = 256 - (bufCur & 255);
 			memcpy(&mousebuf[bufCur & 255], &dims[i],
@@ -297,13 +304,17 @@ int DirectInputMouse::WinProc(UINT msg, unsigned long wParam,
 	case WM_ACTIVATE:
 		if (wParam)
 		{
-			this->Acquire();
-			this->GetDeviceData();
+			if (this->diMouse)
+			{
+				this->Acquire();
+				this->GetDeviceData();
+			}
 			this->ClearBuffer();
 		}
 		else
 		{
-			this->diMouse->Unacquire();
+			if (this->diMouse)
+				this->diMouse->Unacquire();
 			this->m_moveMode = false;
 			this->ClearBuffer();
 		}

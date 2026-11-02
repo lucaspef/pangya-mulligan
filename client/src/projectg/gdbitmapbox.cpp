@@ -19,7 +19,7 @@ void CGDBitmapBox::Initialize(TiXmlNode* pNode)
 		std::string rect = pChild->ToElement()->Attribute("rect");
 
 		sGD_BITMAP bitmap;
-		strcpy(bitmap.fileName, fileName.c_str());
+		strncpy_s(bitmap.fileName, fileName.c_str(), _TRUNCATE);
 		sscanf(rect.c_str(), "%f %f %f %f", &bitmap.rect.x, &bitmap.rect.y,
 			&bitmap.rect.w, &bitmap.rect.h);
 

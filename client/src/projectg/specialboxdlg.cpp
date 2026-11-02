@@ -40,7 +40,8 @@ namespace _gateway
 	{
 		IFF_ITEM_COMMON* pItem = ItemManager()->FindCommonItem(0x1A00015C);
 
-		m_pKeyItemBitmap = g_pFresh->GetBitmap(pItem->Icon);
+		if (pItem)
+			m_pKeyItemBitmap = g_pFresh->GetBitmap(pItem->Icon);
 
 		m_fOpenDelay = 1.0f; // 983 00921cd8
 
@@ -102,6 +103,8 @@ namespace _gateway
 
 	void FrSpecialBoxDlg::OnNotifyAreaOwnerdraw(int param)
 	{
+		if (!m_pKeyItemBitmap)
+			return;
 		g_pFresh->GetManager()->GetGDI()->DrawTexture(m_pKeyItemBitmap,
 			WRect(m_rect.x + 150.0f, m_rect.y + 10.0f, // 983 00921b30
 				(float)m_pKeyItemBitmap->Width(),

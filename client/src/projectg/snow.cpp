@@ -53,7 +53,7 @@ void CSnow::Reset(int num, float size)
 	for (int i = 0; i < m_num; i++)
 	{
 		m_frag[i].sprIndex =
-			(m_sprIndex < 0) ? rand() % m_spr->GetSpriteNum() : m_sprIndex;
+			(m_sprIndex < 0 && m_spr->GetSpriteNum() > 0) ? rand() % m_spr->GetSpriteNum() : m_sprIndex;
 		m_frag[i].swayAngle = Random(0.0f, g_PI * 2.0f);
 		m_frag[i].swayPhase = Random(0.0f, g_PI);
 

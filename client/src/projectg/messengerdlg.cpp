@@ -1356,24 +1356,24 @@ void FrMessengerDlg::DrawFriendGroup(int param)
 		{
 		case 0:
 			// "not connected"
-			wsprintf(szText, "%s",
+			_snprintf_s(szText, _TRUNCATE, "%s",
 				K2L_Compatibility("\xC1\xA2\xBC\xD3\xC7\xCF\xC1\xF6 \xBE\xCA\xC0\xBD"));
 			break;
 		case 1:
 			// "login requested"
-			wsprintf(szText, "%s",
+			_snprintf_s(szText, _TRUNCATE, "%s",
 				K2L_Compatibility("\xB7\xCE\xB1\xD7\xC0\xCE\xC0\xBB \xBF\xE4\xC3\xBB\xC7\xDF\xBD\xC0\xB4\xCF\xB4\xD9"));
 			break;
 		case 4:
-			wsprintf(szText, "%s", K2L_Compatibility("\xC4\xA3\xB1\xB8 \xBE\xF8\xC0\xBD"));
+			_snprintf_s(szText, _TRUNCATE, "%s", K2L_Compatibility("\xC4\xA3\xB1\xB8 \xBE\xF8\xC0\xBD"));
 			break;
 		case 3:
-			wsprintf(szText, "%s",
+			_snprintf_s(szText, _TRUNCATE, "%s",
 				K2L_Compatibility("\xC4\xA3\xB1\xB8\xB8\xAE\xBD\xBA\xC6\xAE \xB9\xDE\xBE\xC6\xBF\xC0\xB4\xC2 \xC1\xDF"));
 			break;
 		case 2:
 			// "login succeeded"
-			wsprintf(szText, "%s",
+			_snprintf_s(szText, _TRUNCATE, "%s",
 				K2L_Compatibility("\xB7\xCE\xB1\xD7\xC0\xCE\xBF\xA1 \xBC\xBA\xB0\xF8\xC7\xDF\xBD\xC0\xB4\xCF\xB4\xD9"));
 			break;
 		}
@@ -1438,24 +1438,24 @@ void FrMessengerDlg::DrawGuildGroup(int param)
 		{
 		case 0:
 			// "not connected"
-			wsprintf(szText, "%s",
+			_snprintf_s(szText, _TRUNCATE, "%s",
 				K2L_Compatibility("\xC1\xA2\xBC\xD3\xC7\xCF\xC1\xF6 \xBE\xCA\xC0\xBD"));
 			break;
 		case 1:
 			// "login requested"
-			wsprintf(szText, "%s",
+			_snprintf_s(szText, _TRUNCATE, "%s",
 				K2L_Compatibility("\xB7\xCE\xB1\xD7\xC0\xCE\xC0\xBB \xBF\xE4\xC3\xBB\xC7\xDF\xBD\xC0\xB4\xCF\xB4\xD9"));
 			break;
 		case 4:
-			wsprintf(szText, "%s", K2L_Compatibility("\xB1\xE6\xB5\xE5\xBF\xF8 \xBE\xF8\xC0\xBD"));
+			_snprintf_s(szText, _TRUNCATE, "%s", K2L_Compatibility("\xB1\xE6\xB5\xE5\xBF\xF8 \xBE\xF8\xC0\xBD"));
 			break;
 		case 3:
-			wsprintf(szText, "%s",
+			_snprintf_s(szText, _TRUNCATE, "%s",
 				K2L_Compatibility("\xB1\xE6\xB5\xE5\xB8\xAE\xBD\xBA\xC6\xAE \xB9\xDE\xBE\xC6\xBF\xC0\xB4\xC2 \xC1\xDF"));
 			break;
 		case 2:
 			// "login succeeded"
-			wsprintf(szText, "%s",
+			_snprintf_s(szText, _TRUNCATE, "%s",
 				K2L_Compatibility("\xB7\xCE\xB1\xD7\xC0\xCE\xBF\xA1 \xBC\xBA\xB0\xF8\xC7\xDF\xBD\xC0\xB4\xCF\xB4\xD9"));
 			break;
 		}
@@ -1545,10 +1545,10 @@ void FrMessengerDlg::UpdateFriendList()
 		else if (buddy.PangyaFriend)
 		{
 			if (!buddy.IsAccept && !buddy.IsAgree)
-				strcpy(buddy.szAlias, K2L_Compatibility("(\xB4\xEB\xB1\xE2\xC1\xDF)"));
+				strncpy_s(buddy.szAlias, K2L_Compatibility("(\xB4\xEB\xB1\xE2\xC1\xDF)"), _TRUNCATE);
 
 			if (buddy.IsAgree && !buddy.IsAccept)
-				strcpy(buddy.szAlias, K2L_Compatibility("(\xBF\xE4\xC3\xBB\xC1\xDF)"));
+				strncpy_s(buddy.szAlias, K2L_Compatibility("(\xBF\xE4\xC3\xBB\xC1\xDF)"), _TRUNCATE);
 
 			m_friendOffList.push_back(&buddy);
 		}

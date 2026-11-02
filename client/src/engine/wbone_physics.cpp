@@ -58,9 +58,9 @@ void WBone::ReleasePhysicsModel()
 {
 	if (m_physic)
 	{
-		delete m_physic->link;
-		delete m_physic->linkoffset;
-		delete m_physic->pos;
+		delete[] m_physic->link;
+		delete[] m_physic->linkoffset;
+		delete[] m_physic->pos;
 		delete m_physic;
 	}
 }

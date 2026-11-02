@@ -960,7 +960,6 @@ C_ASSERT_VC10(offsetof(CSharedDoc, m_playingMode) == 0x1122c && offsetof(CShared
 
 extern unsigned char MyIndex();
 extern sPlayerData* PLAYER(unsigned char index);
-extern const char* GetCharsTillSpace(const char* str, char* out);
 
 // Posts a text message to the Lobby actor of the current task.
 #define SEND_LOBBY_MSG(text, color) \
@@ -1729,7 +1728,7 @@ int ChatManager::CheckChatCommand(const char* str, int type)
 	{
 		unsigned long target = 0;
 		char reason[24]; // 983: 0x18 bytes (quadro de 0x294)
-		switch (sscanf(args, "%s %d %s", cmd, &target, reason))
+		switch (sscanf(args, "%511s %d %23s", cmd, &target, reason))
 		{
 		case 1:
 		{
@@ -1763,7 +1762,7 @@ int ChatManager::CheckChatCommand(const char* str, int type)
 		if (!((CSharedDoc::Instance()->m_myInfo.info.dwIdentity >> 6) & 1))
 			return 1;
 		unsigned long rate = 0;
-		switch (sscanf(args, "%s %d", cmd, &rate))
+		switch (sscanf(args, "%511s %d", cmd, &rate))
 		{
 		case 1:
 		{

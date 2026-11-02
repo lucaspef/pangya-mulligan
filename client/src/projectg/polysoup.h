@@ -703,12 +703,13 @@ private:
 	bool LoadProperty983();                                             // 983: 0092fa70
 	bool LoadShadowmapInfo();                                           // 983: 009473d0
 	bool LoadShadowmapBone983(cFile* file, WBone* bone);               // 983: 00946cd0
-	void smLoadSmapMeshes(SmCase* smCase, cFile* file, WBone* bone, w_mesh** meshList,
-		WVector* vtxList, float (*uvList)[2]);
+	bool smLoadSmapMeshes(SmCase* smCase, cFile* file, WBone* bone, w_mesh** meshList, int meshNum,
+		WVector* vtxList, int vtxNum, float (*uvList)[2], int uvNum);
 	w_mesh* smAddSmapPack(SmInFragList* fragList, cFile* file, int caseIndex,
-		int listIndex, WBone* bone, w_mesh** meshList, WVector* vtxList, float (*uvList)[2]);
-	void smLoadOutFrags(cFile* file, int num, w_mesh** meshList,
-		WVector* vtxList, SmCase* smCase);
+		int listIndex, WBone* bone, w_mesh** meshList, int meshNum, WVector* vtxList, int listVtxNum,
+		float (*uvList)[2], int uvNum);
+	bool smLoadOutFrags(cFile* file, int num, w_mesh** meshList,
+		WVector* vtxList, int vtxNum, SmCase* smCase);
 	void smBuildOutFragMeshes(w_mesh* mesh, SmOutFrag* frag, int num,
 		WVector* vtxList);
 

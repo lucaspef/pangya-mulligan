@@ -19,7 +19,7 @@ CFreeType2::~CFreeType2()
 	if (m_Library)
 		FT_Done_FreeType(m_Library);
 	if (m_pFileBuffer)
-		delete m_pFileBuffer;
+		delete[] m_pFileBuffer;
 }
 
 bool CFreeType2::Load(const char* fname, int fntsize, int fontindex,

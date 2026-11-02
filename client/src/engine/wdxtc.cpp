@@ -396,12 +396,37 @@ bool WDXTC::DecompDXTC()
 
 bool WDXTC::Load(const unsigned char* pData, int iSize)
 {
+	// 983 nao olha iSize: .dds curto ou de outro pak lia alem do arquivo (C788)
+	if (!pData || iSize < static_cast<int>(4 + sizeof(m_DDSD2)))
+		return false;
 	if (pData[0] != 'D' || pData[1] != 'D' || pData[2] != 'S')
 		return false;
 	pData += 4;
 	memcpy(&m_DDSD2, pData, sizeof(m_DDSD2));
 	if (m_DDSD2.dwFlags & DDSD_LINEARSIZE)
 	{
+		unsigned int blockSize;
+		switch (m_DDSD2.ddpfPixelFormat.dwFourCC)
+		{
+		case g_dxt1FourCc:
+			blockSize = 8;
+			break;
+		case g_dxt3FourCc:
+		case g_dxt5FourCc:
+			blockSize = 16;
+			break;
+		default:
+			return false;
+		}
+		// dados alem do arquivo, menos blocos que a imagem ou imagem absurda = recusa
+		const unsigned __int64 dataLeft = iSize - (4 + sizeof(m_DDSD2));
+		const unsigned __int64 blocks =
+			static_cast<unsigned __int64>(m_DDSD2.dwWidth >> 2) * (m_DDSD2.dwHeight >> 2);
+		const unsigned __int64 pixels =
+			static_cast<unsigned __int64>(m_DDSD2.dwWidth) * m_DDSD2.dwHeight;
+		if (m_DDSD2.dwLinearSize > dataLeft || blocks * blockSize > m_DDSD2.dwLinearSize ||
+			pixels > 0x4000000)
+			return false;
 		m_pCompData = new unsigned char[m_DDSD2.dwLinearSize];
 		memcpy(m_pCompData, pData + sizeof(m_DDSD2), m_DDSD2.dwLinearSize);
 		return DecompDXTC();

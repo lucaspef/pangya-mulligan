@@ -73,7 +73,7 @@ void FrAvatarUserListDlg::OnUserListOwnerDraw(int param)
 	else if (pSlot->manner)
 		pIcon = m_pMannerIcon[pSlot->gender % 2];
 	else
-		pIcon = m_pIcon[pSlot->gender];
+		pIcon = m_pIcon[pSlot->gender % 6]; // E492: gender : 3, tabela de 6
 
 	WRect dest(pItem->pos.x, pItem->pos.y, (float)pIcon->Width(),
 		(float)pIcon->Height());

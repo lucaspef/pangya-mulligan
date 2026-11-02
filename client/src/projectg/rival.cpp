@@ -413,7 +413,7 @@ WVector CRival::GetGreenSlope()
 
 	dir = GetHoleCupPos() - GolfBall().m_pos;
 	dir.y = 0.0f;
-	num = (int)(dir.Magnitude() * 0.3125f);
+	num = (int)(dir.Magnitude() / 3.2f); // 983 006f640e: fdiv
 	dir.Normalize();
 
 	slope.Reset();

@@ -169,7 +169,7 @@ namespace
 			while (pNode)
 			{
 				TiXmlElement* pElem = pNode->ToElement();
-				if (uid == pElem->Attribute("uid"))
+				if (pElem && uid == pElem->Attribute("uid")) // comentario no XML nao e elemento
 				{
 					m_nick = pElem->Attribute("nick");
 					TiXmlNode* pParam = pNode->FirstChild("param");
@@ -177,7 +177,7 @@ namespace
 					while (pParam)
 					{
 						TiXmlElement* pParamElem = pParam->ToElement();
-						file = pParamElem->Attribute("file");
+						file = pParamElem ? pParamElem->Attribute("file") : "";
 
 						if (!file.empty())
 						{
@@ -389,7 +389,7 @@ void CGhostHandler::OnGhostPacket(WReceivedPacket& packet)
 	{
 		AfxGetTask()->SendMsgToMainActor(MsgObject(NULL, M983(0x2), 0, 0, 0, 0, 0));
 
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
 		unsigned long uid = packet.Decode4();
 
 		if (count == 0)
@@ -482,7 +482,7 @@ void CGhostHandler::OnGhostPacket(WReceivedPacket& packet)
 		unsigned char result = packet.Decode1();
 		if (result != 0xff)
 		{
-			unsigned long count = packet.Decode4();
+			unsigned long count = packet.DecodeCount();
 			for (unsigned long i = 0; i < count; i++)
 			{
 				FrRecentMatch::sRecentMatchForm form;

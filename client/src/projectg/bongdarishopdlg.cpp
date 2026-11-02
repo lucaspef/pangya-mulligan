@@ -4068,6 +4068,12 @@ void FrBongdarishopNoticeDlg::OnNoticeViewerBnUp()
 {
 	if (m_curIndex < 0)
 		return;
+	// bs_ppl.ini ausente ou vazio (pak de outra versao): m_images vazio com m_curIndex 0; o 983 indexa igual
+	if (m_curIndex >= (int)m_images.size())
+	{
+		Close(FrNONE, true);
+		return;
+	}
 	WPoint point;
 	point = g_pFresh->GetManager()->GetMousePos();
 	std::list<sNoticeImage::sBn>::iterator it;

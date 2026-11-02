@@ -170,15 +170,16 @@ void FrElementFrame::Init(const TiXmlNode* pSrc)
 		pNode = pNode->NextSibling("layer");
 	}
 
-	TiXmlElement* pFrm = pSrc->FirstChild("bfrm")->ToElement();
-	if (pFrm)
-		m_bfrmName = pFrm->Attribute("filename");
-	pFrm = pSrc->FirstChild("sfrm")->ToElement();
-	if (pFrm)
-		m_sfrmName = pFrm->Attribute("filename");
-	pFrm = pSrc->FirstChild("cfrm")->ToElement();
-	if (pFrm)
-		m_cfrmName = pFrm->Attribute("filename");
+	// xml de outro pak pode nao ter as 3
+	auto readName = [pSrc](const char* tag, std::string& out)
+	{
+		TiXmlNode* pFrm = pSrc->FirstChild(tag);
+		if (pFrm && pFrm->ToElement())
+			out = pFrm->ToElement()->Attribute("filename");
+	};
+	readName("bfrm", m_bfrmName);
+	readName("sfrm", m_sfrmName);
+	readName("cfrm", m_cfrmName);
 }
 
 void FrElementLayout::Init(const TiXmlNode* pSrc)
@@ -299,6 +300,13 @@ int FrElementDoc::LoadPic(const char* filename)
 	buf[filesize] = 0;
 	CloseCFile(file);
 
+	// arquivo curto: nao ha cabecalho para ler
+	if ((type == 0 && filesize < 54) || (type == 1 && filesize < 18))
+	{
+		delete[] buf;
+		return 0;
+	}
+
 	Bitmap* pBitmap;
 	unsigned height;
 	unsigned bpl;
@@ -321,6 +329,11 @@ int FrElementDoc::LoadPic(const char* filename)
 	else if (type == 2)
 	{
 		pBitmap = g_resrcmng->LoadPNG(MakeStr("%s.png", filename), false, false);
+		if (!pBitmap)
+		{
+			delete[] buf;
+			return 0;
+		}
 		height = 0;
 	}
 	else
@@ -330,7 +343,12 @@ int FrElementDoc::LoadPic(const char* filename)
 	}
 
 	for (unsigned y = 0; y < height; y++)
-		memcpy(pBitmap->GetVram(y), data + (height - y - 1) * bpl, bpl);
+	{
+		// arquivo curto: linhas que nao vieram ficam como o Bitmap as criou
+		__int64 end = (data - buf) + (__int64)(height - y) * bpl;
+		if (end <= filesize)
+			memcpy(pBitmap->GetVram(y), data + (height - y - 1) * bpl, bpl);
+	}
 
 	resBitmap_t bm;
 	bm.bitmap = pBitmap;

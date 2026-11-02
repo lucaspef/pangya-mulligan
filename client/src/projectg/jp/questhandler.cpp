@@ -542,7 +542,7 @@ bool CQuestHandler::Execute(const MsgObject& msg)
 void CQuestHandler::OnQuestComplete983(const MsgObject& msg)
 {
 	WReceivedPacket* pPacket = MSGJP(msg).Param2<WReceivedPacket*>();
-	unsigned long count = pPacket->Decode4();
+	unsigned long count = pPacket->DecodeCount();
 	std::vector<CQuestItem*> done;
 	for (unsigned int i = 0; i < count; ++i)
 	{
@@ -639,13 +639,13 @@ void CQuestHandler::OnQuestList983(const MsgObject& msg)
 	}
 	unsigned long uid;
 	std::vector<unsigned long> uids;
-	unsigned long count = pPacket->Decode4();
+	unsigned long count = pPacket->DecodeCount();
 	for (unsigned int i = 0; i < count; ++i)
 	{
 		uid = pPacket->Decode4();
 		uids.push_back(uid);
 	}
-	count = pPacket->Decode4();
+	count = pPacket->DecodeCount();
 	for (unsigned int i = 0; i < count; ++i)
 	{
 		unsigned long uid = pPacket->Decode4();
@@ -679,7 +679,7 @@ void CQuestHandler::OnQuestList983(const MsgObject& msg)
 void CQuestHandler::OnQuestCancel983(const MsgObject& msg)
 {
 	WReceivedPacket* pPacket = MSGJP(msg).Param2<WReceivedPacket*>();
-	unsigned long count = pPacket->Decode4();
+	unsigned long count = pPacket->DecodeCount();
 	for (unsigned int i = 0; i < count; ++i)
 	{
 		unsigned long uid = pPacket->Decode4();
@@ -701,7 +701,7 @@ void CQuestHandler::OnQuestUpdate983(const MsgObject& msg)
 {
 	WReceivedPacket* pPacket = MSGJP(msg).Param2<WReceivedPacket*>();
 	CQuestDocument* pDoc = Doc983();
-	unsigned long count = pPacket->Decode4();
+	unsigned long count = pPacket->DecodeCount();
 	for (unsigned int i = 0; i < count; ++i)
 	{
 		CQuestItem item;
@@ -724,7 +724,7 @@ void CQuestHandler::OnAchievementDone983(const MsgObject& msg)
 {
 	WReceivedPacket* pPacket = MSGJP(msg).Param2<WReceivedPacket*>();
 	std::vector<sQuestDone983> done;
-	unsigned long count = pPacket->Decode4();
+	unsigned long count = pPacket->DecodeCount();
 	for (unsigned int i = 0; i < count; ++i)
 	{
 		unsigned long typeId = pPacket->Decode4();

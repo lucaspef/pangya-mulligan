@@ -17,6 +17,8 @@ bool WSliceStr::Get(const char* key, const char* format, ...)
 	float fValue;
 	int i;
 	const char* p;
+	char c;
+	int width;
 
 	p = strstr(m_str, key);
 
@@ -33,10 +35,23 @@ bool WSliceStr::Get(const char* key, const char* format, ...)
 				while (*p == ' ' || *p == '\t')
 					p++;
 
-				for (i = 0; (unsigned char)(buf[i] = *p++) > ' '; i++)
-					if (strchr(s_delimiter, buf[i]))
+				// Fim do texto: p fica no terminador, os campos que faltam saem vazios
+				for (i = 0; (unsigned char)(c = *p++) > ' ';)
+				{
+					if (strchr(s_delimiter, c))
 						break;
+					if (i < (int)sizeof(buf) - 1)
+						buf[i++] = c;
+				}
 				buf[i] = '\0';
+				if (c == '\0')
+					p--;
+
+				// "%63s" limita o texto ao tamanho do destino
+				for (width = 0; *format >= '0' && *format <= '9'; format++)
+					width = width * 10 + *format - '0';
+				if (width > 0 && width < i)
+					buf[width] = '\0';
 
 				switch (*format++)
 				{

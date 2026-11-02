@@ -24,7 +24,8 @@ CFadingText::~CFadingText()
 void CFadingText::Print(const char* text, float time, FrWnd* pWnd, float x,
 	float y, eFadeType type, unsigned long color)
 {
-	strncpy(m_text, text, 512);
+	strncpy(m_text, text, 511);
+	m_text[511] = 0;
 	m_time = time;
 	m_pWnd = pWnd;
 	m_x = x;

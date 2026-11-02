@@ -347,7 +347,7 @@ bool CFxSpray::ParseFile(const char* filename, bool useCache)
 		if (!file)
 			return false;
 		char line[0x400];
-		while (file->Scan("%n", line))
+		while (file->Scan("%259n", line)) // tokens de 0x104 (maior linha real: 142)
 		{
 			if (!ParseLine(TrimA(line, " \t\n\r")))
 			{
@@ -368,7 +368,7 @@ bool CFxSpray::ParseFile(const char* filename, bool useCache)
 		if (!file)
 			return false;
 		char line[0x400];
-		while (file->Scan("%n", line))
+		while (file->Scan("%259n", line)) // tokens de 0x104 (maior linha real: 142)
 		{
 			if (!ParseLine(TrimA(line, " \t\n\r")))
 			{

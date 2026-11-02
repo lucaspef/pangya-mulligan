@@ -1095,7 +1095,8 @@ CDroplet::CDroplet()
 	m_numDroplet = 100;
 	m_pDroplet = new sDroplet[m_numDroplet];
 	m_pSpr = g_resrcmng->Get3DSpr("w-drop.dds", 0);
-	m_pSpr->SetRect(0.2f, 0.2f, 0.1f, 0.1f);
+	if (m_pSpr)
+		m_pSpr->SetRect(0.2f, 0.2f, 0.1f, 0.1f);
 }
 
 CDroplet::~CDroplet()
@@ -1143,7 +1144,7 @@ void CDroplet::Display()
 	{
 		((CShotParticle*)0)->CShotParticle::Process(0.0f);
 	}
-	if (!m_bActive)
+	if (!m_bActive || !m_pSpr)
 	{
 		return;
 	}

@@ -1077,6 +1077,7 @@ void CUccBaseItemDraw::InitializeItemDraw(int side, FrArea* area,
 {
 	CUccBase::Initialize(area, texture, mask);
 	strncpy(m_uccIndex, uccIndex, 9);
+	m_uccIndex[9] = 0; // UccIndex[9] cheio sem zero: strlen/GenerateTextureName liam alem do membro
 	m_typeID = typeID;
 	GenerateTextureName(side, typeID, m_uccIndex);
 	m_history.Clear();
@@ -1089,6 +1090,7 @@ CUccBaseItemDraw::CUccBaseItemDraw()
 	m_textureName[0] = 0;
 	m_uccIndex[0] = 0;
 	m_typeID = 0;
+	static_assert(offsetof(CUccBaseItemDraw, m_uccIndex) % 4 == 0, "m_uccIndex[10] precisa caber no pad do [9]");
 }
 
 CUccBaseItemDraw::~CUccBaseItemDraw()

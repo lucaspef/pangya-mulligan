@@ -122,11 +122,13 @@ void GroundItemMan::HandleMsg(const MsgObject& msg)
 		break;
 
 	case 0x2f6: // 983: flag de habilitado do jogador/time param1 -> *(char*)param2
-		*(char*)msg.param2 = m_enabled983[msg.param1];
+		if ((unsigned int)msg.param1 < sizeof(m_enabled983)) // jogador >= 4: sala com mais gente que o 983 esperava
+			*(char*)msg.param2 = m_enabled983[msg.param1];
 		break;
 
 	case M983(0x27b): // 983 0x2f5: param1 = ligar, param2 = jogador/time
-		m_enabled983[msg.param2] = (msg.param1 == 1);
+		if ((unsigned int)msg.param2 < sizeof(m_enabled983))
+			m_enabled983[msg.param2] = (msg.param1 == 1);
 		EnableGroundItemAll(msg.param1 == 1);
 		break;
 

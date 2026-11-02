@@ -489,7 +489,7 @@ bool FrGrandPrixOpenDlg::OnInit()
 		lua_system::lua_table_helper tbl = script->GetTable("gpFormOffset");
 		int count = lua_tinker::call<int, lua_tinker::table>(tbl.state, "get_array_size", tbl.table);
 		sGPFormPoint983* pOffset = m_offset;
-		for (int i = 1; i <= count; i++, pOffset++)
+		for (int i = 1; i <= count && i <= (int)_countof(m_offset); i++, pOffset++)
 		{
 			float x = AsTable983(LUAIDX983(tbl).GetTableByIndex(i).table).GetByIndex(1);
 			float y = AsTable983(LUAIDX983(tbl).GetTableByIndex(i).table).GetByIndex(2);
@@ -512,7 +512,7 @@ bool FrGrandPrixOpenDlg::OnInit()
 void __fastcall GPFormat2_983(unsigned short value, char* out)
 {
 	char buf[4] = { 0 };
-	sprintf_s(buf, 4, "%d", value);
+	_snprintf_s(buf, _TRUNCATE, "%d", value); // A929: 983 sprintf_s; hora do pak acima de 999 encerrava o processo
 	if (value < 10)
 	{
 		out[0] = '0';

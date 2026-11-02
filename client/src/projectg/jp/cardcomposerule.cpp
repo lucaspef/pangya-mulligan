@@ -102,7 +102,8 @@ bool CCardComposeRule983::NoRare3(const unsigned long* tids)
 {
 	for (int i = 0; i < 3; ++i)
 	{
-		if (ItemManager()->FindCard(tids[i])->RareType == 3)
+		IFF_STRUCT::sCard* pCard = ItemManager()->FindCard(tids[i]);
+		if (pCard && pCard->RareType == 3)
 			return false;
 	}
 	return true;
@@ -114,9 +115,10 @@ __int64 CCardComposeRule983::CalcPrice(const unsigned long* tids)
 	__int64 price = 0;
 	for (int i = 0; i < 3; ++i)
 	{
-		if (tids[i])
+		IFF_STRUCT::sCard* pCard = tids[i] ? ItemManager()->FindCard(tids[i]) : NULL;
+		if (pCard)
 		{
-			switch (ItemManager()->FindCard(tids[i])->RareType)
+			switch (pCard->RareType)
 			{
 			case 0:
 				price += 1000;

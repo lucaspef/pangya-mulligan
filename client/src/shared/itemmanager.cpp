@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include "itemmanager.h"
+#include "iffrecords.h"
 #include "tikimagicboxtable.h"
 #include "localize.h"
 #include "wlocalize.h"
@@ -57,6 +58,19 @@ struct IFF_FILE_HEADER
 	unsigned short nRecords;
 	unsigned int Version;
 };
+
+// Tabela de outro pak pode ser curta ou ter registro de outro tamanho: o 983 confia em nRecords e le fora do buffer.
+static unsigned short ClampIffRecords(const IFF_FILE_HEADER& hdr, int fileSize, int recordSize, const char* table)
+{
+	const int count = IffRecordCount(hdr.nRecords, fileSize, sizeof(IFF_FILE_HEADER), recordSize);
+	if ((__int64)hdr.nRecords * recordSize + sizeof(IFF_FILE_HEADER) != fileSize)
+	{
+		char msg[160];
+		sprintf(msg, "%s: %d registros de %d bytes, arquivo de %d bytes; lidos %d", table, (int)hdr.nRecords, recordSize, fileSize, count);
+		LogOut(0, msg);
+	}
+	return (unsigned short)count;
+}
 
 void DevFinalStockPrice(IFF_ITEM_COMMON& c)
 {
@@ -553,7 +567,7 @@ bool CItemManager::Load()
 	for (int i = 0; i < numItems; i++)
 	{
 		GetZipItemA(hz, i, &ze);
-		char* pBuffer = new char[ze.unc_size];
+		char* pBuffer = new char[ze.unc_size + sizeof(IFF_FILE_HEADER)](); // zerado: arquivo curto ou falha do unzip = 0 registros
 		UnzipItem(hz, i, pBuffer, ze.unc_size, ZIP_MEMORY);
 
 		if (!stricmp(ze.name, "Character.iff"))
@@ -867,10 +881,12 @@ void CItemManager::MakeCharMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sChar sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sChar), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sChar));
@@ -902,10 +918,12 @@ void CItemManager::MakePartMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sPart sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sPart), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sPart));
@@ -939,10 +957,12 @@ void CItemManager::MakeClubMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sClub sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sClub), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sClub));
@@ -975,10 +995,12 @@ void CItemManager::MakeClubSetMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sClubSet sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sClubSet), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sClubSet));
@@ -1010,10 +1032,12 @@ void CItemManager::MakeBallMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sBall sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sBall), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sBall));
@@ -1045,10 +1069,12 @@ void CItemManager::MakeItemMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sItem sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sItem));
@@ -1081,10 +1107,12 @@ void CItemManager::MakeCaddieMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sCaddie sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sCaddie), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sCaddie));
@@ -1116,10 +1144,12 @@ void CItemManager::MakeCadItemMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sCadItem sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sCadItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sCadItem));
@@ -1151,10 +1181,12 @@ void CItemManager::MakeSetItemMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sSetItem sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sSetItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sSetItem));
@@ -1187,10 +1219,12 @@ void CItemManager::MakeCourseMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sCourse sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sCourse), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sCourse));
@@ -1260,10 +1294,12 @@ void CItemManager::MakeMatchMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sMatch sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sMatch), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sMatch));
@@ -1283,10 +1319,12 @@ void CItemManager::MakeTitleMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sTitle sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sTitle), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sTitle));
@@ -1306,10 +1344,12 @@ void CItemManager::MakeEnchantMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sEnchant sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sEnchant), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sEnchant));
@@ -1329,10 +1369,12 @@ void CItemManager::MakeSkinMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sSkin sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sSkin), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sSkin));
@@ -1358,10 +1400,12 @@ void CItemManager::MakeCardMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sCard sCard;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sCard), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sCard, p, sizeof(IFF_STRUCT::sCard));
@@ -1393,10 +1437,12 @@ void CItemManager::MakeFurnitureMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sFurniture sFurni;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sFurniture), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&sFurni, p, sizeof(IFF_STRUCT::sFurniture));
@@ -1429,12 +1475,14 @@ void CItemManager::MakeCadieMagicBoxMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sCadieMagicBox record;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_CadieMagicBox.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sCadieMagicBox), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&record, p, sizeof(IFF_STRUCT::sCadieMagicBox));
@@ -1501,6 +1549,9 @@ void CItemManager::MakeCadieMagicBoxMap(char* Buf, int len)
 
 	for (; it != itEnd; ++it)
 	{
+		// numero vem do IFF; tabela de outro pak pode passar da contagem fixa
+		if ((*it).uiNumber - 1 >= (unsigned int)g_NumIndexRecycleItem)
+			continue;
 		memset(&g_ArrayRecycleItem[(*it).uiNumber - 1], 0,
 			sizeof(sRecycleItem));
 
@@ -1543,11 +1594,13 @@ void CItemManager::MakeRandomRecycleMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sRandomRecycle record;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	std::set<unsigned long> seqNumberSet;
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sRandomRecycle), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&record, p, sizeof(IFF_STRUCT::sRandomRecycle));
@@ -1580,10 +1633,12 @@ void CItemManager::MakeTikiRecipeMap(char* Buf, int len)
 	IFF_STRUCT::sTikiOutputTable record;
 
 	IFF_FILE_HEADER _hdr;
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sTikiOutputTable), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&record, p, sizeof(IFF_STRUCT::sTikiOutputTable));
@@ -1599,10 +1654,12 @@ void CItemManager::MakeTikiPointTableMap(char* Buf, int len)
 	IFF_STRUCT::sTikiPointTable record;
 
 	IFF_FILE_HEADER _hdr;
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sTikiPointTable), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&record, p, sizeof(IFF_STRUCT::sTikiPointTable));
@@ -1618,10 +1675,12 @@ void CItemManager::MakeTikiSpecialTableMap(char* Buf, int len)
 	IFF_STRUCT::sTikiSpecialRecipe record;
 
 	IFF_FILE_HEADER _hdr;
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sTikiSpecialRecipe), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&record, p, sizeof(IFF_STRUCT::sTikiSpecialRecipe));
@@ -1658,12 +1717,14 @@ void CItemManager::MakeRandomBoxMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sRandomBox box;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_RandomBoxMap.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sRandomBox), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&box, p, sizeof(IFF_STRUCT::sRandomBox));
@@ -1749,12 +1810,14 @@ void CItemManager::MakeNonVisibleItemMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sNonVisibleItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_NonVisibleItemMap.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sNonVisibleItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&item, p, sizeof(IFF_STRUCT::sNonVisibleItem));
@@ -1777,12 +1840,14 @@ void CItemManager::MakeSubscriptionItemMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sSubscriptionItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_SubscriptionItemMap.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sSubscriptionItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&item, p, sizeof(IFF_STRUCT::sSubscriptionItem));
@@ -1805,10 +1870,12 @@ void CItemManager::MakeHairStyleMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sHairStyle sHair;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sHairStyle), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sHair, p, sizeof(IFF_STRUCT::sHairStyle));
@@ -1840,10 +1907,12 @@ void CItemManager::MakeChildItemMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sChildItem sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sChildItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sChildItem));
@@ -1863,10 +1932,12 @@ void CItemManager::MakeAuxPartMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sAuxPart sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sAuxPart), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sAuxPart));
@@ -1893,10 +1964,12 @@ void CItemManager::MakeQuestDropMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sQuestDrop sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sQuestDrop), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sQuestDrop));
@@ -1922,10 +1995,12 @@ void CItemManager::MakeQuestMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sQuest sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sQuest), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sQuest));
@@ -1949,10 +2024,12 @@ void CItemManager::MakeMascotMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sMascot sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sMascot), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::sMascot));
@@ -1985,13 +2062,16 @@ void CItemManager::MakeDescMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sDesc desc;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sDesc), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&desc, p, sizeof(IFF_STRUCT::sDesc));
+		desc.Desc[sizeof(desc.Desc) - 1] = 0;
 		p += sizeof(IFF_STRUCT::sDesc);
 
 		m_DescMap.insert(std::map<unsigned int, IFF_STRUCT::sDesc>::value_type(
@@ -2004,10 +2084,12 @@ void CItemManager::MakeFurnitureAbilityList(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sFurnitureAbility sOs;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sFurnitureAbility), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sOs, p, sizeof(IFF_STRUCT::sFurnitureAbility));
@@ -2027,12 +2109,14 @@ void CItemManager::MakeAchievementMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sAchievement item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_AchievementMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sAchievement), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sAchievement));
@@ -2052,12 +2136,14 @@ void CItemManager::MakeCounterItemMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sCounterItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_CounterItemMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sCounterItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sCounterItem));
@@ -2077,12 +2163,14 @@ void CItemManager::MakeQuestStuffMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sQuestStuff item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_QuestStuffMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sQuestStuff), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sQuestStuff));
@@ -2102,12 +2190,14 @@ void CItemManager::MakeQuestItemMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sQuestItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_QuestItemMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sQuestItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sQuestItem));
@@ -2127,12 +2217,14 @@ void CItemManager::MakeErrorCodeInfoMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sErrorCodeInfo item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_ErrorCodeInfoMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sErrorCodeInfo), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sErrorCodeInfo));
@@ -2152,12 +2244,14 @@ void CItemManager::MakeArtifactManaInfoMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sArtifactManaInfo item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_ArtifactManaInfoMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sArtifactManaInfo), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sArtifactManaInfo));
@@ -2177,12 +2271,14 @@ void CItemManager::MakeGrandPrixDataMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sGrandPrixData item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_GrandPrixDataMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sGrandPrixData), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sGrandPrixData));
@@ -2202,12 +2298,14 @@ void CItemManager::MakeAbilityMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sAbility item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_AbilityMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sAbility), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sAbility));
@@ -2227,12 +2325,14 @@ void CItemManager::MakeSetEffectTableMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sSetEffectTable item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_SetEffectTableMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sSetEffectTable), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sSetEffectTable));
@@ -2249,12 +2349,14 @@ void CItemManager::MakeHoleCupDropItemMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sHoleCupDropItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_HoleCupDropItemMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sHoleCupDropItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sHoleCupDropItem));
@@ -2271,10 +2373,12 @@ void CItemManager::MakeShopLimitItemMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sShopLimitItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sShopLimitItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&item, p, sizeof(IFF983::sShopLimitItem));
@@ -2295,12 +2399,14 @@ void CItemManager::MakeLevelUpPrizeItemMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sLevelUpPrizeItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_LevelUpPrizeItemMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, 0xc0, __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, 0xc0);
@@ -2320,10 +2426,12 @@ void CItemManager::MakeScratchShopConfig983(char* Buf, int len)
 {
 	IFF_FILE_HEADER _hdr;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sScratchShopConfig), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		m_ScratchShopConfig983 = *(IFF983::sScratchShopConfig*)p;
@@ -2335,10 +2443,12 @@ void CItemManager::MakeWorkShopChangeProb983(char* Buf, int len)
 {
 	IFF_FILE_HEADER _hdr;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sClubSetWorkShopChangeProb), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		m_WorkShopChangeProb983 = *(IFF983::sClubSetWorkShopChangeProb*)p;
@@ -2350,10 +2460,12 @@ void CItemManager::MakeAttendancePrizeConfig983(char* Buf, int len)
 {
 	IFF_FILE_HEADER _hdr;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sAttendancePrizeConfig), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		m_AttendancePrizeConfig983 = *(IFF983::sAttendancePrizeConfig*)p;
@@ -2365,10 +2477,12 @@ void CItemManager::MakeAlchemyConfig983(char* Buf, int len)
 {
 	IFF_FILE_HEADER _hdr;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(unsigned long), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		m_AlchemyConfig983 = *(unsigned long*)p;
@@ -2384,12 +2498,14 @@ void CItemManager::MakePointShopMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sPointShop item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_PointShopMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sPointShop), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&item, p, sizeof(IFF983::sPointShop));
@@ -2407,6 +2523,7 @@ void CItemManager::MakeScratchItem983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sScratchItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
@@ -2416,6 +2533,7 @@ void CItemManager::MakeScratchItem983(char* Buf, int len)
 
 	m_ScratchItem983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sScratchItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&item, p, sizeof(IFF983::sScratchItem));
@@ -2435,12 +2553,14 @@ void CItemManager::MakeBongdariShopNormalItem983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sBongdariShopNormalItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_BongdariShopNormalItem983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sBongdariShopNormalItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sBongdariShopNormalItem));
@@ -2457,12 +2577,14 @@ void CItemManager::MakeBongdariShopRareItem983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sBongdariShopRareItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_BongdariShopRareItem983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sBongdariShopRareItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&item, p, sizeof(IFF983::sBongdariShopRareItem));
@@ -2527,6 +2649,7 @@ void CItemManager::MakeBroadCastNotices983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sBroadCastNotice item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
@@ -2539,6 +2662,7 @@ void CItemManager::MakeBroadCastNotices983(char* Buf, int len)
 	if (pNotices)
 		pNotices->clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sBroadCastNotice), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&item, p, sizeof(IFF983::sBroadCastNotice));
@@ -2563,6 +2687,7 @@ void CItemManager::MakeTwinsItemMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sTwinsItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
@@ -2570,6 +2695,7 @@ void CItemManager::MakeTwinsItemMap983(char* Buf, int len)
 	if (m_pTwinsItemMap983)
 		m_pTwinsItemMap983->clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sTwinsItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sTwinsItem));
@@ -2612,12 +2738,14 @@ void CItemManager::MakeScratchShopItem983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sScratchShopItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_ScratchShopItem983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sScratchShopItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sScratchShopItem));
@@ -2634,12 +2762,14 @@ void CItemManager::MakeWorkShopLevelUpProb983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sClubSetWorkShopLevelUpProb item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_WorkShopLevelUpProb983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sClubSetWorkShopLevelUpProb), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sClubSetWorkShopLevelUpProb));
@@ -2655,12 +2785,14 @@ void CItemManager::MakeWorkShopLevelUpLimit983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sClubSetWorkShopLevelUpLimit item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_WorkShopLevelUpLimit983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sClubSetWorkShopLevelUpLimit), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sClubSetWorkShopLevelUpLimit));
@@ -2676,12 +2808,14 @@ void CItemManager::MakeWorkShopRankUpExp983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sClubSetWorkShopRankUpExp item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_WorkShopRankUpExp983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sClubSetWorkShopRankUpExp), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sClubSetWorkShopRankUpExp));
@@ -2697,12 +2831,14 @@ void CItemManager::MakeWorkShopChangeItem983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sClubSetWorkShopChangeItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_WorkShopChangeItem983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sClubSetWorkShopChangeItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sClubSetWorkShopChangeItem));
@@ -2718,12 +2854,14 @@ void CItemManager::MakeAttendancePrizeItem983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sAttendancePrizeItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_AttendancePrizeItem983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sAttendancePrizeItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sAttendancePrizeItem));
@@ -2740,12 +2878,14 @@ void CItemManager::MakeGrandPrixSpecialHoleMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sGrandPrixSpecialHole item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_GrandPrixSpecialHoleMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sGrandPrixSpecialHole), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sGrandPrixSpecialHole));
@@ -2777,12 +2917,14 @@ void CItemManager::MakeGrandPrixConditionEquipMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sGrandPrixConditionEquip item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_GrandPrixConditionEquipMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sGrandPrixConditionEquip), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sGrandPrixConditionEquip));
@@ -2809,12 +2951,14 @@ void CItemManager::MakeGrandPrixRankRewardMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sGrandPrixRankReward item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_GrandPrixRankRewardMap983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sGrandPrixRankReward), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sGrandPrixRankReward));
@@ -2842,6 +2986,7 @@ void CItemManager::MakeGrandPrixAIMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sGrandPrixAIOptionalData item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
@@ -2850,6 +2995,7 @@ void CItemManager::MakeGrandPrixAIMap983(char* Buf, int len)
 	m_GrandPrixAIMap983.clear();
 	m_GrandPrixAIMap983_4e4.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sGrandPrixAIOptionalData), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&item, p, sizeof(IFF983::sGrandPrixAIOptionalData));
@@ -2906,10 +3052,12 @@ void CItemManager::MakeAddonPartMap983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sAddonPart item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sAddonPart), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&item, p, sizeof(IFF983::sAddonPart));
@@ -2945,12 +3093,14 @@ void CItemManager::MakeMemorialShopRareItem983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sMemorialShopRareItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_MemorialShopRareItem983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sMemorialShopRareItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sMemorialShopRareItem));
@@ -2966,12 +3116,14 @@ void CItemManager::MakeMemorialShopCoinItem983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sMemorialShopCoinItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_MemorialShopCoinItem983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sMemorialShopCoinItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sMemorialShopCoinItem));
@@ -2987,12 +3139,14 @@ void CItemManager::MakeMemorialShopNormalItem983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sMemorialShopNormalItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_MemorialShopNormalItem983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sMemorialShopNormalItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sMemorialShopNormalItem));
@@ -3008,12 +3162,14 @@ void CItemManager::MakeCharacterMastery983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sCharacterMastery item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_CharacterMastery983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sCharacterMastery), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sCharacterMastery));
@@ -3029,12 +3185,14 @@ void CItemManager::MakeCaddieVoiceTable983(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF983::sCaddieVoice item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
 	m_CaddieVoice983.clear();
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF983::sCaddieVoice), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF983::sCaddieVoice));
@@ -3265,10 +3423,12 @@ void CItemManager::MakeCutinInforMationTableMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::S5::sCutinInformation sItem;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::S5::sCutinInformation), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memmove(&sItem, p, sizeof(IFF_STRUCT::S5::sCutinInformation));
@@ -4237,7 +4397,7 @@ unsigned int CItemManager::GetItemSalePrice(unsigned long in_dwTid,
 		IFF_STRUCT::sItem* pItem2 = FindItem(in_dwTid);
 
 		int num;
-		if (pItem2->COM[0] > 0)
+		if (pItem2 && pItem2->COM[0] > 0)
 			num = in_iCount / pItem2->COM[0];
 		else
 			num = in_iCount;
@@ -5895,10 +6055,12 @@ void CItemManager::MakeSpecialPrizeItemMap(char* Buf, int len)
 	IFF_FILE_HEADER _hdr;
 	IFF_STRUCT::sSpecialPrizeItem item;
 
+	const int iffSize = len;
 	len = sizeof(IFF_FILE_HEADER);
 	memcpy(&_hdr, Buf, len);
 	char* p = Buf + len;
 
+	_hdr.nRecords = ClampIffRecords(_hdr, iffSize, sizeof(IFF_STRUCT::sSpecialPrizeItem), __FUNCTION__);
 	for (int i = 0; i < _hdr.nRecords; i++)
 	{
 		memcpy(&item, p, sizeof(IFF_STRUCT::sSpecialPrizeItem));

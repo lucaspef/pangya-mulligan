@@ -22,8 +22,7 @@ extern "C" void __cdecl jp983_rastro(const char* fmt, ...); // B1392 temporario
 extern WResourceManager* g_resrcmng;
 extern WMatrix g_camera;
 extern WView* g_view;
-const char* GetStrConst(const char* str, char* out);
-const char* GetCharsTillSpace(const char* src, char* dst);
+#include "commonutil.h"
 
 // Campos do 983 que os cabeçalhos da A (CFxSequence/CFxSpray do 645) não têm: acesso pelo deslocamento medido.
 template <class T> static inline T& FxField983(void* p, int offset)
@@ -617,7 +616,7 @@ void FxInterpreter::DetachNamed(int slot)
 // 00888f00
 void FxInterpreter::DetachSlot(int id, int slot)
 {
-	if ((unsigned int)slot > 4)
+	if ((unsigned int)slot >= 4)
 		return;
 	for (std::map<unsigned long, std::list<void*> >::iterator it = m_groups[slot].begin(); it != m_groups[slot].end(); ++it)
 	{
@@ -1074,7 +1073,7 @@ bool FxInterpreter::ApplyMode(int reserved)
 				if (rule != rules.end())
 				{
 					info->m_bActive = rule->m_bActive;
-					strcpy(buf, info->m_name.c_str());
+					strncpy_s(buf, info->m_name.c_str(), _TRUNCATE);
 					SetFxActive(GetFxType(buf), info->m_pFx, info->m_bActive);
 					m_modeFx.push_back(info);
 				}
@@ -1087,7 +1086,7 @@ bool FxInterpreter::ApplyMode(int reserved)
 			if (rule != rules.end())
 			{
 				info->m_bActive = rule->m_bActive;
-				strcpy(buf, info->m_name.c_str());
+				strncpy_s(buf, info->m_name.c_str(), _TRUNCATE);
 				SetFxActive(GetFxType(buf), info->m_pFx, info->m_bActive);
 				m_modeFx.push_back(info);
 			}
@@ -1172,16 +1171,16 @@ void FxInterpreter::StopFx983(const char* file)
 // 00882350
 bool FxInterpreter::ParseKey(const char** str, char* key, int format, int index)
 {
-	char* buf = new char[64];
+	char* buf = new char[65]; // 1 a mais: token de 64+ continua recusado por len < 64
 	const char* src = *str;
 	const char* next;
 	switch (format)
 	{
 	case eSF_FX:
-		next = GetCharsTillSpace(src + strlen(m_tokens[eSF_FX][index].c_str()), buf);
+		next = GetCharsTillSpaceN(src + strlen(m_tokens[eSF_FX][index].c_str()), buf, 65);
 		break;
 	case eSF_PLAYIF:
-		next = GetStrConst(src + strlen(m_tokens[eSF_PLAYIF][index].c_str()), buf);
+		next = GetStrConstN(src + strlen(m_tokens[eSF_PLAYIF][index].c_str()), buf, 65);
 		break;
 	default:
 		return false;
@@ -1212,15 +1211,15 @@ bool FxInterpreter::ParseName(const char** str, char* name, std::vector<std::str
 	{
 	case eSF_FX:
 		if (bAfterKey)
-			*str = GetStrConst(*str, name);
+			*str = GetStrConstN(*str, name, 64);
 		else
-			*str = GetCharsTillSpace(*str + strlen(m_tokens[eSF_FX][index].c_str()), name);
+			*str = GetCharsTillSpaceN(*str + strlen(m_tokens[eSF_FX][index].c_str()), name, 64);
 		break;
 	case eSF_PLAYIF:
 		if (bAfterKey)
-			*str = GetStrConst(*str, name);
+			*str = GetStrConstN(*str, name, 64);
 		else
-			*str = GetStrConst(*str + strlen(m_tokens[eSF_PLAYIF][index].c_str()), name);
+			*str = GetStrConstN(*str + strlen(m_tokens[eSF_PLAYIF][index].c_str()), name, 64);
 		break;
 	default:
 		return false;
@@ -1281,6 +1280,8 @@ bool FxInterpreter::AttachGroups(int kind, const char* name, const char* key, st
 // 0088e860
 int FxInterpreter::ParseBoundingBoxScript_fx(WPuppet* pet)
 {
+	if (!pet)
+		return 0;
 	bool bAttached = false;
 	for (w_bound_box* box = pet->m_bbList.Start(); box; box = pet->m_bbList.Next())
 	{
@@ -1534,7 +1535,7 @@ int FxInterpreter::ParseClubScript_fx(sClubSet* pClubSet, int slot)
 // 00883b70
 bool FxInterpreter::HasGroupOrder(unsigned int slot, unsigned long group)
 {
-	if (group != 0 && slot < 5)
+	if (group != 0 && slot < 4)
 	{
 		for (std::list<unsigned long>::iterator it = m_groupOrder[slot].begin(); it != m_groupOrder[slot].end(); ++it)
 		{

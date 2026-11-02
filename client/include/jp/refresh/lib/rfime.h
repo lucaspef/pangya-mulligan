@@ -82,7 +82,6 @@ public:
 	void UpdateStatus983(); // 00451760 (EventInputMethodStatusChanged)
 	int UpdateLocale983(DWORD layout); // 00452300 (devolve o charset; o 983 não usa)
 	void FlushStrings983(); // 00451c60 (composição ou resultado → _results)
-	int GetCompositionString983(wchar_t* buffer, int length); // 00451f20
 	void ReadCompositionString983(DWORD type); // 00451fc0 (GCS_COMPSTR → _composition, GCS_RESULTSTR → _result)
 
 	HWND _parent; // +0x04

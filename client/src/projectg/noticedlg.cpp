@@ -241,6 +241,13 @@ void FrNoticeDlg::OnViewBtnDown()
 {
 	WPoint point;
 	point = g_pFresh->GetManager()->GetMousePos();
+	// 983 00ae5250 indexa sem testar; sem imagem (notice ausente/vazio em outro pak, OnInit 00ae4f00 abre 550x400)
+	// o clique lia vector vazio (AV). Fecha como clique fora dos botões.
+	if (m_curIndex >= m_images.size())
+	{
+		Close(FrNONE, true);
+		return;
+	}
 	std::list<sNoticeImage::sBn>::iterator it;
 	for (it = m_images[m_curIndex].bnList.begin();
 		it != m_images[m_curIndex].bnList.end(); ++it)

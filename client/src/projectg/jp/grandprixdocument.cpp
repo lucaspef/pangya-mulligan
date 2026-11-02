@@ -288,7 +288,7 @@ void CGrandPrixDocument::UpdateKinds983()
 // 005564a0
 void CGrandPrixDocument::Read5564a0_983(WReceivedPacket* pPacket)
 {
-	int n = pPacket->Decode4();
+	int n = pPacket->DecodeCount();
 	m_list.clear();
 	m_list.reserve(n);
 	for (int i = 0; i < n; ++i)
@@ -334,7 +334,7 @@ void CGrandPrixDocument::Fn5566e0_983(sRoomInfo* pRoom)
 // 005580d0: pares (ticket, kind)
 static void ReadPairs983(std::vector<CGrandPrixDocument::KindPair>& pairs, WReceivedPacket* pPacket)
 {
-	int n = pPacket->Decode4();
+	int n = pPacket->DecodeCount();
 	pairs.clear();
 	pairs.reserve(n);
 	for (int i = 0; i < n; ++i)
@@ -402,6 +402,8 @@ void CGrandPrixDocument::Read5582b0_983(WReceivedPacket* pPacket)
 			}
 			if (it == m_awards.end())
 			{
+				if (next >= picks.size())
+					break; // lugar repetido ou fora de 1..3 vindo do servidor: a soma acima nao garante npc
 				sGPAward983 award;
 				award.uid = picks.at(next++);
 				award.place = place;
@@ -545,7 +547,7 @@ void CGrandPrixDocument::GetRoomItems983(std::vector<sGPRoomItem983*>* pOut, __i
 void CGrandPrixDocument::ReadList983(WReceivedPacket* pPacket)
 {
 	m_list.clear();
-	int n = pPacket->Decode4();
+	int n = pPacket->DecodeCount();
 	for (int i = 0; i < n; ++i)
 	{
 		int v = pPacket->Decode4();

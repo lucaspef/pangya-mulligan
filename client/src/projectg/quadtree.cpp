@@ -577,18 +577,28 @@ CQuadTree::CQuadTree()
 
 CQuadTree::~CQuadTree()
 {
-	for (int i = 0; i < m_quadWidth * m_quadHeight; i++)
-	{
-		if (m_pQuad[i].meshIndex != NULL)
-		{
-			delete[] m_pQuad[i].meshIndex;
-			m_pQuad[i].meshIndex = NULL;
-		}
-	}
+	Clear();
+}
+
+// 983 (0095fa40): tambem chamada por ~WPolySoup (00948998), para o PVS nao guardar soup e modelos ja apagados
+void CQuadTree::Clear()
+{
+	m_pPolySoup = NULL;
+	m_pHolder = NULL;
 	if (m_pQuad != NULL)
 	{
+		for (int i = 0; i < m_quadWidth * m_quadHeight; i++)
+		{
+			if (m_pQuad[i].meshIndex != NULL)
+			{
+				delete[] m_pQuad[i].meshIndex;
+				m_pQuad[i].meshIndex = NULL;
+			}
+		}
 		delete[] m_pQuad;
 		m_pQuad = NULL;
+		m_quadWidth = 0;
+		m_quadHeight = 0;
 	}
 	m_water.clear();
 	m_colList.clear();
@@ -726,7 +736,7 @@ void CQuadTree::MakeObjStructure(short objIndex, int option, bool bRebuild)
 			{
 				char node[0x20];
 				WSliceStr slice = pModel->option;
-				slice.Get("*node", "%s", node);
+				slice.Get("*node", "%31s", node);
 				slice.Get("*stand", "%f", &pMove->m_standTime);
 				slice.Get("*move", "%f", &pMove->m_moveTime);
 				CNodeContainer* pNode = m_pPolySoup->FindNode(node);
@@ -2818,7 +2828,7 @@ void CQuadTree::ScriptProcess(int index, float from, float to)
 	}
 }
 
-const char* GetStrConst(const char* str, char* out);
+#include "commonutil.h"
 
 void CQuadTree::ParsePuppetScript(int index, const char* script)
 {
@@ -2859,7 +2869,7 @@ void CQuadTree::ParsePuppetScript(int index, const char* script)
 				break;
 			}
 		} while (c != '\0');
-		if (count <= 1)
+		if (count <= 1 || count >= (int)sizeof(cmd)) // frame de outro pak: nome longo nao e comando
 		{
 			break;
 		}
@@ -2909,7 +2919,7 @@ void CQuadTree::ParsePuppetScript(int index, const char* script)
 								strFx.substr(0,
 									strFx.length() - 4 - strSuffix.length()) +
 								"water" + strSuffix;
-							strcpy(fx, strFx.c_str());
+							strncpy_s(fx, strFx.c_str(), _TRUNCATE);
 						}
 					}
 					Attacher attacher;
@@ -2956,7 +2966,7 @@ void CQuadTree::ParsePuppetScript(int index, const char* script)
 				sprintf(key, "sound%d", index);
 				script = GetStrConst(script, arg);
 				int loop = 0;
-				sscanf(arg, "%s %d", m_aniObjs[index]->m_sound, &loop);
+				sscanf(arg, "%31s %d", m_aniObjs[index]->m_sound, &loop);
 				if (g_audio->IsPlaying(key))
 				{
 					g_audio->StopSfx(key);

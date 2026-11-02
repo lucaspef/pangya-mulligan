@@ -15,7 +15,7 @@ namespace
 		int result = _vsnprintf(buffer, sizeof(buffer) - 1, format, args);
 		va_end(args);
 
-		if (result != -1)
+		if (result != -1 && result < (int)sizeof(buffer) - 1) // o '\n' precisa caber
 		{
 			size_t length = strlen(buffer);
 			buffer[length] = '\n';

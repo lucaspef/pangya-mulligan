@@ -334,12 +334,12 @@ void FrMascotInfoDlg::OnOkBtnUp()
 						pFee = DYNAMIC_CAST(FrStatic,
 							(FrWnd*)m_pConfirmDlg->FindChildByName("mypang"));
 						if (pFee)
-							pFee->SetCaption(MakeStr("%d", Doc()->m_myInfo.stat.i64Pang));
+							pFee->SetCaption(MakeStr("%d", (int)Doc()->m_myInfo.stat.i64Pang));
 						pFee = DYNAMIC_CAST(FrStatic,
 							(FrWnd*)m_pConfirmDlg->FindChildByName("remainpang"));
-						if (pFee)
+						if (pFee && pMascot)
 							pFee->SetCaption(MakeStr("%d",
-								Doc()->m_myInfo.stat.i64Pang - pMascot->MsgFee));
+								(int)(Doc()->m_myInfo.stat.i64Pang - pMascot->MsgFee)));
 					}
 					else
 						m_pConfirmDlg->SetMessage(K2L_Compatibility("\270\266\275\272\304\332\306\256 \270\336\274\274\301\366\270\246 \272\257\260\346 \307\317\275\303\260\332\275\300\264\317\261\356?"), false);

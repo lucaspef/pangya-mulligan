@@ -37,7 +37,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(JP983Root)src\fresh\third_party\zlib-1.2.2</AdditionalIncludeDirectories>
-      <AdditionalOptions></AdditionalOptions>
+      <AdditionalOptions>/source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -67,7 +67,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS;JP983_VS_DEBUG</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(JP983Root)src\fresh\third_party\zlib-1.2.2</AdditionalIncludeDirectories>
-      <AdditionalOptions></AdditionalOptions>
+      <AdditionalOptions>/source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>

@@ -252,12 +252,12 @@ struct sFortuneOpenText983
 
 void sFortuneOpenText983::Set(const char* res)
 {
-	strcpy_s(name, 0x40, res);
+	strncpy_s(name, 0x40, res, _TRUNCATE); // strcpy_s aborta o jogo com texto longo de outro pak
 	IFF_STRUCT::sItem* pItem = ItemManager()->FindItem(
 		RbPouchPrizeList983::Instance983()->m_typeId);
-	strcpy_s(cap1, 0xc0,
-		MakeStr(K2L_Compatibility("%s \300\273(\270\246)"), pItem->c.Name));
-	strcpy_s(cap2, 0xc0, K2L_Compatibility("\277\255\276\356 \264\331\300\275\260\372 \260\260\300\272 \276\306\300\314\305\333\265\351\300\273 \310\271\265\346\307\337\275\300\264\317\264\331."));
+	strncpy_s(cap1, 0xc0,
+		MakeStr(K2L_Compatibility("%s \300\273(\270\246)"), pItem ? pItem->c.Name : ""), _TRUNCATE);
+	strncpy_s(cap2, 0xc0, K2L_Compatibility("\277\255\276\356 \264\331\300\275\260\372 \260\260\300\272 \276\306\300\314\305\333\265\351\300\273 \310\271\265\346\307\337\275\300\264\317\264\331."), _TRUNCATE);
 }
 
 void FrFortuneOpenDlg::SetItemNewList()

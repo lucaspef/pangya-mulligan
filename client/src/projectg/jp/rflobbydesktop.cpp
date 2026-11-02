@@ -2078,7 +2078,7 @@ void RFLobbyMessengerBubble::Show983(const std::string& text)
 		if (box)
 		{
 			RFRect rc = box->GetRect();
-			box->SetRect(RFRect(rc.left, rc.right, rc.top, area->GetSize().height + 14.0));
+			box->SetRect(RFRect(rc.left, rc.top, rc.right, area->GetSize().height + 14.0));
 			SetRect(box->GetRect());
 			RFWnd* parent = s_pParent983;
 			parent->SetRect(box->GetRect());

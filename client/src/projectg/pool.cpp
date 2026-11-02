@@ -494,6 +494,8 @@ void CPoolReflective::BuildMesh()
 
 void CPoolReflective::Droplet()
 {
+	if (m_width < 2 || m_height < 2) // area sem largura no mapa: rand() % 0
+		return;
 	int x = rand() % (m_width - 1);
 	int y = rand() % (m_height - 1);
 

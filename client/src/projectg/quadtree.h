@@ -305,6 +305,7 @@ public:
 		const WVector& dirZ, float width, float height, enumPolyBlend blend,
 		bool bFlag);
 	void Reserve(short num);
+	void Clear();
 	bool IsOBArea(const WVector& pos);
 	void MakeBaseStructure(WPolySoup::sModel* model, bool bRebuild);
 	void MakeObjStructure(short index, int modelIndex, bool bRebuild);

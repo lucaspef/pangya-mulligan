@@ -998,7 +998,7 @@ bool FrAchievement::OnInit()
 	{
 		lua_system::lua_table_helper tbl = script->GetTable("ach_bitmap_list");
 		int count = lua_tinker::call<int, lua_tinker::table>(tbl.state, "get_array_size", tbl.table);
-		for (int i = 1; i <= count; i++)
+		for (int i = 1; i <= count && i <= (int)_countof(m_bitmaps); i++)
 		{
 			const char* bmpName = ((LuaChild983&)tbl).GetInl983<const char*>(i);
 			m_bitmaps[i - 1] = g_pFresh->GetBitmap(bmpName);
@@ -1010,7 +1010,7 @@ bool FrAchievement::OnInit()
 		lua_system::lua_table_helper tbl = script->GetTable("ach_position");
 		int count = lua_tinker::call<int, lua_tinker::table>(tbl.state, "get_array_size", tbl.table);
 		float* pos = &m_pos[0][0];
-		for (int i = 1; i <= count; i += 2)
+		for (int i = 1; i <= count && i < (int)_countof(m_pos) * 2; i += 2)
 		{
 			float x = ((LuaChild983&)tbl).GetInl983<float>(i);
 			float y = ((LuaChild983&)tbl).GetInl983<float>(i + 1);

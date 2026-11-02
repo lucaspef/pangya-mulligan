@@ -119,4 +119,6 @@ private:
 	WFont* m_pFont;
 	CHoleRuler983* m_pRuler; // 983 +0x260: so no Hole-in-One com realGameType 0xe (OnLoad 00729f80)
 	std::vector<int> m_vec983_264; // 983 +0x264: vector zerado no ctor 0072ca70 e liberado no dtor 0072cba0; sem outro acesso no 983 (tipo do elemento desconhecido)
+	int m_nRivals983; // so nosso: tamanho de m_pRivals (o 983 nao guarda)
+	bool IsRivalSlot983(int r) const { return m_pRivals != NULL && r >= 0 && r < m_nRivals983; }
 };

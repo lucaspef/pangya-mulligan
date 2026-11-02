@@ -184,7 +184,7 @@ void FrSelfDesignAccept::SetData983(int arg1, int arg2, const char* uccIndex, co
 {
 	m_arg1 = arg1;
 	m_arg2 = arg2;
-	strcpy(m_uccIndex, uccIndex);
+	strncpy(m_uccIndex, uccIndex, sizeof(m_uccIndex)); // UccIndex[9] de pacote pode vir sem zero: strcpy pisava m_text
 	m_text = text;
 }
 
@@ -193,7 +193,7 @@ void FrSelfDesignExhibit::SetData983(int arg1, int arg2, const char* uccIndex, c
 {
 	m_arg1 = arg1;
 	m_arg2 = arg2;
-	strcpy(m_uccIndex, uccIndex);
+	strncpy(m_uccIndex, uccIndex, sizeof(m_uccIndex)); // UccIndex[9] de pacote pode vir sem zero: strcpy pisava m_text
 	m_text = text;
 }
 
@@ -211,7 +211,7 @@ bool CCommodityListJp983::Load983(unsigned char* buf, int size)
 	if (count < 1)
 		return false;
 	sCommodityRecord983* recs = new sCommodityRecord983[count];
-	memcpy(recs, cb.GetNewBuffer(), cb.GetNewSize());
+	memcpy(recs, cb.GetNewBuffer(), count * sizeof(sCommodityRecord983)); // E489: sobra < 1 registro estourava recs
 	EnterCriticalSection(&m_cs);
 	for (int i = 0; i < count; ++i)
 	{
@@ -221,7 +221,8 @@ bool CCommodityListJp983::Load983(unsigned char* buf, int size)
 			sCommodity entry;
 			entry.part = *pPart;
 			entry.commodityId = recs[i].commodityId;
-			strcpy(entry.uccIndex, recs[i].uccIndex);
+			strncpy(entry.uccIndex, recs[i].uccIndex, 9); // E489: 983 strcpy; 9 bytes sem terminador corriam ao registro seguinte
+			entry.uccIndex[9] = 0;
 			std::pair<const unsigned long, sCommodity> kv(entry.commodityId, entry);
 			if (m_map.insert(kv).second == true)
 			{

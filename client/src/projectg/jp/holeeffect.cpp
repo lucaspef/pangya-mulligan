@@ -66,6 +66,9 @@ static inline float UNSET983(float v)
 // 0056efc0
 void CHoleEffect::ApplyEvent983(const sItem983& ev)
 {
+	// "index" vem da sceneevent do .lua
+	if ((unsigned int)ev.index >= _countof(m_effects))
+		return;
 	sItem983& e = m_effects[ev.index];
 	e.fromX = (ev.fromX == -1.0f) ? e.fromX : ev.fromX;
 	e.fromY = (ev.fromY == -1.0f) ? e.fromY : ev.fromY;

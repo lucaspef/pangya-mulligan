@@ -208,14 +208,17 @@ int DirectInputKeyboard::WinProc(UINT message, unsigned long wParam,
 	{
 		return 0;
 	}
-	if (wParam)
+	if (this->diKey)
 	{
-		this->Acquire();
-		this->GetDeviceData();
-	}
-	else
-	{
-		this->diKey->Unacquire();
+		if (wParam)
+		{
+			this->Acquire();
+			this->GetDeviceData();
+		}
+		else
+		{
+			this->diKey->Unacquire();
+		}
 	}
 	this->ClearBuffer();
 	return 1;
@@ -263,7 +266,8 @@ void DirectInputKeyboard::GetDeviceData()
 			break;
 		for (DWORD i = 0; i < dwItems;)
 		{
-			DWORD n = dwItems;
+			// 983 repete dwItems aqui: ao dar a volta no anel lia dims fora do fim
+			DWORD n = dwItems - i;
 			if (n >= 256 - (bufCur & 255))
 				n = 256 - (bufCur & 255);
 			memcpy(&keybuf[bufCur & 255], &dims[i],

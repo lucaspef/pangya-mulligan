@@ -516,7 +516,8 @@ bool UnzipUccClothes(unsigned char* data, unsigned long len, Bitmap* front,
 	int index;
 	if (header != NULL)
 	{
-		if (FindZipItemA(zip, "header", true, &index, &entry) == ZR_OK)
+		// unc_size vem do zip: o destino e so o sUccHeader
+		if (FindZipItemA(zip, "header", true, &index, &entry) == ZR_OK && (unsigned long)entry.unc_size <= sizeof(sUccHeader))
 			UnzipItem(zip, index, header, entry.unc_size, ZIP_MEMORY);
 	}
 	if (front != NULL)
@@ -1033,7 +1034,7 @@ void GetUccInfoFromPacket(WReceivedPacket* packet)
 			unsigned long typeId = packet->Decode4();
 			char uccIndex[9];
 			memset(uccIndex, 0, sizeof(uccIndex));
-			strncpy(uccIndex, packet->DecodeStr().c_str(), 9);
+			strncpy_s(uccIndex, packet->DecodeStr().c_str(), _TRUNCATE);
 			UccManager()->AddClothes(0, id, typeId, uccIndex, false, false);
 		}
 	}

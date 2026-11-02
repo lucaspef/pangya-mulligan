@@ -38,7 +38,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>$(JP983Defs);NDEBUG;WIN32;_WINDOWS;_MBCS;REBANG_SEMANTIC_ONLY;JP983_POSTEFFECT;JP983_SERVER_CONFIG</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(JP983Root)tools\vs\compat_msvc;$(WindowsSdkDir)Include\$(TargetPlatformVersion)\shared;$(VCToolsInstallDir)atlmfc\include;$(JP983Root)include;$(JP983Root)include\engine;$(JP983Root)src\engine\lib\freetype-2.2.1\include;$(JP983Root)src\fresh\include;$(JP983Root)src\projectg;$(JP983Root)src\shared\thirties;$(JP983Wtl);$(JP983DxInclude)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/Zm200</AdditionalOptions>
+      <AdditionalOptions>/Zm200 /source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
       <ForcedIncludeFiles>jp983_msvc_novo.h</ForcedIncludeFiles>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
@@ -84,7 +84,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>$(JP983Defs);NDEBUG;WIN32;_WINDOWS;_MBCS;REBANG_SEMANTIC_ONLY;JP983_POSTEFFECT;JP983_SERVER_CONFIG;JP983_VS_DEBUG</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(JP983Root)tools\vs\compat_msvc;$(WindowsSdkDir)Include\$(TargetPlatformVersion)\shared;$(VCToolsInstallDir)atlmfc\include;$(JP983Root)include;$(JP983Root)include\engine;$(JP983Root)src\engine\lib\freetype-2.2.1\include;$(JP983Root)src\fresh\include;$(JP983Root)src\projectg;$(JP983Root)src\shared\thirties;$(JP983Wtl);$(JP983DxInclude)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/Zm200</AdditionalOptions>
+      <AdditionalOptions>/Zm200 /source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
       <ForcedIncludeFiles>jp983_msvc_novo.h</ForcedIncludeFiles>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
@@ -5516,7 +5516,7 @@
       <BufferSecurityCheck></BufferSecurityCheck>
       <OmitFramePointers></OmitFramePointers>
       <StringPooling></StringPooling>
-      <AdditionalOptions></AdditionalOptions>
+      <AdditionalOptions>/source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

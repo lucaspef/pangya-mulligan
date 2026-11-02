@@ -589,11 +589,11 @@ void FrRankingDlg::UpdateUserInfo()
 	char text[32];
 	if (m_userInfo.rank[0].rank <= 0)
 	{
-		sprintf(text, K2L_Compatibility("- \xc0\xa7"));
+		_snprintf_s(text, _TRUNCATE, K2L_Compatibility("- \xc0\xa7"));
 	}
 	else
 	{
-		sprintf(text, K2L_Compatibility("%d \xc0\xa7"), m_userInfo.rank[0].rank);
+		_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d \xc0\xa7"), m_userInfo.rank[0].rank);
 	}
 	m_pUserRankEdit->SetLine(1, text, 0xffffffff, false, 0);
 

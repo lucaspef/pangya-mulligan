@@ -611,6 +611,9 @@ void RF2014ArinStage2Wnd::Refresh983()
 // 005dc600
 void RF2014ArinStage2Wnd::OnRewarded983(int index)
 {
+	// indice = resultado do servidor - 0x15 (00477c30, sem teste no 983): codigo de erro escrevia fora do array
+	if ((unsigned int)index >= MISSION_COUNT983)
+		return;
 	m_bRewarded983[index] = true;
 	SetRewardBtnState983(index, 3);
 	ShowFinalBtn983(IsAllRewarded983());

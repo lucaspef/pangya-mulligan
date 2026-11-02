@@ -59,7 +59,7 @@ void CWebPageConnector::OnServerReply983(const char* userId, const char* serverT
 			|| strncmp(path, "/on_client/club/login.aspx", 26) == 0))
 		{
 			char www[96];
-			if (!GetEnvironmentVariableA("JP983_WWW", www, sizeof(www)))
+			if (GetEnvironmentVariableA("JP983_WWW", www, sizeof(www)) - 1u >= sizeof(www) - 1) // ausente ou nao coube
 				strcpy(www, "http://localhost:30080");
 			char local[0x200];
 			_snprintf(local, sizeof(local) - 1, "%s%s", www, path);

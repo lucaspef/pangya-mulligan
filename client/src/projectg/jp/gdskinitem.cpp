@@ -100,7 +100,12 @@ bool CGDSkinItem::IsRow(unsigned long typeId)
 }
 
 #define SKIN983_ITEM() ((CItemManagerJp2*)&Doc()->m_itemManager)
-#define SKIN983_MASK(tid) (*(unsigned long*)((char*)SKIN983_ITEM()->Find983(tid) + 0xec))
+// tid fora do IFF (peca de outro pak ou servidor): sem mascara
+static unsigned long SkinMask983(unsigned long tid)
+{
+	char* pItem = (char*)SKIN983_ITEM()->Find983(tid);
+	return pItem ? *(unsigned long*)(pItem + 0xec) : 0;
+}
 
 bool CGDSkinItem::Overlaps(const unsigned long* pParts, unsigned long typeId)
 {
@@ -109,12 +114,12 @@ bool CGDSkinItem::Overlaps(const unsigned long* pParts, unsigned long typeId)
 	if (pParts == NULL)
 		return true;
 
-	unsigned long mask = SKIN983_MASK(typeId);
+	unsigned long mask = SkinMask983(typeId);
 	unsigned long found = 0;
 	for (int i = 0; i < 0x18; i++)
 	{
 		if (pParts[i])
-			found |= SKIN983_MASK(pParts[i]) & mask;
+			found |= SkinMask983(pParts[i]) & mask;
 	}
 	return found != 0;
 }
@@ -126,7 +131,7 @@ bool CGDSkinItem::OverlapsKept(const unsigned long* pParts, unsigned long typeId
 	if (pParts == NULL)
 		return true;
 
-	unsigned long mask = SKIN983_MASK(typeId);
+	unsigned long mask = SkinMask983(typeId);
 	unsigned long found = 0;
 	for (int i = 0; i < 0x18; i++, pParts++)
 	{
@@ -134,7 +139,7 @@ bool CGDSkinItem::OverlapsKept(const unsigned long* pParts, unsigned long typeId
 		if (part)
 		{
 			unsigned long before = found;
-			found |= SKIN983_MASK(part) & mask;
+			found |= SkinMask983(part) & mask;
 			if (!IsRow(part))
 				found = before;
 		}

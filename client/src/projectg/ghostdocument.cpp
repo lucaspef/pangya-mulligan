@@ -787,6 +787,9 @@ const CGhostHoleData* CGhostDocument::GetHoleData(unsigned char holeNum) const
 	return pHole;
 }
 
+// .GST de 18 buracos cheios fica longe disto
+static const int GHOST_UNZIPPED_MAX = 0x4000000;
+
 memory_buffer::memory_buffer(unsigned int size)
 {
 	m_pBuffer = NULL;
@@ -851,10 +854,23 @@ __forceinline void memory_buffer::encode(const void* data, unsigned int size)
 	m_length += size;
 }
 
-__forceinline void memory_buffer::decode(void* data, unsigned int size)
+// Registro de size bytes no arquivo: copia ate max para data e avanca size; false se nao cabe no que resta
+bool memory_buffer::decode_part(void* data, unsigned int max, unsigned int size)
 {
-	memcpy(data, (char*)m_pBuffer + m_readPos, size);
+	if (size > m_length - m_readPos)
+	{
+		return false;
+	}
+	memcpy(data, (char*)m_pBuffer + m_readPos, size < max ? size : max);
 	m_readPos += size;
+	return true;
+}
+
+// count registros de unitSize bytes cabem no que resta
+bool memory_buffer::fits(unsigned int count, unsigned int unitSize) const
+{
+	return count == 0 ||
+		(unitSize != 0 && count <= (m_length - m_readPos) / unitSize);
 }
 
 const void* memory_buffer::get_buffer() const
@@ -970,8 +986,15 @@ bool CGhostDocument::Import(unsigned char* data, unsigned int size)
 		CloseZipZ(hz);
 		return false;
 	}
-	char* unzipped = new char[ze.unc_size];
-	UnzipItem(hz, index, unzipped, ze.unc_size, ZIP_MEMORY);
+	// unc_size vem do zip e todos os tamanhos abaixo vem do arquivo: .GST invalido estourava a pilha
+	bool sizeOk = ze.unc_size >= 8 && ze.unc_size <= GHOST_UNZIPPED_MAX;
+	char* unzipped = NULL;
+	ZRESULT zr = ZR_ARGS;
+	if (sizeOk)
+	{
+		unzipped = new char[ze.unc_size]();
+		zr = UnzipItem(hz, index, unzipped, ze.unc_size, ZIP_MEMORY);
+	}
 	if (IsZipHandleU(hz))
 	{
 		CloseZipU(hz);
@@ -979,6 +1002,12 @@ bool CGhostDocument::Import(unsigned char* data, unsigned int size)
 	else
 	{
 		CloseZipZ(hz);
+	}
+	// ZIP_MEMORY: leitura completa no tamanho exato devolve ZR_MORE, nao ZR_OK
+	if (!sizeOk || (zr != ZR_OK && zr != ZR_MORE))
+	{
+		delete[] unzipped;
+		return false;
 	}
 	memory_buffer buffer(unzipped, ze.unc_size);
 	delete[] unzipped;
@@ -992,39 +1021,51 @@ bool CGhostDocument::Import(unsigned char* data, unsigned int size)
 		*(unsigned int*)((char*)buffer.m_pBuffer + buffer.m_readPos);
 	buffer.m_readPos += 4;
 	memset(&header, 0, sizeof(header));
-	memcpy(&header, (char*)buffer.m_pBuffer + buffer.m_readPos, headerSize);
-	buffer.m_readPos += headerSize;
-	buffer.decode(m_pUserData, header.m_size4);
-	buffer.decode(m_pHeader, header.m_size8);
+	if (!buffer.decode_part(&header, sizeof(header), headerSize) ||
+		!buffer.decode_part(m_pUserData, sizeof(GHOST_USER_DATA), header.m_size4) ||
+		!buffer.decode_part(m_pHeader, sizeof(GHOST_GAME_BRIEF), header.m_size8))
+	{
+		return false;
+	}
+	m_pUserData->m_mascotMsg[sizeof(m_pUserData->m_mascotMsg) - 1] = 0;
+	m_pUserData->m_nick[sizeof(m_pUserData->m_nick) - 1] = 0;
+	m_pUserData->m_id[sizeof(m_pUserData->m_id) - 1] = 0;
+	m_pUserData->m_guild[sizeof(m_pUserData->m_guild) - 1] = 0;
+	m_pUserData->m_emblem[sizeof(m_pUserData->m_emblem) - 1] = 0;
 	for (hole = 0; hole < 18; ++hole)
 	{
-		count = *(unsigned int*)((char*)buffer.m_pBuffer + buffer.m_readPos);
-		buffer.m_readPos += 4;
+		if (!buffer.decode_part(&count, sizeof(count), sizeof(count)) ||
+			!buffer.fits(count, header.m_shotUnitSize))
+		{
+			return false;
+		}
 		while (count != 0)
 		{
 			GHOST_SHOT_DATA shot;
 			memset(&shot, 0, sizeof(shot));
-			memcpy(&shot, (char*)buffer.m_pBuffer + buffer.m_readPos,
-				header.m_shotUnitSize);
-			buffer.m_readPos += header.m_shotUnitSize;
+			buffer.decode_part(&shot, sizeof(shot), header.m_shotUnitSize);
 			copy = new GHOST_SHOT_DATA;
 			*copy = shot;
 			m_pHoleData[hole].m_shotDataList.push_back(copy);
 			--count;
 		}
 	}
-	count = *(unsigned int*)((char*)buffer.m_pBuffer + buffer.m_readPos);
-	buffer.m_readPos += 4;
+	if (!buffer.decode_part(&count, sizeof(count), sizeof(count)))
+	{
+		return false;
+	}
 	if (count != 0)
 	{
+		if (!buffer.fits(count, header.m_cardUnitSize))
+		{
+			return false;
+		}
 		m_cards.reserve(count);
 		for (unsigned int i = 0; i < count; ++i)
 		{
 			GHOST_CARD_DATA card;
 			memset(&card, 0, sizeof(card));
-			memcpy(&card, (char*)buffer.m_pBuffer + buffer.m_readPos,
-				header.m_cardUnitSize);
-			buffer.m_readPos += header.m_cardUnitSize;
+			buffer.decode_part(&card, sizeof(card), header.m_cardUnitSize);
 			m_cards.push_back(card);
 		}
 	}

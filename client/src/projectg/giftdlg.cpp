@@ -560,14 +560,14 @@ void FrGiftDlg::SetPrice(int count)
 		char buf[32] = "";
 		__int64 num = count;
 		MakePriceStrA(buf, num * m_pang);
-		strcat(buf, K2L_Compatibility("\xc6\xce"));
+		strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
 		m_pPrice->SetLine(1, buf, 0, false, 0);
 		if (Doc()->m_myInfo.stat.i64Pang - num * m_pang >= 0)
 		{
 			if (m_pMoneyLeft)
 			{
 				MakePriceStrA(buf, Doc()->m_myInfo.stat.i64Pang - num * m_pang);
-				strcat(buf, K2L_Compatibility("\xc6\xce"));
+				strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
 				m_pMoneyLeft->SetLine(1, buf, 0, false, 0);
 			}
 		}
@@ -576,7 +576,7 @@ void FrGiftDlg::SetPrice(int count)
 			if (m_pMoneyLeft)
 			{
 				MakePriceStrA(buf, num * m_pang - Doc()->m_myInfo.stat.i64Pang);
-				strcat(buf, K2L_Compatibility("\xc6\xce \xba\xce\xc1\xb7"));
+				strncat_s(buf, K2L_Compatibility("\xc6\xce \xba\xce\xc1\xb7"), _TRUNCATE);
 				m_pMoneyLeft->SetLine(1, buf, 0xffff0000, false, 0);
 			}
 			m_bEnoughPang = false;
@@ -590,14 +590,14 @@ void FrGiftDlg::SetPrice(int count)
 	if (m_pPriceCookie && m_pMyMoneyCookie && m_cookie != 0)
 	{
 		char buf[32] = "\0";
-		sprintf(buf, K2L_Compatibility("%d\xc4\xed\xc5\xb0"), m_cookie);
+		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("%d\xc4\xed\xc5\xb0"), m_cookie);
 		m_pPriceCookie->SetLine(1, buf, 0, false, 0);
 		__int64 remain = Doc()->m_cookie - m_cookie;
 		if (remain >= 0)
 		{
 			if (m_pMoneyLeftCookie)
 			{
-				sprintf(buf, K2L_Compatibility("%d\xc4\xed\xc5\xb0"), remain);
+				_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("%d\xc4\xed\xc5\xb0"), remain);
 				m_pMoneyLeftCookie->SetLine(1, buf, 0, false, 0);
 			}
 		}
@@ -606,7 +606,7 @@ void FrGiftDlg::SetPrice(int count)
 			if (m_pMoneyLeftCookie)
 			{
 				MakePriceStrA(buf, m_cookie - Doc()->m_cookie);
-				strcat(buf, K2L_Compatibility("\xc4\xed\xc5\xb0 \xba\xce\xc1\xb7"));
+				strncat_s(buf, K2L_Compatibility("\xc4\xed\xc5\xb0 \xba\xce\xc1\xb7"), _TRUNCATE);
 				m_pMoneyLeftCookie->SetLine(1, buf, 0xffff0000, false, 0);
 			}
 			m_bEnoughCookie = false;
@@ -883,8 +883,9 @@ void FrGiftDlg::OnCartOwnerDraw(int param)
 		else if (group == 8)
 		{
 			IFF_STRUCT::sCadItem* pCad = ItemManager()->FindCadItem(tid);
-			pGDI->Print(pricePos, 0, fmtPrice, (int)pCad->COM[m_dayIndex],
-				pCad->COM[m_dayIndex] * 5 / 100);
+			if (pCad)
+				pGDI->Print(pricePos, 0, fmtPrice, (int)pCad->COM[m_dayIndex],
+					pCad->COM[m_dayIndex] * 5 / 100);
 		}
 		else if (group == 0x10)
 		{
@@ -1362,7 +1363,8 @@ void FrGiftDlg::RecalculateTotalCookie(__int64 myPang, __int64 myCookie,
 		{
 			IFF_STRUCT::sMascot* pMascot = ItemManager()->FindMascot(tid);
 			if (pMascot->c.IsCash)
-				m_cookie += pMascot->COM[m_dayIndex];
+				// 983 00aae36d: sem TimeFlag (+0x82) cobra o Price (+0x74); o SendGift deixa m_dayIndex = 5 e COM[5] sai do array
+				m_cookie += pMascot->c.TimeFlag == 0 ? (__int64)pMascot->c.Price : (__int64)pMascot->COM[m_dayIndex];
 			else
 			{
 				int p = (pMascot->COM[m_dayIndex] * 5) / 100 +
@@ -1414,14 +1416,14 @@ void FrGiftDlg::RecalculateTotalCookie(__int64 myPang, __int64 myCookie,
 		if (m_pPrice)
 		{
 			MakePriceStrA(buf, m_pang);
-			strcat(buf, K2L_Compatibility("\xc6\xce"));
+			strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
 			m_pPrice->SetLine(1, buf, 0, false, 0);
 			if (m_pang > 0)
 				bPang = 1;
 		}
 		if (m_pPriceCookie)
 		{
-			sprintf(buf, K2L_Compatibility(STR_FMT_COOKIE), m_cookie);
+			_snprintf_s(buf, _TRUNCATE, K2L_Compatibility(STR_FMT_COOKIE), m_cookie);
 			m_pPriceCookie->SetLine(1, buf, 0, false, 0);
 			if (m_cookie > 0)
 			{
@@ -1440,12 +1442,12 @@ void FrGiftDlg::RecalculateTotalCookie(__int64 myPang, __int64 myCookie,
 		if (m_pMyMoney)
 		{
 			MakePriceStrA(buf, myPang);
-			strcat(buf, K2L_Compatibility("\xc6\xce"));
+			strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
 			m_pMyMoney->SetLine(1, buf, 0, false, 0);
 		}
 		if (m_pMyMoneyCookie)
 		{
-			sprintf(buf, K2L_Compatibility(STR_FMT_COOKIE), myCookie);
+			_snprintf_s(buf, _TRUNCATE, K2L_Compatibility(STR_FMT_COOKIE), myCookie);
 			m_pMyMoneyCookie->SetLine(1, buf, 0, false, 0);
 		}
 	}

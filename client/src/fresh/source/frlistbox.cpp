@@ -406,7 +406,7 @@ void FrListBox::RecalcTopBottom()
 	int x = 0, y = 0;
 	for (; it != m_itemList.end(); ++it)
 	{
-		if (x / m_itemSize.w >= m_colCapacity)
+		if (!m_itemSize.w || x / m_itemSize.w >= m_colCapacity)
 		{
 			y += m_itemSize.h;
 			x = 0;
@@ -757,7 +757,7 @@ bool FrListBox::MoveTopItem(int n)
 	int x = 0, y = 0;
 	for (; it != m_itemList.end(); ++it)
 	{
-		if (x / m_itemSize.w >= m_colCapacity)
+		if (!m_itemSize.w || x / m_itemSize.w >= m_colCapacity)
 		{
 			y += m_itemSize.h;
 			x = 0;

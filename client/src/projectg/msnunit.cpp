@@ -120,7 +120,11 @@ int MSNUnit::OnConnect(WReceivedPacket& packet)
 
 	packet.Decode1();
 	packet.Decode1();
-	m_socket.SetParseKey(packet.Decode4());
+	unsigned long parseKey = packet.Decode4();
+	// E489: 983 indexa PublicKeyTable[16] sem limite; chave fora = mesma saida do cabecalho errado
+	if (parseKey > 15)
+		return FALSE;
+	m_socket.SetParseKey(parseKey);
 
 	NET()->SetParseKey(WNetworkSystem::NET_MSN, true);
 
@@ -161,6 +165,12 @@ void MSNUnit::ConnectToMSNServer()
 	m_socket.AsyncSelect(FD_CONNECT);
 
 	hostent* host = gethostbyname(ip.c_str());
+	// E494: 983 usa host sem testar; endereco do servidor que nao resolve = conexao recusada, tenta o proximo
+	if (host == NULL)
+	{
+		setTransition(eEVENT_FAIL);
+		return;
+	}
 	char szIP[21] = "\0";
 	wsprintf(szIP, "%s", inet_ntoa(*(in_addr*)host->h_addr_list[0]));
 	m_socket.Connect(inet_addr(szIP), htons(port));

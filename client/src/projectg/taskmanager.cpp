@@ -336,7 +336,7 @@ FrForm* CTask::LoadTipText(int a, int b)
 
 	std::list<TIP_ITEM> tipList;
 	char line[8192];
-	while (file->Scan("%n", line))
+	while (file->Scan("%N", line))
 	{
 		int len = 0;
 		for (int i = 0; line[i]; ++i, ++len)
@@ -368,6 +368,8 @@ FrForm* CTask::LoadTipText(int a, int b)
 		tipList.push_back(item);
 	}
 	CloseCFile(file);
+	if (tipList.empty())
+		return NULL; // tip.txt vazio: rand() % 0 derruba o carregamento
 
 	int index = rand() % tipList.size() + 1;
 	xtAlways<false>::
@@ -1429,7 +1431,7 @@ static bool CommodityListLoad983(sd_shop::CCommodityList& list, unsigned char* b
 	sCommodityRecord983* recs = new sCommodityRecord983[count];
 	if (recs)
 		memset(recs, 0, count * sizeof(sCommodityRecord983));
-	memcpy(recs, cb.GetNewBuffer(), cb.GetNewSize());
+	memcpy(recs, cb.GetNewBuffer(), count * sizeof(sCommodityRecord983)); // E489: sobra < 1 registro estourava recs
 	EnterCriticalSection(&list.m_cs);
 	for (int i = 0; i < count; ++i)
 	{
@@ -1519,7 +1521,7 @@ struct RbBongdariShopDlg : public FrWnd
 	void SetBonusBall(int count, sBonusBall* pBalls);
 	void SetBongdariShop();
 	void SetDataFee(int fee);
-	// PKT C74 (lote 67): so do 983; corpos na jp/pktviews983.cpp (FrBongdariShopDlgPkt983) ate a frente A ter o layout (C74.1)
+	// PKT C74 (lote 67): so do 983; corpos na jp/pktviews983.cpp (FrBongdariShopDlgPkt983)
 	void StopAutoPlay983();												// 008b4740
 	void EnableAfterResult983();										// 008b4830
 	void SetResultList983(int count, std::vector<sBonusBall>& balls); // 008bee10
@@ -1777,6 +1779,9 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 
 			for (int i = 1; i < 4; i++)
 				Doc()->m_cardAbilityList[i].clear();
+
+			if (count > 4)
+				count = 4; // m_userInfo tem 4 posicoes; o 983 confia no servidor
 
 			for (int i = 0; i < count; i++)
 			{
@@ -2240,7 +2245,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 	break;
 	case 0x1d3: // 983: era 0x1d5 no 645; caso 009d28c7 (D4, laço D4 + DS, CWinnerNotice::SetWinnerData 008ac130)
 	{
-		unsigned long count = packet.Decode4();
+		unsigned long count = packet.DecodeCount();
 		while (count-- > 0)
 		{
 			std::string data("");
@@ -2264,10 +2269,10 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 
 		const char* sexName[3] = { K2L_Compatibility("\263\262"), K2L_Compatibility("\277\251"), K2L_Compatibility("\272\322\270\355") };
 		char szMsg[256];
-		sprintf(szMsg,
+		_snprintf_s(szMsg, _TRUNCATE, // E492: nome e sexo vem do pacote
 			K2L_Compatibility("%s(\267\271\272\247:%d \274\272\272\260:%s)\264\324\300\314 "
 			"\267\316\261\327\300\316 \307\337\275\300\264\317\264\331."),
-			protocol.name.c_str(), protocol.level, sexName[protocol.sex]);
+			protocol.name.c_str(), protocol.level, sexName[protocol.sex < 3 ? protocol.sex : 2]);
 		CChatMsg::Instance()->AddChatMsg(std::string(szMsg), 0xffff7878, false,
 			false);
 	}
@@ -2540,7 +2545,12 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		for (int group = 0; group < 12 && packet.GetRemainLength() > 0; group++)
 		{
 			unsigned char map = packet.Decode1();
-			if (map != 0xff)
+			if (map >= 22 && map != 0xff) // E491: mapa fora da tabela, consome o registro
+			{
+				sMapStatistics skip;
+				packet.DecodeBuffer(&skip, sizeof(sMapStatistics));
+			}
+			else if (map != 0xff)
 				packet.DecodeBuffer(&Doc()->m_myInfo.mapStat[group * 22 + map], sizeof(sMapStatistics));
 		}
 
@@ -2770,7 +2780,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			sUserPosition pos;
 			pos.iServerGUID = Doc()->m_gameServerUID;
 			pos.iChannelUid = Doc()->m_curChannel.Uid;
-			wsprintfA(pos.csChannelName, "%s", Doc()->m_curChannel.Name);
+			wsprintfA(pos.csChannelName, "%.63s", Doc()->m_curChannel.Name);
 			pos.iRoomIdx = noRoom;
 			pos.iRoomType = -1;
 
@@ -3390,7 +3400,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 				WSendPacket send((enumClientPacket)0x9a);
 				send.Encode1(2);
 				send.Encode4(info.guid);
-				send.EncodeStr(std::string(info.szMsg));
+				send.EncodeStr(std::string(info.szMsg, strnlen(info.szMsg, sizeof(info.szMsg)))); // E491: campo de pacote sem terminador
 				send.Send(TO_GAME);
 				CSharedDoc* pShared = CSharedDoc::Instance();
 				unsigned long guid = pShared->m_myInfo.userEquip.guidMascot;
@@ -4199,11 +4209,11 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		std::list<sChannelInfo>::iterator it = std::find(
 			Doc()->m_channelList.begin(), Doc()->m_channelList.end(), channel);
 		if (it == Doc()->m_channelList.end())
-			sprintf(msg,
+			_snprintf_s(msg, _TRUNCATE, // E496: nick vem do pacote
 				K2L_Compatibility("%s\264\324\300\272 [%s]\277\241\274\255 \303\243\300\273 \274\366 \276\370\275\300\264\317\264\331."),
 				nick.c_str(), (char*)&Doc()->m_curGameServer);
 		else
-			sprintf(msg,
+			_snprintf_s(msg, _TRUNCATE,
 				K2L_Compatibility("%s\264\324\300\272 [%s]\277\241 \301\242\274\323\307\330 \300\326\275\300\264\317\264\331."),
 				nick.c_str(), it->Name);
 		AfxGetTask()->SendMsgToMainActor(
@@ -5113,7 +5123,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			break;
 		case 0:
 		{
-			int count = packet.Decode4();
+			int count = packet.DecodeCount();
 			if (count < 1 || count > 5)
 				break;
 			sBonusBall balls[5] = { 0 };
@@ -5167,7 +5177,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			unsigned char channelUid = Doc()->m_curChannel.Uid;
 			if (channelUid != 0xff)
 				pos.iChannelUid = channelUid;
-			wsprintfA(pos.csChannelName, "%s", Doc()->m_curChannel.Name);
+			wsprintfA(pos.csChannelName, "%.63s", Doc()->m_curChannel.Name);
 			unsigned short roomIdx = Doc()->m_roomInfo.roomGuid;
 			if (roomIdx != 0xffff)
 				pos.iRoomIdx = roomIdx;
@@ -5217,7 +5227,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 	break;
 	case PKT645_SEM_983(0x38):
 	{
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
 		for (; count > 0; count--)
 		{
 			GUILD_USER_MSN_LIST msn;
@@ -5227,7 +5237,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			frnd.Uid = msn.userUID;
 			frnd.GuildFriend = 1;
 			frnd.Gender = msn.sex;
-			strcpy(frnd.NickName, msn.nickname);
+			strncpy_s(frnd.NickName, msn.nickname, _TRUNCATE); // E491: campo de pacote sem terminador
 			frnd.IsLogOn = msn.online;
 			BuddyMGR->AddBuddy(&frnd);
 		}
@@ -5242,7 +5252,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		frnd.Uid = msn.userUID;
 		frnd.GuildFriend = 1;
 		frnd.Gender = msn.sex;
-		strcpy(frnd.NickName, msn.nickname);
+		strncpy_s(frnd.NickName, msn.nickname, _TRUNCATE); // E491: campo de pacote sem terminador
 		frnd.IsLogOn = msn.online;
 		BuddyMGR->AddBuddy(&frnd);
 		IActor* actor = GetActor(s_guildActor[1]);
@@ -5305,7 +5315,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		nick = packet.DecodeStr();
 		sFriend* pFriend = BuddyMGR->GetBuddy(uid);
 		if (pFriend)
-			strcpy(pFriend->NickName, nick.c_str());
+			strncpy_s(pFriend->NickName, nick.c_str(), _TRUNCATE); // E490: comprimento do pacote
 	}
 	break;
 	case 0x39:
@@ -5924,7 +5934,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			sGuildInvite983 invite;
 			invite.dw4 = first;
 			invite.dw0 = second;
-			strcpy(invite.szName, name.c_str());
+			strncpy_s(invite.szName, name.c_str(), _TRUNCATE); // E490: comprimento do pacote
 			// o cabeçalho (frente A) ainda declara o vetor como std::vector<int> (tipo provisório; pedido C -> A)
 			C_ASSERT_VC10(offsetof(CSharedDoc, m_guildInvites983) == 0x10ff8);
 			Doc()->m_guildInvites983.push_back(invite);
@@ -6213,7 +6223,9 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			break;
 		}
 #endif
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
+		if ((unsigned int)count > 11) // E490: 983 confia no count; array da pilha e memcpy do dlg
+			count = count < 0 ? 0 : 11;
 		sBonusBall balls[11];
 		unsigned long* raw = (unsigned long*)balls;
 		raw[0] = 0;
@@ -6440,7 +6452,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		if (Doc()->m_replayTargetUID != uid) // Doc+0x47d4 (uid do dono da loja)
 			break;
 
-		if (pStall->stallKey == stallKey)
+		if (pStall->stallKey == stallKey && slot >= 1 && slot <= 12) // E490: slot do pacote
 		{
 			if (pStall->slotList[slot - 1].itemData.iNum == 0)
 				memset(&pStall->slotList[slot - 1].itemData, 0,
@@ -6870,7 +6882,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			break;
 		}
 		int total = packet.Decode4();
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
 		for (int i = count; i; i--)
 		{
 			_quest::CQuestItem item;
@@ -6889,7 +6901,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			AfxGetTask()->SendMsgToMainActor(MsgObject(NULL, 0x27, error, 0, 0, 0, 0));
 			break;
 		}
-		unsigned int count = packet.Decode4();
+		unsigned int count = packet.DecodeCount();
 		for (unsigned int i = 0; i < count; i++)
 		{
 			_quest::CQuestItem item;
@@ -6912,7 +6924,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			AfxGetTask()->SendMsgToMainActor(MsgObject(NULL, 0x27, error, 0, 0, 0, 0));
 			break;
 		}
-		unsigned int count = packet.Decode4();
+		unsigned int count = packet.DecodeCount();
 		for (unsigned int i = 0; i < count; i++)
 		{
 			unsigned long uid = packet.Decode4();
@@ -6935,7 +6947,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			AfxGetTask()->SendMsgToMainActor(MsgObject(NULL, 0x27, error, 0, 0, 0, 0));
 			break;
 		}
-		unsigned int count = packet.Decode4();
+		unsigned int count = packet.DecodeCount();
 		for (unsigned int i = 0; i < count; i++)
 		{
 			unsigned long uid = packet.Decode4();
@@ -6958,7 +6970,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			AfxGetTask()->SendMsgToMainActor(MsgObject(NULL, 0x27, error, 0, 0, 0, 0));
 			break;
 		}
-		unsigned int count = packet.Decode4();
+		unsigned int count = packet.DecodeCount();
 		for (unsigned int i = 0; i < count; i++)
 		{
 			_quest::CQuestItem item;
@@ -7480,6 +7492,8 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		unsigned char slot = packet.Decode1();
 		static sTradeItem item;
 		packet.DecodeBuffer(&item, sizeof(item));
+		if (slot < 1 || slot > 12) // E490: slot do pacote
+			break;
 		sStall* pStall = &Doc()->m_stallItem;
 		if (item.dwTid == 0 && pStall->slotList[slot - 1].IsValid)
 		{
@@ -7678,7 +7692,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			Doc()->SetTradeUID(packet.Decode4());
 			Doc()->SetTradeTitle(title);
 			sTradeItem item;
-			int count = packet.Decode4();
+			int count = packet.DecodeCount();
 			for (int i = 0; i < count; i++)
 			{
 				packet.DecodeBuffer(&item, sizeof(item));
@@ -7806,7 +7820,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			GetActor("AvatarChat")
 				<< MsgObject(NULL, M983(0xe8), (int)info, 1, 0, 0, 0);
 			sTradeItem item;
-			int count = packet.Decode4();
+			int count = packet.DecodeCount();
 			for (int i = 0; i < count; i++)
 			{
 				packet.DecodeBuffer(&item, sizeof(item));
@@ -8564,7 +8578,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 				"%d\260\263\300\307 \306\355\301\366\260\241 \272\270\260\374 \261\342\260\243\300\273 \303\312\260\372\307\317\277\264\275\300\264\317\264\331.\n\267\316\261\327\276\306\277\364 \310\244\300\272 \274\255\271\366 \300\314\265\277\300\273 \307\317\261\342 \300\374\277\241 \261\342\260\243\300\314 \301\366\263\255 \270\336\300\317\277\241 \306\367\307\324\265\310 \276\306\300\314\305\333\300\273\n\277\305\260\334\301\326\275\303\261\342 \271\331\266\370\264\317\264\331.\n",
 				days);
 			AfxGetTask()->SendMsgToMainActor(
-				MsgObject(NULL, M983(0x23), (int)msg, 0, 0, 0, 0));
+				MsgObject(NULL, M983(0x23), (int)K2L_Compatibility(msg), 0, 0, 0, 0));
 		}
 	}
 	break;
@@ -8783,6 +8797,9 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 	case 0xff:
 	{
 		unsigned long count = packet.Decode4();
+		// E489: 983 confia no count; maior que o array da pilha sobrescrevia o retorno
+		if (count > CCommodityStatusManager::MAX_COMMODITY_COUNT)
+			count = CCommodityStatusManager::MAX_COMMODITY_COUNT;
 		unsigned long totals[10] = { 0 };
 		packet.DecodeBuffer(totals, count * 4);
 		for (unsigned long i = 0; i < count; i++)
@@ -8793,6 +8810,9 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 	case 0x100:
 	{
 		unsigned long count = packet.Decode4();
+		// E489: 983 confia no count; maior que o array da pilha sobrescrevia o retorno
+		if (count > CCommodityStatusManager::MAX_COMMODITY_COUNT)
+			count = CCommodityStatusManager::MAX_COMMODITY_COUNT;
 		CCommodityStatusManager::sCommodityStatus
 			items[CCommodityStatusManager::MAX_COMMODITY_COUNT] = { 0 };
 		packet.DecodeBuffer(items,
@@ -9021,7 +9041,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 	{
 		Doc()->m_mailList.clear();
 		static sMailInfoBrief mail;
-		unsigned long count = packet.Decode4();
+		unsigned long count = packet.DecodeCount();
 		for (unsigned long i = 0; i < count; i++)
 		{
 			packet.DecodeBuffer(&mail, sizeof(mail));
@@ -9081,7 +9101,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		{
 			if (IsAdministrator(0xffffffff) == 1)
 				break;
-			int count = packet.Decode4();
+			int count = packet.DecodeCount();
 			std::list<sPrize*> prizeList;
 			for (; count > 0; count--)
 			{
@@ -9104,7 +9124,8 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 					index++;
 					IFF_ITEM_COMMON* pItem =
 						ItemManager()->FindCommonItem(pPrize->tid);
-					strcpy(name, pItem->Name);
+					if (pItem) // E496: tid do pacote fora do IFF; 983 009cf571 nao testa
+						strcpy(name, pItem->Name);
 					if (pPrize->type == 0)
 					{
 						if (pPrize->rankFrom == pPrize->rankTo)
@@ -9122,33 +9143,33 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 						switch (pPrize->type)
 						{
 						case 1:
-							strcpy(kind,
-								K2L_Compatibility("\272\243\275\272\306\256 \275\272\307\307\264\365"));
+							strncpy_s(kind,
+								K2L_Compatibility("\272\243\275\272\306\256 \275\272\307\307\264\365"), _TRUNCATE);
 							break;
 						case 2:
-							strcpy(kind,
-								K2L_Compatibility("\272\243\275\272\306\256 \267\257\263\312"));
+							strncpy_s(kind,
+								K2L_Compatibility("\272\243\275\272\306\256 \267\257\263\312"), _TRUNCATE);
 							break;
 						case 5:
-							strcpy(kind,
-								K2L_Compatibility("\272\243\275\272\306\256 \270\256\304\277\271\366\270\256"));
+							strncpy_s(kind,
+								K2L_Compatibility("\272\243\275\272\306\256 \270\256\304\277\271\366\270\256"), _TRUNCATE);
 							break;
 						case 6:
-							strcpy(kind, K2L_Compatibility("\307\340\277\356\273\363"));
+							strncpy_s(kind, K2L_Compatibility("\307\340\277\356\273\363"), _TRUNCATE);
 							break;
 						case 4:
-							strcpy(kind,
-								K2L_Compatibility("\272\243\275\272\306\256 \267\325\306\333\305\315"));
+							strncpy_s(kind,
+								K2L_Compatibility("\272\243\275\272\306\256 \267\325\306\333\305\315"), _TRUNCATE);
 							break;
 						case 3:
-							strcpy(kind,
-								K2L_Compatibility("\272\243\275\272\306\256 \304\250\300\316"));
+							strncpy_s(kind,
+								K2L_Compatibility("\272\243\275\272\306\256 \304\250\300\316"), _TRUNCATE);
 							break;
 						}
 						sprintf(line, K2L_Compatibility("%2d. %s %s %d\260\263\012"), index, kind,
 							name, pPrize->count);
 					}
-					strcat(text, line);
+					strncat(text, line, 0x200 - 1 - strlen(text)); // E496: quantidade vem do pacote; 983 strcat
 				}
 			}
 			FrForm* pForm = CreateForm<FrForm>(g_pFresh->GetManager(), this,
@@ -9524,7 +9545,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		{
 			std::string nick = packet.DecodeStr();
 			char szMsg[0x80] = { 0 };
-			sprintf(szMsg,
+			_snprintf_s(szMsg, _TRUNCATE, // E496: nick vem do pacote
 				"\307\366\300\347 \307\303\267\271\300\314\301\337\300\316 \260\324\300\323\277\241\274\255 '%s'\264\324\277\241 \300\307\307\330 \306\370\301\327\300\314 \305\315\301\263\275\300\264\317\264\331.",
 				nick.c_str());
 			// PKT (frente C, lote 12): 983 009d05fa - K2L_Compatibility sobre o texto ja formatado
@@ -9664,9 +9685,9 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			unsigned long guid = packet.Decode4();
 			unsigned long tid = packet.Decode4();
 			char uccIndex[9];
-			strncpy(uccIndex, packet.DecodeStr().c_str(), 9);
+			strncpy_s(uccIndex, packet.DecodeStr().c_str(), _TRUNCATE);
 			char uccName[41];
-			strncpy(uccName, packet.DecodeStr().c_str(), 41);
+			strncpy_s(uccName, packet.DecodeStr().c_str(), _TRUNCATE);
 			// PKT (frente C, lote 13): 983 009d09cf - as quatro mensagens do caso vao ao ator principal (era "RealMyRoom")
 			AfxGetTask()->SendMsgToMainActor(MsgObject(NULL, M983(0x214), result, (int)&guid,
 				(int)&tid, (int)uccIndex, (int)uccName));
@@ -9677,7 +9698,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			sItemInfo item;
 			packet.Decode4();
 			char uccIndex[9];
-			strncpy(uccIndex, packet.DecodeStr().c_str(), 9);
+			strncpy_s(uccIndex, packet.DecodeStr().c_str(), _TRUNCATE);
 			unsigned char slot = packet.Decode1();
 			packet.DecodeBuffer(&item, sizeof(sItemInfo));
 			if (slot == 1)
@@ -9708,7 +9729,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 				{
 					pClothes->date = item.ItemDate;
 					if (strlen(item.ItemName) != 0)
-						strcpy(pClothes->uccName, item.ItemName);
+						strncpy_s(pClothes->uccName, item.ItemName, _TRUNCATE); // E491: campo de pacote sem terminador
 				}
 				else
 				{
@@ -9718,7 +9739,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 					clothes.downloadCount = 0;
 					clothes.icon = NULL;
 					if (strlen(item.ItemName) != 0)
-						strcpy(clothes.uccName, item.ItemName);
+						strncpy_s(clothes.uccName, item.ItemName, _TRUNCATE); // E491: campo de pacote sem terminador
 					clothes.typeId = item.tid;
 					strncpy(clothes.uccIndex, item.UccIndex, 9);
 					UccManager()->AddClothes(slot, clothes, false, false);
@@ -9730,13 +9751,13 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		{
 			unsigned long tid = packet.Decode4();
 			char uccIndex[9];
-			strncpy(uccIndex, packet.DecodeStr().c_str(), 9);
+			strncpy_s(uccIndex, packet.DecodeStr().c_str(), _TRUNCATE);
 			int seq = packet.Decode2();
 			unsigned long oldGuid = packet.Decode4();
 			unsigned long newGuid = packet.Decode4();
 			unsigned long newTid = packet.Decode4();
 			char newUccIndex[9];
-			strncpy(newUccIndex, packet.DecodeStr().c_str(), 9);
+			strncpy_s(newUccIndex, packet.DecodeStr().c_str(), _TRUNCATE);
 			int newSeq = packet.Decode2();
 			if (packet.Decode1() == 1)
 			{
@@ -9790,7 +9811,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		{
 			unsigned long tid = packet.Decode4();
 			char uccIndex[9] = { 0 };
-			strncpy(uccIndex, packet.DecodeStr().c_str(), 9);
+			strncpy_s(uccIndex, packet.DecodeStr().c_str(), _TRUNCATE);
 			unsigned char result = packet.Decode1();
 			if (result == 1)
 			{
@@ -9901,8 +9922,8 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			if (uid == MyUID())
 				it->second.dwGuildPoint = guild.guildPoint;
 			it->second.info.info.dwEmblemVer = guild.emblemVer;
-			strcpy(it->second.info.info.szEmblemName, guild.guildMark);
-			strcpy(it->second.info.info.sGuild, guild.guildName);
+			strncpy_s(it->second.info.info.szEmblemName, guild.guildMark, _TRUNCATE); // E491: campo de pacote sem terminador
+			strncpy_s(it->second.info.info.sGuild, guild.guildName, _TRUNCATE);
 		}
 	}
 	break;
@@ -10021,7 +10042,8 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 				sMapStatistics one;
 				one.bMap = 0xff;
 				packet.DecodeBuffer(&one, sizeof(sMapStatistics));
-				stats[one.bMap] = one; // 983: sem conferir o indice
+				if (one.bMap < 22) // E491: o 983 nao confere o indice
+					stats[one.bMap] = one;
 			}
 			int index = MapStat983::Index(type, list == 1);
 			if (index == -1)
@@ -10228,7 +10250,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			Doc()->m_rmrAuthority.ownerUID = auth.ownerUID;
 			Doc()->m_rmrAuthority.bPrivate = auth.bPrivate;
 			Doc()->m_rmrAuthority.serverValue983 = auth.serverValue983;
-			strcpy(Doc()->m_rmrAuthority.password, auth.password);
+			strncpy_s(Doc()->m_rmrAuthority.password, auth.password, _TRUNCATE); // E491: campo de pacote sem terminador
 			AfxGetTask()->SendMsgToMainActor(
 				MsgObject(NULL, M983(0x21f), 0, 0, 0, 0, 0));
 		}
@@ -10324,7 +10346,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 	case 0x195:
 	{
 		unsigned char season = packet.Decode1();
-		unsigned long count = packet.Decode4();
+		unsigned long count = packet.DecodeCount();
 		std::map<unsigned char, sMapStatistics>& stats =
 			Doc()->GetMyPastMapStat(season);
 		for (; count > 0; count--)
@@ -10342,7 +10364,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		AfxGetTask()->SendMsgToMainActor(MsgObject(NULL, M983(0x2), 0, 0, 0, 0, 0));
 		if (!IsLocalContent((localContentType_t)0x8e))
 			break;
-		unsigned long count = packet.Decode4();
+		unsigned long count = packet.DecodeCount();
 		for (; count > 0; count--)
 		{
 			unsigned long value = packet.Decode4();
@@ -10549,7 +10571,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		sMailBoxListForPage page;
 		page.iTotalPage = packet.Decode4();
 		page.iCurPage = packet.Decode4();
-		page.iTotalCount = packet.Decode4();
+		page.iTotalCount = packet.DecodeCount();
 		for (int i = 0; i < page.iTotalCount; ++i)
 		{
 			sMailInfoBrief983 mail;
@@ -10584,9 +10606,9 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		}
 		sMailInfo mailInfo;
 		mailInfo.dwIndex = packet.Decode4();
-		strncpy(mailInfo.szFromNick, packet.DecodeStr().c_str(), 0x16);
-		strncpy(mailInfo.szDate, packet.DecodeStr().c_str(), 0x20);
-		strncpy(mailInfo.szContent, packet.DecodeStr().c_str(), 800);
+		strncpy_s(mailInfo.szFromNick, packet.DecodeStr().c_str(), _TRUNCATE);
+		strncpy_s(mailInfo.szDate, packet.DecodeStr().c_str(), _TRUNCATE);
+		strncpy_s(mailInfo.szContent, packet.DecodeStr().c_str(), _TRUNCATE);
 		mailInfo.bHaveItem = packet.Decode1() == 1;
 		if (mailInfo.bHaveItem)
 		{
@@ -10857,6 +10879,8 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		packet.DecodeBuffer(&pos.x, 4);
 		packet.DecodeBuffer(&pos.y, 4);
 		packet.DecodeBuffer(&pos.z, 4);
+		if (!Doc()->HasUserInfo(uid))
+			break;
 		unsigned char idx = Doc()->GetIndex(uid);
 		if (Doc()->m_golfGame.gameType == 1 &&
 			PLAYER(MyIndex())->team != PLAYER(idx)->team)
@@ -10909,7 +10933,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			pos.iServerGUID = Doc()->m_gameServerUID;
 			pos.iChannelUid = Doc()->m_curChannel.Uid;
 			memset(pos.csChannelName, 0, sizeof(pos.csChannelName));
-			wsprintfA(pos.csChannelName, "%s", Doc()->m_curChannel.Name);
+			wsprintfA(pos.csChannelName, "%.63s", Doc()->m_curChannel.Name);
 			pos.iRoomIdx = noRoom;
 			pos.iRoomType = -1;
 			pos.csChannelName[63] = 0;
@@ -10932,7 +10956,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		for (std::map<int, int>::iterator it = table.begin(); it != table.end(); ++it)
 			operator delete((void*)it->second);
 		table.clear();
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
 		for (int i = 0; i < count; ++i)
 		{
 			unsigned char* pRec = (unsigned char*)operator new(0xe);
@@ -10993,7 +11017,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		AfxGetTask()->SendMsgToMainActor(MsgObject(NULL, M983(0x2), 0, 0, 0, 0, 0));
 		if (packet.Decode4() != 0)
 			break;
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
 		for (int i = 0; i < count; ++i)
 		{
 			unsigned long rec[2];
@@ -11019,7 +11043,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			break;
 		}
 		int total = packet.Decode4();
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
 		for (int i = 0; i < count; ++i)
 		{
 			// 983: construtor 00585520 (zera), Decode 009b90e0 (cópia do 005e6010) e CSharedDoc::AddQuestCount983 00641470 (A110)
@@ -11038,7 +11062,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		// contagem; por registro: construir, ler (009bfc90) e aplicar pelo CItemUpdater (CSharedDoc 00633680); != 0 = erro
 		// (mensagem 0x27 com o codigo, para o laco). Sempre termina com a mensagem 0x102 ao ator principal.
 		unsigned long now = packet.Decode4();
-		unsigned long count = packet.Decode4();
+		unsigned long count = packet.DecodeCount();
 		for (unsigned long i = 0; i < count; ++i)
 		{
 			sItemUpdate983 rec;
@@ -11139,7 +11163,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		// nada); a lista e esvaziada antes. O primeiro dword depois do tipo e lido e descartado.
 		unsigned char kind = packet.Decode1();
 		packet.Decode4();
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
 		if (kind == 0)
 		{
 			Doc()->m_specialTrophyList983.clear();
@@ -11171,7 +11195,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 		sd_shop::CCommodityList* pList = &Doc()->m_sdCommodityList983;
 		if (size > 0)
 		{
-			if (mark != 0)
+			if (mark != 0 && size <= packet.GetRemainLength()) // E489: tamanho absurdo = bad_alloc sem catch
 			{
 				unsigned char* buf = new unsigned char[size];
 				memset(buf, 0, size);
@@ -11211,7 +11235,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 				__rtti_obj = pDlg;
 			break;
 		}
-		unsigned long count = packet.Decode4();
+		unsigned long count = packet.DecodeCount();
 		std::vector<unsigned int> values1;	// 983: vector de 4 bytes proprio (009bb710/009be380/0065be00)
 		std::vector<unsigned long> values2; // 00479490/004c1240/00479770
 		std::vector<int> values3;			// 0049e650/004c1d50/0049e810
@@ -11257,7 +11281,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			if (IActor* pMain = AfxGetTask()->GetMainActor())
 				pMain << MsgObject(NULL, M983(0xe1), 0, 0, 0, 0, 0);
 		}
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
 		if ((unsigned int)(count - 1) > 4)
 			break;
 		sBonusBall balls[5] = { 0 };
@@ -11312,7 +11336,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			if (IActor* pRoom = AfxGetTask()->GetActor("RealMyRoom"))
 				pRoom << MsgObject(NULL, M983(0xe1), 0, 0, 0, 0, 0);
 		}
-		int count = packet.Decode4();
+		int count = packet.DecodeCount();
 		for (int i = count; i > 0; i--)
 		{
 			sBonusBall ball = { 0 };

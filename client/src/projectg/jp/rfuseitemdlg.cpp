@@ -77,7 +77,8 @@ void RFUseItemDlg::SetItem983(sItemInfo* pItem)
 		if (m_pItemImg983)
 		{
 			IFF_ITEM_COMMON* pIff = (IFF_ITEM_COMMON*)ItemManager()->FindItem(pItem->typeId);
-			m_pItemImg983->SetPicture(MultiByteToWide983(MakeStr("%s.tga", pIff->Icon)));
+			if (pIff)
+				m_pItemImg983->SetPicture(MultiByteToWide983(MakeStr("%s.tga", pIff->Icon)));
 		}
 		if (m_pItemNum983)
 			m_pItemNum983->SetLabel(MultiByteToWide983(MakeStr("x%d", pItem->Common[0])));

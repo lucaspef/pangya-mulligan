@@ -8,6 +8,7 @@
 #include "../shared/localize.h"
 #include "../shared/tikimagicboxtable.h"
 #include <process.h>
+#include <locale.h>
 #include "wlocalize.h"
 
 #include "logininfo.h"
@@ -395,6 +396,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 {
 	LFHInstaller::install();
 
+	setlocale(LC_CTYPE, "jpn"); // 983 00a72a57
 	InitLocalizeSystem();
 
 	CoInitialize(NULL);
@@ -434,7 +436,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 		if (!launchOk)
 		{
-			MessageBox(NULL,
+			GameMessageBox(NULL,
 				K2L_Compatibility(
 					"\306\316\276\337 \276\367\265\245\300\314\306\256 \307\301\267\316\261\327\267\245\300\273 \270\325\300\372 \275\307\307\340\307\330 \301\326\275\303\261\342 \271\331\266\370\264\317\264\331."),
 				"PangYa", MB_OK);
@@ -459,7 +461,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 			{
 				if (!CheckWndVersion())
 				{
-					MessageBox(NULL,
+					GameMessageBox(NULL,
 						K2L_Compatibility(
 							"\300\251\265\265\277\354\301\356 98 \310\244\300\272 \300\251\265\265\277\354\301\356 2000 \300\314\273\363\300\307 \277\356\277\265\303\274\301\246\260\241 \307\312\277\344\307\325\264\317\264\331"),
 						K2L_Compatibility("\306\316\276\337"), MB_OK);
@@ -1121,7 +1123,7 @@ void SetWindowTitle(HWND hWnd)
 {
 	// O título do original vinha do japan.dat, que não faz parte deste repositório.
 	strcpy(window_name, "PangYa Mulligan!");
-	SetWindowText(hWnd, window_name);
+	GameSetWindowText(hWnd, window_name);
 }
 
 void SetDirectory()
@@ -1205,7 +1207,7 @@ bool CheckRelatedDLL(HWND hWnd)
 	HMODULE hDll = LoadLibrary("dinput8.dll");
 	if (hDll == NULL)
 	{
-		MessageBox(hWnd,
+		GameMessageBox(hWnd,
 			K2L_Compatibility(
 				"DirectX \260\374\267\303 \306\304\300\317\300\273 \303\243\300\273 \274\366 \276\370\275\300\264\317\264\331.\nDirectX 9.0c \300\314\273\363\300\273 \274\263\304\241 \310\304 \264\331\275\303 \275\307\307\340\307\330 \301\326\274\274\277\344."),
 			K2L_Compatibility("\306\316\276\337"), MB_OK);

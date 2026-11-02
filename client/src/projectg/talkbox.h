@@ -24,7 +24,7 @@ public:
 private:
 	struct sLine
 	{
-		char text[32];
+		char text[33]; // 983 [32]: lider em 29 + espaco termina em text[32]
 		float width;
 		unsigned long color;
 		int newLine;

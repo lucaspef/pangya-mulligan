@@ -1229,10 +1229,10 @@ void FrUserInfoForm::UpdateEditUserLocation()
 						0xff000000, false, 0);
 					return;
 				}
-				wsprintfA(buf, "%s %s", buf,
+				wsprintfA(buf + lstrlenA(buf), " %s",
 					pFriend->userPosition.csChannelName);
 				if (pFriend->userPosition.iRoomIdx != 0xffff)
-					wsprintfA(buf, "%s [%d]", buf,
+					wsprintfA(buf + lstrlenA(buf), " [%d]",
 						pFriend->userPosition.iRoomIdx);
 				m_pGeneralEdit[4]->SetLine(1, buf, 0xff000000, false, 0);
 			}
@@ -1586,7 +1586,7 @@ void FrUserInfoForm::OnGpNormalBoxOwnerDraw983(int param)
 			pMatch = ItemManager()->FindMatch((*pGroup)[0].tid);
 			color = 0x60000000;
 		}
-		const Bitmap* pIcon = g_pFresh->GetManager()->GetBitmap("TROPHY", pMatch->Icon[0]);
+		const Bitmap* pIcon = pMatch ? g_pFresh->GetManager()->GetBitmap("TROPHY", pMatch->Icon[0]) : NULL;
 		if (!pIcon)
 			break;
 		float half = 0.0f;
@@ -1639,7 +1639,7 @@ void FrUserInfoForm::OnGpSpecialBoxOwnerDraw983(int param)
 	float y = line * 15.0f + 30.0f;
 	pDevice->Print(WPoint(pItem->pos.x + 5.0f, pItem->pos.y + y), 0, "%s", pText);
 
-	const Bitmap* pIcon = g_pFresh->GetManager()->GetBitmap("TROPHY", pMatch->Icon[0]);
+	const Bitmap* pIcon = pMatch ? g_pFresh->GetManager()->GetBitmap("TROPHY", pMatch->Icon[0]) : NULL;
 	float half = 0.0f;
 	if (m_pGpTrophyBox983[1])
 		half = m_pGpTrophyBox983[0]->GetItemHeight() * 0.5f;
@@ -2070,7 +2070,7 @@ void FrUserInfoForm::HidePet(bool bWait)
 void FrUserInfoForm::SetInfo(sUserInfoTime* pInfo)
 {
 	m_position.iServerGUID = pInfo->userPosition.iServerGUID;
-	wsprintf(m_position.csChannelName, "%s", pInfo->userPosition.csChannelName);
+	wsprintf(m_position.csChannelName, "%.63s", pInfo->userPosition.csChannelName);
 	m_position.iRoomIdx = pInfo->userPosition.iRoomIdx;
 	m_userInfo = pInfo->info;
 	// 983 (008a9290): peÃ§a que o pangya.iff nÃ£o conhece sai do boneco
@@ -2249,7 +2249,7 @@ void FrUserInfoForm::UpdateEditSchoolAndGuild(eSeasonType type,
 	else
 	{
 		int len = strlen(info->sGuild);
-		sprintf(text, "%s",
+		_snprintf_s(text, _TRUNCATE, "%s",
 			len ? info->sGuild
 				: K2L_Compatibility("\274\322\274\323 \261\346\265\345 \276\370\300\275"),
 			0xff000000);
@@ -2304,7 +2304,7 @@ void FrUserInfoForm::UpdateEditExpAndMannerInfo(eSeasonType type,
 	if (stat->Level < 70)
 	{
 		sprintf(text, "%d / %d", stat->dwExp,
-			CSharedDoc::Instance()->m_levelTable[stat->Level]);
+			CSharedDoc::Instance()->m_levelTable[stat->Level].exp);
 	}
 	else
 	{
@@ -2315,7 +2315,7 @@ void FrUserInfoForm::UpdateEditExpAndMannerInfo(eSeasonType type,
 	{
 		if (m_tabType == 0)
 			SetDisconnQuestionMark(true);
-		sprintf(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"));
+		_snprintf_s(text, _TRUNCATE, K2L_Compatibility("\261\342\267\317 \276\370\300\275"));
 	}
 	else
 	{
@@ -2540,11 +2540,11 @@ void FrUserInfoForm::UpdateEditSpecialInfo(eSeasonType type,
 		for (int i = 0; i < 13; ++i)
 			sum[j] += pTrophy->Trophy[i][j];
 	}
-	sprintf(text, K2L_Compatibility("%d "), sum[0]);
+	_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d "), sum[0]);
 	m_pSpecialEdit[0]->SetLine(1, text, color, false, 0);
-	sprintf(text, K2L_Compatibility("%d "), sum[1]);
+	_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d "), sum[1]);
 	m_pSpecialEdit[1]->SetLine(1, text, color, false, 0);
-	sprintf(text, K2L_Compatibility("%d "), sum[2]);
+	_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d "), sum[2]);
 	m_pSpecialEdit[2]->SetLine(1, text, color, false, 0);
 
 	// Grand Prix (es0_4..6) = soma de count por (tid & 0xff) - 1, menos os de byte 2 == 'd'
@@ -2552,25 +2552,26 @@ void FrUserInfoForm::UpdateEditSpecialInfo(eSeasonType type,
 	std::list<sSpecialTrophy>::const_iterator it;
 	for (it = pSpecialTrophy->begin(); it != pSpecialTrophy->end(); ++it)
 	{
-		if (((it->tid >> 16) & 0xff) != 'd')
-			gp[(unsigned short)((it->tid & 0xff) - 1)] += it->count;
+		// 3 categorias; tid de outro servidor nao escreve fora
+		if (((it->tid >> 16) & 0xff) != 'd' && (it->tid & 0xff) - 1 < 3)
+			gp[(it->tid & 0xff) - 1] += it->count;
 	}
-	sprintf(text, K2L_Compatibility("%d "), gp[0]);
+	_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d "), gp[0]);
 	m_pSpecialEdit[3]->SetLine(1, text, color, false, 0);
-	sprintf(text, K2L_Compatibility("%d "), gp[1]);
+	_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d "), gp[1]);
 	m_pSpecialEdit[4]->SetLine(1, text, color, false, 0);
-	sprintf(text, K2L_Compatibility("%d "), gp[2]);
+	_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d "), gp[2]);
 	m_pSpecialEdit[5]->SetLine(1, text, color, false, 0);
 
 	if (pStat->dwTeamGames == 0)
-		strcpy(text, K2L_Compatibility(szNone));
+		strncpy_s(text, K2L_Compatibility(szNone), _TRUNCATE);
 	else
 		sprintf(text, "%.1f %%",
 			(float)pStat->dwTeamWin / (float)pStat->dwTeamGames * 100.0f);
 	m_pSpecialEdit[6]->SetLine(1, text, color, false, 0);
 
 	if (pStat->dwHole - pStat->dwMatchHole == 0)
-		strcpy(text, K2L_Compatibility(szNone));
+		strncpy_s(text, K2L_Compatibility(szNone), _TRUNCATE);
 	else
 	{
 		// 983: média em double; no país 0x1e limitada a 100
@@ -2578,30 +2579,30 @@ void FrUserInfoForm::UpdateEditSpecialInfo(eSeasonType type,
 		if (IsLocalCountry(0x1e))
 		{
 			double average = score / (pStat->dwHole - pStat->dwMatchHole) + 72.0;
-			sprintf(text, K2L_Compatibility("%.2f \305\270"), average > 100.0 ? 100.0 : average);
+			_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%.2f \305\270"), average > 100.0 ? 100.0 : average);
 		}
 		else
-			sprintf(text, K2L_Compatibility("%.2f \305\270"),
+			_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%.2f \305\270"),
 				score / (pStat->dwHole - pStat->dwMatchHole) + 72.0);
 	}
 	m_pSpecialEdit[7]->SetLine(1, text, color, false, 0);
 
 	if (pStat->dwDrive + pStat->dwPutt == 0)
-		strcpy(text, K2L_Compatibility(szNone));
+		strncpy_s(text, K2L_Compatibility(szNone), _TRUNCATE);
 	else
-		sprintf(text, K2L_Compatibility("%.1f \303\312"),
+		_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%.1f \303\312"),
 			(float)pStat->dwShotTime / (float)(pStat->dwDrive + pStat->dwPutt));
 	m_pSpecialEdit[8]->SetLine(1, text, color, false, 0);
 
 	if (pStat->dwDrive == 0)
-		strcpy(text, K2L_Compatibility(szNone));
+		strncpy_s(text, K2L_Compatibility(szNone), _TRUNCATE);
 	else
 		sprintf(text, "%.1f %%",
 			(float)pStat->dwPangya / (float)pStat->dwDrive * 100.0f);
 	m_pSpecialEdit[9]->SetLine(1, text, color, false, 0);
 
 	if (pStat->dwHole - pStat->dwMatchHole == 0)
-		strcpy(text, K2L_Compatibility(szNone));
+		strncpy_s(text, K2L_Compatibility(szNone), _TRUNCATE);
 	else
 		sprintf(text, "%.1f %%",
 			(float)pStat->dwFairway /
@@ -2609,14 +2610,14 @@ void FrUserInfoForm::UpdateEditSpecialInfo(eSeasonType type,
 	m_pSpecialEdit[10]->SetLine(1, text, color, false, 0);
 
 	if (pStat->dwPutt == 0)
-		strcpy(text, K2L_Compatibility(szNone));
+		strncpy_s(text, K2L_Compatibility(szNone), _TRUNCATE);
 	else
 		sprintf(text, "%.1f %%",
 			(float)pStat->dwPuttIn / (float)pStat->dwPutt * 100.0f);
 	m_pSpecialEdit[11]->SetLine(1, text, color, false, 0);
 
 	if (pStat->dwDrive + pStat->dwPutt == 0)
-		strcpy(text, K2L_Compatibility(szNone));
+		strncpy_s(text, K2L_Compatibility(szNone), _TRUNCATE);
 	else
 		sprintf(text, "%.1f %%",
 			(float)pStat->dwOB / (float)(pStat->dwDrive + pStat->dwPutt) *
@@ -2624,7 +2625,7 @@ void FrUserInfoForm::UpdateEditSpecialInfo(eSeasonType type,
 	m_pSpecialEdit[12]->SetLine(1, text, color, false, 0);
 
 	if (pStat->i64TotalSkinsPang == 0)
-		strcpy(text, K2L_Compatibility(szNone));
+		strncpy_s(text, K2L_Compatibility(szNone), _TRUNCATE);
 	else
 		sprintf(text, "%I64d", pStat->i64TotalSkinsPang);
 	m_pSpecialEdit[13]->SetLine(1, text, color, false, 0);
@@ -2793,7 +2794,9 @@ void __fastcall SortMapStat(sMapStatistics** const ppMap, sMapStatistics* pStat,
 			: pStat->bMap;
 		IFF_STRUCT::sCourse* pCourse =
 			ItemManager()->FindCourse(course | 0x28000000);
-		if (pCourse && pCourse->c.Final)
+		// C792: Difficulty (4 bits do Course.iff) indexa ppMap[5]/pMaxPang[5] com -1; o 983 nao testa e um pak com
+		// dificuldade 0 ou > 5 escrevia antes/depois dos vetores do form. Fora de 1..5 o mapa nao entra na tabela.
+		if (pCourse && pCourse->c.Final && pCourse->Difficulty >= 1 && pCourse->Difficulty <= 5)
 		{
 			sMapStatistics*& pBest = ppMap[pCourse->Difficulty - 1];
 			__int64& maxPang = pMaxPang[pCourse->Difficulty - 1];
@@ -2856,59 +2859,59 @@ void FrUserInfoForm::SetContent(bool bRefresh)
 	int hour = pUserStat->dwVisitTime / 3600;
 	int minute = (pUserStat->dwVisitTime - hour * 3600) / 60;
 	if (hour == 0)
-		sprintf(text, K2L_Compatibility("%d \272\320"), minute);
+		_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d \272\320"), minute);
 	else if (hour < 24)
-		sprintf(text, K2L_Compatibility("%d \275\303\260\243 %d \272\320"), hour, minute);
+		_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d \275\303\260\243 %d \272\320"), hour, minute);
 	else
-		sprintf(text, K2L_Compatibility("%d \300\317 %d \275\303\260\243 %d \272\320"), hour / 24,
+		_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d \300\317 %d \275\303\260\243 %d \272\320"), hour / 24,
 			hour % 24, minute);
 	m_pRecordEdit[0]->SetLine(1, text, color, false, 0);
 
-	sprintf(text, K2L_Compatibility("%d "), (int)(pUserStat->dwDistance / 43745.48828125)); // 983 008a85f7
+	_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d "), (int)(pUserStat->dwDistance / 43745.48828125)); // 983 008a85f7
 	m_pRecordEdit[3]->SetLine(1, text, color, false, 0);
 	if (pUserStat->dwDistance == 0)
-		strcpy(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"));
+		strncpy_s(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"), _TRUNCATE);
 	else
-		sprintf(text, K2L_Compatibility("%.1f\270\270 y "),
+		_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%.1f\270\270 y "),
 			(double)((float)pUserStat->dwDistance * 0.0001f));
 	m_pRecordEdit[4]->SetLine(1, text, color, false, 0);
 
 	if (pUserStat->dwPutt + pUserStat->dwDrive == 0)
 	{
-		strcpy(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"));
+		strncpy_s(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"), _TRUNCATE);
 	}
 	else
 	{
 		RemakeNumber(pUserStat->dwPutt + pUserStat->dwDrive, text);
-		strcat(text, K2L_Compatibility(" \305\270"));
+		strncat_s(text, K2L_Compatibility(" \305\270"), _TRUNCATE);
 	}
 	m_pRecordEdit[1]->SetLine(1, text, color, false, 0);
 
 	if (pUserStat->dwHole == 0)
 	{
-		strcpy(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"));
+		strncpy_s(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"), _TRUNCATE);
 	}
 	else
 	{
 		RemakeNumber(pUserStat->dwHole, text);
-		strcat(text, K2L_Compatibility(" \310\246"));
+		strncat_s(text, K2L_Compatibility(" \310\246"), _TRUNCATE);
 	}
 	m_pRecordEdit[2]->SetLine(1, text, color, false, 0);
 
 	if (Wabs(pUserStat->fLongest) < g_EPSILON)
-		strcpy(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"));
+		strncpy_s(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"), _TRUNCATE);
 	else
 		sprintf(text, "%.2f y", pUserStat->fLongest);
 	m_pRecordEdit[12]->SetLine(1, text, color, false, 0);
 
 	if (Wabs(pUserStat->fLongestPuttIn) < g_EPSILON)
-		strcpy(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"));
+		strncpy_s(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"), _TRUNCATE);
 	else
 		sprintf(text, "%.2f y", pUserStat->fLongestPuttIn);
 	m_pRecordEdit[13]->SetLine(1, text, color, false, 0);
 
 	if (Wabs(pUserStat->fLongestChipIn) < g_EPSILON)
-		strcpy(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"));
+		strncpy_s(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"), _TRUNCATE);
 	else
 		sprintf(text, "%.2f y", pUserStat->fLongestChipIn);
 	m_pRecordEdit[14]->SetLine(1, text, color, false, 0);
@@ -2919,13 +2922,13 @@ void FrUserInfoForm::SetContent(bool bRefresh)
 		for (int i = 0; i < 5; ++i)
 		{
 			if (m_pBestScoreMap[4 - i] == NULL)
-				strcpy(bestText[4 - i], K2L_Compatibility("\261\342\267\317 \276\370\300\275"));
+				strncpy_s(bestText[4 - i], K2L_Compatibility("\261\342\267\317 \276\370\300\275"), _TRUNCATE);
 			else if (m_pBestScoreMap[4 - i]->cBestScore == 0)
 				sprintf(bestText[4 - i], "%+d [%I64dp]",
 					m_pBestScoreMap[4 - i]->cBestScore,
 					m_bestMaxPang983[4 - i]);
 			else if (m_pBestScoreMap[4 - i]->cBestScore == 0x7f)
-				strcpy(bestText[4 - i], K2L_Compatibility("\261\342\267\317 \276\370\300\275"));
+				strncpy_s(bestText[4 - i], K2L_Compatibility("\261\342\267\317 \276\370\300\275"), _TRUNCATE);
 			else
 				sprintf(bestText[4 - i], "%+d [%I64dp]",
 					m_pBestScoreMap[4 - i]->cBestScore,
@@ -2961,9 +2964,9 @@ void FrUserInfoForm::SetContent(bool bRefresh)
 	}
 	unsigned short quiz = *(const unsigned short*)((const char*)pStat2 + 0xff);
 	if (quiz == 0)
-		strcpy(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"));
+		strncpy_s(text, K2L_Compatibility("\261\342\267\317 \276\370\300\275"), _TRUNCATE);
 	else
-		sprintf(text, K2L_Compatibility("%d \261\336"), 6 - quiz);
+		_snprintf_s(text, _TRUNCATE, K2L_Compatibility("%d \261\336"), 6 - quiz);
 	if (m_pGeneralEdit[7])
 		m_pGeneralEdit[7]->SetLine(1, text, color, false, 0);
 	const bool& bTotal = (m_pRecordBtn[3]->GetStatus() == FrButton::PRESSED);
@@ -2996,11 +2999,11 @@ void FrUserInfoForm::SetContent(bool bRefresh)
 	}
 	else
 	{
-		strcpy(text, K2L_Compatibility("\276\370\300\275"));
+		strncpy_s(text, K2L_Compatibility("\276\370\300\275"), _TRUNCATE);
 		m_pGuildEdit[0]->SetLine(1, text, color, false, 0);
-		strcpy(text, K2L_Compatibility("\276\370\300\275"));
+		strncpy_s(text, K2L_Compatibility("\276\370\300\275"), _TRUNCATE);
 		m_pGuildEdit[1]->SetLine(1, text, color, false, 0);
-		strcpy(text, K2L_Compatibility("\276\370\300\275"));
+		strncpy_s(text, K2L_Compatibility("\276\370\300\275"), _TRUNCATE);
 	}
 	m_pGuildEdit[2]->SetLine(1, text, color, false, 0);
 }
@@ -4002,23 +4005,24 @@ void FrAIInfoForm::SetInfo(unsigned short aiId) // 008a32c0
 		if (!tid || pos >= 0x19)
 			continue;
 		IFF_STRUCT::sPart* pPart = ItemManager()->FindPart(tid);
+		if (pPart == NULL)
+			continue;
 		// tira do combo o que ocupa a mesma posicao da peca nova e entram as sub-pecas dela
 		for (int slot = 0; slot < 0x18; ++slot)
 		{
 			if (!info.tidParts[slot])
 				continue;
 			IFF_STRUCT::sPart* pCur = ItemManager()->FindPart(info.tidParts[slot]);
-			if (!(pPart->PosMask & pCur->PosMask))
+			if (pCur == NULL || !(pPart->PosMask & pCur->PosMask))
 				continue;
 			unsigned long curPos = (pCur->c.TypeId >> 13) & 0x1f;
 			if (curPos == ((pPart->c.TypeId >> 13) & 0x1f))
 				info.tidParts[slot] = tid;
 			else
 				info.tidParts[curPos] = 0;
-			if (pPart->SubPart[0])
-				info.tidParts[(pPart->SubPart[0] >> 13) & 0x1f] = pPart->SubPart[0];
-			if (pPart->SubPart[1])
-				info.tidParts[(pPart->SubPart[1] >> 13) & 0x1f] = pPart->SubPart[1];
+			for (int s = 0; s < 2; ++s) // posicao vem do IFF; a lista tem 24
+				if (pPart->SubPart[s] && ((pPart->SubPart[s] >> 13) & 0x1f) < 24)
+					info.tidParts[(pPart->SubPart[s] >> 13) & 0x1f] = pPart->SubPart[s];
 		}
 		info.tidParts[pos] = tid;
 	}

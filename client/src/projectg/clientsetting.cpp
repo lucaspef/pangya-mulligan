@@ -588,13 +588,15 @@ bool COption::ScanReg_F(int index, float* value)
 	return false;
 }
 
-bool COption::ScanReg_S(int index, char* value)
+bool COption::ScanReg_S(int index, char* value, int size)
 {
 	if (index >= 0 && index < 74 && ms_szReg[index][0] &&
 		strlen(ms_szReg[index][0]) != 0)
 	{
-		if (m_reg.Scan((char*)ms_szReg[index][0], "%s", value) != 0)
+		char text[128] = ""; // Scan copia ate 127
+		if (m_reg.Scan((char*)ms_szReg[index][0], "%s", text) != 0)
 		{
+			strncpy_s(value, size, text, _TRUNCATE);
 			return true;
 		}
 		*value = 0;
@@ -609,7 +611,7 @@ void COption::WriteReg(int index, const char* value)
 	if (index >= 0 && index < 74 && ms_szReg[index][0] &&
 		strlen(ms_szReg[index][0]) != 0)
 	{
-		m_reg.Write((char*)ms_szReg[index][0], value);
+		m_reg.Write((char*)ms_szReg[index][0], "%s", value); // A929: macro de chat com '%' nao e formato
 	}
 }
 
@@ -646,7 +648,7 @@ bool COption::WriteReg_S(int index, const char* value)
 		strlen(ms_szReg[index][0]) != 0)
 	{
 		sprintf(buf, "%s", value);
-		m_reg.Write((char*)ms_szReg[index][0], buf);
+		m_reg.Write((char*)ms_szReg[index][0], "%s", buf);
 		return true;
 	}
 	return false;
@@ -1789,7 +1791,7 @@ void COption::Init()
 		}
 	}
 
-	ScanReg_S(0, PY_PUBLIC_VERSION);
+	ScanReg_S(0, PY_PUBLIC_VERSION, sizeof(PY_PUBLIC_VERSION));
 	ScanReg_I(1, &m_opt.vWindowMode);
 	ScanReg_I(2, &m_opt.vFillMode);
 	ScanReg_I(3, &m_opt.vWideMode);
@@ -1836,7 +1838,7 @@ void COption::Init()
 	ScanReg_I(43, &m_opt.gFriendConfirm);
 	ScanReg_I(44, &m_opt.gTransChatWin);
 	ScanReg_I(45, &m_opt.gUiEffect);
-	ScanReg_S(46, m_opt.gLastLoginID);
+	ScanReg_S(46, m_opt.gLastLoginID, sizeof(m_opt.gLastLoginID));
 	ScanReg_I(47, &m_opt.gIdentity);
 	ScanReg_I(48, &m_opt.gExtendChatLine);
 	ScanReg_I(49, &m_opt.gUserSort);
@@ -1857,7 +1859,7 @@ void COption::Init()
 	ScanReg_I(64, &m_opt.gBindMouseCursor);
 	for (int i = 0; i < 8; ++i)
 	{
-		ScanReg_S(65 + i, macros[i]);
+		ScanReg_S(65 + i, macros[i], sizeof(macros[i]));
 	}
 	ScanReg_I(73, &m_opt.mSaveMacros);
 	for (int i = 0; i < 8; ++i)
@@ -1928,7 +1930,7 @@ void COption::Init()
 		if (macro.length() == 0 ||
 			macro.find_first_not_of(' ') == std::string::npos)
 		{
-			sprintf(m_opt.mMacro[i],
+			_snprintf_s(m_opt.mMacro[i], _TRUNCATE,
 				K2L_Compatibility("\xc3\xa4\xc6\xc3 \xb8\xc5\xc5\xa9\xb7\xce\xb8\xa6 \xbc\xb3\xc1\xa4\xc7\xd8 \xc1\xd6\xbc\xbc\xbf\xe4."));
 		}
 		LimitText(m_opt.mMacro[i], 64);
@@ -1940,16 +1942,15 @@ void COption::Init()
 	char swapBuf[128];
 	if (mouseReg.Read("SwapMouseButtons", swapBuf, 128))
 	{
-		int swap;
+		int swap = 0; // valor vazio: sscanf nao grava
 		sscanf(swapBuf, "%d", &swap);
 		m_bSwapMouseButton = swap != 0;
 	}
 	FrForm::ms_bHasTail = m_opt.gUiEffect != 0;
 
-	char cmdLine[260];
-	strcpy(cmdLine, GetCommandLineA());
-	strlwr(cmdLine);
-	if (strstr(cmdLine, "-safe"))
+	std::string cmdLine(GetCommandLineA()); // 983 copia em 260 bytes
+	strlwr(&cmdLine[0]);
+	if (strstr(cmdLine.c_str(), "-safe"))
 	{
 		m_opt.vWindowMode = 1;
 		m_opt.vWideMode = 0;

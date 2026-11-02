@@ -571,6 +571,8 @@ void WBone::ResetMeshBone(WPuppet* pet, WPuppet* owner, bool child)
 				WBone* bone = pet->FindBone(mesh->boneList[i]->m_name);
 				if (bone == 0)
 					bone = pet->CreateMissingBone983(mesh->boneList[i], owner);
+				if (bone == 0)
+					continue;
 				if (bone->IsExtraBone983())
 					bone->AddOwnerUp983(owner);
 				mesh->boneList[i] = bone;
@@ -583,6 +585,8 @@ void WBone::ResetMeshBone(WPuppet* pet, WPuppet* owner, bool child)
 				WBone* bone = pet->FindBone(mesh->blendedBoneList[i]->m_name);
 				if (bone == 0)
 					bone = pet->CreateMissingBone983(mesh->blendedBoneList[i], owner);
+				if (bone == 0)
+					continue;
 				if (bone->IsExtraBone983())
 					bone->AddOwnerUp983(owner);
 				mesh->blendedBoneList[i] = bone;
@@ -3740,12 +3744,23 @@ void WBone::CountBones(int& count)
 	} while (bone != 0);
 }
 
+// Contagem de chaves que nao cabe no arquivo: fica 0 e o chunk ANIM acaba aqui (o proximo id le -1)
+static int ReadKeyCount(cFile* fp, int keySize)
+{
+	int count = 0;
+	fp->Read(&count, 4);
+	if (fp->CountFits(count, keySize))
+		return count;
+	fp->Seek(fp->Length(), 0);
+	return 0;
+}
+
 float WBone::LoadAnimationKey(cFile* fp, unsigned long petVersion983)
 {
 	float t = 0.0f;
 	int i;
 	WQuat rot;
-	fp->Read(&m_keyPosNum, 4);
+	m_keyPosNum = ReadKeyCount(fp, 16);
 	if (m_keyPosNum != 0)
 	{
 		m_keyPos = new w_keyframe_pos[m_keyPosNum];
@@ -3760,7 +3775,7 @@ float WBone::LoadAnimationKey(cFile* fp, unsigned long petVersion983)
 				t = m_keyPos[i].time;
 		}
 	}
-	fp->Read(&m_keyRotNum, 4);
+	m_keyRotNum = ReadKeyCount(fp, 20);
 	if (m_keyRotNum != 0)
 	{
 		m_keyFlag |= 1;
@@ -3779,7 +3794,7 @@ float WBone::LoadAnimationKey(cFile* fp, unsigned long petVersion983)
 		}
 	}
 	// 983 (00b97010): chaves de escala (o 645 lia aqui um contador e o descartava) e, a partir do .pet 0xfffe0103, chaves de FOV
-	fp->Read(&m_keyScaleNum, 4);
+	m_keyScaleNum = ReadKeyCount(fp, 16);
 	if (m_keyScaleNum != 0)
 	{
 		m_keyScale = new w_keyframe_pos[m_keyScaleNum];
@@ -3796,7 +3811,7 @@ float WBone::LoadAnimationKey(cFile* fp, unsigned long petVersion983)
 	}
 	if (ComparePetVersion983(petVersion983, PET_VERSION_FOVKEYS983) >= 0)
 	{
-		fp->Read(&m_key983_f0, 4);
+		m_key983_f0 = ReadKeyCount(fp, 8);
 		if (m_key983_f0 != 0)
 		{
 			m_key983_ec = new w_keyframe_fov983[m_key983_f0];
@@ -5005,8 +5020,11 @@ void WBonePalette983::Bind(WPuppet* pet, WPuppet* source)
 		else
 		{
 			int id = bone->m_id;
-			transf[i] = pet->m_boneMatrices983.find(id)->second;
-			orig[i] = &list.find(id)->second;
+			// .pet de outro pak pode ter osso sem matriz
+			auto itTransf = pet->m_boneMatrices983.find(id);
+			auto itOrig = list.find(id);
+			transf[i] = itTransf != pet->m_boneMatrices983.end() ? itTransf->second : &WMatrix::IDENTITY;
+			orig[i] = itOrig != list.end() ? &itOrig->second : &WMatrix::IDENTITY;
 		}
 	}
 }

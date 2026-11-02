@@ -128,7 +128,7 @@ RFPoint& RFPoint::operator+=(const RFPoint& o)
 // 0041dcd0 / 00428bc0: "%f, %f" (o 983 lê o texto da propriedade do XML)
 RFSize& RFSize::FromString(const std::string& s)
 {
-	float a, b;
+	float a = width, b = height; // texto curto: fica o valor atual
 	sscanf(s.c_str(), "%f, %f", &a, &b);
 	width = a;
 	height = b;
@@ -196,7 +196,7 @@ RFVector2 RFVector2::operator/(float s) const
 // 00428bc0
 RFVector2& RFVector2::FromString(const std::string& s)
 {
-	float a, b;
+	float a = x, b = y;
 	sscanf(s.c_str(), "%f, %f", &a, &b);
 	x = a;
 	y = b;

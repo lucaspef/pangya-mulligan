@@ -59,8 +59,11 @@ public:
 	unsigned long GetTextOutlineColor() const { return m_textOutlineColor; }
 	void SetTextColor(unsigned long color, unsigned long outlineColor);
 	void SetTextStyle(unsigned long style);
-	float Print(const WPoint& point, unsigned long style, const char* format,
-		...);
+	// A929: sem argumentos o texto (nick, item) nao e formato: '%' do servidor ou do pak derrubava.
+	// A conversao de Format faz a sobrecarga de const char* ganhar quando nao ha argumentos.
+	struct Format { const char* text; Format(const char* s) : text(s) {} };
+	float Print(const WPoint& point, unsigned long style, Format format, ...);
+	float Print(const WPoint& point, unsigned long style, const char* text);
 	float GetViewWidth();
 	float GetViewHeight();
 
@@ -72,8 +75,8 @@ public:
 	int SetSpace11(int space);
 	void SetScale(float scale);
 	void SetScale11(float scale);
-	float Print11(const WPoint& point, unsigned long align, const char* format,
-		...);
+	float Print11(const WPoint& point, unsigned long align, Format format, ...);
+	float Print11(const WPoint& point, unsigned long align, const char* text);
 	void PrintText(const WPoint& point, const FrTEXT& text);
 	void PrintText11(const WPoint& point, const FrTEXT& text);
 	void PrintText(const WPoint& point, unsigned long align,

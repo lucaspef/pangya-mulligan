@@ -197,11 +197,11 @@ void FrDtRoomDlg::UpdateGameDesc983()
 		if (match)
 			typeName = match->Name;
 		else
-			typeName = Doc()->m_gameTypeInfo[Doc()->m_roomDetail.gameType].name;
+			typeName = (Doc()->m_roomDetail.gameType < GAME_TYPE_MAX ? Doc()->m_gameTypeInfo[Doc()->m_roomDetail.gameType].name : "");
 	}
 	break;
 	default:
-		typeName = Doc()->m_gameTypeInfo[Doc()->m_roomDetail.gameType].name;
+		typeName = (Doc()->m_roomDetail.gameType < GAME_TYPE_MAX ? Doc()->m_gameTypeInfo[Doc()->m_roomDetail.gameType].name : "");
 		break;
 	}
 	sprintf(text, K2L_Compatibility("\260\324\300\323\305\270\300\324 : %s%s"), typeName,
@@ -809,14 +809,15 @@ void FrDtRoomDlg::ShowGrandPrix983()
 	// horario: so no Grand Prix sem tipo ou com tipo (bits 19-25) != 0
 	if (pInfo->ticket == 0 || ((pInfo->ticket >> 19) & 0x7f) != 0)
 	{
-		sprintf(text, GetGameString(0x7545), pInfo->start[4], pInfo->start[5], pInfo->end[4], pInfo->end[5]);
+		sprintf(text, CheckFormat(GetGameString(0x7545), pInfo->start[4], pInfo->start[5], pInfo->end[4], pInfo->end[5]),
+			pInfo->start[4], pInfo->start[5], pInfo->end[4], pInfo->end[5]);
 		m_pGameDesc->SetLine(4, text, 0, false, 0);
 	}
 
 	std::string rule = GPRuleText983(pInfo);
 	if (!rule.empty())
 	{
-		sprintf(text, rule.c_str()); // 983: sprintf de 2 args
+		strncpy_s(text, rule.c_str(), _TRUNCATE); // 983: sprintf de 2 args; A929: '%' no texto nao e formato
 		((FrEditJp983*)m_pGameDesc)->AddText983(text, false, true, 0, 0);
 	}
 
@@ -870,9 +871,10 @@ void FrDtRoomDlg::ShowGrandPrix983()
 	if (!prizes.empty())
 	{
 		std::string::size_type pos = prizes.find_last_of(",");
-		if (pos != std::string::npos)
+		if (pos != std::string::npos && pos != 0) // nome vazio: erase(npos) lanca
 			prizes.erase(pos - 1);
-		strcpy(text, MakeStr(GetGameString(0x7546), prizes.c_str()));
+		strncpy(text, MakeStr(GetGameString(0x7546), prizes.c_str()), sizeof(text) - 1); // MakeStr vai a 0x240
+		text[sizeof(text) - 1] = 0;
 		((FrEditJp983*)m_pGameDesc)->AddText983(text, false, true, 0, 0);
 	}
 }

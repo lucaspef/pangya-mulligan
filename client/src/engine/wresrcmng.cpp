@@ -205,6 +205,8 @@ WPuppet* WResourceManager::GetPuppet(const char* f, bool alphatest,
 
 	// 983: tipos novos (eram 0xff / 0x11b / 0x66 / 0x82)
 	char* ext = strrchr(name, '.');
+	if (!ext)
+		return 0;
 	if (!strcmpi(ext, ".pet"))
 		type = 0x1ff;
 	else if (!strcmpi(ext, ".mpet"))
@@ -1007,9 +1009,9 @@ Bitmap* WResourceManager::LoadBitmap(const char* filename, int level, bool bNet)
 	const char* inname = strrchr(filename, '?');
 	if (inname)
 	{
-		char temp[260] = "";
-		memcpy(temp, filename, inname - filename);
-		bitmap = LoadBRES(inname + 1, temp);
+		// 983 00b5cf80: buffer de 260 sem teto; nome de outro pak com 260+ letras antes do '?' estourava a pilha
+		const std::string temp(filename, inname - filename);
+		bitmap = LoadBRES(inname + 1, temp.c_str());
 	}
 	else if (extension)
 	{
@@ -1025,10 +1027,10 @@ Bitmap* WResourceManager::LoadBitmap(const char* filename, int level, bool bNet)
 		if (!bitmap &&
 			(!strcmpi(extension, ".jpg") || !strcmpi(extension, ".bmp")))
 		{
-			char temp[256];
-			strcpy(temp, filename);
-			strcpy(strrchr(temp, '.'), ".png");
-			bitmap = LoadPNG(temp, false, false);
+			// 983: idem, buffer de 256 (nome longo de outro pak estourava a pilha)
+			std::string temp(filename, extension - filename);
+			temp += ".png";
+			bitmap = LoadPNG(temp.c_str(), false, false);
 		}
 	}
 
@@ -1365,6 +1367,7 @@ Bitmap* WResourceManager::LoadTGA(const char* filename)
 	if (fp)
 	{
 		sTgaHeader header;
+		memset(&header, 0, sizeof(header)); // arquivo vazio
 		fp->Read(&header, sizeof(header));
 		if (header.iType == 2)
 		{
@@ -1402,6 +1405,12 @@ Bitmap* WResourceManager::LoadBMP(const char* filename)
 
 	int offset = *(unsigned int*)&header[10] - 14;
 	int len = fp->Length() - fp->Tell();
+	// arquivo curto: nem o cabecalho veio
+	if (len < (int)sizeof(BITMAPINFOHEADER))
+	{
+		CloseCFile(fp);
+		return 0;
+	}
 	BITMAPINFO* bi = (BITMAPINFO*)new unsigned char[len];
 	fp->Read(bi, len);
 
@@ -1415,11 +1424,19 @@ Bitmap* WResourceManager::LoadBMP(const char* filename)
 		int num = bi->bmiHeader.biClrUsed;
 		if (!num)
 			num = 1 << bi->bmiHeader.biBitCount;
-		memcpy(bitmap->bi->bmiColors, bi->bmiColors, num * sizeof(RGBQUAD));
+		if (num > 256)
+			num = 256;
+		if ((int)(sizeof(BITMAPINFOHEADER) + num * sizeof(RGBQUAD)) <= len)
+			memcpy(bitmap->bi->bmiColors, bi->bmiColors, num * sizeof(RGBQUAD));
 	}
 	for (int y = 0; y < bi->bmiHeader.biHeight; y++)
-		memcpy(bitmap->vram + y * bitmap->pitch,
-			vram + (bi->bmiHeader.biHeight - y - 1) * bpl, bitmap->pitch);
+	{
+		// arquivo curto: linhas que nao vieram ficam como o Create as deixou
+		__int64 start = (__int64)offset + (__int64)(bi->bmiHeader.biHeight - y - 1) * bpl;
+		if (start >= 0 && start + bitmap->pitch <= len)
+			memcpy(bitmap->vram + y * bitmap->pitch, vram + (bi->bmiHeader.biHeight - y - 1) * bpl,
+				bitmap->pitch);
+	}
 
 	delete[] bi;
 	CloseCFile(fp);
@@ -1456,36 +1473,28 @@ Bitmap* WResourceManager::LoadBRES(const char* zipname, const char* filename)
 			unsigned char* item = new unsigned char[ze.unc_size];
 			UnzipItem(hz, i, item, ze.unc_size, ZIP_MEMORY);
 
-			char* ext = strrchr(ze.name, '.');
-			Bitmap* pBitmap;
-			unsigned char* vram;
-			unsigned height;
-			unsigned bpl;
-			if (!stricmp(ext, ".bmp"))
-			{
-				vram = item + 0x36;
-				pBitmap = new Bitmap(*(int*)(item + 0x12), *(int*)(item + 0x16),
-					*(short*)(item + 0x1c));
-				height = *(int*)(item + 0x16);
-				bpl = pBitmap->pitch;
-			}
-			else if (!stricmp(ext, ".tga"))
-			{
-				vram = item + 0x12;
-				pBitmap = new Bitmap(*(short*)(item + 0xc),
-					*(short*)(item + 0xe), item[0x10]);
-				height = *(short*)(item + 0xe);
-				bpl = item[0x10] * *(short*)(item + 0xc) / 8;
-			}
-			else
+			const char* ext = strrchr(ze.name, '.');
+			const bool bmp = ext && !stricmp(ext, ".bmp");
+			const int hdr = bmp ? 0x36 : 0x12;
+			if ((!bmp && !(ext && !stricmp(ext, ".tga"))) || (int)ze.unc_size < hdr)
 			{
 				delete[] item;
 				break;
 			}
-
-			for (unsigned y = 0; y < height; y++)
+			const int width = bmp ? *(int*)(item + 0x12) : *(short*)(item + 0xc);
+			const int height = bmp ? *(int*)(item + 0x16) : *(short*)(item + 0xe);
+			const int bits = bmp ? *(short*)(item + 0x1c) : item[0x10];
+			const __int64 bpl = bmp ? ((bits / 8) * (__int64)width + 3) & ~3 : (bits / 8) * (__int64)width;
+			// cabecalho de outro pak: tamanho maior que o arquivo
+			if (width <= 0 || height <= 0 || bits < 8 || bpl * height > (int)ze.unc_size - hdr)
+			{
+				delete[] item;
+				break;
+			}
+			Bitmap* pBitmap = new Bitmap(width, height, bits);
+			for (int y = 0; y < height; y++)
 				memcpy(pBitmap->vram + pBitmap->pitch * y,
-					vram + (height - 1 - y) * bpl, bpl);
+					item + hdr + (height - 1 - y) * bpl, (size_t)bpl);
 
 			delete[] item;
 			CloseZipU(hz);
@@ -1707,7 +1716,7 @@ void WResourceManager::LoadMatchCacheList(const char* filename)
 	{
 		do
 		{
-			fp->Scan("%s", fname);
+			fp->Scan("%255s", fname);
 			AddMatchList(fname);
 		} while (fp->Tell() < fp->Length());
 		CloseCFile(fp);
@@ -1717,6 +1726,8 @@ void WResourceManager::LoadMatchCacheList(const char* filename)
 void WResourceManager::SaveMatchCacheList(const char* filename)
 {
 	FILE* fp = fopen(filename, "wb");
+	if (!fp)
+		return;
 	for (w_match_filename* n = m_matchList.Start(); n; n = m_matchList.Next())
 		fprintf(fp, "%s\n", n->fullname);
 	fclose(fp);

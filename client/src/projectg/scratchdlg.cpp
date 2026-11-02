@@ -664,7 +664,7 @@ void FrScratchDlg::SetBmpScratchItem()
 		for (int k = 0; k < setCount; k++)
 		{
 			IFF_ITEM_COMMON* pItem = ItemManager()->FindCommonItem(typeIds[k]);
-			if (g_pFresh->GetBitmap(pItem->Icon) == NULL)
+			if (pItem == NULL || g_pFresh->GetBitmap(pItem->Icon) == NULL)
 				m_pItemBmp.push_back(g_pFresh->GetBitmap("equipitem_itemslot_empty.tga"));
 			else
 				m_pItemBmp.push_back(g_pFresh->GetBitmap(pItem->Icon));
@@ -678,14 +678,12 @@ void FrScratchDlg::SetBmpScratchItem()
 	sBonusBall* pBall = m_ball;
 	while (pBall->typeId != 0)
 	{
+		// tid fora do IFF tambem ocupa imagem: m_pItemBmp.at(i) vai ate m_ballCount, sem catch no jogo
 		IFF_ITEM_COMMON* pItem = ItemManager()->FindCommonItem(pBall->typeId);
-		if (pItem)
-		{
-			if (g_pFresh->GetBitmap(pItem->Icon) == NULL)
-				m_pItemBmp.push_back(g_pFresh->GetBitmap("equipitem_itemslot_empty"));
-			else
-				m_pItemBmp.push_back(g_pFresh->GetBitmap(pItem->Icon));
-		}
+		if (pItem == NULL || g_pFresh->GetBitmap(pItem->Icon) == NULL)
+			m_pItemBmp.push_back(g_pFresh->GetBitmap("equipitem_itemslot_empty"));
+		else
+			m_pItemBmp.push_back(g_pFresh->GetBitmap(pItem->Icon));
 		if ((pBall->typeId & 0xfc000000) == 0x24000000)
 		{
 			m_ballCount = 1;
@@ -697,6 +695,7 @@ void FrScratchDlg::SetBmpScratchItem()
 			return;
 	}
 	m_pItemBmp.push_back(g_pFresh->GetBitmap("scratch_text_nothing"));
+	m_ballCount = i + 1; // lista acabou antes da contagem do pacote
 }
 
 // 983 (008e6820): canto do primeiro item; os itens ficam em fila, 64 px um do outro, centrados no dialogo

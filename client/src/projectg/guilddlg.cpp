@@ -195,16 +195,22 @@ void FrGuildDlg::ParseRSS(TiXmlDocument& doc)
 	pNode = pNode->FirstChild("item");
 	while (pNode)
 	{
+		TiXmlNode* pTitle = pNode->FirstChild("title");
+		TiXmlNode* pDesc = pNode->FirstChild("description");
+		if (pTitle == NULL || pTitle->FirstChild() == NULL || pDesc == NULL || pDesc->FirstChild() == NULL)
+		{
+			pNode = pNode->NextSibling("item"); // outro servidor; 983 cai aqui
+			continue;
+		}
+
 		sRSSItem* pItem = new sRSSItem;
 
-		TiXmlNode* pTitle = pNode->FirstChild("title");
 		const char* title = pTitle->FirstChild()->Value();
 
 		int len = strlen(title);
 		pItem->title = new char[len + 1];
 		strcpy(pItem->title, title);
 
-		TiXmlNode* pDesc = pNode->FirstChild("description");
 		const char* desc = pDesc->FirstChild()->Value();
 
 		len = strlen(desc);

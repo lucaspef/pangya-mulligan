@@ -126,6 +126,7 @@ WPolySoup::~WPolySoup()
 		g_resrcmng->Release(m_holecupTex);
 		m_holecupTex = 0;
 	}
+	GetPVS().Clear(); // 983 00948998
 }
 
 void WPolySoup::Clear()
@@ -262,13 +263,17 @@ static inline int ReadVector983(cFile* file, WVector& v)
 
 int cFile::ReadAabb983(Waabb& aabb)
 {
-	return ReadVector983(this, aabb.min) + ReadVector983(this, aabb.max);
+	// A ordem importa: a+b nao define qual Read vem primeiro
+	int n = ReadVector983(this, aabb.min);
+	return n + ReadVector983(this, aabb.max);
 }
 
 int cFile::ReadMatrix983(WMatrix& mat)
 {
-	return ReadVector983(this, mat.xa) + ReadVector983(this, mat.ya) + ReadVector983(this, mat.za) +
-		   ReadVector983(this, mat.pivot);
+	int n = ReadVector983(this, mat.xa);
+	n += ReadVector983(this, mat.ya);
+	n += ReadVector983(this, mat.za);
+	return n + ReadVector983(this, mat.pivot);
 }
 
 WPolySoup::sLink983::sLink983()
@@ -333,9 +338,17 @@ void WPolySoup::sHeader::Read(cFile* file)
 bool __fastcall WPolySoup::ReadHeader983(cFile* file, sHeader& header)
 {
 	header.Read(file);
+	// arquivo vazio ou curto: contagem lixo viraria new[] gigante e leitura fora
+	const int len = file->m_nLen;
+	if (len <= 0 || header.modelNum < 0 || header.modelNum > len || header.modelNum1 < 0 || header.modelNum1 > len ||
+		header.modelNum2 < 0 || header.modelNum2 > len || header.cameraNum < 0 || header.cameraNum > len ||
+		header.pointNum < 0 || header.pointNum > len || header.areaNum < 0 || header.areaNum > len ||
+		header.textureNum < 0 || header.textureNum > len || header.nodeNum < 0 || header.nodeNum > len ||
+		header.attachNum983 < 0 || header.attachNum983 > len)
+		return false;
 	if ((int)header.version > 0x72)
 	{
-		MessageBox(NULL,
+		GameMessageBox(NULL,
 			K2L_Compatibility("\xb9\xe8\xb0\xe6 \xc6\xc4\xc0\xcf\xc0\xc7 \xb9\xf6\xc1\xaf\xc0\xcc "
 							  "\xb8\xc2\xc1\xf6 \xbe\xca\xbd\xc0\xb4\xcf\xb4\xd9."),
 			K2L_Compatibility("\xb9\xe8\xb0\xe6\xc6\xc4\xc0\xcf \xb9\xf6\xc1\xaf"), 0);
@@ -364,6 +377,7 @@ void WPolySoup::sCameraBase983::Read(int version, cFile* file)
 
 	Clear();
 	file->Read(name, 32);
+	name[31] = 0;
 	file->Read(&eye.x, 4);
 	file->Read(&eye.y, 4);
 	file->Read(&eye.z, 4);
@@ -435,11 +449,13 @@ void WPolySoup::sPointBase983::Read(int version, cFile* file)
 	Clear();
 	file->Read(&type, 1);
 	file->Read(name, 32);
+	name[31] = 0;
 	ReadVector983(file, pos);
 	if (type)
 	{
-		char buf[64];
+		char buf[64] = "";
 		file->Read(buf, 64);
+		buf[63] = 0;
 		option = buf;
 	}
 }
@@ -494,6 +510,7 @@ void WPolySoup::sAreaBase983::Read(int version, cFile* file)
 	Clear();
 	file->Read(&type, 1);
 	file->Read(name, 64);
+	name[63] = 0;
 	file->ReadAabb983(aabb);
 }
 
@@ -557,6 +574,7 @@ void WPolySoup::sAttach983::Read(int version, cFile* file)
 	Clear();
 	link983.Read(version, file);
 	file->Read(name, 64);
+	name[63] = 0;
 	file->ReadMatrix983(mat);
 	file->ReadMatrix983(mat2);
 	file->Read(&value, 4);
@@ -882,6 +900,7 @@ bool WPolySoup::sMapData983::BuildNodes983()
 {
 	std::map<sNode*, int> depth;
 	std::map<int, sNode*> nodeById;
+	const int maxDepth = 4096; // Find/Update sao recursivos
 	unsigned int i;
 
 	for (i = 0; i < (unsigned int)cameraNum; i++)
@@ -936,9 +955,14 @@ bool WPolySoup::sMapData983::BuildNodes983()
 	for (std::map<sNode*, int>::iterator it = depth.begin(); it != depth.end(); ++it)
 	{
 		sNode* node = it->first;
+		int steps = 0;
 		while (node->GetParentId() != -1)
 		{
-			node = nodeById[node->GetParentId()];
+			// pai ausente ou ciclo em .gbin invalido
+			std::map<int, sNode*>::iterator parent = nodeById.find(node->GetParentId());
+			if (parent == nodeById.end() || ++steps > maxDepth)
+				return false;
+			node = parent->second;
 			depth[node]++;
 		}
 	}
@@ -1044,10 +1068,13 @@ void WPolySoup::sTexture::Read(int version, cFile* file)
 {
 	Clear();
 	file->Read(this, 0x20);
+	name[31] = 0;
 }
 
 bool __fastcall WPolySoup::ReadCameras983(cFile* file, sHeader& header, sCamera*& camera)
 {
+	if (!file->CountFits(header.cameraNum, 64))
+		return false;
 	if (header.cameraNum > 0)
 	{
 		camera = new sCamera[header.cameraNum];
@@ -1059,6 +1086,8 @@ bool __fastcall WPolySoup::ReadCameras983(cFile* file, sHeader& header, sCamera*
 
 bool __fastcall WPolySoup::ReadPoints983(cFile* file, sHeader& header, sPoint*& point)
 {
+	if (!file->CountFits(header.pointNum, 45))
+		return false;
 	if (header.pointNum > 0)
 	{
 		point = new sPoint[header.pointNum];
@@ -1070,6 +1099,8 @@ bool __fastcall WPolySoup::ReadPoints983(cFile* file, sHeader& header, sPoint*& 
 
 bool __fastcall WPolySoup::ReadAreas983(cFile* file, sHeader& header, sArea*& area)
 {
+	if (!file->CountFits(header.areaNum, 89))
+		return false;
 	if (header.areaNum > 0)
 	{
 		area = new sArea[header.areaNum];
@@ -1081,6 +1112,8 @@ bool __fastcall WPolySoup::ReadAreas983(cFile* file, sHeader& header, sArea*& ar
 
 bool __fastcall WPolySoup::ReadTextures983(cFile* file, sHeader& header, sTexture*& texture)
 {
+	if (!file->CountFits(header.textureNum, 32))
+		return false;
 	if (header.textureNum > 0)
 	{
 		texture = new sTexture[header.textureNum];
@@ -1092,6 +1125,8 @@ bool __fastcall WPolySoup::ReadTextures983(cFile* file, sHeader& header, sTextur
 
 bool __fastcall WPolySoup::ReadNodes983(cFile* file, sHeader& header, std::vector<CNodeContainer>& node)
 {
+	if (!file->CountFits(header.nodeNum, 24))
+		return false;
 	if (header.nodeNum > 0)
 	{
 		node.reserve(header.nodeNum);
@@ -1102,9 +1137,13 @@ bool __fastcall WPolySoup::ReadNodes983(cFile* file, sHeader& header, std::vecto
 				char name[16];
 				int num;
 				int reserved;
+				char end; // nome de 16 sem 0 emenda em num (ha nos paks): nao passar disto
 			} nodeInfo;
 
-			file->Read(&nodeInfo, sizeof(nodeInfo));
+			nodeInfo.end = 0;
+			file->Read(&nodeInfo, 24);
+			if (!file->CountFits(nodeInfo.num, 12))
+				return false;
 
 			CNodeContainer container(std::string(nodeInfo.name));
 
@@ -1172,7 +1211,9 @@ bool __fastcall WPolySoup::ReadModel983(cFile* file, sHeader& header, unsigned c
 	model->localMat983 = bgModel.mat2_983;
 	model->scale = bgModel.mat.xa.Magnitude();
 	strncpy(model->name, bgModel.name, 31);
+	model->name[31] = 0;
 	strncpy(model->option, bgModel.option, 31);
+	model->option[31] = 0;
 	if (skipped)
 		*skipped = false;
 	return true;
@@ -1204,6 +1245,8 @@ bool __fastcall WPolySoup::ReadModels983(cFile* file, sHeader& header, std::vect
 		return true;
 
 	int total = header.modelNum2 + header.modelNum1 + header.modelNum;
+	if (!file->CountFits(total, 0xac))
+		return false;
 	model.resize(num);
 
 	int n = 0;
@@ -1216,11 +1259,14 @@ bool __fastcall WPolySoup::ReadModels983(cFile* file, sHeader& header, std::vect
 		if (n == num)
 			return true;
 	}
+	model.resize(n); // cabecalho conta mais modelos deste detalhe do que o arquivo tem
 	return true;
 }
 
 bool __fastcall WPolySoup::ReadAttach983(cFile* file, sHeader& header, sAttach983*& attach)
 {
+	if (!file->CountFits(header.attachNum983, 172))
+		return false;
 	if (header.attachNum983 > 0)
 	{
 		attach = new sAttach983[header.attachNum983];
@@ -1238,19 +1284,27 @@ bool __fastcall WPolySoup::CompareModel983(sModel* a, sModel* b)
 // 983: 00927220 -- pula as cores de vertice do modelo base (o que o ReadVertexColors983 le na 0x72) sem montar o boneco.
 bool __fastcall WPolySoup::SkipVertexColors983(cFile* file, sHeader& header)
 {
-	int groupNum;
+	int groupNum = -1;
 	file->Read(&groupNum, 4);
+	if (!file->CountFits(groupNum, 8))
+		return false;
 	for (int g = 0; g < groupNum; g++)
 	{
-		int len;
+		int len = -1;
 		file->Read(&len, 4);
+		if (!file->CountFits(len, 1))
+			return false;
 		file->Seek(len, SEEK_CUR);
-		unsigned int meshNum;
+		int meshNum = -1;
 		file->Read(&meshNum, 4);
-		for (unsigned int m = 0; m < meshNum; m++)
+		if (!file->CountFits(meshNum, 4))
+			return false;
+		for (int m = 0; m < meshNum; m++)
 		{
-			int vtxNum;
+			int vtxNum = -1;
 			file->Read(&vtxNum, 4);
+			if (!file->CountFits(vtxNum, 4))
+				return false;
 			file->Seek(vtxNum * 4, SEEK_CUR);
 		}
 	}
@@ -1373,6 +1427,8 @@ bool WPolySoup::CheckCameraNodes983()
 bool WPolySoup::LoadBaseModel983(cFile* file)
 {
 	m_baseModel->pet = g_resrcmng->GetPuppet(m_baseModel->name, false, false, false);
+	if (!m_baseModel->pet)
+		return false;
 	m_baseModel->pet->m_lightmode = 0x1000000;
 	m_vtxColors983.Read(m_header.version, file, m_baseModel->pet);
 
@@ -1468,7 +1524,7 @@ void WPolySoup::LoadSoundBoxes983()
 			sound.interval = -1.0f;
 			sound.distance = 60.0f;
 			sound.time = 0.0f;
-			sscanf(area->name, "%s %f %f", sound.name, &sound.distance, &sound.interval);
+			sscanf(area->name, "%31s %f %f", sound.name, &sound.distance, &sound.interval);
 			sound.obb = area->aabb;
 			m_soundBox.push_back(sound);
 		}
@@ -1511,7 +1567,7 @@ void WPolySoup::LoadBgFx983(bool bOption)
 		WVector rotation;
 
 		WSliceStr slice(area->name);
-		slice.Get("*fx", "%s %f %f %f", fxName, &rotation.x, &rotation.y,
+		slice.Get("*fx", "%63s %f %f %f", fxName, &rotation.x, &rotation.y,
 			&rotation.z);
 
 		if (bOption)
@@ -1937,7 +1993,7 @@ bool WPolySoup::ReadExtraTeeArea983(cFile* file, unsigned char hole)
 	}
 
 	if (!NET()->IsConnected(WNetworkSystem::NET_GAME))
-		MessageBox(NULL,
+		GameMessageBox(NULL,
 			MakeStr(K2L_Compatibility(
 				"%d\xc8\xa6\xbf\xa1 \xbe\xee\xc7\xc1\xb7\xce\xc4\xa1 \xbf\xb5\xbf\xaa\xc0\xcc \xbc\xb3\xc1\xa4\xb5\xc7"
 				"\xbe\xee \xc0\xd6\xc1\xf6 \xbe\xca\xbd\xc0\xb4\xcf\xb4\xd9"),
@@ -2004,6 +2060,8 @@ bool WPolySoup::LoadShortGameTee983(unsigned char hole)
 // 983: 009403b0 -- abre o mapa do buraco (numero pelo GetHoleValue983) e roda os passos acima no arquivo aberto.
 bool WPolySoup::LoadMapCheckData(unsigned char hole)
 {
+	if (hole - 1u >= 18) // LoadShot recusou a fita e o chamador segue: m_pHoleData tem 18
+		return false;
 	unsigned char mapHole = DOCJP()->GetHoleValue983(GetHoleIndex(hole));
 	cFile* file = GetResrcManager()->GetCFile(
 		MakeStr("%s_%02d.gbin", Doc()->m_golfGame.pCourse ? Doc()->m_golfGame.pCourse->Data : NULL, mapHole),
@@ -2063,9 +2121,11 @@ bool WPolySoup::GetTeePinByRange983(unsigned char hole, WVector2D* pPin, float r
 		return false;
 
 	sAttach983* pin = FindPinAttach983(data.attach, data.attachNum);
+	sAttach983* tee = FindTeeAttach983(data.attach, data.attachNum, range);
+	if (!pin || !tee)
+		return false;
 	pPin->x = pin->mat.pivot.x;
 	pPin->y = pin->mat.pivot.z;
-	sAttach983* tee = FindTeeAttach983(data.attach, data.attachNum, range);
 	pTee->x = tee->mat.pivot.x;
 	pTee->y = tee->mat.pivot.z;
 	return true;
@@ -2109,6 +2169,8 @@ void WPolySoup::GetPinAndTees983(unsigned char hole, WVector2D* pPin, std::vecto
 		return;
 
 	sAttach983* pin = FindPinAttach983(data.attach, data.attachNum);
+	if (!pin)
+		return;
 	pPin->x = pin->mat.pivot.x;
 	pPin->y = pin->mat.pivot.z;
 	for (unsigned int i = 0; i < (unsigned int)data.attachNum; i++)
@@ -2144,7 +2206,7 @@ static bool IsSilviaCannonArea(const WPolySoup::sArea* area)
 	char name[64];
 	float value[3];
 
-	slice.Get("*fx", "%s %f %f %f", name, &value[0], &value[1], &value[2]);
+	slice.Get("*fx", "%63s %f %f %f", name, &value[0], &value[1], &value[2]);
 
 	if (strcmpi(name, "silviacannon.seq") == 0)
 		return true;
@@ -2211,24 +2273,32 @@ void cVertexColorTable983::Read(int version, cFile* file, WPuppet* pet)
 	}
 	else
 	{
-		int boneNum;
+		int boneNum = -1;
 		file->Read(&boneNum, 4);
+		if (!file->CountFits(boneNum, 8))
+			return;
 		for (int b = 0; b < boneNum; b++)
 		{
-			int len;
+			int len = -1;
 			char name[260];
 			file->Read(&len, 4);
+			if (len < 0 || len >= (int)sizeof(name) || !file->CountFits(len, 1))
+				return;
 			file->Read(name, len);
 			name[len] = 0;
 
-			unsigned int meshNum;
+			int meshNum = -1;
 			file->Read(&meshNum, 4);
-			for (unsigned int m = 0; m < meshNum; m++)
+			if (!file->CountFits(meshNum, 4))
+				return;
+			for (int m = 0; m < meshNum; m++)
 			{
-				unsigned int vtxNum;
+				int vtxNum = -1;
 				file->Read(&vtxNum, 4);
+				if (!file->CountFits(vtxNum, 4))
+					return;
 				sVertexColorArray983& colors = Get(std::string(name), m, vtxNum);
-				for (unsigned int v = 0; v < vtxNum; v++)
+				for (int v = 0; v < vtxNum; v++)
 				{
 					unsigned long color;
 					file->Read(&color, 4);
@@ -2291,7 +2361,7 @@ bool WPolySoup::Load(const char* filename, bool bOption)
 	cFile* file = GetResrcManager()->GetCFile(filename, -1);
 	if (file == NULL)
 	{
-		MessageBox(NULL,
+		GameMessageBox(NULL,
 			MakeStr(K2L_Compatibility("\xb9\xe8\xb0\xe6 \xc6\xc4\xc0\xcf(%s)\xc0\xbb "
 									  "\xc0\xd0\xbe\xee\xbf\xc0\xc1\xf6 "
 									  "\xb8\xf8\xc7\xdf\xbd\xc0\xb4\xcf\xb4\xd9."),
@@ -2424,7 +2494,7 @@ void WPolySoup::ProcessPostLoadPet(sModel* model)
 			sound.interval = -1.0f;
 			sound.distance = 60.0f;
 			sound.time = 0.0f;
-			sscanf(option, "%s %f %f", sound.name, &sound.distance,
+			sscanf(option, "%31s %f %f", sound.name, &sound.distance,
 				&sound.interval);
 			sound.obb = box->bone->GetMatrix();
 			sound.obb *= (box->info->aabb.max - box->info->aabb.min) * 0.5f;
@@ -2446,7 +2516,7 @@ void WPolySoup::ProcessPostLoadPet(sModel* model)
 
 		Attacher attacher;
 		char cmd[8], file[32] = "", type[32] = "";
-		sscanf(fx, "%s %s %s", cmd, file, type);
+		sscanf(fx, "%7s %31s %31s", cmd, file, type);
 
 		if (box->bone == NULL || box->bone->IsInvisible())
 			continue;
@@ -2657,7 +2727,10 @@ void WPolySoup::ChangeFloorTexture(const char* from, const char* to)
 	if (from == NULL || to == NULL)
 		return;
 
-	int fromHandle = g_resrcmng->FindTexture(from)->texhandle;
+	w_texlist* pFrom = g_resrcmng->FindTexture(from); // OrgTex do IFF de outro pak pode nao estar na sala
+	if (pFrom == NULL)
+		return;
+	int fromHandle = pFrom->texhandle;
 
 	int toHandle = g_resrcmng->LoadTexture(to, 0, 0, 0);
 
@@ -2676,7 +2749,10 @@ void WPolySoup::ChangeObjectTexture(const char* from, const char* to, int index)
 
 	if (index == -1)
 	{
-		int fromHandle = g_resrcmng->FindTexture(from)->texhandle;
+		w_texlist* pFrom = g_resrcmng->FindTexture(from);
+		if (pFrom == NULL)
+			return;
+		int fromHandle = pFrom->texhandle;
 
 		int toHandle = g_resrcmng->LoadTexture(to, 0, 0, 0);
 
@@ -2698,7 +2774,8 @@ void WPolySoup::ChangeObjectTexture(const char* from, const char* to, int index)
 	}
 	else
 	{
-		for (int i = 0; i < m_modelNum; i++)
+		int i;
+		for (i = 0; i < m_modelNum; i++)
 		{
 			if (m_model[i]->id == index)
 			{
@@ -2707,7 +2784,10 @@ void WPolySoup::ChangeObjectTexture(const char* from, const char* to, int index)
 			}
 		}
 
-		int fromHandle = g_resrcmng->FindTexture(from)->texhandle;
+		w_texlist* pFrom = g_resrcmng->FindTexture(from);
+		if (i == m_modelNum || pFrom == NULL) // id de movel que a sala nao tem
+			return;
+		int fromHandle = pFrom->texhandle;
 
 		int toHandle = g_resrcmng->LoadTexture(to, 0, 0, 0);
 
@@ -3117,6 +3197,8 @@ void WPolySoup::SetAdditionModel(const char* name, const WVector& pos)
 
 	model->pet = g_resrcmng->GetPuppet(model->name, IsSeaPet(model->name),
 		model->type != 0, false);
+	if (!model->pet)
+		return;
 
 	w_bound_box* bb = model->pet->m_bbList.Find("char0");
 	if (bb)
@@ -3349,6 +3431,11 @@ bool WPolySoup::LoadShadowmapInfo()
 			char boneName[260] = "";
 			int len;
 			file->Read(&len, 4);
+			if (len < 0 || len >= (int)sizeof(boneName))
+			{
+				ok = false;
+				break;
+			}
 			file->Read(boneName, len);
 			boneName[len] = 0;
 			WBone* bone = m_baseModel->pet->FindBone(boneName);
@@ -3389,6 +3476,8 @@ bool WPolySoup::LoadShadowmapBone983(cFile* file, WBone* bone)
 	file->Read(&numUV, 4);
 	if (numUV == 0)
 		return true;
+	if (numVtx < 0 || numUV < 0 || numVtx > file->m_nLen || numUV > file->m_nLen)
+		return false;
 
 	WVector* vtxList = new WVector[numVtx];
 	file->Read(vtxList, numVtx * sizeof(WVector));
@@ -3396,8 +3485,8 @@ bool WPolySoup::LoadShadowmapBone983(cFile* file, WBone* bone)
 	file->Read(uvList, numUV * sizeof(float[2]));
 
 	SmCase smCase[2];
-	smLoadSmapMeshes(smCase, file, bone, &meshList[0], vtxList, uvList);
-	smLoadOutFrags(file, meshNum, &meshList[0], vtxList, smCase);
+	const bool ok = smLoadSmapMeshes(smCase, file, bone, &meshList[0], meshNum, vtxList, numVtx, uvList, numUV) &&
+		smLoadOutFrags(file, meshNum, &meshList[0], vtxList, numVtx, smCase);
 	delete[] vtxList;
 	delete[] uvList;
 
@@ -3407,13 +3496,13 @@ bool WPolySoup::LoadShadowmapBone983(cFile* file, WBone* bone)
 		if (maxVtx < mesh->vtxNum)
 			maxVtx = mesh->vtxNum;
 	}
-	bone->AllocVTX(maxVtx);
-	return true;
+	bone->AllocVTX(maxVtx); // tambem em falha: malhas novas ja podem estar na lista do osso
+	return ok;
 }
 
 // 983 00945db0: malhas novas no fim da lista do osso; texturas/malhas vao para os vetores +0x4988/+0x4998
-void WPolySoup::smLoadSmapMeshes(SmCase* smCase, cFile* file, WBone* bone, w_mesh** meshList,
-	WVector* vtxList, float (*uvList)[2])
+bool WPolySoup::smLoadSmapMeshes(SmCase* smCase, cFile* file, WBone* bone, w_mesh** meshList, int meshNum,
+	WVector* vtxList, int vtxNum, float (*uvList)[2], int uvNum)
 {
 	w_mesh* last = bone->GetMesh();
 
@@ -3422,7 +3511,7 @@ void WPolySoup::smLoadSmapMeshes(SmCase* smCase, cFile* file, WBone* bone, w_mes
 
 	w_mesh* first;
 	w_mesh* mesh;
-	int size;
+	int size = 0;
 
 	file->Read(&size, 4);
 
@@ -3432,13 +3521,20 @@ void WPolySoup::smLoadSmapMeshes(SmCase* smCase, cFile* file, WBone* bone, w_mes
 	{
 		file->Read(&smCase[0].num, 4);
 
+		if (smCase[0].num > file->m_nLen) // lista invalida: cada item tem no minimo 8 bytes
+		{
+			smCase[0].num = 0;
+			return false;
+		}
 		if (smCase[0].num > 0)
 			smCase[0].list = new SmInFragList[smCase[0].num];
 
 		for (int i = 0; i < smCase[0].num; i++)
 		{
-			mesh = smAddSmapPack(&smCase[0].list[i], file, 0, i, bone, meshList,
-				vtxList, uvList);
+			mesh = smAddSmapPack(&smCase[0].list[i], file, 0, i, bone, meshList, meshNum,
+				vtxList, vtxNum, uvList, uvNum);
+			if (!mesh)
+				return false;
 
 			last->next = mesh;
 			last = mesh;
@@ -3468,13 +3564,20 @@ void WPolySoup::smLoadSmapMeshes(SmCase* smCase, cFile* file, WBone* bone, w_mes
 		break;
 	}
 
+	if (smCase[1].num > file->m_nLen)
+	{
+		smCase[1].num = 0;
+		return false;
+	}
 	if (smCase[1].num > 0)
-		smCase[1].list = new SmInFragList[smCase[0].num];
+		smCase[1].list = new SmInFragList[smCase[1].num]; // 645 usava smCase[0].num: num[1] maior estourava o heap
 
 	for (int i = 0; i < smCase[1].num; i++)
 	{
 		mesh = smAddSmapPack(&smCase[1].list[i], file, GetDiffFlag(), i,
-			bone, meshList, vtxList, uvList);
+			bone, meshList, meshNum, vtxList, vtxNum, uvList, uvNum);
+		if (!mesh)
+			return false;
 
 		last->next = mesh;
 		last = mesh;
@@ -3491,6 +3594,7 @@ void WPolySoup::smLoadSmapMeshes(SmCase* smCase, cFile* file, WBone* bone, w_mes
 		m_smapVec4988_983.push_back(mesh->drawFlag & 0x7ff);
 		m_smapVec4998_983.push_back(mesh);
 	}
+	return true;
 }
 
 struct sDDSHeader
@@ -3531,13 +3635,28 @@ static void SetMeshPalette983(WPuppet* pet, WBone* bone, w_mesh* mesh)
 	pet->BindPalettes983(0);
 }
 
-w_mesh* WPolySoup::smAddSmapPack(SmInFragList* fragList, cFile* file,
-	int caseIndex, int listIndex, WBone* bone, w_mesh** meshList, WVector* vtxList,
-	float (*uvList)[2])
+// indices do .sbin: tri 0xffff = sem triangulo; vtx < 0x8000 = vtxList, senao vertice da malha
+static bool IsSmapFragValid(const w_mesh* mesh, int tri, const unsigned short* vtx, int vtxNum)
 {
-	int width, height;
+	if (tri != 0xffff && tri * 3 + 2 >= mesh->indexNum)
+		return false;
+	for (int k = 0; k < 3; k++)
+	{
+		if (vtx[k] < 0x8000 ? vtx[k] >= vtxNum || tri == 0xffff : vtx[k] - 0x8000 >= mesh->vtxNum)
+			return false;
+	}
+	return true;
+}
+
+w_mesh* WPolySoup::smAddSmapPack(SmInFragList* fragList, cFile* file,
+	int caseIndex, int listIndex, WBone* bone, w_mesh** meshList, int meshNum, WVector* vtxList, int listVtxNum,
+	float (*uvList)[2], int uvNum)
+{
+	int width = -1, height = -1;
 	file->Read(&width, 4);
 	file->Read(&height, 4);
+	if (width < 0 || height < 0 || (__int64)width * height / 2 > file->m_nLen)
+		return NULL;
 
 	sDDSHeader ddsd;
 	memset(&ddsd, 0, sizeof(ddsd));
@@ -3561,19 +3680,28 @@ w_mesh* WPolySoup::smAddSmapPack(SmInFragList* fragList, cFile* file,
 	buf[3] = ' ';
 	file->Read(buf + 0x80, ddsd.dwLinearSize);
 
-	char name[32];
+	char name[64]; // 983: nome do modelo ate 31 + indices
 	sprintf(name, "%s-%d-%d.dds", m_baseModel->name, caseIndex, listIndex);
 
 	int texHandle = g_resrcmng->LoadTexture_DDS(buf, size, name, 0, 0);
 	delete[] buf;
 
-	int fragNum;
+	int fragNum = -1;
 	file->Read(&fragNum, 4);
+	if (fragNum < 0 || fragNum > file->m_nLen / (int)sizeof(SmInFragment))
+		return NULL;
 
 	SmInFragment* frag = new SmInFragment[fragNum];
-	fragList->num = fragNum;
+	fragList->num = 0;
 	fragList->frag = frag;
 	file->Read(frag, fragNum * sizeof(SmInFragment));
+	for (int i = 0; i < fragNum; i++)
+	{
+		if (frag[i].mesh >= meshNum || !IsSmapFragValid(meshList[frag[i].mesh], frag[i].tri, frag[i].vtx, listVtxNum) ||
+			frag[i].uv[0] >= uvNum || frag[i].uv[1] >= uvNum || frag[i].uv[2] >= uvNum)
+			return NULL;
+	}
+	fragList->num = fragNum;
 
 	w_mesh* mesh = new w_mesh; // 983: construtor zera
 
@@ -3690,8 +3818,8 @@ w_mesh* WPolySoup::smAddSmapPack(SmInFragList* fragList, cFile* file,
 	return mesh;
 }
 
-void WPolySoup::smLoadOutFrags(cFile* file, int num, w_mesh** meshList,
-	WVector* vtxList, SmCase* smCase)
+bool WPolySoup::smLoadOutFrags(cFile* file, int num, w_mesh** meshList,
+	WVector* vtxList, int vtxNum, SmCase* smCase)
 {
 	int c, i, j, k, r;
 	SmInFragList* list;
@@ -3716,7 +3844,7 @@ void WPolySoup::smLoadOutFrags(cFile* file, int num, w_mesh** meshList,
 		}
 	}
 
-	int outNum;
+	int outNum = -1;
 	file->Read(&outNum, 4);
 
 	int detailNum = 0;
@@ -3741,10 +3869,14 @@ void WPolySoup::smLoadOutFrags(cFile* file, int num, w_mesh** meshList,
 		break;
 	}
 
-	int* count = new int[num * 4];
-	memset(count, 0, num * 4 * sizeof(int));
+	if (outNum < 0 || detailNum < 0 || outNum > file->m_nLen || detailNum > file->m_nLen)
+		return false;
 
-	SmOutFrag* frag = new SmOutFrag[detailNum + outNum + extra];
+	std::vector<int> countBuf(num * 4); // zerado
+	int* count = &countBuf[0];
+
+	std::vector<SmOutFrag> fragBuf(detailNum + outNum + extra);
+	SmOutFrag* frag = fragBuf.empty() ? NULL : &fragBuf[0];
 
 	if (outNum > 0)
 		file->Read(&count[num], num * sizeof(int));
@@ -3754,6 +3886,18 @@ void WPolySoup::smLoadOutFrags(cFile* file, int num, w_mesh** meshList,
 		file->Read(&count[num * 2], num * sizeof(int));
 	if (skipAfter > 0)
 		file->Seek(num * sizeof(int), 1);
+
+	// frag foi alocado pelos totais: as contagens por malha nao podem passar deles
+	__int64 sumOut = 0, sumDetail = 0;
+	for (i = 0; i < num; i++)
+	{
+		if (count[num + i] < 0 || count[num * 2 + i] < 0)
+			return false;
+		sumOut += count[num + i];
+		sumDetail += count[num * 2 + i];
+	}
+	if (sumOut > outNum || sumDetail > detailNum)
+		return false;
 
 	for (c = 0; c < 2; c++)
 	{
@@ -3843,6 +3987,16 @@ void WPolySoup::smLoadOutFrags(cFile* file, int num, w_mesh** meshList,
 
 	for (i = 0; i < num; i++)
 	{
+		for (j = 0; j < count[num + i]; j++)
+		{
+			const SmOutFrag& out = frag[count[i] + j];
+			if (out.tri == 0xffff || !IsSmapFragValid(meshList[i], out.tri, out.vtx, vtxNum))
+				return false;
+		}
+	}
+
+	for (i = 0; i < num; i++)
+	{
 		if (count[num + i] > 0)
 		{
 			int unique = 0;
@@ -3916,8 +4070,7 @@ void WPolySoup::smLoadOutFrags(cFile* file, int num, w_mesh** meshList,
 		}
 	}
 
-	delete[] count;
-	delete[] frag;
+	return true;
 }
 
 int WPolySoup::smCompareOutFrag(const void* a, const void* b)
@@ -4163,6 +4316,8 @@ void WPolySoup::ReloadBasePet()
 
 	m_baseModel->pet =
 		g_resrcmng->GetPuppet(m_baseModel->name, false, false, false);
+	if (!m_baseModel->pet)
+		return;
 
 	m_baseModel->pet->m_lightmode = 0x1000000;
 	m_baseModel->pet->SetMatrix(m_baseModel->mat);
@@ -4171,7 +4326,9 @@ void WPolySoup::ReloadBasePet()
 	for (int i = 0; i < m_header.attachNum983; i++)
 	{
 		sAttach983* attach = &m_attach983[i];
-		m_baseModel->pet->FindBone(attach->name)->SetMatrix(attach->mat, NULL);
+		WBone* bone = m_baseModel->pet->FindBone(attach->name);
+		if (bone)
+			bone->SetMatrix(attach->mat, NULL);
 	}
 
 	m_baseModel->pet->UpdateBound(false, false);

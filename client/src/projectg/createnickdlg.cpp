@@ -228,7 +228,7 @@ bool FrCreateNickDlg::CheckNickByClient()
 	}
 
 	char nick[22];
-	strcpy(nick, m_pEditNick->GetLine(1, false));
+	strncpy_s(nick, m_pEditNick->GetLine(1, false), _TRUNCATE); // charlimit padrao do FrEdit = 255
 
 	const char* err = Doc()->m_chatManager.FilteringNick(nick);
 	if (err)

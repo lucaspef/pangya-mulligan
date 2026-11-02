@@ -37,7 +37,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_MBCS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(JP983Root)tools\vs\compat_msvc;$(WindowsSdkDir)Include\$(TargetPlatformVersion)\shared;$(VCToolsInstallDir)atlmfc\include;$(JP983Root)include;$(JP983Root)include\engine;$(JP983Root)src\shared;$(JP983DxInclude)</AdditionalIncludeDirectories>
-      <AdditionalOptions></AdditionalOptions>
+      <AdditionalOptions>/source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
       <ForcedIncludeFiles>jp983_msvc_novo.h</ForcedIncludeFiles>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
@@ -82,7 +82,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;_MBCS;JP983_VS_DEBUG</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(JP983Root)tools\vs\compat_msvc;$(WindowsSdkDir)Include\$(TargetPlatformVersion)\shared;$(VCToolsInstallDir)atlmfc\include;$(JP983Root)include;$(JP983Root)include\engine;$(JP983Root)src\shared;$(JP983DxInclude)</AdditionalIncludeDirectories>
-      <AdditionalOptions></AdditionalOptions>
+      <AdditionalOptions>/source-charset:.1252 /execution-charset:.1252</AdditionalOptions>
       <ForcedIncludeFiles>jp983_msvc_novo.h</ForcedIncludeFiles>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>false</ConformanceMode>

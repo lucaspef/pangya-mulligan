@@ -358,7 +358,9 @@ void CAIPlayer::NextStep983(int index)
 		return;
 	}
 	m_players[index].m_state = 0;
-	WVector pos;
+	// 983 le `pos` sem valor quando o caminho esta vazio (CalcPath983 falhou: linha do GP ausente em outro pak; m_step passa
+	// de 0 a 1 sem bater no size 0). Aqui a bola do rival fica onde esta em vez de ir para lixo da pilha.
+	WVector pos = Doc()->m_rivalList[player].ballPos;
 	sAIPlayerInfo983& next = m_players[index];
 	unsigned int step = next.m_step;
 	if (step < next.m_path.size())
@@ -395,13 +397,13 @@ void CAIPlayer::OnProcess(float delta)
 	if (!m_bTurn || m_players.empty())
 		return;
 	delta /= g_pMainFrame983->m_gameSpeed;
-	sAITime983 t;
+	sAITime983 t = {};
 	for (unsigned int i = 0; i < m_players.size(); ++i)
 	{
 		sAIPlayerInfo983& info = m_players[i];
 		if (info.m_state == 1)
 		{
-			if (!info.m_times.empty())
+			if (info.m_step < info.m_times.size())
 				t = info.m_times[info.m_step];
 			switch (info.m_phase)
 			{
@@ -467,7 +469,8 @@ void CAIPlayer::Fn471e50_983()
 		rival.level = 0;
 		std::string name;
 		GetName983(i, &name);
-		strcpy(rival.nickname, name.c_str());
+		strncpy(rival.nickname, name.c_str(), sizeof(rival.nickname) - 1); // npc.name tem 0x28
+		rival.nickname[sizeof(rival.nickname) - 1] = 0;
 		strcpy(rival.guildName, "no guild");
 		rival.guildUID = 0;
 		rival.guildEmblemVer983 = 1;
@@ -964,7 +967,8 @@ void sAIPlayerInfo983::MakeTimes983(int strokes, float frame)
 			t.y = (float)(i++ * t.x + third);
 			float rest = t.x * i - t.y;
 			int limit = (int)rest;
-			int r = rand() % limit;
+			// limit = (int)(40 / strokes): placar do 0x256 com strokes >= 41 dava rand() % 0 (o 983 cai igual)
+			int r = limit > 0 ? rand() % limit : 0;
 			t.z = (float)r + t.y;
 			m_times.push_back(t);
 		} while (i < strokes);

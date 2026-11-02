@@ -474,7 +474,7 @@ void CRealMyRoomMain::OnLoad()
 		if (!point)
 			point = MYROOM_POLYSOUP()->FindPoint(
 				MakeStr("\xb4\xeb\xc8\xad\xb9\xe6\xbd\xc3\xc0\xdb"));
-		WVector pos = point->pos;
+		WVector pos = point ? point->pos : WVector(0.0f, 0.0f, 0.0f);
 		pos = GetPVS().GetGroundPoint(pos, false, NULL, false);
 		m_v2c8 = pos;
 		((CQuadTreeEx&)GetPVS()).SetAvatarPosition(pos, 2.0f);
@@ -517,7 +517,7 @@ void CRealMyRoomMain::OnLoad()
 			if (!point)
 				point = MYROOM_POLYSOUP()->FindPoint(
 					MakeStr("\xbd\xc3\xc0\xdb\xc1\xa1"));
-			pos = point->pos;
+			pos = point ? point->pos : WVector(0.0f, 0.0f, 0.0f);
 			pos.x += Random(-16.0f, 16.0f);
 			pos.z += Random(-16.0f, 16.0f);
 			pos = GetPVS().GetGroundPoint(pos, false, NULL, false);
@@ -581,7 +581,7 @@ void CRealMyRoomMain::OnLoad()
 		if (!point)
 			point = MYROOM_POLYSOUP()->FindPoint(
 				MakeStr("\xbd\xc3\xc0\xdb\xc1\xa1"));
-		WVector pos = point->pos;
+		WVector pos = point ? point->pos : WVector(0.0f, 0.0f, 0.0f);
 		pos = GetPVS().GetGroundPoint(pos, false, NULL, false);
 		((CQuadTreeEx&)GetPVS()).SetAvatarPosition(pos, 2.0f);
 		m_v2c8 = pos;

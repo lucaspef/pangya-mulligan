@@ -1480,10 +1480,12 @@ int inflate_blocks(inflate_blocks_statef* s, z_streamp z, int r)
 			&s->sub.trees.tb, s->hufts, z);
 		if (t != Z_OK)
 		{
-			ZFREE(z, s->sub.trees.blens);
 			r = t;
-			if (r == Z_DATA_ERROR)
+			if (r == Z_DATA_ERROR) // zlib 1.1.4 (CVE-2002-0059): fora de IBM_BAD o reset libera blens de novo
+			{
+				ZFREE(z, s->sub.trees.blens);
 				s->mode = IBM_BAD;
+			}
 			LEAVE
 		}
 		s->sub.trees.index = 0;
@@ -1544,14 +1546,17 @@ int inflate_blocks(inflate_blocks_statef* s, z_streamp z, int r)
 			t = s->sub.trees.table;
 			t = inflate_trees_dynamic(257 + (t & 0x1f), 1 + ((t >> 5) & 0x1f),
 				s->sub.trees.blens, &bl, &bd, &tl, &td, s->hufts, z);
-			ZFREE(z, s->sub.trees.blens);
 			if (t != Z_OK)
 			{
-				if (t == (uInt)Z_DATA_ERROR)
+				if (t == (uInt)Z_DATA_ERROR) // idem
+				{
+					ZFREE(z, s->sub.trees.blens);
 					s->mode = IBM_BAD;
+				}
 				r = t;
 				LEAVE
 			}
+			ZFREE(z, s->sub.trees.blens);
 			if ((c = inflate_codes_new(bl, bd, tl, td, z)) == Z_NULL)
 			{
 				r = Z_MEM_ERROR;
@@ -2512,7 +2517,9 @@ unsigned int lufread(void* ptr, unsigned int size, unsigned int n,
 			stream->herr = true;
 		return red2 / size;
 	}
-	if (stream->pos + red > stream->len)
+	if (stream->pos >= stream->len) // zip com offset fora do arquivo: lufseek nao confere
+		red = 0;
+	else if (red > stream->len - stream->pos)
 		red = stream->len - stream->pos;
 	memcpy(ptr, (char*)stream->buf + stream->pos, red);
 	stream->pos += red;
@@ -3433,7 +3440,7 @@ ZRESULT TUnzip::Open(void* z, unsigned int len, DWORD flags)
 	if (f == NULL)
 		return e;
 	uf = unzOpenInternal(f);
-	return ZR_OK;
+	return uf ? ZR_OK : ZR_CORRUPT; // ZR_OK sem uf: Get lia uf->gi em NULL
 }
 
 ZRESULT TUnzip::Get(int index, ZIPENTRY* ze)
@@ -3466,7 +3473,10 @@ ZRESULT TUnzip::Get(int index, ZIPENTRY* ze)
 	if (index < (int)uf->num_file)
 		unzGoToFirstFile(uf);
 	while ((int)uf->num_file < index)
-		unzGoToNextFile(uf);
+	{
+		if (unzGoToNextFile(uf) != UNZ_OK)
+			return ZR_CORRUPT; // lista cortada: num_file nao anda mais
+	}
 	unz_file_info ufi;
 	char fn[MAX_PATH];
 	unzGetCurrentFileInfo(uf, &ufi, fn, MAX_PATH, NULL, 0, NULL, 0);
@@ -3537,7 +3547,7 @@ ZRESULT TUnzip::Get(int index, ZIPENTRY* ze)
 			etype[0] = extra[epos];
 			etype[1] = extra[epos + 1];
 			etype[2] = 0;
-			int size = (char)extra[epos + 2];
+			int size = (unsigned char)extra[epos + 2]; // com sinal, epos voltava e o laco nao acabava
 			if (strcmp(etype, "UT") != 0)
 			{
 				epos += 4 + size;
@@ -3548,6 +3558,8 @@ ZRESULT TUnzip::Get(int index, ZIPENTRY* ze)
 			bool hasatime = (flags & 2) != 0;
 			bool hasctime = (flags & 4) != 0;
 			epos += 5;
+			if (epos + (hasmtime + hasatime + hasctime) * sizeof(time_t) > extralen)
+				break;
 			if (hasmtime)
 			{
 				time_t mtime = *(time_t*)(extra + epos);
@@ -3648,7 +3660,10 @@ ZRESULT TUnzip::Unzip(int index, void* dst, unsigned int len, DWORD flags)
 			if (index < (int)uf->num_file)
 				unzGoToFirstFile(uf);
 			while ((int)uf->num_file < index)
-				unzGoToNextFile(uf);
+			{
+				if (unzGoToNextFile(uf) != UNZ_OK)
+					return ZR_CORRUPT; // lista cortada: num_file nao anda mais
+			}
 			unzOpenCurrentFile(uf);
 			currentfile = index;
 		}
@@ -3671,7 +3686,10 @@ ZRESULT TUnzip::Unzip(int index, void* dst, unsigned int len, DWORD flags)
 	if (index < (int)uf->num_file)
 		unzGoToFirstFile(uf);
 	while ((int)uf->num_file < index)
-		unzGoToNextFile(uf);
+	{
+		if (unzGoToNextFile(uf) != UNZ_OK)
+			return ZR_CORRUPT; // lista cortada: num_file nao anda mais
+	}
 	ZIPENTRY ze;
 	Get(index, &ze);
 

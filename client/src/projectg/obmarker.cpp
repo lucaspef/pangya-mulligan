@@ -71,5 +71,6 @@ void CMarker::GetReady()
 		break;
 	}
 	m_sprite = g_resrcmng->Get3DSpr(filename.c_str(), 0);
-	m_sprite->SetRect(1.0f, 2.0f, 0.5f, 0.0f);
+	if (m_sprite)
+		m_sprite->SetRect(1.0f, 2.0f, 0.5f, 0.0f);
 }

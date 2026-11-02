@@ -251,7 +251,7 @@ std::string cHttpNtreevAuthResult::GetMessageA()
 	char multiByte[260] = "";
 	wchar_t wide[260] = L"";
 	MultiByteToWideChar(CP_UTF8, 0, message.c_str(), -1, wide, 260);
-	WideCharToMultiByte(CP_OEMCP, 0, wide, -1, multiByte, 260, NULL, NULL);
+	WideCharToMultiByte(GAME_CODEPAGE, 0, wide, -1, multiByte, 260, NULL, NULL);
 
 	return multiByte;
 }

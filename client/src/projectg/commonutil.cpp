@@ -1,5 +1,6 @@
 #include "minatl.h"
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -215,6 +216,13 @@ static std::string PakSortName(const char* name)
 	}
 }
 
+static int XmlIntAttribute(TiXmlElement* element, const char* name)
+{
+	int value = 0;
+	element->Attribute(name, &value);
+	return value;
+}
+
 bool DownloadUpdateList(std::list<PAKINFO>* paks, char* version)
 {
 	// 983 0098e4a0 (D230): the list comes from HttpDownloadText983 (00a4cb40, CINetBuffer), not cHttp; an empty
@@ -224,7 +232,7 @@ bool DownloadUpdateList(std::list<PAKINFO>* paks, char* version)
 	// sem rugburn nada reescreve a URL: JP983_WEB=http://host:porta, senao o web 30091 do robo (client/COMPILAR.md item 5)
 	// C642: "localhost", nao 127.0.0.1 - o web do PC so atende Host localhost (gglog vs2022: 127.0.0.1 parou, rugburn -> localhost segue)
 	char web[128];
-	url = GetEnvironmentVariable("JP983_WEB", web, sizeof(web)) ? web : "http://localhost:30091";
+	url = GetEnvironmentVariable("JP983_WEB", web, sizeof(web)) - 1u < sizeof(web) - 1 ? web : "http://localhost:30091";
 	// A214: o rugburn reescreve dl.pangya.jp/pangya/season4/patch/updatelist para <web>/patch/updatelist (gglog a212-1)
 	std::string file = "/patch/updatelist";
 #else
@@ -234,7 +242,7 @@ bool DownloadUpdateList(std::list<PAKINFO>* paks, char* version)
 	if (body.empty())
 	{
 		unsigned long code = HttpGetLastError983();
-		MessageBox(NULL,
+		GameMessageBox(NULL,
 			MakeStr("%s : Code[%d]",
 				K2L_Compatibility("\xbc\xad\xb9\xf6\xb7\xce\xba\xce\xc5\xcd \xc6\xc4\xc0\xcf \xb8\xf1\xb7\xcf\xc0\xbb \xb0\xa1\xc1\xae\xbf\xc0\xc1\xf6 \xb8\xf8\xc7\xdf\xbd\xc0\xb4\xcf\xb4\xd9."),
 				code),
@@ -265,7 +273,7 @@ bool DownloadUpdateList(std::list<PAKINFO>* paks, char* version)
 		delete[] xml;
 	if (doc.Error())
 	{
-		MessageBox(NULL,
+		GameMessageBox(NULL,
 			K2L_Compatibility("XML \xc6\xc4\xbd\xcc\xc1\xdf \xbf\xa1\xb7\xaf\xb0\xa1 \xb9\xdf\xbb\xfd\xc7\xdf\xbd\xc0\xb4\xcf\xb4\xd9."),
 			K2L_Compatibility("\xbe\xcb\xb8\xb2"), MB_ICONINFORMATION);
 		return false;
@@ -292,7 +300,7 @@ bool DownloadUpdateList(std::list<PAKINFO>* paks, char* version)
 	TiXmlNode* root = doc.FirstChild(tag[0].c_str());
 	if (!root)
 	{
-		MessageBox(NULL,
+		GameMessageBox(NULL,
 			K2L_Compatibility("\xc6\xc4\xc0\xcf \xb8\xf1\xb7\xcf\xc0\xbb \xc0\xd0\xb4\xc2 \xc1\xdf \xbf\xc0\xb7\xf9\xb0\xa1 \xb9\xdf\xbb\xfd\xc7\xdf\xbd\xc0\xb4\xcf\xb4\xd9."),
 			K2L_Compatibility("\xc6\xc4\xc0\xcf \xbf\xa1\xb7\xaf"), MB_ICONINFORMATION);
 		return false;
@@ -301,24 +309,28 @@ bool DownloadUpdateList(std::list<PAKINFO>* paks, char* version)
 	for (TiXmlNode* node = root->FirstChild(tag[1].c_str()); node;
 		node = node->NextSibling())
 	{
+		// E488: lista de outro servidor (comentario entre os nos, atributo que falta, nome longo) derrubava o 983 0098e4a0
 		TiXmlElement* element = node->ToElement();
 		int dummy;
+		const char* name = element ? element->Attribute(tag[2].c_str(), &dummy) : NULL;
+		if (!name)
+			continue;
 		PAKINFO info;
 		memset(&info, 0, sizeof(info));
-		strcpy(info.name, element->Attribute(tag[2].c_str(), &dummy));
+		strncpy(info.name, name, sizeof(info.name) - 1);
 		size_t len = strlen(info.name);
 		if (len < 5 || strcmpi(info.name + len - 4, ".pak") != 0)
 		{
 			if (strcmpi("ProjectG.exe", info.name) == 0)
 			{
-				info.size = atoi(node->ToElement()->Attribute("fsize", &dummy));
-				info.crc = atoi(node->ToElement()->Attribute("fcrc", &dummy));
+				info.size = XmlIntAttribute(element, "fsize");
+				info.crc = XmlIntAttribute(element, "fcrc");
 				paks->push_back(info);
 			}
 			continue;
 		}
 		char base[64] = "\0";
-		strcpy(base, info.name);
+		strncpy(base, info.name, sizeof(base) - 1);
 		char* dot = strrchr(base, '.');
 		if (dot)
 			*dot = '\0';
@@ -326,8 +338,8 @@ bool DownloadUpdateList(std::list<PAKINFO>* paks, char* version)
 			(strcmpi(base, version) > 0 && !IsIntegratedPakFile(info.name)))
 		{
 			strcpy(info.sortName, PakSortName(info.name).c_str());
-			info.size = atoi(element->Attribute(tag[3].c_str(), &dummy));
-			info.crc = atoi(element->Attribute(tag[4].c_str(), &dummy));
+			info.size = XmlIntAttribute(element, tag[3].c_str());
+			info.crc = XmlIntAttribute(element, tag[4].c_str());
 			paks->push_back(info);
 		}
 	}
@@ -438,7 +450,7 @@ bool __stdcall GetCRCCheckList(
 	char version[64] = "\0";
 	if (pakName.GetLength() == 0)
 	{
-		MessageBox(NULL,
+		GameMessageBox(NULL,
 			K2L_Compatibility("\xc6\xc4\xc0\xcf\xbf\xa1 \xb9\xae\xc1\xa6\xb0\xa1 \xc0\xd6\xbd\xc0\xb4\xcf\xb4\xd9. \xb4\xd9\xbd\xc3 \xbc\xb3\xc4\xa1\xc7\xd8\xc1\xd6\xbc\xbc\xbf\xe4."), // 983 0098d8fe
 			K2L_Compatibility("\xc6\xc4\xc0\xcf \xbf\xa1\xb7\xaf"), MB_ICONEXCLAMATION);
 		return false;
@@ -480,7 +492,7 @@ bool InitPakedFile2()
 	char version[64] = "\0";
 	if (pakName.GetLength() == 0)
 	{
-		MessageBox(NULL,
+		GameMessageBox(NULL,
 			K2L_Compatibility("\xc0\xce\xbd\xba\xc5\xe7 \xb9\xf6\xc1\xaf\xc0\xbb \xbc\xb3\xc4\xa1, \xc8\xa4\xc0\xba \xb7\xb1\xc3\xc4\xb8\xa6 \xb8\xd5\xc0\xfa \xbd\xc7\xc7\xe0\xc7\xcf\xbd\xc3\xb1\xe2 \xb9\xd9\xb6\xf8\xb4\xcf\xb4\xd9."),
 			K2L_Compatibility("\xc6\xc4\xc0\xcf \xbf\xa1\xb7\xaf"), MB_ICONEXCLAMATION);
 		return false;
@@ -499,7 +511,7 @@ bool InitPakedFile2()
 	GetEnvironmentVariableA("PANGYA_ARG_SUB", arg, sizeof(arg));
 	if (strcmp(arg, "noWindow") != 0)
 	{
-		MessageBox(NULL,
+		GameMessageBox(NULL,
 			MakeStr(
 				K2L_Compatibility("%s \xc6\xc4\xc0\xcf\xbf\xa1 \xbc\xd5\xbb\xf3\xc0\xcc \xb9\xdf\xb0\xdf\xb5\xc7\xbe\xfa\xbd\xc0\xb4\xcf\xb4\xd9. \xb4\xd9\xbd\xc3 \xbd\xc7\xc7\xe0\xc7\xd8 \xc1\xd6\xbc\xbc\xbf\xe4."),
 				errName.c_str()),
@@ -548,7 +560,7 @@ void InitPakedFile()
 	}
 	catch (...)
 	{
-		MessageBox(NULL, K2L_Compatibility("\xc6\xc4\xc0\xcf\xbf\xa1 \xb9\xae\xc1\xa6\xb0\xa1 \xc0\xd6\xbd\xc0\xb4\xcf\xb4\xd9. \xb4\xd9\xbd\xc3 \xbc\xb3\xc4\xa1\xc7\xd8\xc1\xd6\xbc\xbc\xbf\xe4."),
+		GameMessageBox(NULL, K2L_Compatibility("\xc6\xc4\xc0\xcf\xbf\xa1 \xb9\xae\xc1\xa6\xb0\xa1 \xc0\xd6\xbd\xc0\xb4\xcf\xb4\xd9. \xb4\xd9\xbd\xc3 \xbc\xb3\xc4\xa1\xc7\xd8\xc1\xd6\xbc\xbc\xbf\xe4."),
 			K2L_Compatibility("\xc6\xc4\xc0\xcf \xbf\xa1\xb7\xaf"), MB_ICONINFORMATION);
 		throw;
 	}
@@ -580,28 +592,29 @@ void LineParse(const char* line, std::vector<std::string>& tokens)
 		}
 		else
 		{
-			int sp = isspace(*line);
+			int sp = isspace((unsigned char)*line);
 			for (; sp == 0 && *line != '\0'; line = line + 1)
 			{
 				token += *line;
-				sp = isspace(line[1]);
+				sp = isspace((unsigned char)line[1]);
 			}
 		}
 push:
 		tokens.push_back(token);
-		int sp = isspace(*line);
+		int sp = isspace((unsigned char)*line);
 		while (sp != 0)
 		{
 			const char* n = line + 1;
 			line = line + 1;
-			sp = isspace(*n);
+			sp = isspace((unsigned char)*n);
 		}
 		c = *line;
 	}
 }
 
-char* GetStr(char* src, char* dst)
+char* GetStrN(char* src, char* dst, size_t dstSize)
 {
+	char* end = dst + dstSize - 1;
 	while (*src == ' ' || *src == '\t')
 	{
 		if (*src == 0)
@@ -620,7 +633,9 @@ char* GetStr(char* src, char* dst)
 						++src;
 					goto done;
 				}
-				*dst++ = *src++;
+				if (dst != end)
+					*dst++ = *src;
+				++src;
 			}
 		}
 	}
@@ -629,8 +644,9 @@ done:
 	return src;
 }
 
-const char* GetStrConst(const char* src, char* dst)
+const char* GetStrConstN(const char* src, char* dst, size_t dstSize)
 {
+	char* end = dst + dstSize - 1;
 	while (*src == ' ' || *src == '\t')
 	{
 		if (*src == 0)
@@ -649,7 +665,9 @@ const char* GetStrConst(const char* src, char* dst)
 						++src;
 					goto done;
 				}
-				*dst++ = *src++;
+				if (dst != end)
+					*dst++ = *src;
+				++src;
 			}
 		}
 	}
@@ -658,8 +676,9 @@ done:
 	return src;
 }
 
-const char* GetCharsTillSpace(const char* src, char* dst)
+const char* GetCharsTillSpaceN(const char* src, char* dst, size_t dstSize)
 {
+	char* end = dst + dstSize - 1;
 	while (*src == ' ' || *src == '\t')
 	{
 		if (*src == 0)
@@ -675,7 +694,8 @@ fail:
 	for (;;)
 	{
 		++src;
-		*dst++ = c;
+		if (dst != end)
+			*dst++ = c;
 		c = *src;
 		if (c == 0)
 			break;
@@ -730,13 +750,21 @@ void LimitText(char* text, int limit)
 	}
 }
 
-char* __cdecl MakeStr(const char* format, ...)
+char* __cdecl MakeStr(FormatText format, ...)
 {
 	static __declspec(thread) char s_strBuf[64][0x240];
 	static __declspec(thread) unsigned char s_strIndex;
-	_vsnprintf(s_strBuf[s_strIndex & 0x3f], 0x240, format,
-		(char*)(&format + 1));
+	va_list ap;
+	va_start(ap, format);
+	_vsnprintf(s_strBuf[s_strIndex & 0x3f], 0x240, format.text, ap);
+	va_end(ap);
+	s_strBuf[s_strIndex & 0x3f][0x23f] = 0; // texto longo: _vsnprintf nao termina
 	return s_strBuf[s_strIndex++ & 0x3f];
+}
+
+char* __cdecl MakeStr(const char* text)
+{
+	return MakeStr("%s", text);
 }
 
 std::string GetMyComputerName()

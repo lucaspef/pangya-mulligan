@@ -56,7 +56,7 @@ static bool __fastcall WriteExtBase64983(const char* key, const char* text, unsi
 // 00626ca0
 static bool __fastcall ReadExtBase64983(const char* key, const char* data, unsigned int size, sExtReader983* r)
 {
-	char* buf = new char[size];
+	char* buf = new char[size + 1](); // o Parse le ate o 0: lixo pode nao decodificar nada
 	S5::UTIL::Base64Decode((char*)data, (unsigned char*)buf, size);
 	r->Parse(buf);
 	if (buf)
@@ -84,7 +84,7 @@ static bool __fastcall ReadExtCrypt983(const char* key, const char* data, unsign
 	CCryptDecoder983 dec(&s_extCrypt, key, data, size);
 	if (dec.IsOk())
 	{
-		r->Parse((const char*)dec.GetData());
+		r->Parse(std::string((const char*)dec.GetData(), dec.GetSize()).c_str()); // sem 0 se a fita veio alterada
 		return true;
 	}
 	return false;
@@ -109,11 +109,9 @@ static void ReadExtRepeat983(TiXmlNode* ext)
 {
 	int hole;
 	TiXmlNode* node = ext->FirstChild(s_repeat);
-	if (node)
-	{
-		node->ToElement()->Attribute(s_id, &hole);
+	// node pode ser texto "repeat" (ToElement NULL); sem id, hole ficaria sem valor
+	if (node && node->ToElement() && node->ToElement()->Attribute(s_id, &hole))
 		DOCJP()->SetFixHole983(hole);
-	}
 }
 
 // 006270c0
@@ -162,10 +160,17 @@ void __fastcall ReplayWriteExtension983(FILE* fp, int version, SYSTEMTIME* pTime
 void __fastcall ReplayReadExtension983(FILE* fp, SYSTEMTIME* pTime)
 {
 	sExtChunk983 chunk("EXTENSION");
-	if (fread(&chunk, 0x13, 1, fp) && strcmp(chunk.tag, "extension") == 0)
+	if (fread(&chunk, 0x13, 1, fp) && memcmp(chunk.tag, "extension", 10) == 0)
 	{
-		chunk.data = new char[chunk.size];
+		const long pos = ftell(fp);
+		fseek(fp, 0, SEEK_END);
+		const unsigned long left = ftell(fp) - pos;
+		fseek(fp, pos, SEEK_SET);
+		if (chunk.size > left)
+			return;
+		chunk.data = new char[chunk.size + 1]; // os leitores tratam como texto com 0
 		fread(chunk.data, chunk.size, 1, fp);
+		((char*)chunk.data)[chunk.size] = 0;
 		ExtReader983 fn;
 		if (chunk.version < 5 && (fn = s_extReaders[chunk.version]) != NULL)
 		{

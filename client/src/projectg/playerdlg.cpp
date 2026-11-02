@@ -336,6 +336,8 @@ void FrSubEquipBar::Initialize()
 				if (it->second.guid != c->partsUid)
 					continue;
 				IFF_STRUCT::sCard* pCard = ItemManager()->FindCard(c->tid);
+				if (pCard == NULL)
+					continue;
 				switch (c->cardType)
 				{
 				case 0:
@@ -437,56 +439,6 @@ void FrSubEquipBar::Initialize()
 	m_pCountFont983->Create(&info);
 }
 
-bool FrSubEquipBar::SetClientEquipInfo(PANGYA_ITEM_GROUP group,
-	unsigned long guid)
-{
-	bool bFound = false;
-	switch ((int)group)
-	{
-	case 1:
-	{
-		std::map<unsigned int, sCharacterInfo>::iterator it =
-			Doc()->m_charMap.find(guid);
-		if (it != Doc()->m_charMap.end())
-			bFound = true;
-		break;
-	}
-	case 5:
-	{
-		std::list<sItemInfo>::iterator it =
-			std::find(Doc()->m_ballList.begin(), Doc()->m_ballList.end(), guid);
-		if (it != Doc()->m_ballList.end())
-			bFound = true;
-		break;
-	}
-	case 4:
-	{
-		std::map<unsigned int, sItemInfo>::iterator it =
-			Doc()->m_clubSetMap.find(guid);
-		if (it != Doc()->m_clubSetMap.end())
-			bFound = true;
-		break;
-	}
-	case 16:
-	{
-		std::map<unsigned int, sMascotInfo>::iterator it =
-			Doc()->m_mascotMap.find(guid);
-		if (it != Doc()->m_mascotMap.end())
-			bFound = true;
-		break;
-	}
-	case 7:
-	{
-		std::map<unsigned int, sCaddieInfo>::iterator it =
-			Doc()->m_caddieMap.find(guid);
-		if (it != Doc()->m_caddieMap.end())
-			bFound = true;
-		break;
-	}
-	}
-	return bFound;
-}
-
 void FrSubEquipBar::OnInitSubEquipList(int param)
 {
 	m_pSubEquipList = DYNAMIC_CAST(FrListBox, (FrWnd*)param);
@@ -573,7 +525,9 @@ void FrSubEquipBar::OnDrawSubEquipList(int param)
 
 	if (pBitmap)
 	{
-		if (pListItem->idx % m_pSubEquipList->GetColCapacity() == 0)
+		// column="0" no layout (outro pak) chega cru ao m_colCapacity: % 0 derrubava o desenho da lista
+		int cols = m_pSubEquipList->GetColCapacity();
+		if (cols > 0 && pListItem->idx % cols == 0)
 		{
 			const Bitmap* pBar = g_pFresh->GetBitmap("select_bar_02");
 			if (pBar)
@@ -1329,15 +1283,16 @@ void FrPlayerDlg::SetLevelBar()
 	const short* pClubSlot = pDoc->m_userInfo[m_index].clubInfo.slotUp983;
 	unsigned int guidMascot = pDoc->m_userInfo[m_index].userEquip.guidMascot;
 	unsigned long tidMascot;
-	if (guidMascot == 0)
+	if (pDoc->m_mascotMap.find(guidMascot) == pDoc->m_mascotMap.end())
 		tidMascot = 0;
 	else
 		tidMascot = pDoc->m_mascotMap.find(guidMascot)->second.tid;
-	sCharacterInfo& ch = pDoc->m_charMap.find(guidChar)->second;
+	std::map<unsigned int, sCharacterInfo>::iterator itChar = pDoc->m_charMap.find(guidChar);
+	sCharacterInfo& ch = itChar != pDoc->m_charMap.end() ? itChar->second : pDoc->m_userInfo[m_index].charInfo;
 	const unsigned long* pParts = ch.tidParts;
 	const unsigned long* pAuxParts = ch.tidAuxParts;
 	unsigned long tidCaddie;
-	if (guidCaddie == 0)
+	if (pDoc->m_caddieMap.find(guidCaddie) == pDoc->m_caddieMap.end())
 		tidCaddie = 0;
 	else
 		tidCaddie = pDoc->m_caddieMap.find(guidCaddie)->second.tid;

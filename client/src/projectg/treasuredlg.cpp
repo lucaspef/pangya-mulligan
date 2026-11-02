@@ -149,8 +149,11 @@ bool FrNextHole::OnInit()
 	// 983 008404b7: modo caos mede next_chaos.tga; senao precisa das 2 imagens
 	if (Doc()->m_roomInfo.realGameType == GAME_TYPE_USEMAX)
 	{
-		m_texWidth = m_pHoleOverlay[2]->GetWidth();
-		m_texHeight = m_pHoleOverlay[2]->GetHeight();
+		if (m_pHoleOverlay[2])
+		{
+			m_texWidth = m_pHoleOverlay[2]->GetWidth();
+			m_texHeight = m_pHoleOverlay[2]->GetHeight();
+		}
 	}
 	else if (m_pHoleOverlay[0] && m_pHoleOverlay[1])
 	{

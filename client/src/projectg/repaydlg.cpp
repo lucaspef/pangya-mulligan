@@ -62,33 +62,33 @@ void FrRepayDlg::Repay(const IFF_ITEM_COMMON& item, unsigned long guid,
 	if (m_pPrice)
 	{
 		MakePriceStrA(buf, m_pang);
-		strcat(buf, K2L_Compatibility("\xc6\xce"));
+		strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
 		m_pPrice->SetLine(1, buf, 0, false, 0);
 	}
 
 	if (m_pPriceCookie)
 	{
-		sprintf(buf, K2L_Compatibility("\xc4\xed\xc5\xb0 %I64d\xb0\xb3"), m_cookie);
+		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("\xc4\xed\xc5\xb0 %I64d\xb0\xb3"), m_cookie);
 		m_pPriceCookie->SetLine(1, buf, 0, false, 0);
 	}
 
 	if (m_pMyMoney)
 	{
 		MakePriceStrA(buf, myPang);
-		strcat(buf, K2L_Compatibility("\xc6\xce"));
+		strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
 		m_pMyMoney->SetLine(1, buf, 0, false, 0);
 	}
 
 	if (m_pMyMoneyCookie)
 	{
-		sprintf(buf, K2L_Compatibility("\xc4\xed\xc5\xb0 %I64d\xb0\xb3"), myCookie);
+		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("\xc4\xed\xc5\xb0 %I64d\xb0\xb3"), myCookie);
 		m_pMyMoneyCookie->SetLine(1, buf, 0, false, 0);
 	}
 
 	if (m_pPrice && m_pMyMoney && m_pang)
 	{
 		MakePriceStrA(buf, m_pang);
-		strcat(buf, K2L_Compatibility("\xc6\xce"));
+		strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
 		m_pPrice->SetLine(1, buf, 0, false, 0);
 
 		if (Doc()->m_myInfo.stat.i64Pang + m_pang < 0)
@@ -96,7 +96,7 @@ void FrRepayDlg::Repay(const IFF_ITEM_COMMON& item, unsigned long guid,
 			if (m_pMoneyLeft)
 			{
 				MakePriceStrA(buf, myPang + m_pang);
-				strcat(buf, K2L_Compatibility(" \xba\xce\xc1\xb7"));
+				strncat_s(buf, K2L_Compatibility(" \xba\xce\xc1\xb7"), _TRUNCATE);
 				m_pMoneyLeft->SetLine(1, buf, 0, false, 0);
 			}
 
@@ -109,7 +109,7 @@ void FrRepayDlg::Repay(const IFF_ITEM_COMMON& item, unsigned long guid,
 			if (m_pMoneyLeft)
 			{
 				MakePriceStrA(buf, myPang + m_pang);
-				strcat(buf, K2L_Compatibility("\xc6\xce"));
+				strncat_s(buf, K2L_Compatibility("\xc6\xce"), _TRUNCATE);
 				m_pMoneyLeft->SetLine(1, buf, 0, false, 0);
 			}
 
@@ -125,7 +125,7 @@ void FrRepayDlg::Repay(const IFF_ITEM_COMMON& item, unsigned long guid,
 
 	if (m_pPriceCookie && m_pMyMoneyCookie && m_cookie)
 	{
-		sprintf(buf, K2L_Compatibility("\xc4\xed\xc5\xb0 %I64d\xb0\xb3"), m_cookie);
+		_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("\xc4\xed\xc5\xb0 %I64d\xb0\xb3"), m_cookie);
 		m_pPriceCookie->SetLine(1, buf, 0, false, 0);
 
 		__int64 cookie = Doc()->m_cookie;
@@ -134,7 +134,7 @@ void FrRepayDlg::Repay(const IFF_ITEM_COMMON& item, unsigned long guid,
 			if (m_pMoneyLeftCookie)
 			{
 				MakePriceStrA(buf, cookie + m_cookie);
-				strcat(buf, K2L_Compatibility(" \xba\xce\xc1\xb7"));
+				strncat_s(buf, K2L_Compatibility(" \xba\xce\xc1\xb7"), _TRUNCATE);
 				m_pMoneyLeftCookie->SetLine(1, buf, 0, false, 0);
 			}
 
@@ -146,7 +146,7 @@ void FrRepayDlg::Repay(const IFF_ITEM_COMMON& item, unsigned long guid,
 		{
 			if (m_pMoneyLeftCookie)
 			{
-				sprintf(buf, K2L_Compatibility("\xc4\xed\xc5\xb0 %I64d\xb0\xb3"),
+				_snprintf_s(buf, _TRUNCATE, K2L_Compatibility("\xc4\xed\xc5\xb0 %I64d\xb0\xb3"),
 					cookie + m_cookie);
 				m_pMoneyLeftCookie->SetLine(1, buf, 0, false, 0);
 			}

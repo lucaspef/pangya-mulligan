@@ -164,6 +164,8 @@ CSetAbility* CSetEffectObject::CreateAbility(int ability)
 
 CSetAbility* CSetEffectObject::GetAbility(int ability)
 {
+	if ((unsigned int)ability >= m_abilities.size()) // vem do IFF; at() lanca
+		return NULL;
 	CSetAbility* pAbility = m_abilities.at(ability);
 	if (pAbility == NULL)
 	{

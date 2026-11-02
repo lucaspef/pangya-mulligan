@@ -100,6 +100,9 @@ protected:
 		(void)&g_HUGE;
 		(void)&g_EPSILON;
 		m_pFxInterpreter983 = new FxInterpreter(NULL, 0);
+		// 983 (ctor 0073a5f0, OnInit 00734360) tambem nao grava 0x78..0xa0: so 0x13/0x121 chamam ResetTalk, e o OnInit
+		// ja liga m_pCaddie/m_bVisible, entao o TalkProcess podia ler lixo do new antes da 1a 0x13 (B1654)
+		ResetTalk();
 	}
 
 	bool IsGoodMotion(sCaddie* c, const char* motion);

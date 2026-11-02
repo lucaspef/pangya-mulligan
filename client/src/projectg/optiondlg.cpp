@@ -1006,7 +1006,7 @@ void FrOptionDlg::gOnChangeNickBtnUp()
 	if (m_bApply)
 		m_bOK = false;
 
-	strcpy(nick, m_gameTab.m_pNickEdit->GetLine(1, false));
+	strncpy_s(nick, m_gameTab.m_pNickEdit->GetLine(1, false), _TRUNCATE); // charlimit padrao do FrEdit = 255
 
 	const char* err = Doc()->m_chatManager.FilteringNick(nick);
 	if (err)

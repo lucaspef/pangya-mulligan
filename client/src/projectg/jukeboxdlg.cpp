@@ -101,6 +101,9 @@ void FrJukeBoxDlg::LoadBGMList()
 			script->RunFile("BGMlist.lua");
 		lua_system::lua_table_helper count = script->GetTable("max_count_bgm_list");
 		m_maxCount = LUA983_GET(count, int, "max_count");
+		// sem BGMlist.lua ou com max_count 0: uma linha vazia, a janela usa rand() % m_maxCount e m_bgmList[m_curBGM]
+		if (m_maxCount < 1)
+			m_maxCount = 1;
 		lua_system::lua_table_helper bgm = script->GetTable("bgm_list");
 		if (0 < m_maxCount * 2)
 		{
@@ -195,6 +198,8 @@ void __fastcall FrJukeBoxDlg::PlayWithMap(unsigned char map)
 	{
 		g_audio->StopBGM(true);
 		m_curBGM = list[rand() % list.size()];
+		if ((unsigned int)m_curBGM >= m_bgmList.size()) // BGMlist.lua menor que a tabela do mapa
+			m_curBGM = 0;
 		g_audio->PlayBGM(m_bgmList[m_curBGM].file, false, true);
 	}
 }

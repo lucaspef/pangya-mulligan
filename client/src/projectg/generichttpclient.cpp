@@ -66,15 +66,17 @@ int GenericHTTPClient::Connect(const char* szAddress, const char* szAgent,
 	if (!_hHTTPConnection)
 	{
 		_dwError = ::GetLastError();
-		::CloseHandle(_hHTTPOpen);
+		::InternetCloseHandle(_hHTTPOpen);
+		_hHTTPOpen = NULL;
 		return FALSE;
 	}
 
 	if (::InternetAttemptConnect(NULL) != ERROR_SUCCESS)
 	{
 		_dwError = ::GetLastError();
-		::CloseHandle(_hHTTPConnection);
-		::CloseHandle(_hHTTPOpen);
+		::InternetCloseHandle(_hHTTPConnection);
+		::InternetCloseHandle(_hHTTPOpen);
+		_hHTTPConnection = _hHTTPOpen = NULL;
 		return FALSE;
 	}
 
@@ -349,8 +351,11 @@ int GenericHTTPClient::Response(unsigned char* pHeaderBuffer,
 	dwResultSize = 0;
 	while ((dwNumOfBytesToRead =
 				   ResponseOfBytes(pResponseBuffer, __SIZE_BUFFER)) != NULL &&
-		dwResultSize < dwBufferLength)
+		dwResultSize < dwBufferLength - 1)
 	{
+		// resposta maior que o buffer (pagina de erro de outro servidor): corta, com terminador
+		if (dwNumOfBytesToRead > dwBufferLength - 1 - dwResultSize)
+			dwNumOfBytesToRead = dwBufferLength - 1 - dwResultSize;
 		::CopyMemory((pBuffer + dwResultSize), pResponseBuffer,
 			dwNumOfBytesToRead);
 		dwResultSize += dwNumOfBytesToRead;
@@ -442,7 +447,8 @@ unsigned long GenericHTTPClient::AllocMultiPartsFormData(
 		pInBuffer = NULL;
 	}
 
-	pInBuffer = (PBYTE)::LocalAlloc(LPTR, GetMultiPartsFormDataLength());
+	pInBuffer = (PBYTE)::LocalAlloc(LPTR,
+		GetMultiPartsFormDataLength() + _tcslen(szBoundary) + 6);
 	std::vector<GenericHTTPArgument>::iterator itArgv;
 
 	DWORD dwPosition = 0;
@@ -457,7 +463,7 @@ unsigned long GenericHTTPClient::AllocMultiPartsFormData(
 		case GenericHTTPClient::TypeNormal:
 			pBuffer = (PBYTE)::LocalAlloc(LPTR, __SIZE_HTTP_HEAD_LINE * 4);
 
-			_stprintf((TCHAR*)pBuffer,
+			_sntprintf((TCHAR*)pBuffer, __SIZE_HTTP_HEAD_LINE * 4 - 1,
 				"--%s\r\n"
 				"Content-Disposition: form-data; name=\"%s\"\r\n"
 				"\r\n"
@@ -510,6 +516,9 @@ unsigned long GenericHTTPClient::AllocMultiPartsFormData(
 			dwBufferSize = dwBufPosition + dwTotalBytes + _tcslen("\r\n");
 			break;
 		}
+
+		if (pBuffer == NULL) // arquivo do upload sumiu: a parte fica de fora
+			continue;
 
 		::CopyMemory((pInBuffer + dwPosition), pBuffer, dwBufferSize);
 		dwPosition += dwBufferSize;

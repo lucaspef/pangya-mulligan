@@ -106,6 +106,8 @@ public:
 		bool bAttachFile);
 
 	bool IsRSSDownLoadComplete() { return m_rss.IsComplete(); }
+	// 983 00ab7f89: ecx = this+0x28 (m_rss), call 009ac050 (IsNewRss fora de linha)
+	bool IsNewGuildRSS983() { return m_rss.IsNewRss(); }
 
 	void ResetGuildRSS() { m_rss.ResetVars(); }
 

@@ -307,6 +307,8 @@ FrUccCopyCompletedDlg::FrUccCopyCompletedDlg()
 	: m_typeID(0)
 {
 	m_uccIndex[0] = 0;
+	static_assert(offsetof(FrUccCopyCompletedDlg, m_uccIndex) % 4 == 0, "m_uccIndex[10] precisa caber no pad do [9]");
+	static_assert(offsetof(FrUccCopyCompletedDlg, m_pOkBtn) == offsetof(FrUccCopyCompletedDlg, m_uccIndex) + 12, "layout do 983");
 }
 
 FrUccCopyCompletedDlg::~FrUccCopyCompletedDlg()
@@ -317,6 +319,7 @@ void FrUccCopyCompletedDlg::Init(unsigned long typeID, const char* uccIndex)
 {
 	m_typeID = typeID;
 	strncpy(m_uccIndex, uccIndex, 9);
+	m_uccIndex[9] = 0; // UccIndex[9] cheio sem zero: FindClothes/GetMyItemInfo liam m_pOkBtn
 }
 
 void FrUccCopyCompletedDlg::OnOkBtnInit(int param)

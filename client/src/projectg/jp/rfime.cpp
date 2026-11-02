@@ -129,7 +129,7 @@ void RFIme::Restore983()
 void RFIme::SetNativeMode983(bool native)
 {
 	RFImmContext983 context(_enabled ? _imeWnd : _parent);
-	DWORD conversion, sentence;
+	DWORD conversion = 0, sentence = 0; // sem contexto (Windows sem IME) a leitura falha e não escreve
 	ImmGetConversionStatus(context.himc, &conversion, &sentence);
 	ImmSetConversionStatus(context.himc, (conversion & ~(IME_CMODE_NATIVE | IME_CMODE_KATAKANA)) | (native == true ? IME_CMODE_NATIVE : 0),
 		sentence);
@@ -139,7 +139,7 @@ void RFIme::SetNativeMode983(bool native)
 bool RFIme::IsNativeMode983()
 {
 	RFImmContext983 context(_enabled ? _imeWnd : _parent);
-	DWORD conversion, sentence;
+	DWORD conversion = 0, sentence = 0; // sem contexto (Windows sem IME) a leitura falha e não escreve
 	ImmGetConversionStatus(context.himc, &conversion, &sentence);
 	if (conversion & IME_CMODE_NATIVE)
 		return true;
@@ -157,7 +157,7 @@ void RFIme::GetStatus983(LocaleIndicatorTypes::Type* locale, unsigned int* statu
 void RFIme::UpdateStatus983()
 {
 	RFImmContext983 context(_imeWnd);
-	DWORD conversion, sentence;
+	DWORD conversion = 0, sentence = 0; // sem contexto (Windows sem IME) a leitura falha e não escreve
 	ImmGetConversionStatus(context.himc, &conversion, &sentence);
 	_status = 0;
 	if (conversion & IME_CMODE_NATIVE)
@@ -248,41 +248,19 @@ void RFIme::FinishComposition983(bool complete)
 		ImmNotifyIME(context.himc, NI_COMPOSITIONSTR, CPS_COMPLETE, 0);
 }
 
-// 00451f20
-int RFIme::GetCompositionString983(wchar_t* buffer, int length)
-{
-	int size = (int)_composition.size();
-	if (buffer && size > 0 && length > 0 && length <= size)
-	{
-		memcpy(buffer, _composition.c_str(), length * sizeof(wchar_t));
-		_composition.clear();
-	}
-	return size;
-}
-
 // 00451c60: em composição vai a composição (mesmo vazia); senão, o resultado que houver
 void RFIme::FlushStrings983()
 {
-	wchar_t composition[0x100] = { 0 };
-	wchar_t result[0x100] = { 0 };
+	// sem os buffers de 0x100 do 983: texto maior estourava a pilha
 	if (_composing)
 	{
-		if (_composition.size() > 0)
-			GetCompositionString983(composition, (int)_composition.size());
-		_results.push_back(RFImeString983(std::wstring(composition), true));
+		_results.push_back(RFImeString983(_composition, true));
+		_composition.clear();
 	}
-	else
+	else if (!_result.empty())
 	{
-		int size = (int)_result.size();
-		if (size > 0)
-		{
-			if (size <= size)
-			{
-				memcpy(result, _result.c_str(), size * sizeof(wchar_t));
-				_result.clear();
-			}
-			_results.push_back(RFImeString983(std::wstring(result), false));
-		}
+		_results.push_back(RFImeString983(_result, false));
+		_result.clear();
 	}
 }
 
@@ -371,7 +349,7 @@ void RFIme::OnCloseCandidate983()
 	RFManager::GetInstance()._interface->OnInputMethodStateChanged(InputMethodStateTypes::CandidateClose983);
 }
 
-// 00452240: caractere sem IME (de 1 byte, pela página de código do sistema); Ctrl+tecla e as de controle ficam de fora
+// 00452240: caractere sem IME; Ctrl+tecla e as de controle ficam de fora
 bool RFIme::OnChar983(WPARAM wParam, LPARAM lParam)
 {
 	switch (wParam)
@@ -382,13 +360,10 @@ bool RFIme::OnChar983(WPARAM wParam, LPARAM lParam)
 	case VK_ESCAPE:
 		break;
 	default:
-		if (!(GetAsyncKeyState(VK_CONTROL) & 0x8000))
-		{
-			wchar_t ch;
-			MultiByteToWideChar(CP_ACP, 0, (LPCSTR)&wParam, 1, &ch, 1);
-			_result.erase();
-			_result.insert(_result.end(), ch);
-		}
+		// AltGr = Ctrl + Alt direito ('@' em vários teclados); janela Unicode: wParam já é o caractere
+		// (o 983 descarta AltGr e passa só o byte baixo pelo CP_ACP, com ch sem valor se falhar)
+		if (!(GetAsyncKeyState(VK_CONTROL) & 0x8000) || (GetAsyncKeyState(VK_RMENU) & 0x8000))
+			_result.assign(1, (wchar_t)wParam);
 		break;
 	}
 	return true;
@@ -509,7 +484,8 @@ void RFCustomIme::ReadCandidateList983()
 		if (list)
 		{
 			DWORD i = 0;
-			for (DWORD j = (list->dwSelection / list->dwPageSize) * list->dwPageSize; j < list->dwCount && i < list->dwPageSize; i++, j++)
+			const DWORD page = list->dwPageSize ? list->dwPageSize : 9; // há IME que informa 0: divisão por zero no 983
+			for (DWORD j = (list->dwSelection / page) * page; j < list->dwCount && i < page; i++, j++)
 				_candidates.push_back(std::wstring((const wchar_t*)((BYTE*)list + list->dwOffset[j])));
 			_candidateCount = i;
 		}
