@@ -25,7 +25,7 @@ public sealed partial class JpSystems(Connection conn, GameHandler kr, GameConte
         [CBigPapel, CMemorial, CMailList, CMailRead, CMailSend, CMailTake, CMailDelete, CAchievements, CGpEnter, CGpLeave,
             CAttendance, CAttendanceAck, CWsLevel, CWsLevelOk, CWsLevelCancel, CWsRank, CWsTransformYes, CWsTransformNo, CWsRecover,
             CWsTransfer, CWsReset, CWsEvent, CWsEventCount, CMasteryExpand, CStatUp, CStatDown, CCardEquip, CCardPatch, CCardRemove, CLolo,
-            CDailyOpen, CDailyAccept, CDailyPrize, CDailyGiveUp, CPointShopOpen, CPointShopBalance, CPointShopSell, CPointShopBuy, CTikiShop,
+            CArinStart, CArinTickets, CArinOpen, CArinReward, CArinFinal, CMissionEvent, CMissionGift, CBingoEvent, CKoohEvent, CDailyOpen, CDailyAccept, CDailyPrize, CDailyGiveUp, CPointShopOpen, CPointShopBalance, CPointShopSell, CPointShopBuy, CTikiShop,
             CWebKey, CWebEnter, CWebClubClosed, CGuildPending, CGuildAnswer, CGuildInviteAnswer,
             CAssistToggle, CAssistGreen, CAutoCommand, CChangeServer, CTicker, CTickerQueue, CGachaClosed, CWorldTourGift, CMyRoomBox, CRecentPlayers, CTikiReportUse, CTikiReportOpen];
 
@@ -45,6 +45,10 @@ public sealed partial class JpSystems(Connection conn, GameHandler kr, GameConte
                 return true;
             case >= CWsLevel and <= CWsReset or CWsEvent or CWsEventCount: return await HandleWorkshopAsync(p);
             case >= CMasteryExpand and <= CCardRemove or CLolo: return await HandleCharacterAsync(p);
+            case >= CArinStart and <= CArinFinal: return HandleArin(p);
+            case CBingoEvent: return await HandleBingoAsync(p);
+            case CMissionEvent or CMissionGift: return await HandleMissionAsync(p);
+            case CKoohEvent: return EventUnavailable(p);
             case >= CDailyOpen and <= CDailyGiveUp: return await HandleDailyAsync(p);
             case >= CPointShopOpen and <= CPointShopBuy or CTikiShop: return await HandleTikiAsync(p);
             case CAssistToggle or CAssistGreen or CAutoCommand or CChangeServer: return await HandleEffectsAsync(p);

@@ -24,6 +24,9 @@ public static class TreasureHunter
         };
     }
 
+    /// <summary>Pontos do buraco com o bônus do anel (dropUp em %; Luck Ring = 120).</summary>
+    public static int WithRing(int points, int dropUp) => points * dropUp / 100;
+
     /// <summary>Faixas de caixas pelos pontos (GB): até N pontos -> mínimo..máximo.</summary>
     static readonly (int UpTo, int Min, int Max)[] Boxes =
         [(100, 1, 2), (200, 2, 4), (300, 3, 5), (400, 3, 7), (500, 4, 8), (600, 4, 10), (700, 5, 11), (800, 5, 13),

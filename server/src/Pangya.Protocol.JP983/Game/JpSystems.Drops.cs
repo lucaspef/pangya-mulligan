@@ -26,9 +26,10 @@ public sealed partial class JpSystems
         if (s.Practice || s.Zodiac != ZodiacKind.None || s.Mode is GameMode.Approach or GameMode.NewApproach) return;
         if (dropGame != g) { dropGame = g; drops.Clear(); holedCount = 0; }
         holedCount++;
+        CountEagle(room);
         byte course = room.HoleCourses.Length == 18 && hole is >= 1 and <= 18 ? room.HoleCourses[Math.Max(0, holedCount - 1)] : room.CoursePlayed;
         var list = HoleDrops.Roll(kr.Context.World.Config.HoleDrops, kr.Player, course, hole, holedCount, s.Holes, room.GrandPrix != null, Random.Shared,
-            s.Artifact, (int)kr.Context.Data.CourseStars(course & 0x7F));
+            s.Artifact, (int)kr.Context.Data.CourseStars(course & 0x7F), kr.Context.Data.DropUpPercent(kr.Player));
         if (list.Count == 0 || drops.Count + list.Count > DropSlots) return;
         drops.AddRange(list);
         uint oid = room.Find(kr)?.Guid ?? (uint)kr.Player.AccountId;

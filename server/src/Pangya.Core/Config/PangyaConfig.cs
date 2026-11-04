@@ -239,6 +239,34 @@ public sealed class WorldTourConfig
     ];
 }
 
+/// <summary>Bingo (JP, conteúdo 0x82): fichas iniciais e por partida terminada, e o prêmio de cada linha nova (vai por carta).</summary>
+public sealed class BingoConfig
+{
+    public bool Enabled { get; set; } = true;
+    public DateOnly? Start { get; set; }
+    public DateOnly? End { get; set; }
+    public int StartTries { get; set; } = 3;
+    public int TriesPerGame { get; set; } = 1;
+    public int MinHoles { get; set; } = 3;
+    public List<GachaItem> LinePrizes { get; set; } = [new() { TypeId = 0x1A000080, Quantity = 1 }];   // Gacha Ticket por linha
+}
+
+/// <summary>Mission (JP, conteúdo 0x80): datas e os prêmios (um sorteado pelo peso) das missões do dia e do período (vão por carta).</summary>
+public sealed class MissionEventConfig
+{
+    public bool Enabled { get; set; } = true;
+    public DateOnly? Start { get; set; }
+    public DateOnly? End { get; set; }
+    public List<GachaItem> DayPrizes { get; set; } =
+    [
+        new() { TypeId = 0x18000000, Quantity = 5 }, new() { TypeId = 0x18000001, Quantity = 5 }, new() { TypeId = 0x18000004, Quantity = 5 },
+    ];
+    public List<GachaItem> TermPrizes { get; set; } =
+    [
+        new() { TypeId = 0x1A000272, Quantity = 1 },                        // Memorial Coin (Premium)
+    ];
+}
+
 public sealed class GachaItem
 {
     public int TypeId { get; set; }
@@ -276,6 +304,10 @@ public sealed class GameConfig
     public GoldenTimeConfig GoldenTime { get; set; } = new();
     /// <summary>Game server JP: World Tour (16 campos completados = prêmio).</summary>
     public WorldTourConfig WorldTour { get; set; } = new();
+    /// <summary>Game server JP: Bingo do lobby (linhas da cartela = prêmio).</summary>
+    public BingoConfig Bingo { get; set; } = new();
+    /// <summary>Game server JP: Mission do lobby (missões do dia e do período).</summary>
+    public MissionEventConfig Mission { get; set; } = new();
     /// <summary>Game server JP: drop por buraco.</summary>
     public HoleDropsConfig HoleDrops { get; set; } = new();
     /// <summary>Game server JP: horários do evento do Grand Zodiac ("HH:MM int|adv", relógio do servidor).</summary>

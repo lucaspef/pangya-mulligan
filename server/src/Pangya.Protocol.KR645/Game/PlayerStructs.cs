@@ -167,7 +167,7 @@ public static class PlayerStructs
         static ushort W(long v) => (ushort)Math.Clamp(v, 0, ushort.MaxValue);
         var s = new sPangYaUserStatistics
         {
-            dwDrive = U(t.Drive), dwPutt = U(t.Putt), dwShotTime = U(t.ShotTime), fLongest = t.Longest, dwPangya = U(t.Pangya),
+            dwDrive = U(t.Drive), dwPutt = U(t.Putt), dwVisitTime = U(t.VisitTime), dwShotTime = U(t.ShotTime), fLongest = t.Longest, dwPangya = U(t.Pangya),
             dwTimeOut = U(t.TimeOut), dwOB = U(t.OB), dwDistance = U(t.Distance), dwHole = U(t.Hole), wHoleInOne = W(t.HoleInOne),
             wBunker = W(t.Bunker), dwFairway = U(t.Fairway), wAlbatross = W(t.Albatross), dwHoleIn = U(t.HoleIn),
             dwPuttIn = U(t.PuttIn), fLongestPuttIn = t.LongestPuttIn, fLongestChipIn = t.LongestChipIn,

@@ -21,6 +21,8 @@ public static class GameWeb
 {
     public const string UpdateListPath = "/patch/updatelist";
     public const string TranslationPath = "/Translation/Read.aspx";
+    /// <summary>Conteúdo extra (ícones do topo, fundos, avisos): extracontents.xml, o tema e as imagens dele.</summary>
+    public const string ExtraContentsPath = "/patch/extracontents/{file}";
 
     /// <summary>Base64 de uma tabela sem textos: GameStringManager aceita e o Ready segue sem "string load failed.".</summary>
     public static readonly byte[] EmptyTranslation = Encoding.ASCII.GetBytes(Convert.ToBase64String(Encoding.ASCII.GetBytes("<TEXT></TEXT>")));
@@ -38,6 +40,8 @@ public static class GameWeb
         var app = builder.Build();
         app.MapMethods(UpdateListPath, ["GET", "HEAD"], (Delegate)((HttpContext ctx) => Serve(ctx, Path.Combine(dir, "patch", "updatelist"), null)));
         app.MapMethods(TranslationPath, ["GET", "HEAD"], (Delegate)((HttpContext ctx) => Serve(ctx, Path.Combine(dir, "Translation", "Read.aspx"), EmptyTranslation)));
+        app.MapMethods(ExtraContentsPath, ["GET", "HEAD"], (Delegate)((HttpContext ctx, string file) =>
+            Serve(ctx, Path.Combine(dir, "patch", "extracontents", Path.GetFileName(file)), null)));
         return app;
     }
 

@@ -36,6 +36,8 @@ public interface IGameData
     /// club set + upgrades do club + caddie; força − 15. E o DriveUp dos anéis (jardas a mais em todo taco menos putter).
     /// </summary>
     (int[] Stats, int DriveUp) PlayStats(Player p);
+    /// <summary>Maior ItemDropUp dos anéis equipados, em % (100 = sem bônus; Luck Ring = 120).</summary>
+    int DropUpPercent(Player p) => 100;
     /// <summary>Pode ir para a loja pessoal (IFF_ITEM_COMMON.IsSalable 1 ou 3, como o cliente filtra).</summary>
     bool CanTrade(int typeId);
     /// <summary>Bola sem contagem (COM[0] = 0 no Ball.iff, IsUnlimitAztec do cliente): nunca é gasta.</summary>

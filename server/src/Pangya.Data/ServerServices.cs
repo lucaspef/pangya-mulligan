@@ -36,6 +36,8 @@ public sealed class ServerServices : IAsyncDisposable
     public Pangya.Domain.Players.ILoginRewardStore LoginRewards { get; }
     public Pangya.Domain.Players.IWorldTourStore WorldTour { get; }
     public Pangya.Domain.Players.IRecentPlayersStore RecentPlayers { get; }
+    public Pangya.Domain.Players.IBingoStore Bingo { get; }
+    public Pangya.Domain.Players.IMissionStore Mission { get; }
     /// <summary>Gacha do JP: o site sorteia no jogador online do game-jp.</summary>
     public Pangya.Domain.Shop.GachaDesk Gacha { get; }
 
@@ -67,6 +69,8 @@ public sealed class ServerServices : IAsyncDisposable
         LoginRewards = new LoginRewardRepository(Db);
         WorldTour = new WorldTourRepository(Db);
         RecentPlayers = new RecentPlayersRepository(Db);
+        Bingo = new BingoRepository(Db);
+        Mission = new MissionEventRepository(Db);
         Gacha = new Pangya.Domain.Shop.GachaDesk(config.Gacha);
     }
 

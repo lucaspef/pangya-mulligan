@@ -76,13 +76,16 @@ public sealed class InGameOutput(Room room, bool botPasses, BotGolfer golfer, fl
 
     bool TreasureOn => treasure is { Enabled: true } && room.Settings.Mode is GameMode.Stroke or GameMode.Team;
 
+    static int DropUp(RoomPlayer rp) => rp.Session is GameHandler h ? PlayerStructs.Data?.DropUpPercent(h.Player) ?? 100 : 100;
+
     /// <summary>Pontos da sala (soma de todos, como o GB) nos buracos já terminados; teto 1000.</summary>
     int TreasurePoints(int holesDone)
     {
         int total = 0;
         foreach (var p in Game.Players)
             for (int i = 0; i < Math.Min(holesDone, Game.HoleCount); i++)
-                if (p.Strokes[i] > 0) total += TreasureHunter.HolePoints(p.Strokes[i], Game.ParOf(Game.HoleAt(i)));
+                if (p.Strokes[i] > 0)
+                    total += TreasureHunter.WithRing(TreasureHunter.HolePoints(p.Strokes[i], Game.ParOf(Game.HoleAt(i))), DropUp(p.RoomPlayer));
         return Math.Min(total, TreasureHunter.MaxPoints);
     }
 

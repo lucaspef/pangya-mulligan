@@ -31,6 +31,10 @@ public sealed class JpGameContext(GameContext kr, Jp983GameData? jpData = null, 
     public Domain.Players.LoginRewardService? LoginRewards { get; init; }
     /// <summary>World Tour (16 campos).</summary>
     public Domain.Players.WorldTourService? WorldTour { get; init; }
+    /// <summary>Bingo do lobby (conteúdo 0x82).</summary>
+    public Domain.Players.BingoService? Bingo { get; init; }
+    /// <summary>Mission do lobby (conteúdo 0x80).</summary>
+    public Domain.Players.MissionEventService? Mission { get; init; }
     /// <summary>Pontos do Grand Zodiac por conta (tamanho do copo).</summary>
     public Domain.Players.IZodiacPointsStore? ZodiacPoints { get; init; }
     /// <summary>Point Shop e Tiki Shop (só com os dados do JP e o banco).</summary>
@@ -68,12 +72,16 @@ public sealed class JpGameHandler : IConnectionHandler
         translator.ItemSpent = systems.SpendAsync;
         Kr.TrophyGiven = systems.TrophyWon;
         systems.WorldTour = ctx.WorldTour;
+        systems.Bingo = ctx.Bingo;
+        systems.Mission = ctx.Mission;
         systems.Boxes = ctx.Boxes;
         Kr.ClubMastery = async g =>                                                 // fim da partida
         {
             await systems.ClubMasteryAsync(g);
             await systems.CreditDropsAsync(g);
             await systems.WorldTourGameEndAsync(g);
+            await systems.BingoGameEndAsync(g);
+            await systems.MissionGameEndAsync(g);
         };
         Kr.Holed = systems.OnHoled;
         Kr.BallSpent = c => conn.SendTranslated(JpSystems.ItemsChanged([c]));

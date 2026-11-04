@@ -62,6 +62,8 @@ public sealed class JpGameServer
             Gacha = s.Gacha,
             LoginRewards = new LoginRewardService(s.LoginRewards, kr.Mail, config.LoginRewards),
             WorldTour = new WorldTourService(s.WorldTour, kr.Mail, config.WorldTour),
+            Bingo = new BingoService(s.Bingo, kr.Mail, config.Bingo),
+            Mission = new MissionEventService(s.Mission, kr.Mail, config.Mission),
             Boxes = new Domain.Shop.BoxService(kr.Shop, s.Config.Boxes),
         };
         Zodiac = zodiac = new JpZodiacEvent(kr);

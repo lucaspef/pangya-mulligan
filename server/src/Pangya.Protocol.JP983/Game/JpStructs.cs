@@ -73,7 +73,7 @@ public static class JpStructs
     {
         var t = p.Stats;
         static int I(long v) => (int)Math.Clamp(v, int.MinValue, int.MaxValue);
-        w.I32(I(t.Drive)).I32(I(t.Putt)).I32(0).I32(I(t.ShotTime)).F32(t.Longest).I32(I(t.Pangya)).I32(I(t.TimeOut)).I32(I(t.OB))
+        w.I32(I(t.Drive)).I32(I(t.Putt)).I32(I(t.VisitTime)).I32(I(t.ShotTime)).F32(t.Longest).I32(I(t.Pangya)).I32(I(t.TimeOut)).I32(I(t.OB))
             .I32(I(t.Distance)).I32(I(t.Hole)).I32(0).I32(I(t.HoleInOne)).I16((short)Math.Clamp(t.Bunker, 0, short.MaxValue))
             .I32(I(t.Fairway)).I32(I(t.Albatross)).I32(I(t.HoleIn)).I32(I(t.PuttIn)).F32(t.LongestPuttIn).F32(t.LongestChipIn)
             .I32(Math.Max(p.Exp, 0)).U8((byte)p.Level).U64((ulong)Math.Max(p.Pang, 0)).I32(I(t.TotalScore));

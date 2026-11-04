@@ -27,6 +27,8 @@ public sealed class PlayerStats
     public long Drive { get; set; }
     public long Putt { get; set; }
     public long ShotTime { get; set; }
+    /// <summary>Tempo jogado em segundos (Total Play Time do perfil); o cliente não informa, o servidor mede.</summary>
+    public long VisitTime { get; set; }
     public float Longest { get; set; }
     public long Pangya { get; set; }
     public long TimeOut { get; set; }

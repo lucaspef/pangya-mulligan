@@ -66,6 +66,15 @@ public sealed class Kr645GameData : IGameData
     Dictionary<uint, Iff.sCaddie>? caddieStats;
     Dictionary<uint, Iff.sAuxPart>? auxStats;
 
+    public int DropUpPercent(Player p)
+    {
+        int up = 100;
+        if (p.Character is { } ch)
+            foreach (var x in Iff.AuxParts)
+                if (x.ItemDropUp > up && Array.IndexOf(ch.IntArray("aux", 5), (int)x.c.TypeId) >= 0) up = x.ItemDropUp;
+        return up;
+    }
+
     public (int[] Stats, int DriveUp) PlayStats(Player p)
     {
         if (charStats == null)

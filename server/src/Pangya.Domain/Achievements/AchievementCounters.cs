@@ -53,7 +53,7 @@ public static class AchievementCounters
 
     /// <summary>O que vale para uma partida inteira (avaliado no fim, como a referência).</summary>
     public sealed record GameEnd(GameMode Mode, bool Practice, byte RepeatHole, byte Course, int Holes, bool Master, bool Finished,
-        GameStats? Stats, long Pang, (int Course, int Score)? Result, bool Shuffle = false, bool Zodiac = false);
+        GameStats? Stats, long Pang, (int Course, int Score)? Result, bool Shuffle = false, bool Zodiac = false, bool NewRecord = false);
 
     /// <summary>Saco do fim da partida: início (personagem, caddie, mascote, campo, buracos, modo) + totais da partida.</summary>
     public static CounterBag ForGame(Player p, GameEnd g)

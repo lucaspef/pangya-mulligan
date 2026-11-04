@@ -31,7 +31,7 @@ public static class HoleDrops
     /// artifact = artefato da sala; stars = dificuldade do mapa (itens com MinStars maior não caem).
     /// </summary>
     public static List<HoleDrop> Roll(HoleDropsConfig cfg, Player p, byte course, byte hole, int seq, int holes, bool grandPrix,
-        Random rng, int artifact = 0, int stars = 1)
+        Random rng, int artifact = 0, int stars = 1, int dropUp = 100)
     {
         var list = new List<HoleDrop>();
         if (!cfg.Enabled) return list;
@@ -42,11 +42,11 @@ public static class HoleDrops
         foreach (var it in cfg.Items)
         {
             if (it.TypeId == 0 || it.LastHoleOnly && !last || stars < it.MinStars) continue;
-            if (rng.Next(1000) < it.PerMille) list.Add(new HoleDrop(it.TypeId, course, hole, (short)(Math.Max(1, it.Quantity) + extra)));
+            if (rng.Next(1000) < it.PerMille * dropUp / 100) list.Add(new HoleDrop(it.TypeId, course, hole, (short)(Math.Max(1, it.Quantity) + extra)));
         }
-        if (cfg.ManaPerMille > 0 && rng.Next(1000) < cfg.ManaPerMille)
+        if (cfg.ManaPerMille > 0 && rng.Next(1000) < cfg.ManaPerMille * dropUp / 100)
             list.Add(new HoleDrop(Mana[rng.Next(Mana.Length)], course, hole, 1));
-        if (cfg.SpecialShufflePerMille > 0 && rng.Next(1000) < cfg.SpecialShufflePerMille)
+        if (cfg.SpecialShufflePerMille > 0 && rng.Next(1000) < cfg.SpecialShufflePerMille * dropUp / 100)
             list.Add(new HoleDrop(SpecialShuffleTicket, course, hole, (short)(1 + extra)));
         if (last && !grandPrix && cfg.GrandPrixTicketMax > 0)                  // ticket do GP: 9/18 buracos sempre; menos, 1 em 3
         {

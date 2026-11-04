@@ -362,7 +362,7 @@ public sealed partial class GameHandler
                 InGameOutput.Broadcast(r, MassOutput.GuildPairs(tg.Pairs));
             InGameOutput.Broadcast(r, RoomPackets.GameInit(r));         // o cliente troca para a tela da partida
             foreach (var rp in r.Players)                               // amigos do mensageiro: "jogando"
-                if (rp.Session is GameHandler gh) gh.MessengerPlaying(true);
+                if (rp.Session is GameHandler gh) { gh.MessengerPlaying(true); gh.gameStartedAt = System.Diagnostics.Stopwatch.GetTimestamp(); }
             LobbyRoom(3, r);
             Log.Info($"sala {r.Index}: início mapa={r.CoursePlayed} buracos={r.Settings.Holes} jogadores={r.Players.Count}");
         }

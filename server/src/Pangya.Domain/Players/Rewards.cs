@@ -56,12 +56,13 @@ public static class Rewards
     /// </summary>
     public static async Task<Reward> ApplyAsync(IPlayerStore store, Player p, uint reportedPang, uint reportedBonus, int holes, bool finished,
         RewardConfig cfg, (int Course, int Score)? course = null, int pangRate = 0, int expRate = 0, GameStats? stats = null,
-        ExpInput? expIn = null, (int RoomTid, int Kind)? trophy = null)
+        ExpInput? expIn = null, (int RoomTid, int Kind)? trophy = null, long playSeconds = 0)
     {
         var (pang, exp) = Compute(reportedPang, reportedBonus, holes, finished, cfg, pangRate, expRate, expIn);
         // totais do perfil: só partida terminada; os contadores vêm do último 0x31/0x06 do cliente, limitados por buraco
         var totals = finished && holes > 0 && expIn?.Practice != true ? PlayerStats.After(p.Stats, stats, holes, course?.Score) : null;
         if (totals != null && trophy is { Kind: > Trophy.None } t) Trophy.Add(totals.Trophies, t.RoomTid, t.Kind);
+        if (totals != null) totals.VisitTime += playSeconds;
         if (totals != null) totals.PangEarned += pang;                          // ranking de pang ganho
         Dictionary<int, CourseRecord>? courses = null;
         bool newRecord = false;

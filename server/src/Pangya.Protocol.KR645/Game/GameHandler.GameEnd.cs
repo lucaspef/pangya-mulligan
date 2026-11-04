@@ -34,6 +34,15 @@ public sealed partial class GameHandler
         public (int TypeId, int Holes) Ball { get; init; }
     }
     PendingEnd? pendingEnd;
+    long gameStartedAt;   // Stopwatch; 0 fora de partida
+
+    /// <summary>Segundos desde o início da partida, para o Total Play Time (teto de um dia).</summary>
+    long PlaySeconds()
+    {
+        long started = gameStartedAt;
+        gameStartedAt = 0;
+        return started == 0 ? 0 : (long)Math.Min(System.Diagnostics.Stopwatch.GetElapsedTime(started).TotalSeconds, 86400);
+    }
 
     /// <summary>Partida encerrada sem placar (0x65, no 1º buraco): sem recompensa; só volta o status do mensageiro.</summary>
     public void GameAborted()
@@ -141,8 +150,9 @@ public sealed partial class GameHandler
             var stats = lastGameStats;
             lastGameStats = null;
             int levelBefore = p.Level;
+            long seconds = PlaySeconds();
             var r = await Rewards.ApplyAsync(ctx.Players.Store, p, e.Pang, e.Bonus, e.Holes, e.Finished, ctx.World.Config.Rewards,
-                e.Course, e.PangRate, e.ExpRate, stats, e.ExpIn, e.Trophy);
+                e.Course, e.PangRate, e.ExpRate, stats, e.ExpIn, e.Trophy, seconds);
             if (r.Pang != 0 || r.Exp != 0)
                 Log.Info($"{conn} recompensa: +{r.Pang} pang, +{r.Exp} EXP{(r.LevelsUp > 0 ? $", subiu {r.LevelsUp} nível(is) -> {p.Level}" : "")}");
             if (e.Trophy is { Kind: > Trophy.None } t) Log.Info($"{conn} troféu {t.Kind} (1 ouro, 2 prata, 3 bronze) da sala {t.RoomTid:X8}");
@@ -153,6 +163,12 @@ public sealed partial class GameHandler
                 Log.Info($"{conn} mana {mana.TypeId:X8} do artefato gasta (sobram {mana.Quantity})");
             }
             await SpendBallAsync(e.Ball);
+            if (!e.ExpIn.Practice)                                  // Practice não gasta; buracos só de partida terminada
+                foreach (var ring in await ctx.Actions.SpendRingsAsync(p, seconds, e.Finished ? e.Holes : 0))
+                {
+                    conn.Send(new PacketWriter(SItemCounts).U8(1).U32((uint)ring.TypeId).U32((uint)ring.Id).U16((ushort)Math.Max(ring.Quantity, 0)));
+                    Log.Info($"{conn} anel {ring.TypeId:X8} gasto (sobram {ring.Quantity})");
+                }
             foreach (var tid in e.AwardItems) await AwardItemAsync(tid);
             if (e.Finished && e.Holes > 0)                                  // 0x43: totais, EXP/nível novos, troféus e o registro do curso
             {
@@ -169,7 +185,8 @@ public sealed partial class GameHandler
             if (r.Pang != 0 || r.LevelsUp > 0 || treasurePang) conn.Send(new PacketWriter(SPang).U64((ulong)p.Pang).U64(0));
             if (Achievements is { } sink && e.Game is { } g)                // conquistas: a partida inteira de uma vez (como a referência)
                 await sink.RecordAsync(Domain.Achievements.AchievementCounters.ForGame(p, g with { Stats = stats?.Sane(e.Holes), Pang = r.Pang }));
-            if (ClubMastery is { } mastery && e.Game is { } mg) await mastery(mg);     // maestria do taco (oficina do JP)
+            if (ClubMastery is { } mastery && e.Game is { } mg)                  // maestria do taco e eventos do JP
+                await mastery(mg with { Stats = stats?.Sane(e.Holes), NewRecord = r.NewRecord });
         }
         catch (Exception ex) { Log.Error($"{conn} falha ao gravar a recompensa", ex); }
     }

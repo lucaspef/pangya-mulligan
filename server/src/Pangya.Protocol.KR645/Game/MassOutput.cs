@@ -114,14 +114,15 @@ public sealed class MassOutput(Room room, Core.Config.TreasureHunterConfig? trea
 
     // ---- Treasure Hunter no torneio (tipos 4/5): pontos de cada jogador, caixas só dele (SPEC-treasure-hunter.md §3/§4)
 
-    bool TreasureOn => treasure is { Enabled: true } && room.Settings.Mode is GameMode.Tournament or GameMode.Team30s;
+    bool TreasureOn => treasure is { Enabled: true } && room.Settings.Mode is GameMode.Tournament or GameMode.Team30s or (GameMode)14;   // 14 = Special Shuffle Course
 
     /// <summary>Pontos do jogador nos buracos que ele já terminou (teto 1000).</summary>
     int TreasurePoints(MassPlayer p)
     {
         int total = 0;
+        int up = p.RoomPlayer.Session is GameHandler h ? PlayerStructs.Data?.DropUpPercent(h.Player) ?? 100 : 100;
         for (int i = 0; i < Math.Min(p.HoleIndex, Game.HoleCount); i++)
-            if (p.Strokes[i] > 0) total += TreasureHunter.HolePoints(p.Strokes[i], Game.ParOf(Game.HoleAt(i)));
+            if (p.Strokes[i] > 0) total += TreasureHunter.WithRing(TreasureHunter.HolePoints(p.Strokes[i], Game.ParOf(Game.HoleAt(i))), up);
         return Math.Min(total, TreasureHunter.MaxPoints);
     }
 

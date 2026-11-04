@@ -115,6 +115,41 @@ public sealed class PlayerActions(IPlayerStore store, IGameData data)
         return edit;
     }
 
+    /// <summary>
+    /// Gasta os anéis equipados no fim da partida. Ao chegar a zero o anel sai do inventário e dos personagens (o cliente
+    /// faz o mesmo ao receber a quantidade zero). Devolve os anéis que mudaram, com a quantidade nova.
+    /// </summary>
+    public async Task<List<Item>> SpendRingsAsync(Player p, long seconds, int holes)
+    {
+        var spent = new List<Item>();
+        if (p.Character is not { } worn) return spent;
+        var ch = new PlayerChanges();
+        var chars = new List<Item>();
+        foreach (var tid in worn.IntArray("aux", 5))
+        {
+            if (tid == 0 || !Rings.PerHour(tid) && !Rings.PerHole(tid) || p.FindType(tid) is not { } ring) continue;
+            var edit = ring.Clone();
+            edit.Quantity = Math.Max(ring.Quantity - Rings.Spend(edit, seconds, holes), 0);
+            spent.Add(edit);
+            if (edit.Quantity > 0) { ch.Updated.Add(edit); continue; }
+            ch.Removed.Add(ring.Id);
+            foreach (var c in p.OfGroup(ItemGroup.Character))
+            {
+                if (Array.IndexOf(c.IntArray("aux", 5), tid) < 0) continue;
+                var freed = chars.Find(x => x.Id == c.Id);
+                if (freed == null) { freed = c.Clone(); chars.Add(freed); ch.Updated.Add(freed); }
+                var aux = freed.IntArray("aux", 5);
+                for (int i = 0; i < aux.Length; i++) if (aux[i] == tid) aux[i] = 0;
+                freed.Set("aux", aux);
+            }
+        }
+        if (spent.Count == 0) return spent;
+        await store.ApplyAsync(p.AccountId, ch);
+        foreach (var it in spent) if (it.Quantity == 0) p.Items.Remove(it.Id); else p.Items[it.Id] = it;
+        foreach (var c in chars) p.Items[c.Id] = c;
+        return spent;
+    }
+
     /// <summary>Bola de quem ficou sem a equipada: a premium enquanto o ticket vale, senão a básica.</summary>
     public static int DefaultBall(Player p, DateTime nowUtc) => Premium.Ticket(p, nowUtc) is { } t ? Premium.CometOf(t.TypeId) : Item.BasicBall;
 

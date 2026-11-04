@@ -561,6 +561,17 @@ public sealed class Jp983GameData : IGameData, Domain.Shop.IMemorialData, Domain
     /// peça Attr 0x1E4 e Slot 0x1EE; anel Attr u8[5] 0xCA, Slot 0xCF, DriveUp 0xD4; club set Attr 0xD0; caddie nível 0x48 e
     /// Attr 0xEC.
     /// </summary>
+    public int DropUpPercent(Player p)
+    {
+        auxRows ??= ByTypeId(Rows("AuxPart.iff"));
+        int up = 100;
+        if (p.Character is { } ch)
+            foreach (var tid in ch.IntArray("aux", 5))
+                if (tid != 0 && auxRows.TryGetValue(tid, out var aux))
+                    up = Math.Max(up, BitConverter.ToUInt16(aux.Span[0xD6..]));
+        return up;
+    }
+
     public (int[] Stats, int DriveUp) PlayStats(Player p)
     {
         if (charRows == null)
