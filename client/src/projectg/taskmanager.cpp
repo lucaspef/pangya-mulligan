@@ -7117,7 +7117,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			break;
 		}
 		AfxGetTask()->GetActor(s_gatewayActor[1])
-			<< MsgObject(NULL, 0x753f, 1, 0, 0, 0, 0);
+			<< MsgObject(NULL, 0x753f, 1, (int)&packet, 0, 0, 0);
 	}
 	break;
 	case 0x27b: // 009d71b4
@@ -7130,7 +7130,7 @@ int CTask::OnPacketCommon(WReceivedPacket& packet)
 			break;
 		}
 		AfxGetTask()->GetActor(s_gatewayActor[1])
-			<< MsgObject(NULL, 0x753f, 4, 0, 0, 0, 0);
+			<< MsgObject(NULL, 0x753f, 4, (int)&packet, 0, 0, 0);
 	}
 	break;
 	case 0x27c: // 009d7246

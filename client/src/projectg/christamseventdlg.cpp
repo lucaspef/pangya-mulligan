@@ -69,6 +69,8 @@ namespace
 		}
 		bool IsAlive()
 		{
+			if (!m_pImg)	// 983: sem snow1..3 nos paks o GetBitmap volta NULL
+				return false;
 			if (m_pos.x - m_pImg->Width() < rcArea.x ||
 				m_pos.x + m_pImg->Width() > rcArea.x + rcArea.w ||
 				m_pos.y + m_pImg->Height() + 30 > rcArea.y + rcArea.h)
@@ -308,6 +310,7 @@ void FrChristmasEventDlg::OnSnowFallDraw()
 		++it)
 	{
 		cSnow* flake = *it;
-		gdi->DrawTexture(flake->Img(), flake->GetRect(), flake->Color(), 0);
+		if (flake->Img())
+			gdi->DrawTexture(flake->Img(), flake->GetRect(), flake->Color(), 0);
 	}
 }

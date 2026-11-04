@@ -45,6 +45,7 @@ protected:
 	void OnLButtonDownDayGiftButton();
 	void OnInitTermGiftButton(int param);
 	void OnLButtonDownTermGiftButton();
+	WPoint ScreenShift();
 	void OnInitMissionClearArea(int param);
 	void OnOwnerDrawMissionClearArea(int param);
 	void OnInitCourseClearArea(int param);

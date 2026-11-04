@@ -141,11 +141,22 @@ void FrWorkShopEventDlg::CalcBoxCount983()
 	m_boxCount = (m_myHoles - m_openedBoxes * HOLES_PER_BOX) / HOLES_PER_BOX;
 }
 
+// posicoes do 983 sao do formulario: fora de 800x600 a janela fica centralizada e as barras saiam do lugar
+static void DrawGaugeInForm983(CGaugeBar983* gauge, const WRect& form)
+{
+	const float x = gauge->m_x, y = gauge->m_y;
+	gauge->m_x += form.x;
+	gauge->m_y += form.y;
+	gauge->Draw();
+	gauge->m_x = x;
+	gauge->m_y = y;
+}
+
 // 0082ebd0
 void FrWorkShopEventDlg::OnMyBarDraw(int param)
 {
 	if (m_pMyGauge)
-		m_pMyGauge->Draw();
+		DrawGaugeInForm983(m_pMyGauge, GetRect());
 }
 
 // 0082ebf0
@@ -253,12 +264,12 @@ void FrWorkShopEventDlg::OnTotalBarDraw(int param)
 {
 	if (m_pTotalGauge && !m_bGoalDone)
 	{
-		m_pTotalGauge->Draw();
+		DrawGaugeInForm983(m_pTotalGauge, GetRect());
 		return;
 	}
 	if (m_pCompleteOverlay && m_bGoalDone)
 	{
-		WRect dst(580.0f, 55.0f, (float)m_pCompleteOverlay->GetWidth(), (float)m_pCompleteOverlay->GetHeight());
+		WRect dst(GetRect().x + 580.0f, GetRect().y + 55.0f, (float)m_pCompleteOverlay->GetWidth(), (float)m_pCompleteOverlay->GetHeight());
 		m_pCompleteOverlay->Render(g_pMainView983, g_rectUnit983_e4296c, dst, 0, 0xffffffff, 0.0f, 0);
 	}
 }

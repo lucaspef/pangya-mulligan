@@ -186,6 +186,13 @@ void FrMissionEventDlg::OnLButtonDownTermGiftButton()
 		RequestGift(2);
 }
 
+// as posicoes fixas (m_textPos/m_missionPos) sao de tela 800x600 com o form centralizado: desloca p/ onde o form esta
+WPoint FrMissionEventDlg::ScreenShift()
+{
+	const WRect& r = GetRect();
+	return WPoint(r.x - (800.0f - r.w) * 0.5f, r.y - (600.0f - r.h) * 0.5f);
+}
+
 void FrMissionEventDlg::OnInitMissionClearArea(int param)
 {
 	m_pMissionClearArea = DYNAMIC_CAST(FrArea, (FrWnd*)param);
@@ -201,10 +208,11 @@ void FrMissionEventDlg::OnOwnerDrawMissionClearArea(int param)
 	unsigned char indices[4] = { 0, 1, 2, 5 };
 	pGDI->SetTextStyle(0);
 	pGDI->SetTextColor(0xffffffff, 0xffffffff);
+	const WPoint d = ScreenShift();
 	for (int i = 0; i < 4; ++i)
 	{
 		sprintf(text, "%d", m_pMissionEvent->GetCondition(indices[i]));
-		WPoint pos(m_textPos[i].x, m_textPos[i].y);
+		WPoint pos(m_textPos[i].x + d.x, m_textPos[i].y + d.y);
 		pGDI->Print(pos, 0, "%s", text);
 	}
 	pGDI->SetTextColor(color, 0xffffffff);
@@ -214,7 +222,7 @@ void FrMissionEventDlg::OnOwnerDrawMissionClearArea(int param)
 	{
 		if (m_bMissionComplete[j])
 			pGDI->DrawTexture(m_pBitmap[0],
-				WRect(m_missionPos[j].x, m_missionPos[j].y, (float)width,
+				WRect(m_missionPos[j].x + d.x, m_missionPos[j].y + d.y, (float)width,
 					(float)height),
 				0xffffffff, 0);
 	}
@@ -260,7 +268,8 @@ void FrMissionEventDlg::OnOwnerDrawCourseClearArea(int param)
 	pGDI->SetTextStyle(0);
 	pGDI->SetTextColor(0xffffffff, 0xffffffff);
 	sprintf(text, "%d", m_completeCourseNum);
-	pGDI->Print(WPoint(m_textPos[4].x, m_textPos[4].y), 0, "%s", text);
+	const WPoint d = ScreenShift();
+	pGDI->Print(WPoint(m_textPos[4].x + d.x, m_textPos[4].y + d.y), 0, "%s", text);
 	pGDI->SetTextColor(color, 0xffffffff);
 }
 

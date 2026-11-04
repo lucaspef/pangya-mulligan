@@ -1182,6 +1182,16 @@ void FrBongdariShopDlg::OnNormalPlayBnUp()
 	SetButtonStatus983();
 }
 
+// 008b3e40 esconde o combo (Big Papel, pacote 0x186) sempre; no modo de teste (JP983_EVENTOS) ele aparece
+static bool ComboVisible983()
+{
+#ifdef JP983_SERVER_CONFIG
+	return IsLocalContent((localContentType_t)0x1f);
+#else
+	return false;
+#endif
+}
+
 void FrBongdariShopDlg::OnComboPlayBnInit(int param)
 {
 	m_pComboPlayBn983 = DYNAMIC_CAST(FrButton, (FrWnd*)param);
@@ -1309,7 +1319,7 @@ void FrBongdariShopDlg::OnSelectBongBnUp()
 	m_pSelectMemBn983->SetVisible(false);
 	m_pAutoStartBn983->SetVisible(true);
 	m_pNormalPlayBn983->SetVisible(true); // 008b3e40(1)
-	m_pComboPlayBn983->SetVisible(false);
+	m_pComboPlayBn983->SetVisible(ComboVisible983());
 	m_pAboutBn983->SetStatus((FrButton::eButMode)0);
 	m_pAboutBn983->Enable(true);
 	m_pCloseBn->Enable(true);
@@ -2582,7 +2592,7 @@ void FrBongdariShopDlg::EndPlay983()
 	if (!m_bAutoPlay983 || m_comboMode983 != 0)
 	{
 		m_pNormalPlayBn983->SetVisible(true); // 008b3e40(1)
-		m_pComboPlayBn983->SetVisible(false);
+		m_pComboPlayBn983->SetVisible(ComboVisible983());
 		if (m_comboMode983 == 1)
 		{
 			RefreshTotalItem983(&m_listSecond983);

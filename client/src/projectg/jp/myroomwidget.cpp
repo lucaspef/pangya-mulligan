@@ -4454,6 +4454,8 @@ void CRealMyRoomForm983::ItemEquip983(FrListBox* box, FrListItem* item, bool equ
 		// tidAuxParts do personagem (+0x4f4 aponta para o doc -> 0x0020 sub 0 ao sair de Clothes); fora do My Room "LobbyAvatar"
 		// 0x18b (&tid, 1 = equipar), senao CPetFrame::SetAuxPart (008acd40) na previa (+0x584); equipar desmarca o anel antigo do
 		// slot (00beea90); depois 0061a810. Antes o clique em 0x70 voltava sem fazer nada: o anel nunca ia ao servidor.
+		if (equip)
+			g_audio->PlaySfx("item_select_cloth"); // 0061f916: antes de separar anel e roupa
 		unsigned long* aux = m_pSelCharAux983;
 		if (!aux)
 			return;

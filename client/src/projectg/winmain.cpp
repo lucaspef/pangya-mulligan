@@ -398,6 +398,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	setlocale(LC_CTYPE, "jpn"); // 983 00a72a57
 	InitLocalizeSystem();
+#ifdef JP983_SERVER_CONFIG
+	EnableTestEvents983();
+#endif
 
 	CoInitialize(NULL);
 

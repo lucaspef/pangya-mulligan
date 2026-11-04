@@ -3569,6 +3569,12 @@ void CLobbyMain::OnFirstConnectOwnerDraw(int param)
 	pGDI->Print(WPoint(textX, rect.y + 30.0f), 0, K2L_Compatibility("\xc8\xb9\xb5\xe6!!"));
 }
 
+// layout sem o botao (lobby.xml do 983 traz varios comentados): os eventos so usam a posicao dos vizinhos
+static WRect SafeBtnRect983(FrButton* btn)
+{
+	return btn ? btn->GetRect() : WRect(0.0f, 0.0f, 0.0f, 0.0f);
+}
+
 void CLobbyMain::OnToppage_PointEventInit(int param)
 {
 	m_pToppagePointEvent = DYNAMIC_CAST(FrButton, (FrWnd*)param);
@@ -3585,14 +3591,11 @@ void CLobbyMain::OnToppage_PointEventInit(int param)
 
 		if (IsLocalContent(S4_TOPPAGE_BTN_LINEUP))
 		{
-			WRect rect = m_pToppagePointEvent->GetRect();
-			float x = GetTopPageBtnRect();
-			rect.x = x;
-			m_pToppagePointEvent->SetRect(rect);
+			cTopEventIcon((eTopIconID)9).Prepare(m_pToppagePointEvent); // ver World Tour
 		}
 		else if (!CLoginInfo::Instance()->IsPcBang())
 		{
-			WRect pcbangRect = m_pToppagePcbang->GetRect();
+			WRect pcbangRect = SafeBtnRect983(m_pToppagePcbang);
 			WRect rect = m_pToppagePointEvent->GetRect();
 			rect.x = pcbangRect.x;
 			rect.y = pcbangRect.y - 2.0f;
@@ -3669,18 +3672,15 @@ void CLobbyMain::OnToppage_WorldTourEventInit(int param)
 		bool bPcBang = CLoginInfo::Instance()->IsPcBang() != 0;
 		bool bPointEvent = IsLocalContent((localContentType_t)0x16 /*983: era 0x15; medido*/);
 
-		WRect pcbangRect = m_pToppagePcbang->GetRect();
-		WRect pointRect = m_pToppagePointEvent->GetRect();
+		WRect pcbangRect = SafeBtnRect983(m_pToppagePcbang);
+		WRect pointRect = SafeBtnRect983(m_pToppagePointEvent);
 		WRect rect = m_pToppageWorldTourEvent->GetRect();
 
 		rect.y += 2.0f;
 
 		if (IsLocalContent(S4_TOPPAGE_BTN_LINEUP))
 		{
-			WRect btnRect = m_pToppageWorldTourEvent->GetRect();
-			float x = GetTopPageBtnRect();
-			btnRect.x = x;
-			m_pToppageWorldTourEvent->SetRect(btnRect);
+			cTopEventIcon((eTopIconID)8).Prepare(m_pToppageWorldTourEvent); // vaga livre: o id 7 e do Natal 2007
 		}
 		else if (bPcBang && bPointEvent)
 		{
@@ -3763,11 +3763,11 @@ void CLobbyMain::OnToppage_FindEbortEventInit(int param)
 
 		if (bPcBang)
 			rect.x +=
-				m_pToppagePcbang->GetRect().x + m_pToppagePcbang->GetRect().w;
+				SafeBtnRect983(m_pToppagePcbang).x + SafeBtnRect983(m_pToppagePcbang).w;
 
 		if (bPointEvent)
-			rect.x += m_pToppagePointEvent->GetRect().x +
-				m_pToppagePointEvent->GetRect().w;
+			rect.x += SafeBtnRect983(m_pToppagePointEvent).x +
+				SafeBtnRect983(m_pToppagePointEvent).w;
 
 		if (bWorldTour)
 			rect.x += m_pToppageWorldTourEvent->GetRect().x +
@@ -4085,6 +4085,9 @@ void CLobbyMain::OnToppage_TreasureIslandInit(int param)
 
 void CLobbyMain::OnToppage_TreasureIslandLBDown()
 {
+#ifdef JP983_SERVER_CONFIG
+	return; // a pagina era do QA coreano do 645; nada aqui deve abrir site oficial
+#endif
 	if (IsLocalContent((localContentType_t)0x89 /*983: era 0x8c; mesmo conteúdo do Init*/))
 	{
 		ShellExecuteA(NULL, NULL,

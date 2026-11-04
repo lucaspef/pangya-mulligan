@@ -87,6 +87,27 @@ O nome `game-web` no `Run` do servidor, em `Pangya.Web/GameWeb.cs`, atende em `W
 
 Para gerar só o `updatelist`: `updlist --generate <pasta do jogo> <arquivo>`. Para atualizar um arquivo em uma lista existente: `updlist <updatelist> ProjectG.exe wangreal.dll`. O pós-build faz o mesmo com `/p:JP983UpdateList=<arquivo>`.
 
+### Conteúdo extra
+
+Ícones de evento no topo do lobby, fundos e avisos vêm de `GET /patch/extracontents/<arquivo>`, lidos de `server/data/gameweb/patch/extracontents/`. Sem essa pasta, o jogo abre sem eles.
+
+`extracontents.xml` escolhe o tema:
+
+```xml
+<extracontents><themes><pangya_default src="pangya_default.xml"/></themes></extracontents>
+```
+
+`pangya_default.xml` lista o conteúdo. Eventos aceitos pelo cliente: `cardpack3rd`, `pointshop`, `one_day_quest`, `event_2013_workshop`, `event_2014_arin` e `CChristmas2011`. Imagens que já existem nos paks não precisam estar na pasta:
+
+```xml
+<extracontents><topicons>
+  <event name="cardpack3rd">
+    <normal name="cardpack03_btn_n.tga"/>
+    <over name="cardpack03_btn_o.tga"/>
+  </event>
+</topicons></extracontents>
+```
+
 ### Registro
 
 O jogo lê o valor `IntegratedPak` em `HKLM\SOFTWARE\WOW6432Node\Ntreev\Pangya_Jp`, com o nome do pak base. Sem ele, mostra um erro de arquivo e não abre. O instalador do jogo grava esse valor. Numa cópia sem instalador, o `run-local.ps1` o cria, só quando falta, e nunca troca um valor existente. Para fazer à mão, num prompt elevado:

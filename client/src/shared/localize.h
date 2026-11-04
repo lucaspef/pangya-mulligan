@@ -86,6 +86,7 @@ enum localContentType_t
 };
 
 void InitLocalizeSystem();
+void EnableTestEvents983();
 bool IsLocalCountry(__int64 code);
 bool IsLocalContent(localContentType_t code);
 int GetLocalCountry();

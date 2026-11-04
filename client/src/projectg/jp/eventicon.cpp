@@ -82,7 +82,7 @@ void EventIcon_Christmas2011983()
 // 00b152a0: "cardpack3rd" — a loja na primeira página
 void EventIcon_CardPack3rd983()
 {
-	AfxGetTask()->SendMsgToMainActor(MsgObject(NULL, 0x88, (int)"CShopMain", (int)"TOPPAGE", 0, 0, 0));
+	AfxGetTask()->SendMsgToMainActor(MsgObject(NULL, 0x88, (int)"CShopWidget", (int)"TOPPAGE", 0, 0, 0));
 }
 
 // 00b15300: "pointshop"

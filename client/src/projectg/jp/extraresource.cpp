@@ -18,6 +18,12 @@ const char* g_szExtraTheme = "pangya_default"; // 00e06f44
 std::string __fastcall GetExtraUrl()
 {
 	std::string url = "http://dl.pangya.jp/pangya/season4/patch/";
+#ifdef JP983_SERVER_CONFIG
+	// sem rugburn nada reescreve a URL: mesma regra do updatelist (commonutil.cpp); dl.pangya.jp nao existe mais
+	char web[128];
+	url = GetEnvironmentVariable("JP983_WEB", web, sizeof(web)) - 1u < sizeof(web) - 1 ? web : "http://localhost:30091";
+	url += "/patch/";
+#endif
 	if (url == "")
 		url = "http://192.168.81.237:8888/client/updatetest/";
 	return url + g_szExtraName + "/";

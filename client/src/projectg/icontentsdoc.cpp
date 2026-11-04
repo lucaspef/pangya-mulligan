@@ -6,6 +6,7 @@
 
 #include "contentsdoc.h"
 #include "gatewaydoc.h"
+#include "../shared/localize.h"
 
 // HACK: template instantiation order
 typedef char rb_msgMapSize[sizeof(std::map<int, const char*>)];
@@ -216,6 +217,21 @@ bool CContentsDoc::Initialize()
 	InsertContainer((localContentType_t)0xa4, new CTutorialContainer983, false);
 	// 0xa5 CLobbyContainer (0x1c, vtable 00d3c600; 00915fc8; B192.1/C102.1): doc da lista de salas/sala (dono em +0x14)
 	InsertContainer((localContentType_t)0xa5, new CLobbyContainer983, false);
+#ifdef JP983_SERVER_CONFIG
+	// modo de teste (JP983_EVENTOS): o 983 nao cria estes documentos, sem eles os botoes nao abrem nada
+	if (IsLocalContent((localContentType_t)0x1f))
+	{
+		InsertContainer((localContentType_t)0x1f, new CWorldTourEvent(), false);
+		InsertContainer((localContentType_t)0x22, new CHalloweenEvent(), false);
+		CChristmasEvent* pChristmas = new CChristmasEvent();
+		InsertContainer((localContentType_t)0x4d, pChristmas, false);
+		pChristmas->SetFlag(true);
+		CTicketExchange* pTicket = new CTicketExchange();
+		InsertContainer((localContentType_t)0x77, pTicket, false);
+		pTicket->SetFlag(true);
+		InsertContainer((localContentType_t)0x80, new CMissionEvent(), false); // Mission: a resposta 0x189 cai aqui
+	}
+#endif
 	if (s_pCreators983 != NULL)
 	{
 		ForEachCreators983(s_pCreators983->begin()._Ptr,
